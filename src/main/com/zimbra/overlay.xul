@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://global/skin/global.css"?>
+<?xml-stylesheet href="chrome://zimbra_mail_notifier/skin/global.css" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://zimbra_mail_notifier/locale/zimbra_mail_notifier.dtd">
+
+<overlay id="zimbra_mail_notifier-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="zimbra_mail_notifier-bundle" src="chrome://zimbra_mail_notifier/locale/zimbra_mail_notifier.properties"/>
+	</stringbundleset>
+	
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/constant/zimbrahelper.js"/>
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/domain/session.js"/>
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/domain/message.js"/>
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/domain/task.js"/>
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/domain/calevent.js"/>
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/service/notifier.js"/>
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/service/webservices.js"/>
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/service/prefs.js"/>
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/service/util.js" />
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/service/logger.js"/>
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/controller/service.js"/>
+	<script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/overlay.js"/>
+	
+	<popupset id="mainPopupSet">
+		<tooltip id="zimbra_mail_notifier-tip" noautohide="true" orient="horizontal" onpopupshowing="com.zimbra.Main.initiliazeTooltip()" onpopuphidden="com.zimbra.Main.hideTooltip()">
+			<vbox>
+				<groupbox flex="1" orient="horizontal">
+					<vbox width="70px">
+						<image src="chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png" />
+					</vbox>
+					<vbox id="zimbra_mail_notifier_tooltipContent" style="padding-left:15px;">
+						<label id="zimbra_mail_notifier_tooltipTitle" style="font-weight:bold"/>
+						<spacer height="6px" />
+						<description id="zimbra_mail_notifier_tooltipMessage"/>
+					</vbox>
+				</groupbox>
+				<groupbox flex="1" id="zimbra_mail_notifier_tooltipCalendarGroup">
+					<caption label="&tooltip.calendar.caption;" style="font-weight: bold;"/>
+					<vbox id="zimbra_mail_notifier_tooltipCalendar"/>
+				</groupbox>
+				<groupbox flex="1" id="zimbra_mail_notifier_tooltipTaskGroup">
+					<caption label="&tooltip.task.caption;" style="font-weight: bold;"/>
+					<vbox id="zimbra_mail_notifier_tooltipTask"/>
+				</groupbox>
+			</vbox>
+		</tooltip>
+		<menupopup id="zimbra_mail_notifier_clipmenu">
+			<menuitem class="menuitem-iconic" id="zimbra_mail_notifier-mainCheckNow" label="&main.checkNow;" hidden="true" oncommand="com.zimbra.Main.onCheckNowClick();" />
+			<menuitem class="menuitem-iconic" id="zimbra_mail_notifier-mainConnect" label="&main.connect;" oncommand="com.zimbra.Main.onConnectClick();" />
+			<menuitem class="menuitem-iconic" id="zimbra_mail_notifier-mainDisconnect" label="&main.disconnect;" hidden="true" oncommand="com.zimbra.Main.onDisconnectClick();" />
+			<menuseparator id="zimbra_mail_notifier-mainSeparator" />
+    		<menuitem class="menuitem-iconic" id="zimbra_mail_notifier-mainOption" label="&main.options.label;" oncommand="com.zimbra.Main.openOptionsDialog();" />
+			<menuitem class="menuitem-iconic" id="zimbra_mail_notifier-mainAbout" label="&main.about.label;" oncommand="com.zimbra.Main.openAboutDialog();"/>
+  		</menupopup>
+  	</popupset>    
+  	 
+  	 <menupopup id="menu_ToolsPopup">
+		<menu id="zimbra_mail_notifier-tools-menu" label="&title;" insertafter="devToolsSeparator">
+				<menupopup id="zimbra_mail_notifier_clipmenu">
+				<menuitem class="menuitem-iconic" id="zimbra_mail_notifier-mainToolsCheckNow" label="&main.checkNow;" hidden="true" oncommand="com.zimbra.Main.onCheckNowClick();" />
+				<menuitem class="menuitem-iconic" id="zimbra_mail_notifier-mainToolsConnect" label="&main.connect;" oncommand="com.zimbra.Main.onConnectClick();" />
+				<menuitem class="menuitem-iconic" id="zimbra_mail_notifier-mainToolsDisconnect" label="&main.disconnect;" hidden="true" oncommand="com.zimbra.Main.onDisconnectClick();" />
+				<menuseparator id="zimbra_mail_notifier-mainToolsSeparator" />
+    			<menuitem class="menuitem-iconic" id="zimbra_mail_notifier-mainToolsOption" label="&main.options.label;" oncommand="com.zimbra.Main.openOptionsDialog();" />
+				<menuitem class="menuitem-iconic" id="zimbra_mail_notifier-mainToolsAbout" label="&main.about.label;" oncommand="com.zimbra.Main.openAboutDialog();"/>
+  			</menupopup>
+		</menu>
+	</menupopup>
+	
+  	<statusbar id="status-bar">
+  		<statusbarpanel tooltip="zimbra_mail_notifier-tip" style="visibilit:collapse;" status="0" context="zimbra_mail_notifier_clipmenu" class="statusbarpanel-iconic-text" label="" id="zimbra_mail_notifier-status-icon" onclick="return com.zimbra.Main.onStatusBarClick(event);">
+  		</statusbarpanel>
+	</statusbar>
+	
+	<toolbarbutton id="zimbra_mail_notifier-toolbar-button" label="&title;" status="0"
+		tooltip="zimbra_mail_notifier-tip" oncommand="com.zimbra.Main.onStatusBarClick();"
+		class="toolbarbutton-1 chromeclass-toolbar-additional" 
+		context="zimbra_mail_notifier_clipmenu">
+		
+	</toolbarbutton>
+	
+	<toolbarpalette id="BrowserToolbarPalette"> 
+  		<toolbarbutton id="zimbra_mail_notifier-toolbar-button"/>
+  	</toolbarpalette>
+
+</overlay>

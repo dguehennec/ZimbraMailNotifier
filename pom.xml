@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.zimbra</groupId>
+	<artifactId>extensionZimbra</artifactId>
+	<packaging>pom</packaging>
+	<version>1.2.0</version>
+
+	<name>Zimbra Notifier</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<withCompletion>false</withCompletion>
+		<sonar.language>js</sonar.language>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.host.url>http://127.0.0.1:9000</sonar.host.url>
+	</properties>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>jsdoctk2</id>
+			<url>http://jsdoctk-plugin.googlecode.com/svn/repo</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<profiles>
+		<profile>
+			<id>Dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<configuration>
+									<tasks>
+										<echo message="Copy sources" />
+										<copydir src="${basedir}/src/main/" dest="${project.build.directory}/sources" />
+										<echo
+											message="Minifying JS files. This takes a few minutes, please be patient" />
+										<echo message="Generate minifying xpi directory" />
+										<copydir src="${project.build.directory}/sources/resources"
+											dest="${project.build.directory}/sources_xpi" />
+										<copydir
+											src="${project.build.directory}/sources/com/zimbra"
+											dest="${project.build.directory}/sources_xpi/chrome/content" />
+										<echo message="Generate XPI archive" />
+										<zip update="true" compress="true"
+											destfile="${project.build.directory}/${project.name}-${project.version}.xpi"
+											basedir="${project.build.directory}/sources_xpi" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>Prod</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<configuration>
+									<tasks>
+										<echo message="Copy sources" />
+										<copydir src="${basedir}/src/main/" dest="${project.build.directory}/sources" />
+										<echo
+											message="Minifying JS files. This takes a few minutes, please be patient" />
+										<apply executable="java" failOnError="true">
+											<arg
+												line="-cp target/builddependency/args4j.jar:target/builddependency/guava.jar:target/builddependency/closure-compiler.jar com.google.javascript.jscomp.CommandLineRunner --compilation_level SIMPLE_OPTIMIZATIONS --charset UTF-8 --js " />
+											<fileset dir="${basedir}/src/main/" includes="**/*.js" />
+											<redirector>
+												<outputmapper id="out" type="glob" from="*.js"
+													to="${project.build.directory}/sources/*.js" />
+											</redirector>
+										</apply>
+										<echo message="Generate minifying xpi directory" />
+										<copydir src="${project.build.directory}/sources/resources"
+											dest="${project.build.directory}/sources_xpi" />
+										<copydir
+											src="${project.build.directory}/sources/com/zimbra"
+											dest="${project.build.directory}/sources_xpi/chrome/content" />
+										<echo message="Generate XPI archive" />
+										<zip update="true" compress="true"
+											destfile="${project.build.directory}/${project.name}-${project.version}.xpi"
+											basedir="${project.build.directory}/sources_xpi" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>nl.windgazer</groupId>
+						<artifactId>jsdoctk-plugin</artifactId>
+						<version>2.3.2</version>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<configuration>
+									<template>jsdoc</template>
+									<directory>${project.build.directory}/jsdoc</directory>
+									<recurse>10</recurse>
+									<ext>js</ext>
+									<allfunctions>true</allfunctions>
+									<Allfunctions>true</Allfunctions>
+									<privateOption>true</privateOption>
+									<srcDir>${basedir}/src/main/</srcDir>
+								</configuration>
+								<goals>
+									<goal>jsdoc-report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<build>
+		<sourceDirectory>src/main/</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.google.javascript</groupId>
+									<artifactId>closure-compiler</artifactId>
+									<version>r1810</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>target/builddependency</outputDirectory>
+									<destFileName>closure-compiler.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>args4j</groupId>
+									<artifactId>args4j</artifactId>
+									<version>2.0.12</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>target/builddependency</outputDirectory>
+									<destFileName>args4j.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.google.guava</groupId>
+									<artifactId>guava</artifactId>
+									<version>r07</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>target/builddependency</outputDirectory>
+									<destFileName>guava.jar</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>attach-artifacts</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attach-artifact</goal>
+						</goals>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<file>${project.build.directory}/${project.name}-${project.version}.xpi</file>
+									<type>xpi</type>
+								</artifact>
+							</artifacts>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.google.javascript</groupId>
+				<artifactId>closure-compiler</artifactId>
+				<version>r2079</version>
+			</dependency>
+			<dependency>
+				<groupId>args4j</groupId>
+				<artifactId>args4j</artifactId>
+				<version>2.0.12</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>r07</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<developers>
+		<developer>
+			<id>dguehennec</id>
+			<name>David GUEHENNEC</name>
+			<email>david.guehennec@gmail.com</email>
+		</developer>
+	</developers>
+
+</project>

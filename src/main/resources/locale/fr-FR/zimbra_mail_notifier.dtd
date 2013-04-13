@@ -1,0 +1,75 @@
+<!ENTITY title "Zimbra Mail Notifier">
+
+<!ENTITY yes "Oui">
+<!ENTITY no "Non">
+<!ENTITY week "semaine">
+<!ENTITY weeks "semaines">
+<!ENTITY time "fois">
+<!ENTITY atTime "à l'heure">
+<!ENTITY minuteBefore "minute avant">
+<!ENTITY minutesBefore "minutes avant">
+<!ENTITY hourBefore "heure avant">
+<!ENTITY hoursBefore "heures avant">
+
+<!ENTITY main.checkNow "Rafraichir...">
+<!ENTITY main.connect "Connexion">
+<!ENTITY main.disconnect "Déconnexion">
+<!ENTITY main.options.label "Préférences">
+<!ENTITY main.about.label "à propos de &title;">
+
+<!ENTITY tooltip.calendar.caption "Evenements à venir">
+<!ENTITY tooltip.task.caption "Tâches en cours">
+
+<!ENTITY about.homepage.label "Site Web :">
+<!ENTITY about.about.label "&main.about.label;">
+<!ENTITY about.createdby.label "Crée par :">
+<!ENTITY about.version.label "Version">
+<!ENTITY about.legal.label "Cette extension n&apos;est pas affiliée à VMware ni soutenue par cette entreprise.">
+<!ENTITY about.close.label "Fermer">
+
+<!ENTITY option.option.label "Préférences">
+<!ENTITY option.default.label "Général">
+<!ENTITY option.default.connection.caption "Connexion">
+<!ENTITY option.default.autoConnect "Connexion automatique au lancement du module">
+<!ENTITY option.default.notification.caption "Notification">
+<!ENTITY option.default.systemNotification "Notification système">
+<!ENTITY option.default.soundNotification "Émettre un son">
+<!ENTITY option.default.access.caption "Moyen d'accès au module">
+<!ENTITY option.default.statusbar "Barre des modules">
+
+<!ENTITY option.calendar.label "Calendrier">
+<!ENTITY option.calendar.activate "Activer la gestion du calendrier">
+<!ENTITY option.calendar.view.caption "Visualisation">
+<!ENTITY option.calendar.view.period.label "Période affichée">
+<!ENTITY option.calendar.view.nbMax.label "Nombre de rendez-vous maximum affichées">
+<!ENTITY option.calendar.notification.caption "Notification">
+<!ENTITY option.calendar.systemNotification "Notification système">
+<!ENTITY option.calendar.soundNotification "Notification sonore">
+<!ENTITY option.calendar.repeat "Répéter">
+
+<!ENTITY option.task.label "Tâches">
+<!ENTITY option.task.activate "Activer la gestion des tâches">
+<!ENTITY option.task.view.caption "Visualisation">
+<!ENTITY option.task.view.reminder "Rappel">
+<!ENTITY option.task.view.confZimbra "Configuration Zimbra">
+<!ENTITY option.task.view.nbTasks "Nombre de tâches maximum affichées">
+<!ENTITY option.task.view.nbPriorities "Priorités affichées">
+<!ENTITY option.task.view.all "Toutes">
+<!ENTITY option.task.view.highAndNormal "Elevée et Normal">
+<!ENTITY option.task.view.high "Elevée">
+<!ENTITY option.task.view.normal "Normal">
+<!ENTITY option.task.view.low "Basse">
+
+<!ENTITY option.identifiant.label "Identifiant">
+<!ENTITY option.identifiant.params.caption "Compte">
+<!ENTITY option.identifiant.login.label "Utilisateur">
+<!ENTITY option.identifiant.password.label "Mot de passe">
+<!ENTITY option.identifiant.savePassword.label "Sauvegarde du mot de passe">
+<!ENTITY option.identifiant.server.caption "Serveur">
+<!ENTITY option.identifiant.server.label "Url du serveur de mail">
+<!ENTITY option.identifiant.connect.button "Connexion">
+<!ENTITY option.identifiant.connectInProgress.button "En cours...">
+<!ENTITY option.identifiant.disconnect.button "Déconnexion">
+
+<!ENTITY option.close.label "Fermer">
+<!ENTITY option.save.label "Sauvegarder">

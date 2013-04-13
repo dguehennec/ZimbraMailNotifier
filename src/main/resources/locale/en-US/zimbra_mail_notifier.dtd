@@ -1,0 +1,75 @@
+<!ENTITY title "Zimbra Mail Notifier">
+
+<!ENTITY yes "yes">
+<!ENTITY no "no">
+<!ENTITY week "week">
+<!ENTITY weeks "weeks">
+<!ENTITY time "time">
+<!ENTITY atTime "at time">
+<!ENTITY minuteBefore "minute before">
+<!ENTITY minutesBefore "minutes before">
+<!ENTITY hourBefore "hour before">
+<!ENTITY hoursBefore "hours before">
+
+<!ENTITY main.checkNow "Refresh...">
+<!ENTITY main.connect "Connect">
+<!ENTITY main.disconnect "Disconnect">
+<!ENTITY main.options.label "Preferences">
+<!ENTITY main.about.label "About &title;">
+
+<!ENTITY tooltip.calendar.caption "Next events">
+<!ENTITY tooltip.task.caption "Current tasks">
+
+<!ENTITY about.homepage.label "Web Site :">
+<!ENTITY about.about.label "&main.about.label;">
+<!ENTITY about.createdby.label "By :">
+<!ENTITY about.version.label "Version">
+<!ENTITY about.legal.label "This extension is not affiliated or endorsed by VMware.">
+<!ENTITY about.close.label "Close">
+
+<!ENTITY option.option.label "Preferences">
+<!ENTITY option.default.label "General">
+<!ENTITY option.default.connection.caption "Connection">
+<!ENTITY option.default.autoConnect "Automatically log in">
+<!ENTITY option.default.notification.caption "Notification">
+<!ENTITY option.default.systemNotification "System notification">
+<!ENTITY option.default.soundNotification "Sound notification">
+<!ENTITY option.default.access.caption "Extension access">
+<!ENTITY option.default.statusbar "Statusbar">
+
+<!ENTITY option.calendar.label "Calendar">
+<!ENTITY option.calendar.activate "Enable calendar management">
+<!ENTITY option.calendar.view.caption "Displaying">
+<!ENTITY option.calendar.view.period.label "Period displayed">
+<!ENTITY option.calendar.view.nbMax.label "Number of appointments maximum displayed">
+<!ENTITY option.calendar.notification.caption "Notification">
+<!ENTITY option.calendar.systemNotification "System notification">
+<!ENTITY option.calendar.soundNotification "Sound notification">
+<!ENTITY option.calendar.repeat "Repeat">
+
+<!ENTITY option.task.label "Tasks">
+<!ENTITY option.task.activate "Enable Tasks management">
+<!ENTITY option.task.view.caption "Displaying">
+<!ENTITY option.task.view.reminder "Reminder">
+<!ENTITY option.task.view.confZimbra "Zimbra configuration">
+<!ENTITY option.task.view.nbTasks "Number of tasks maximum displayed">
+<!ENTITY option.task.view.nbPriorities "Priorities set">
+<!ENTITY option.task.view.all "All">
+<!ENTITY option.task.view.highAndNormal "High and normal">
+<!ENTITY option.task.view.high "High">
+<!ENTITY option.task.view.normal "Normal">
+<!ENTITY option.task.view.low "Low">
+
+<!ENTITY option.identifiant.label "Identifier">
+<!ENTITY option.identifiant.params.caption "Account">
+<!ENTITY option.identifiant.login.label "Login">
+<!ENTITY option.identifiant.password.label "Password">
+<!ENTITY option.identifiant.savePassword.label "Remember password.">
+<!ENTITY option.identifiant.server.caption "Server">
+<!ENTITY option.identifiant.server.label "Server  URL">
+<!ENTITY option.identifiant.connect.button "Connect">
+<!ENTITY option.identifiant.connectInProgress.button "In progress...">
+<!ENTITY option.identifiant.disconnect.button "Disconnect">
+
+<!ENTITY option.close.label "Close">
+<!ENTITY option.save.label "Save">

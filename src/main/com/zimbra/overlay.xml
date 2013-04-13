@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<bindings xmlns="http://www.mozilla.org/xbl"
+          xmlns:xbl="http://www.mozilla.org/xbl"
+          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <binding id="zimbra_mail_notifier-toolbarbutton" extends="chrome://global/content/bindings/toolbarbutton.xml#toolbarbutton">
+    <content>
+      <xul:stack class="toolbarbutton-icon">
+      	<xul:vbox align="center" pack="center">
+      		<xul:image id="zimbra_mail_notifier-toolbarbutton-icon" xbl:inherits="validate,src=image,toolbarmode,buttonstyle" flex="1"/>
+      	</xul:vbox>
+     	<xul:vbox pack="end" flex="1">
+      		<xul:label id="zimbra_mail_notifier-toolbar-button-label" crop="right" xbl:inherits="value"/>
+      	</xul:vbox>
+      </xul:stack>
+      <xul:label class="toolbarbutton-text" crop="right" flex="1" xbl:inherits="value=label,accesskey,crop"/>
+    </content>
+  </binding>
+</bindings>
