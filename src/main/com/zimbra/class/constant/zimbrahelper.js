@@ -48,49 +48,65 @@ if (!com.zimbra.constant) {
 
 /**
  * Logger level
- * 
+ *
  * @constant
  */
-com.zimbra.constant.LOGGER_LEVEL = 0;
-
-/**
- * check time
- * 
- * @constant
- */
-com.zimbra.constant.CHECK_TIME = 90000;
-
-/**
- * 
- * Server Error
- * 
- * @constant
- * 
- */
-com.zimbra.constant.SERVER_ERROR = {
-    NO_ERROR : 0,
-    TIMEOUT : 1,
-    REQUEST : 2,
-    AUTHENTIFICATION : 3,
-    NOOP_REQUEST : 4,
-    SEARCH_REQUEST : 5
+com.zimbra.constant.LOGGER = {
+    LEVEL : 3,
+    PRINT_STACK : true,
+    PRINT_DATE : true
 };
 
 /**
  * Oberver
- * 
+ *
  * @constant
- * 
+ *
  */
 com.zimbra.constant.OBSERVER = {
     PREF_SAVED : "zimbra_mail_notifier.pref.saved"
 };
 
 /**
- * Option select tab
- * 
+ * Notifier
+ *
  * @constant
- * 
+ *
+ */
+com.zimbra.constant.NOTIFIER = {
+    REPEAT_DELAY_MS : 60000
+};
+
+/**
+ * Session
+ *
+ * @constant
+ *
+ */
+com.zimbra.constant.SESSION = {
+    TOKEN_LIFETIME_SECU : 20000,
+    TOKEN_LIFETIME_EXPIR : 180000
+};
+
+/**
+ * Service
+ *
+ * @constant
+ *
+ */
+com.zimbra.constant.SERVICE = {
+    CONNECT_BASE_WAIT_AFTER_FAILURE : 20000,
+    CONNECT_MAX_WAIT_AFTER_FAILURE : 300000,
+    REFRESH_WAIT_AFTER_FAILURE : 10000,
+    DELAY_NOTIFY_FIRST_UNREAD : 8000,
+    NB_RETRY_QUERY : 3
+};
+
+/**
+ * Option select tab
+ *
+ * @constant
+ *
  */
 com.zimbra.constant.OPTION_SELECT_TAB = {
     GENERAL : 0,

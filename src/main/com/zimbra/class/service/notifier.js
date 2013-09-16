@@ -91,7 +91,7 @@ com.zimbra.service.Notifier.prototype.start = function() {
         diff -= this._event.timeConf * 60 * 1000;
     }
     this.stop();
-    if (diff >= 0 && diff < 172800000) {
+    if (diff >= 0 && diff < 0x3FFFFFFF) {
         this._currentTimer = window.setTimeout(function() {
             object.notify();
         }, diff);
@@ -116,19 +116,21 @@ com.zimbra.service.Notifier.prototype.stop = function() {
  * @this {Notifier}
  */
 com.zimbra.service.Notifier.prototype.notify = function() {
+    this.stop();
     if (this._withSoundNotification) {
         this._util.playSound();
     }
     if (this._withSystemNotification) {
-        this._util.showNotificaton(this._event.startDate.toLocaleString(), this._util.getBundleString("connector.notification.event") + this._event.name, null, null);
+        this._util.showNotificaton(this._event.startDate.toLocaleString(),
+                                   this._util.getBundleString("connector.notification.event") +
+                                   this._event.name, null, null);
     }
     if (this._nbRepeat > 0) {
         this._nbRepeat--;
-        // repeat every minute
         var object = this;
         this._currentTimer = window.setTimeout(function() {
             object.notify();
-        }, 60000);
+        }, com.zimbra.constant.NOTIFIER.REPEAT_DELAY_MS);
     }
 };
 

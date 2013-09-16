@@ -4,40 +4,41 @@
 
 <!DOCTYPE window SYSTEM "chrome://zimbra_mail_notifier/locale/zimbra_mail_notifier.dtd">
 
-<window title="&about.about.label;"	
-	orient="vertical"
-	windowtype="window:zimbra_mail_notifierAbout"
-	width="270" height="190"
-	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<window title="&about.about.label;"
+    orient="vertical"
+    windowtype="window:zimbra_mail_notifierAbout"
+    width="270" height="190"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-	<stringbundleset id="stringbundleset">
-		<stringbundle id="zimbra_mail_notifier-bundle" src="chrome://zimbra_mail_notifier/locale/zimbra_mail_notifier.properties" />
-	</stringbundleset>
-	
-	<groupbox orient="vertical">
-		<hbox align="center">
-			<vbox >
-				<image src="chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png"/>
-				<spacer flex="1"/>
-			</vbox>
-			<spring flex="1"/>
-			<vbox align="center" flex="1">
-				<hbox flex="1" align="center">
-					<spacer flex="1"/>
-					<text value="&about.version.label;" style="margin-top:4px;"/>
-					<label value="1.2.0" style="font-weight: bold; font-size: 18px;"/>
-				</hbox>
-				<separator class="thin" />
-				<text value="&about.createdby.label;" style="font-weight: bold;" />
-				<text value="David GUEHENNEC" />
-			</vbox>
-		</hbox>
-		<separator class="thin" />
-		<description>&about.legal.label;</description>
-	</groupbox>
-	<hbox>
-		<spacer flex="1"/>
-		<button label="&about.close.label;" oncommand="window.close();"/>
-	</hbox>
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="zimbra_mail_notifier-bundle" src="chrome://zimbra_mail_notifier/locale/zimbra_mail_notifier.properties" />
+    </stringbundleset>
+
+    <groupbox orient="vertical">
+        <hbox align="center">
+            <vbox >
+                <image src="chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png"/>
+                <spacer flex="1"/>
+            </vbox>
+            <spring flex="1"/>
+            <vbox align="center" flex="1">
+                <hbox flex="1" align="center">
+                    <spacer flex="1"/>
+                    <text value="&about.version.label;" style="margin-top:4px;"/>
+                    <label value="2.0.0" style="font-weight: bold; font-size: 18px;"/>
+                </hbox>
+                <separator class="thin" />
+                <text value="&about.createdby.label;" style="font-weight: bold;" />
+                <text value="David GUEHENNEC" />
+                <text value="Benjamin ROBIN" />
+            </vbox>
+        </hbox>
+        <separator class="thin" />
+        <description>&about.legal.label;</description>
+    </groupbox>
+    <hbox>
+        <spacer flex="1"/>
+        <button label="&about.close.label;" oncommand="window.close();"/>
+    </hbox>
 
 </window>

@@ -48,10 +48,10 @@ if (!com.zimbra.service) {
 
 /**
  * Creates an instance of logger.
- * 
+ *
  * @constructor
  * @this {Logger}
- * 
+ *
  */
 com.zimbra.service.Logger = function(name) {
     this._name = name;
@@ -59,39 +59,80 @@ com.zimbra.service.Logger = function(name) {
 
 /**
  * generate error trace.
- * 
+ *
  * @this {Logger}
  * @param {String}
  *            message message of the trace
  */
 com.zimbra.service.Logger.prototype.error = function(message) {
-    if (com.zimbra.constant.LOGGER_LEVEL > 0) {
-        dump("ERROR in " + this._name + " : " + message + "\n");
+    if (com.zimbra.constant.LOGGER.LEVEL > 0) {
+        this._printStack();
+        dump(this._getStrDate() + "ERROR in " + this._name + " : " + message + "\n");
     }
 };
 
 /**
  * generate warning trace.
- * 
+ *
  * @this {Logger}
  * @param {String}
  *            message message of the trace
  */
 com.zimbra.service.Logger.prototype.warning = function(message) {
-    if (com.zimbra.constant.LOGGER_LEVEL > 1) {
-        dump("WARNING in " + this._name + " : " + message + "\n");
+    if (com.zimbra.constant.LOGGER.LEVEL > 1) {
+        this._printStack();
+        dump(this._getStrDate() + "WARNING in " + this._name + " : " + message + "\n");
     }
 };
 
 /**
  * generate trace trace.
- * 
+ *
  * @this {Logger}
  * @param {String}
  *            message message of the trace
  */
 com.zimbra.service.Logger.prototype.trace = function(message) {
-    if (com.zimbra.constant.LOGGER_LEVEL > 2) {
-        dump("TRACE in " + this._name + " : " + message + "\n");
+    if (com.zimbra.constant.LOGGER.LEVEL > 2) {
+        this._printStack();
+        dump(this._getStrDate() + "TRACE in " + this._name + " : " + message + "\n");
     }
+};
+
+/**
+ * Print the stack trace
+ *
+ * @private
+ * @this {Logger}
+ */
+com.zimbra.service.Logger.prototype._printStack = function() {
+    if (com.zimbra.constant.LOGGER.PRINT_STACK === true) {
+        try {
+            throw Error('');
+        } catch(err) {
+            var stack = err.stack.split("\n").slice(2).join("\n")
+            dump("--------\n" + stack + "--------\n");
+        }
+    }
+};
+
+/**
+ * Get date to print
+ *
+ * @private
+ * @this {Logger}
+ */
+com.zimbra.service.Logger.prototype._getStrDate = function() {
+    if (com.zimbra.constant.LOGGER.PRINT_DATE === true) {
+        var date = new Date();
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        var ms = date.getMilliseconds();
+        return "[" + ((h < 10) ? "0" + h : h) + ":" +
+                     ((m < 10) ? "0" + m : m) + ":" +
+                     ((s < 10) ? "0" + s : s) + "." +
+                     ((ms < 10) ? "00" + ms : ((ms < 100) ? "0" + ms : ms)) + "] ";
+    }
+    return '';
 };

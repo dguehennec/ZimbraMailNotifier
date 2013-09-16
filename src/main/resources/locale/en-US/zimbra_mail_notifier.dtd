@@ -67,7 +67,7 @@
 <!ENTITY option.identifiant.savePassword.label "Remember password.">
 <!ENTITY option.identifiant.server.caption "Server">
 <!ENTITY option.identifiant.server.label "Server  URL">
-<!ENTITY option.identifiant.connect.button "Connect">
+<!ENTITY option.identifiant.connect.button "Save &amp; Connect">
 <!ENTITY option.identifiant.connectInProgress.button "In progress...">
 <!ENTITY option.identifiant.disconnect.button "Disconnect">
 

@@ -1,6 +1,6 @@
-content	zimbra_mail_notifier	chrome/content/
-skin	zimbra_mail_notifier	classic/1.0	skin/
-locale	zimbra_mail_notifier	en-US	locale/en-US/
-locale  zimbra_mail_notifier	fr-FR   locale/fr-FR/
-style chrome://global/content/customizeToolbar.xul chrome://zimbra_mail_notifier/skin/global.css
-overlay chrome://browser/content/browser.xul chrome://zimbra_mail_notifier/content/overlay.xul
+content  zimbra_mail_notifier    chrome/content/
+skin     zimbra_mail_notifier    classic/1.0      skin/
+locale   zimbra_mail_notifier    en-US            locale/en-US/
+locale   zimbra_mail_notifier    fr-FR            locale/fr-FR/
+style    chrome://global/content/customizeToolbar.xul  chrome://zimbra_mail_notifier/skin/global.css
+overlay  chrome://browser/content/browser.xul          chrome://zimbra_mail_notifier/content/overlay.xul

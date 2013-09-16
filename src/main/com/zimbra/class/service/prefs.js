@@ -48,7 +48,7 @@ if (!com.zimbra.service) {
 
 /**
  * Creates an instance of com.zimbra.service.Prefs.
- * 
+ *
  * @constructor
  * @this {Prefs}
  */
@@ -58,7 +58,7 @@ com.zimbra.service.Prefs = function() {
 
 /**
  * pref identifiers
- * 
+ *
  * @constant
  */
 com.zimbra.service.Prefs.prototype.PREF = {
@@ -81,20 +81,21 @@ com.zimbra.service.Prefs.prototype.PREF = {
     USER_PASSWORD_HOSTNAME : "chrome://zimbra_mail_notifier/",
     USER_PASSWORD_ACTIONURL : "defaultPassword",
     USER_SAVEPASSWORD : "extensions.zimbra_mail_notifier.userSavePassword",
-    USER_SERVER : "extensions.zimbra_mail_notifier.userServer"
+    USER_SERVER : "extensions.zimbra_mail_notifier.userServer",
+    WAITSET_INFO : "extensions.zimbra_mail_notifier.waitSetInfo",
+    REQUEST_QUERY_TIMEOUT : "extensions.zimbra_mail_notifier.requestQueryTimeout",
+    REQUEST_WAIT_TIMEOUT : "extensions.zimbra_mail_notifier.requestWaitTimeout"
 };
 
 /**
  * load preferences
- * 
+ *
  * @this {Prefs}
  */
 com.zimbra.service.Prefs.prototype.load = function() {
     // check version
+    this.initDefaultValues(this._getPref(this.PREF.CURRENT_VERSION) === null);
     this.pref_current_version = this._getPref(this.PREF.CURRENT_VERSION);
-    if (this.pref_current_version === "") {
-        this.initDefaultValues();
-    }
     // default
     this.pref_autoConnect = this._getPref(this.PREF.AUTOCONNECT);
     this.pref_system_notification_enabled = this._getPref(this.PREF.SYSTEM_NOTIFICATION_ENABLED);
@@ -114,47 +115,60 @@ com.zimbra.service.Prefs.prototype.load = function() {
     this.pref_task_priorities = this._getPref(this.PREF.TASK_PRIORITIES);
     // user
     this.pref_user_login = this._getPref(this.PREF.USER_LOGIN);
-    this.pref_user_password = this._getPassword(this.PREF.USER_PASSWORD_HOSTNAME, this.PREF.USER_PASSWORD_ACTIONURL, this.pref_user_login);
+    this.pref_user_password = this._getPassword(this.PREF.USER_PASSWORD_HOSTNAME,
+                                                this.PREF.USER_PASSWORD_ACTIONURL, this.pref_user_login);
     this.pref_user_server = this._getPref(this.PREF.USER_SERVER);
     this.pref_user_savePassword = this._getPref(this.PREF.USER_SAVEPASSWORD);
+    // Last Wait set
+    this.pref_waitset_info = this._getComplexPref(this.PREF.WAITSET_INFO);
+    // Request
+    this.pref_request_queryTimeout = this._getPref(this.PREF.REQUEST_QUERY_TIMEOUT);
+    this.pref_request_waitTimeout = this._getPref(this.PREF.REQUEST_WAIT_TIMEOUT);
 };
 
 /**
  * init Default Values
- * 
+ *
  * @this {Prefs}
  */
-com.zimbra.service.Prefs.prototype.initDefaultValues = function() {
+com.zimbra.service.Prefs.prototype.initDefaultValues = function(newInstall) {
     // default
-    this._setPref(this.PREF.CURRENT_VERSION, 10200);
-    this._setPref(this.PREF.AUTOCONNECT, false);
-    this._setPref(this.PREF.SYSTEM_NOTIFICATION_ENABLED, true);
-    this._setPref(this.PREF.SOUND_ENABLED, true);
-    this._setPref(this.PREF.ACCESS_STATUSBAR, true);
+    this._setPref(this.PREF.CURRENT_VERSION, 0x20000);
+    this._addPref(this.PREF.AUTOCONNECT, false);
+    this._addPref(this.PREF.SYSTEM_NOTIFICATION_ENABLED, true);
+    this._addPref(this.PREF.SOUND_ENABLED, true);
+    this._addPref(this.PREF.ACCESS_STATUSBAR, true);
     // calendar
-    this._setPref(this.PREF.CALENDAR_ENABLED, false);
-    this._setPref(this.PREF.CALENDAR_PERIOD_DISPLAYED, 14);
-    this._setPref(this.PREF.CALENDAR_NB_DISPLAYED, 5);
-    this._setPref(this.PREF.CALENDAR_SYSTEM_NOTIFICATION_ENABLED, true);
-    this._setPref(this.PREF.CALENDAR_SOUND_ENABLED, true);
-    this._setPref(this.PREF.CALENDAR_REMINDER_TIME_CONF, -1);
-    this._setPref(this.PREF.CALENDAR_REMINDER_NB_REPEAT, 0);
+    this._addPref(this.PREF.CALENDAR_ENABLED, false);
+    this._addPref(this.PREF.CALENDAR_PERIOD_DISPLAYED, 14);
+    this._addPref(this.PREF.CALENDAR_NB_DISPLAYED, 5);
+    this._addPref(this.PREF.CALENDAR_SYSTEM_NOTIFICATION_ENABLED, true);
+    this._addPref(this.PREF.CALENDAR_SOUND_ENABLED, true);
+    this._addPref(this.PREF.CALENDAR_REMINDER_TIME_CONF, -1);
+    this._addPref(this.PREF.CALENDAR_REMINDER_NB_REPEAT, 0);
     // task
-    this._setPref(this.PREF.TASK_ENABLED, false);
-    this._setPref(this.PREF.TASK_NB_DISPLAYED, 5);
-    this._setPref(this.PREF.TASK_PRIORITIES, 0);
+    this._addPref(this.PREF.TASK_ENABLED, false);
+    this._addPref(this.PREF.TASK_NB_DISPLAYED, 5);
+    this._addPref(this.PREF.TASK_PRIORITIES, 0);
     // user
-    this._setPref(this.PREF.USER_SAVEPASSWORD, false);
-    this._setPref(this.PREF.USER_SERVER, 'https://zimbra.site.fr');
+    this._addPref(this.PREF.USER_LOGIN, '');
+    this._addPref(this.PREF.USER_SAVEPASSWORD, false);
+    this._addPref(this.PREF.USER_SERVER, '');
+    // Last Wait set
+    this._addPref(this.PREF.WAITSET_INFO, '');
+    // Request
+    this._addPref(this.PREF.REQUEST_QUERY_TIMEOUT, 15000);
+    this._addPref(this.PREF.REQUEST_WAIT_TIMEOUT, 300000);
     // toolbar install
-    var util = new com.zimbra.service.Util();
-    util.installButton("nav-bar", "zimbra_mail_notifier-toolbar-button");
-    return true;
+    if (newInstall) {
+        var util = new com.zimbra.service.Util();
+        util.installButton("nav-bar", "zimbra_mail_notifier-toolbar-button");
+    }
 };
 
 /**
- * save preferences
- * 
+ * Save preferences
+ *
  * @this {Prefs}
  * @returns {Boolean} true if success
  */
@@ -179,14 +193,70 @@ com.zimbra.service.Prefs.prototype.save = function() {
     // user
     this._setPref(this.PREF.USER_LOGIN, this.pref_user_login);
     this._setPref(this.PREF.USER_SERVER, this.pref_user_server);
-    this._setPassword(this.PREF.USER_PASSWORD_HOSTNAME, this.PREF.USER_PASSWORD_HTTPREALM, this.pref_user_login, this.pref_user_password, this.pref_user_savePassword);
+    this._setPassword(this.PREF.USER_PASSWORD_HOSTNAME, this.PREF.USER_PASSWORD_ACTIONURL,
+                      this.pref_user_login, this.pref_user_password, this.pref_user_savePassword);
     this._setPref(this.PREF.USER_SAVEPASSWORD, this.pref_user_savePassword);
+    // Request
+    this._setPref(this.PREF.REQUEST_QUERY_TIMEOUT, this.pref_request_queryTimeout);
+    this._setPref(this.PREF.REQUEST_WAIT_TIMEOUT, this.pref_request_waitTimeout);
+
     return true;
 };
 
 /**
+ * Get the information about the previous wait set
+ *
+ * @this {Prefs}
+ * @return {Object} The wait set information
+ */
+com.zimbra.service.Prefs.prototype.getPreviousWaitSet = function() {
+    try {
+        if (this.pref_waitset_info &&
+            this.pref_waitset_info.id && this.pref_waitset_info.id.length > 0 &&
+            this.pref_waitset_info.seq && this.pref_waitset_info.seq.length > 0 &&
+            this.pref_waitset_info.hostname && this.pref_waitset_info.hostname.length > 0 &&
+            this.pref_waitset_info.user && this.pref_waitset_info.user.length > 0) {
+
+            return {
+                id: this.pref_waitset_info.id,
+                seq: this.pref_waitset_info.seq,
+                hostname : this.pref_waitset_info.hostname,
+                user : this.pref_waitset_info.user
+            };
+        }
+    }
+    catch (e) {
+    }
+    return null;
+};
+
+/**
+ * Save the currently used wait set information
+ *
+ * @this {Prefs}
+ * @param {String}
+ *            id The wait set id
+ * @param {String}
+ *            seq The wait set sequence
+ * @param {String}
+ *            hostname The hostname used with this wait set
+ * @param {String}
+ *            user The user used with this wait set
+ */
+com.zimbra.service.Prefs.prototype.saveWaitSet = function(id, seq, hostname, user) {
+    if (id === null || id === '' || seq === null || seq === '') {
+        id  = '';
+        seq = '';
+    }
+    if (hostname && hostname.length > 0 && user && user.length > 0) {
+        this.pref_waitset_info = { id: id, seq: seq, hostname: hostname, user: user };
+        this._setPref(this.PREF.WAITSET_INFO, JSON.stringify(this.pref_waitset_info));
+    }
+};
+
+/**
  * indicate the current version
- * 
+ *
  * @this {Prefs}
  * @return {Number} the current version
  */
@@ -196,7 +266,7 @@ com.zimbra.service.Prefs.prototype.getCurrentVersion = function() {
 
 /**
  * indicate the server
- * 
+ *
  * @this {Prefs}
  * @return {String} the server
  */
@@ -206,7 +276,7 @@ com.zimbra.service.Prefs.prototype.getUserServer = function() {
 
 /**
  * set the server
- * 
+ *
  * @this {Prefs}
  * @param {String}
  *            server the server
@@ -217,12 +287,11 @@ com.zimbra.service.Prefs.prototype.setUserServer = function(server) {
     } else {
         this.pref_user_server = server;
     }
-
 };
 
 /**
  * indicate the login
- * 
+ *
  * @this {Prefs}
  * @return {String} the login
  */
@@ -232,7 +301,7 @@ com.zimbra.service.Prefs.prototype.getUserLogin = function() {
 
 /**
  * set the login
- * 
+ *
  * @this {Prefs}
  * @param {String}
  *            login the login
@@ -243,7 +312,7 @@ com.zimbra.service.Prefs.prototype.setUserLogin = function(login) {
 
 /**
  * indicate the password
- * 
+ *
  * @this {Prefs}
  * @return {String} the password
  */
@@ -253,7 +322,7 @@ com.zimbra.service.Prefs.prototype.getUserPassword = function() {
 
 /**
  * set the password
- * 
+ *
  * @this {Prefs}
  * @param {String}
  *            password the password
@@ -264,7 +333,7 @@ com.zimbra.service.Prefs.prototype.setUserPassword = function(password) {
 
 /**
  * indicate if statusBar is enabled
- * 
+ *
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
@@ -274,7 +343,7 @@ com.zimbra.service.Prefs.prototype.isStatusBarEnabled = function() {
 
 /**
  * set if StatusBar is enabled
- * 
+ *
  * @this {Prefs}
  * @param {Boolean}
  *            enabled true to enabled
@@ -285,7 +354,7 @@ com.zimbra.service.Prefs.prototype.setIsStatusBarEnabled = function(enabled) {
 
 /**
  * indicate if SavePassword is enabled
- * 
+ *
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
@@ -295,7 +364,7 @@ com.zimbra.service.Prefs.prototype.isSavePasswordEnabled = function() {
 
 /**
  * set if SavePassword is enabled
- * 
+ *
  * @this {Prefs}
  * @param {Boolean}
  *            enabled true to enabled
@@ -306,7 +375,7 @@ com.zimbra.service.Prefs.prototype.setIsSavePasswordEnabled = function(enabled) 
 
 /**
  * indicate if sound is enabled
- * 
+ *
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
@@ -316,7 +385,7 @@ com.zimbra.service.Prefs.prototype.isSoundEnabled = function() {
 
 /**
  * set if sound is enabled
- * 
+ *
  * @this {Prefs}
  * @param {Boolean}
  *            enabled true to enabled
@@ -327,7 +396,7 @@ com.zimbra.service.Prefs.prototype.setIsSoundEnabled = function(enabled) {
 
 /**
  * indicate if system notification is enabled
- * 
+ *
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
@@ -337,7 +406,7 @@ com.zimbra.service.Prefs.prototype.isSystemNotificationEnabled = function() {
 
 /**
  * set if system notification is enabled
- * 
+ *
  * @this {Prefs}
  * @param {Boolean}
  *            enabled true to enabled
@@ -348,7 +417,7 @@ com.zimbra.service.Prefs.prototype.setIsSystemNotificationEnabled = function(ena
 
 /**
  * indicate if AutoConnect is enabled
- * 
+ *
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
@@ -358,7 +427,7 @@ com.zimbra.service.Prefs.prototype.isAutoConnectEnabled = function() {
 
 /**
  * set if AutoConnect is enabled
- * 
+ *
  * @this {Prefs}
  * @param {Boolean}
  *            enabled true to enabled
@@ -369,7 +438,7 @@ com.zimbra.service.Prefs.prototype.setIsAutoConnectEnabled = function(enabled) {
 
 /**
  * indicate if Calendar is enabled
- * 
+ *
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
@@ -379,7 +448,7 @@ com.zimbra.service.Prefs.prototype.isCalendarEnabled = function() {
 
 /**
  * set if Calendar is enabled
- * 
+ *
  * @this {Prefs}
  * @param {Boolean}
  *            enabled true to enabled
@@ -390,7 +459,7 @@ com.zimbra.service.Prefs.prototype.setIsCalendarEnabled = function(enabled) {
 
 /**
  * get Calendar Period Displayed
- * 
+ *
  * @this {Prefs}
  * @return {Number}
  */
@@ -400,7 +469,7 @@ com.zimbra.service.Prefs.prototype.getCalendarPeriodDisplayed = function() {
 
 /**
  * set Calendar Period Displayed
- * 
+ *
  * @this {Prefs}
  * @param {Number}
  *            number
@@ -411,7 +480,7 @@ com.zimbra.service.Prefs.prototype.setCalendarPeriodDisplayed = function(number)
 
 /**
  * get Calendar Number Displayed
- * 
+ *
  * @this {Prefs}
  * @return {Number}
  */
@@ -421,7 +490,7 @@ com.zimbra.service.Prefs.prototype.getCalendarNbDisplayed = function() {
 
 /**
  * set Calendar Number Displayed
- * 
+ *
  * @this {Prefs}
  * @param {Number}
  *            number
@@ -432,7 +501,7 @@ com.zimbra.service.Prefs.prototype.setCalendarNbDisplayed = function(number) {
 
 /**
  * indicate if Calendar System Notification is enabled
- * 
+ *
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
@@ -442,7 +511,7 @@ com.zimbra.service.Prefs.prototype.isCalendarSystemNotificationEnabled = functio
 
 /**
  * set if Calendar System Notification is enabled
- * 
+ *
  * @this {Prefs}
  * @param {Boolean}
  *            enabled true to enabled
@@ -453,7 +522,7 @@ com.zimbra.service.Prefs.prototype.setIsCalendarSystemNotificationEnabled = func
 
 /**
  * indicate if Calendar Sound Notification is enabled
- * 
+ *
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
@@ -463,7 +532,7 @@ com.zimbra.service.Prefs.prototype.isCalendarSoundNotificationEnabled = function
 
 /**
  * set if Calendar System Sound is enabled
- * 
+ *
  * @this {Prefs}
  * @param {Boolean}
  *            enabled true to enabled
@@ -474,7 +543,7 @@ com.zimbra.service.Prefs.prototype.setIsCalendarSoundNotificationEnabled = funct
 
 /**
  * get Calendar Reminder Time Configuration
- * 
+ *
  * @this {Prefs}
  * @return {Number}
  */
@@ -484,7 +553,7 @@ com.zimbra.service.Prefs.prototype.getCalendarReminderTimeConf = function() {
 
 /**
  * set Calendar Reminder Time Configuration
- * 
+ *
  * @this {Prefs}
  * @param {Number}
  *            number
@@ -495,7 +564,7 @@ com.zimbra.service.Prefs.prototype.setCalendarReminderTimeConf = function(number
 
 /**
  * get Calendar Reminder number repeat
- * 
+ *
  * @this {Prefs}
  * @return {Number}
  */
@@ -505,7 +574,7 @@ com.zimbra.service.Prefs.prototype.getCalendarReminderNbRepeat = function() {
 
 /**
  * set Calendar Reminder number repeat
- * 
+ *
  * @this {Prefs}
  * @param {Number}
  *            number
@@ -516,7 +585,7 @@ com.zimbra.service.Prefs.prototype.setCalendarReminderNbRepeat = function(number
 
 /**
  * indicate if Task is enabled
- * 
+ *
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
@@ -526,7 +595,7 @@ com.zimbra.service.Prefs.prototype.isTaskEnabled = function() {
 
 /**
  * set if Task is enabled
- * 
+ *
  * @this {Prefs}
  * @param {Boolean}
  *            enabled true to enabled
@@ -537,7 +606,7 @@ com.zimbra.service.Prefs.prototype.setIsTaskEnabled = function(enabled) {
 
 /**
  * get Task number Displayed
- * 
+ *
  * @this {Prefs}
  * @return {Number}
  */
@@ -547,7 +616,7 @@ com.zimbra.service.Prefs.prototype.getTaskNbDisplayed = function() {
 
 /**
  * set Task number Displayed
- * 
+ *
  * @this {Prefs}
  * @param {Number}
  *            number
@@ -558,7 +627,7 @@ com.zimbra.service.Prefs.prototype.setTaskNbDisplayed = function(number) {
 
 /**
  * get Task Priorities Displayed
- * 
+ *
  * @this {Prefs}
  * @return {Number}
  */
@@ -568,7 +637,7 @@ com.zimbra.service.Prefs.prototype.getTaskPrioritiesDisplayed = function() {
 
 /**
  * set Task Priorities Displayed
- * 
+ *
  * @this {Prefs}
  * @param {Number}
  *            number
@@ -578,19 +647,41 @@ com.zimbra.service.Prefs.prototype.setTaskPrioritiesDisplayed = function(number)
 };
 
 /**
- * get preference
- * 
- * @private
- * 
+ * Get the timeout (ms) for query
+ *
  * @this {Prefs}
- * 
+ * @return {Number}
+ */
+com.zimbra.service.Prefs.prototype.getRequestQueryTimeout = function() {
+    return this.pref_request_queryTimeout;
+};
+
+/**
+ * Get the timeout (ms) for the wait request
+ *
+ * @this {Prefs}
+ * @return {Number}
+ */
+com.zimbra.service.Prefs.prototype.getRequestWaitTimeout = function() {
+    return this.pref_request_waitTimeout;
+};
+
+
+/**
+ * get preference
+ *
+ * @private
+ *
+ * @this {Prefs}
+ *
  * @param {String}
  *            pref the preference name
  * @return {Object} the preference value
  */
 com.zimbra.service.Prefs.prototype._getPref = function(pref) {
-    var prefManager = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-    var value = '';
+    var prefManager = Components.classes["@mozilla.org/preferences-service;1"].
+                        getService(Components.interfaces.nsIPrefBranch);
+    var value = null;
     if (prefManager.getPrefType(pref) === prefManager.PREF_BOOL) {
         value = prefManager.getBoolPref(pref);
     } else if (prefManager.getPrefType(pref) === prefManager.PREF_INT) {
@@ -602,19 +693,48 @@ com.zimbra.service.Prefs.prototype._getPref = function(pref) {
 };
 
 /**
- * set char preference
- * 
+ * get a complex preference
+ *
  * @private
- * 
  * @this {Prefs}
- * 
+ *
+ * @param {String}
+ *            pref the preference name
+ * @return {Object} the preference value
+ */
+com.zimbra.service.Prefs.prototype._getComplexPref = function(pref) {
+    var prefManager = Components.classes["@mozilla.org/preferences-service;1"].
+                        getService(Components.interfaces.nsIPrefBranch);
+    var value = null;
+    try {
+        var strVal = null;
+        if (prefManager.getPrefType(pref) === prefManager.PREF_STRING) {
+            strVal = prefManager.getCharPref(pref);
+        }
+        if (strVal && strVal.length > 0) {
+            value = JSON.parse(strVal);
+        }
+    }
+    catch (e) {
+    }
+    return value;
+};
+
+/**
+ * set char preference
+ *
+ * @private
+ *
+ * @this {Prefs}
+ *
  * @param {String}
  *            pref the preference name
  * @param {Object}
  *            value the preference value
  */
 com.zimbra.service.Prefs.prototype._setPref = function(pref, value) {
-    var prefManager = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+    var prefManager = Components.classes["@mozilla.org/preferences-service;1"].
+                        getService(Components.interfaces.nsIPrefBranch);
     if (typeof value === 'number') {
         prefManager.setIntPref(pref, value);
     } else if (typeof value === 'boolean') {
@@ -625,10 +745,37 @@ com.zimbra.service.Prefs.prototype._setPref = function(pref, value) {
 };
 
 /**
- * get password
- * 
+ * Add a preference if doesn't already exist
+ *
  * @private
- * 
+ *
+ * @this {Prefs}
+ *
+ * @param {String}
+ *            pref the preference name
+ * @param {Object}
+ *            value The preference initial/default value
+ */
+com.zimbra.service.Prefs.prototype._addPref = function(pref, value) {
+    var prefManager = Components.classes["@mozilla.org/preferences-service;1"].
+                        getService(Components.interfaces.nsIPrefBranch);
+
+    if (prefManager.getPrefType(pref) === prefManager.PREF_INVALID) {
+        if (typeof value === 'number') {
+            prefManager.setIntPref(pref, value);
+        } else if (typeof value === 'boolean') {
+            prefManager.setBoolPref(pref, value);
+        } else {
+            prefManager.setCharPref(pref, value);
+        }
+    }
+};
+
+/**
+ * get password
+ *
+ * @private
+ *
  * @this {Prefs}
  * @param {String}
  *            hostname
@@ -640,7 +787,8 @@ com.zimbra.service.Prefs.prototype._setPref = function(pref, value) {
  */
 com.zimbra.service.Prefs.prototype._getPassword = function(hostname, actionURL, username) {
     try {
-        var loginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
+        var loginManager = Components.classes["@mozilla.org/login-manager;1"].
+                            getService(Components.interfaces.nsILoginManager);
         var logins = loginManager.findLogins({}, hostname, actionURL, null);
         var password = "";
         for ( var i = 0; i < logins.length; i++) {
@@ -657,9 +805,9 @@ com.zimbra.service.Prefs.prototype._getPassword = function(hostname, actionURL, 
 
 /**
  * set password
- * 
+ *
  * @private
- * 
+ *
  * @this {Prefs}
  * @param {String}
  *            hostname
@@ -675,7 +823,8 @@ com.zimbra.service.Prefs.prototype._getPassword = function(hostname, actionURL, 
  */
 com.zimbra.service.Prefs.prototype._setPassword = function(hostname, actionURL, username, password, withSave) {
     try {
-        var loginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
+        var loginManager = Components.classes["@mozilla.org/login-manager;1"].
+                            getService(Components.interfaces.nsILoginManager);
         var logins = loginManager.findLogins({}, hostname, actionURL, null);
         var currentLoginInfo = null;
         for ( var i = 0; i < logins.length; i++) {
@@ -683,7 +832,8 @@ com.zimbra.service.Prefs.prototype._setPassword = function(hostname, actionURL, 
                 currentLoginInfo = logins[i];
             }
         }
-        var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1", Components.interfaces.nsILoginInfo, "init");
+        var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",
+                                                     Components.interfaces.nsILoginInfo, "init");
         var newLogin = new nsLoginInfo(hostname, actionURL, null, username, password, "", "");
         if (currentLoginInfo !== null) {
             if (withSave) {

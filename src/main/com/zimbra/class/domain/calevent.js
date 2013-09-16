@@ -48,10 +48,10 @@ if (!com.zimbra.domain) {
 
 /**
  * Creates an instance of CalEvent.
- * 
+ *
  * @constructor
  * @this {CalEvent}
- * 
+ *
  * @param {String}
  *            id the message id
  * @param {String}
@@ -72,6 +72,7 @@ com.zimbra.domain.CalEvent = function(id, name, timestamp, duration, timeConf) {
     this.timeConf = timeConf;
     this.notifier = null;
     // calculate week
-    var onejan = new Date(this.startDate.getFullYear(), 0, 1);
-    this.startWeek = Math.ceil((((this.startDate - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    var onejan = new Date(this.startDate.getFullYear(), 0, 1, 0, 0, 0, 0);
+    var diffDays = Math.floor((this.startDate.getTime() - onejan.getTime()) / 86400000);
+    this.startWeek = Math.floor((diffDays + onejan.getDay()) / 7) + 1;
 };

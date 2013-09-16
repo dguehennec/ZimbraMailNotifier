@@ -48,10 +48,10 @@ if (!com.zimbra.service) {
 
 /**
  * Creates an instance of com.zimbra.service.Util.
- * 
+ *
  * @constructor
  * @this {Util}
- * 
+ *
  */
 com.zimbra.service.Util = function() {
 };
@@ -63,9 +63,9 @@ com.zimbra.service.Util.prototype._bundle = null;
 
 /**
  * get bundle.
- * 
+ *
  * @this {Util}
- * 
+ *
  * @param {String}
  *            param parameter value to get
  * @return {String} value of parameter
@@ -83,25 +83,28 @@ com.zimbra.service.Util.prototype.getBundleString = function(param) {
 
 /**
  * convert seconds to time string hh:mm:ss
- * 
+ *
  * @this {Util}
  * @param {Number}
  *            time in seconds.
  * @return {String} time in format hh:mm:ss.
  */
 com.zimbra.service.Util.prototype.secToTimeStr = function(time) {
-    if (time === null) {
+    if (time === null || time < 0) {
         return "";
     }
-    var a = parseInt(time / 3600);
-    var b = parseInt((time - (a * 3600)) / 60);
-    var d = time - (a * 3600) - (b * 60);
-    return ((a < 10) ? "0" + a : a) + ":" + ((b < 10) ? "0" + b : b) + ":" + ((d < 10) ? "0" + d : d);
+    var tmp = time;
+    var h = Math.floor(tmp / 3600);
+    tmp = tmp - (h * 3600);
+    var m = Math.floor(tmp / 60);
+    tmp = tmp - (m * 60);
+    var s = Math.floor(tmp);
+    return ((h < 10) ? "0" + h : h) + ":" + ((m < 10) ? "0" + m : m) + ":" + ((s < 10) ? "0" + s : s);
 };
 
 /**
  * convert seconds to datetime string jj.mm.aaaa hh:mm
- * 
+ *
  * @this {Util}
  * @param {Date}
  *            date to convert in seconds
@@ -111,14 +114,14 @@ com.zimbra.service.Util.prototype.formatDateTime = function(date) {
     if (date === null) {
         return "";
     }
-    var e = (date.getHours() < 10) ? "0" + date.getHours() : date.getHours();
-    var f = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes();
-    return date.toLocaleDateString() + " " + e + ":" + f;
+    var h = date.getHours();
+    var m = date.getMinutes();
+    return date.toLocaleDateString() + " " + ((h < 10) ? "0" + h : h) + ":" + ((m < 10) ? "0" + m : m);
 };
 
 /**
  * return max length string
- * 
+ *
  * @this {Util}
  * @param {String}
  *            text text to limit.
@@ -130,12 +133,18 @@ com.zimbra.service.Util.prototype.maxStringLength = function(text, length) {
     if (text === null || (text.length < length)) {
         return text;
     }
+    if (length <= 0) {
+        return '';
+    }
+    if (length < 6) {
+        return text.substring(0, length);
+    }
     return text.substring(0, length - 3) + "...";
 };
 
 /**
  * open url in a new browser tab
- * 
+ *
  * @this {Util}
  * @param {String}
  *            UrlToGoTo url to open.
@@ -143,10 +152,13 @@ com.zimbra.service.Util.prototype.maxStringLength = function(text, length) {
  */
 com.zimbra.service.Util.prototype.openURL = function(UrlToGoTo) {
     try {
-        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
+        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"].
+            getService(Components.interfaces.nsIWindowMediator);
+
         var browserEnumerator = wm.getEnumerator("navigator:browser");
         var exp = /(\b(https|http):\/\/)/gi;
         var url = UrlToGoTo.replace(exp, "");
+
         while (browserEnumerator.hasMoreElements()) {
             var browserInstance = browserEnumerator.getNext().getBrowser();
             var numTabs = browserInstance.mPanelContainer.childNodes.length;
@@ -173,7 +185,7 @@ com.zimbra.service.Util.prototype.openURL = function(UrlToGoTo) {
 
 /**
  * Show notification
- * 
+ *
  * @param {String}
  *            title
  * @param {String}
@@ -182,7 +194,7 @@ com.zimbra.service.Util.prototype.openURL = function(UrlToGoTo) {
  *            callbackData
  * @param {Function}
  *            callback
- * 
+ *
  * @return {Boolean} true if success
  */
 com.zimbra.service.Util.prototype.showNotificaton = function(title, text, callbackData, callback) {
@@ -191,8 +203,11 @@ com.zimbra.service.Util.prototype.showNotificaton = function(title, text, callba
         if (callback) {
             textClickable = true;
         }
-        var alertsService = Components.classes['@mozilla.org/alerts-service;1'].getService(Components.interfaces.nsIAlertsService);
-        alertsService.showAlertNotification('chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png', title, text, textClickable, callbackData, callback, "");
+        var alertsService = Components.classes['@mozilla.org/alerts-service;1'].
+            getService(Components.interfaces.nsIAlertsService);
+
+        alertsService.showAlertNotification('chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png',
+                                            title, text, textClickable, callbackData, callback, "");
     } catch (e) {
         return false;
     }
@@ -201,7 +216,7 @@ com.zimbra.service.Util.prototype.showNotificaton = function(title, text, callba
 
 /**
  * play new mail sound
- * 
+ *
  * @return {Boolean} true if success
  */
 com.zimbra.service.Util.prototype.playSound = function() {
@@ -221,7 +236,7 @@ com.zimbra.service.Util.prototype.playSound = function() {
 
 /**
  * install button.
- * 
+ *
  * @this {Util}
  * @param {String}
  *            toolbarid
@@ -253,7 +268,7 @@ com.zimbra.service.Util.prototype.installButton = function(toolbarId, id, afterI
 
 /**
  * set menulist
- * 
+ *
  * @this {Util}
  */
 com.zimbra.service.Util.prototype.setMenulist = function(id, value) {
@@ -273,7 +288,7 @@ com.zimbra.service.Util.prototype.setMenulist = function(id, value) {
 
 /**
  * set visibility.
- * 
+ *
  * @this {Util}
  * @param {String}
  *            id
@@ -288,7 +303,7 @@ com.zimbra.service.Util.prototype.setVisibility = function(id, visibility) {
 
 /**
  * set attribute.
- * 
+ *
  * @this {Util}
  * @param {String}
  *            id
@@ -305,7 +320,7 @@ com.zimbra.service.Util.prototype.setAttribute = function(id, attribute, value) 
 
 /**
  * set textContent.
- * 
+ *
  * @this {Util}
  * @param {String}
  *            id
@@ -321,7 +336,7 @@ com.zimbra.service.Util.prototype.setTextContent = function(id, value) {
 };
 /**
  * get attribute.
- * 
+ *
  * @this {Util}
  * @param {String}
  *            id
@@ -338,7 +353,7 @@ com.zimbra.service.Util.prototype.getAttribute = function(id, attribute) {
 
 /**
  * remove attribute.
- * 
+ *
  * @this {Util}
  * @param {String}
  *            id
@@ -353,7 +368,7 @@ com.zimbra.service.Util.prototype.removeAttribute = function(id, attribute) {
 
 /**
  * addObserver.
- * 
+ *
  * @this {Util}
  * @param {Observer}
  *            observer the observer
@@ -361,13 +376,14 @@ com.zimbra.service.Util.prototype.removeAttribute = function(id, attribute) {
  *            topic the topic
  */
 com.zimbra.service.Util.prototype.addObserver = function(observer, topic) {
-    var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+    var observerService = Components.classes["@mozilla.org/observer-service;1"].
+        getService(Components.interfaces.nsIObserverService);
     observerService.addObserver(observer, topic, false);
 };
 
 /**
  * removeObserver.
- * 
+ *
  * @this {Util}
  * @param {Observer}
  *            observer the observer
@@ -375,13 +391,14 @@ com.zimbra.service.Util.prototype.addObserver = function(observer, topic) {
  *            topic the topic
  */
 com.zimbra.service.Util.prototype.removeObserver = function(observer, topic) {
-    var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+    var observerService = Components.classes["@mozilla.org/observer-service;1"].
+        getService(Components.interfaces.nsIObserverService);
     observerService.removeObserver(observer, topic);
 };
 
 /**
  * notifyObservers.
- * 
+ *
  * @this {Util}
  * @param {String}
  *            topic the topic
@@ -389,6 +406,7 @@ com.zimbra.service.Util.prototype.removeObserver = function(observer, topic) {
  *            data the data
  */
 com.zimbra.service.Util.prototype.notifyObservers = function(topic, data) {
-    var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+    var observerService = Components.classes["@mozilla.org/observer-service;1"].
+        getService(Components.interfaces.nsIObserverService);
     observerService.notifyObservers(null, topic, data);
 };
