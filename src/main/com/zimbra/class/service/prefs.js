@@ -94,9 +94,9 @@ com.zimbra.service.Prefs.prototype.PREF = {
  */
 com.zimbra.service.Prefs.prototype.load = function() {
     // check version
-    this.initDefaultValues(this._getPref(this.PREF.CURRENT_VERSION) === null);
-    this.pref_current_version = this._getPref(this.PREF.CURRENT_VERSION);
+    this.initDefaultValuesIfNecessary();
     // default
+    this.pref_current_version = this._getPref(this.PREF.CURRENT_VERSION);
     this.pref_autoConnect = this._getPref(this.PREF.AUTOCONNECT);
     this.pref_system_notification_enabled = this._getPref(this.PREF.SYSTEM_NOTIFICATION_ENABLED);
     this.pref_sound_enabled = this._getPref(this.PREF.SOUND_ENABLED);
@@ -131,39 +131,51 @@ com.zimbra.service.Prefs.prototype.load = function() {
  *
  * @this {Prefs}
  */
-com.zimbra.service.Prefs.prototype.initDefaultValues = function(newInstall) {
-    // default
-    this._setPref(this.PREF.CURRENT_VERSION, 0x20000);
-    this._addPref(this.PREF.AUTOCONNECT, false);
-    this._addPref(this.PREF.SYSTEM_NOTIFICATION_ENABLED, true);
-    this._addPref(this.PREF.SOUND_ENABLED, true);
-    this._addPref(this.PREF.ACCESS_STATUSBAR, true);
-    // calendar
-    this._addPref(this.PREF.CALENDAR_ENABLED, false);
-    this._addPref(this.PREF.CALENDAR_PERIOD_DISPLAYED, 14);
-    this._addPref(this.PREF.CALENDAR_NB_DISPLAYED, 5);
-    this._addPref(this.PREF.CALENDAR_SYSTEM_NOTIFICATION_ENABLED, true);
-    this._addPref(this.PREF.CALENDAR_SOUND_ENABLED, true);
-    this._addPref(this.PREF.CALENDAR_REMINDER_TIME_CONF, -1);
-    this._addPref(this.PREF.CALENDAR_REMINDER_NB_REPEAT, 0);
-    // task
-    this._addPref(this.PREF.TASK_ENABLED, false);
-    this._addPref(this.PREF.TASK_NB_DISPLAYED, 5);
-    this._addPref(this.PREF.TASK_PRIORITIES, 0);
-    // user
-    this._addPref(this.PREF.USER_LOGIN, '');
-    this._addPref(this.PREF.USER_SAVEPASSWORD, false);
-    this._addPref(this.PREF.USER_SERVER, '');
-    // Last Wait set
-    this._addPref(this.PREF.WAITSET_INFO, '');
-    // Request
-    this._addPref(this.PREF.REQUEST_QUERY_TIMEOUT, 15000);
-    this._addPref(this.PREF.REQUEST_WAIT_TIMEOUT, 300000);
-    // toolbar install
-    if (newInstall) {
+com.zimbra.service.Prefs.prototype.initDefaultValuesIfNecessary = function() {
+	
+	var current_version = this._getPref(this.PREF.CURRENT_VERSION);
+	if(current_version === null) {
+	    // default
+	    this._setPref(this.PREF.CURRENT_VERSION, 0x20000);
+	    this._addPref(this.PREF.AUTOCONNECT, false);
+	    this._addPref(this.PREF.SYSTEM_NOTIFICATION_ENABLED, true);
+	    this._addPref(this.PREF.SOUND_ENABLED, true);
+	    this._addPref(this.PREF.ACCESS_STATUSBAR, true);
+	    // calendar
+	    this._addPref(this.PREF.CALENDAR_ENABLED, false);
+	    this._addPref(this.PREF.CALENDAR_PERIOD_DISPLAYED, 14);
+	    this._addPref(this.PREF.CALENDAR_NB_DISPLAYED, 5);
+	    this._addPref(this.PREF.CALENDAR_SYSTEM_NOTIFICATION_ENABLED, true);
+	    this._addPref(this.PREF.CALENDAR_SOUND_ENABLED, true);
+	    this._addPref(this.PREF.CALENDAR_REMINDER_TIME_CONF, -1);
+	    this._addPref(this.PREF.CALENDAR_REMINDER_NB_REPEAT, 0);
+	    // task
+	    this._addPref(this.PREF.TASK_ENABLED, false);
+	    this._addPref(this.PREF.TASK_NB_DISPLAYED, 5);
+	    this._addPref(this.PREF.TASK_PRIORITIES, 0);
+	    // user
+	    this._addPref(this.PREF.USER_LOGIN, '');
+	    this._addPref(this.PREF.USER_SAVEPASSWORD, false);
+	    this._addPref(this.PREF.USER_SERVER, '');
+	    // Last Wait set
+	    this._addPref(this.PREF.WAITSET_INFO, '');
+	    // Request
+	    this._addPref(this.PREF.REQUEST_QUERY_TIMEOUT, 15000);
+	    this._addPref(this.PREF.REQUEST_WAIT_TIMEOUT, 300000);
+	    // toolbar install
         var util = new com.zimbra.service.Util();
-        util.installButton("nav-bar", "zimbra_mail_notifier-toolbar-button");
-    }
+	    util.installButton("nav-bar", "zimbra_mail_notifier-toolbar-button");
+	}
+	else if(current_version < 0x20000) {
+		alert("alors");
+		//Just set new parameters
+		this._setPref(this.PREF.CURRENT_VERSION, 0x20000);
+		// Last Wait set
+	    this._addPref(this.PREF.WAITSET_INFO, '');
+	    // Request
+	    this._addPref(this.PREF.REQUEST_QUERY_TIMEOUT, 15000);
+	    this._addPref(this.PREF.REQUEST_WAIT_TIMEOUT, 300000);
+	}
 };
 
 /**
@@ -735,6 +747,7 @@ com.zimbra.service.Prefs.prototype._getComplexPref = function(pref) {
 com.zimbra.service.Prefs.prototype._setPref = function(pref, value) {
     var prefManager = Components.classes["@mozilla.org/preferences-service;1"].
                         getService(Components.interfaces.nsIPrefBranch);
+    dump("_setPref="+pref+", vaue="+value);
     if (typeof value === 'number') {
         prefManager.setIntPref(pref, value);
     } else if (typeof value === 'boolean') {

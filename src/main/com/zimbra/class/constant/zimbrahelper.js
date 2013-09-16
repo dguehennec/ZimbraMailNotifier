@@ -52,7 +52,7 @@ if (!com.zimbra.constant) {
  * @constant
  */
 com.zimbra.constant.LOGGER = {
-    LEVEL : 3,
+    LEVEL : 0,
     PRINT_STACK : true,
     PRINT_DATE : true
 };
