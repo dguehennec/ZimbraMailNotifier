@@ -65,11 +65,38 @@ if (!com.zimbra.domain) {
  * @param {Number}
  *            nbMail the number of messages
  */
-com.zimbra.domain.Message = function(id, timestamp, subject, content, senderMail, nbMail) {
+com.zimbra.domain.Message = function(id, timestamp, subject, content, senderMail, mailIdList) {
     this.id = id;
     this.date = new Date(timestamp);
     this.subject = subject;
     this.content = content;
     this.senderEmail = senderMail;
-    this.nbMail = nbMail;
+    this.nbMail = mailIdList.length;
+    this.mailIdList = mailIdList;
 };
+
+/**
+ * Indicate the number of new unread mail in message
+ *
+ * @this {Message}
+ * @param {Array}
+ *            message list to compare
+ * @return {Number} Number of new mail in message
+ */
+com.zimbra.domain.Message.prototype.getNbNewUnReadMail = function(messageList) {
+	var newUnReadMail = this.mailIdList.length;
+	for ( var index = 0; index < messageList.length; index++) {
+		var message = messageList[index];
+		if(message.id === this.id) {
+			for (var i = 0; i < this.mailIdList.length; i++) {
+				for (var j = 0; j < message.mailIdList.length; j++) {
+					if(this.mailIdList[i].id === message.mailIdList[j].id) {
+						newUnReadMail--;
+						break;
+					}
+				}
+			}
+		}
+    }
+	return newUnReadMail;
+}

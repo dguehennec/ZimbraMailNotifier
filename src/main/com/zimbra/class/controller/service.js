@@ -864,24 +864,19 @@ com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages)
             // Find new unread messages
             for ( var index = 0; index < messages.length; index++) {
                 var newMessage = messages[index];
-                var found = false;
-                for ( var indexC = 0; indexC < this._currentMessageUnRead.length; indexC++) {
-                    if (newMessage.id === this._currentMessageUnRead[indexC].id) {
-                        found = true;
-                    }
-                }
-                if (!found) {
-                    nbMail += newMessage.nbMail;
-                    if (nbMail > 1) {
-                        title = this._util.getBundleString("connector.notification.nbUnreadMessages");
-                        title = title.replace("%NB%", newMessage.nbMail);
-                        msg += newMessage.subject + "\n";
-                    }
-                    else if (nbMail === 1) {
-                        title = this._util.getBundleString("connector.notification.NewMessage");
-                        title = title.replace("%EMAIL%", newMessage.senderEmail);
-                        msg += newMessage.subject + "\n";
-                    }
+                var nbNewUnReadMail = newMessage.getNbNewUnReadMail(this._currentMessageUnRead);
+                if(nbNewUnReadMail>0) {
+                	nbMail += nbNewUnReadMail;
+	                if (nbMail > 1) {
+	                    title = this._util.getBundleString("connector.notification.nbUnreadMessages");
+	                    title = title.replace("%NB%", nbMail);
+	                    msg += newMessage.subject + "\n";
+	                }
+	                else if (nbMail === 1) {
+	                    title = this._util.getBundleString("connector.notification.NewMessage");
+	                    title = title.replace("%EMAIL%", newMessage.senderEmail);
+	                    msg += newMessage.subject + "\n";
+	                }
                 }
             }
 

@@ -499,8 +499,8 @@ com.zimbra.service.Webservice.prototype._callbackUnreadMsgRequest = function(req
                     for (var index = content.length - 1; index >= 0; index--) {
                         var currMsg = content[index];
                         var msg = new com.zimbra.domain.Message(currMsg.id, currMsg.d, currMsg.su,
-                                                                currMsg.fr, currMsg.e[0].a,
-                                                                currMsg.m.length);
+                                                                currMsg.fr, currMsg.e[currMsg.e.length-1].a,
+                                                                currMsg.m);
                         messages.push(msg);
                     }
                 }
