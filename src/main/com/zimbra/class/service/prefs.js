@@ -167,7 +167,6 @@ com.zimbra.service.Prefs.prototype.initDefaultValuesIfNecessary = function() {
 	    util.installButton("nav-bar", "zimbra_mail_notifier-toolbar-button");
 	}
 	else if(current_version < 0x20000) {
-		alert("alors");
 		//Just set new parameters
 		this._setPref(this.PREF.CURRENT_VERSION, 0x20000);
 		// Last Wait set
