@@ -48,10 +48,10 @@ if (!com.zimbra.domain) {
 
 /**
  * Creates an instance of Message.
- * 
+ *
  * @constructor
  * @this {Message}
- * 
+ *
  * @param {String}
  *            id the message id
  * @param {Number}
@@ -84,19 +84,19 @@ com.zimbra.domain.Message = function(id, timestamp, subject, content, senderMail
  * @return {Number} Number of new mail in message
  */
 com.zimbra.domain.Message.prototype.getNbNewUnReadMail = function(messageList) {
-	var newUnReadMail = this.mailIdList.length;
-	for ( var index = 0; index < messageList.length; index++) {
-		var message = messageList[index];
-		if(message.id === this.id) {
-			for (var i = 0; i < this.mailIdList.length; i++) {
-				for (var j = 0; j < message.mailIdList.length; j++) {
-					if(this.mailIdList[i].id === message.mailIdList[j].id) {
-						newUnReadMail--;
-						break;
-					}
-				}
-			}
-		}
+    var newUnReadMail = this.mailIdList.length;
+    for ( var index = 0; index < messageList.length; index++) {
+        var message = messageList[index];
+        if(message.id === this.id) {
+            for (var i = 0; i < this.mailIdList.length; i++) {
+                for (var j = 0; j < message.mailIdList.length; j++) {
+                    if(this.mailIdList[i].id === message.mailIdList[j].id) {
+                        newUnReadMail--;
+                        break;
+                    }
+                }
+            }
+        }
     }
-	return newUnReadMail;
+    return newUnReadMail;
 }

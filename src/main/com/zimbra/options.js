@@ -61,6 +61,7 @@ com.zimbra.Options.init = function() {
 
     this._closeWhenConnected = false;
     this._util = new com.zimbra.service.Util();
+    this._main = null;
 
     // show identification tab if necessary
     if (!window.arguments || !window.arguments[0].getService) {

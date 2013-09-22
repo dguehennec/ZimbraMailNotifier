@@ -53,7 +53,7 @@ if (!com.zimbra.constant) {
  */
 com.zimbra.constant.LOGGER = {
     LEVEL : 0,
-    PRINT_STACK : true,
+    PRINT_STACK : false,
     PRINT_DATE : true
 };
 
@@ -100,6 +100,16 @@ com.zimbra.constant.SERVICE = {
     REFRESH_WAIT_AFTER_FAILURE : 10000,
     DELAY_NOTIFY_FIRST_UNREAD : 8000,
     NB_RETRY_QUERY : 3
+};
+
+/**
+ * WebService
+ *
+ * @constant
+ *
+ */
+com.zimbra.constant.WEBSERVICE = {
+    WAITSET_WATCH_TYPES : 'all'
 };
 
 /**
