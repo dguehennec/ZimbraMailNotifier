@@ -265,17 +265,35 @@ com.zimbra.controller.Service.prototype._changeRunningState = function(newState,
  * @private
  * @this {Service}
  * @param {String}
- *            expState the expected state
+ *            expStates the array of expected states
  */
-com.zimbra.controller.Service.prototype._checkExpectedState = function(expState) {
-    if (this._currentState !== expState) {
-        this._logger.error("Unexpected state " + this._currentState + " instead " + expState);
+com.zimbra.controller.Service.prototype._checkExpectedStates = function(expStates) {
+    var ok = false;
+    for ( var idx = 0; idx < expStates.length; idx++) {
+        if (this._currentState === expStates[idx]) {
+            ok = true;
+            break;
+        }
+    }
+    if (ok === false) {
+        this._logger.error("Unexpected state: " + this._currentState + " instead: " + expStates);
         this._webservice.abortRunningReq();
         this._stopStateTimer();
         this._planRunState(com.zimbra.controller.SERVICE_STATE.NOTHING_TO_DO, 100);
-        return false;
     }
-    return true;
+    return ok;
+};
+
+/**
+ * Check the current state of the state machine, if the state is unexpected, go the init state
+ *
+ * @private
+ * @this {Service}
+ * @param {String}
+ *            expState the expected state
+ */
+com.zimbra.controller.Service.prototype._checkExpectedState = function(expState) {
+    return this._checkExpectedStates([expState]);
 };
 
 /**
@@ -572,7 +590,6 @@ com.zimbra.controller.Service.prototype._doConnect = function(password) {
 
     if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.CONNECT_RUN)) {
 
-        this._reqInfoErrors.clearAllErrors();
         this._sendCallBackRefreshEvent(true);
 
         if (!this._webservice.authRequest(this._prefs.getUserServer(), this._prefs.getUserLogin(),
@@ -611,6 +628,9 @@ com.zimbra.controller.Service.prototype.initializeConnection = function(password
     this._webservice.abortRunningReq();
     this._stopStateTimer();
     this._changeState(com.zimbra.controller.SERVICE_STATE.CONNECT_RUN);
+
+    this._reqInfoErrors.clearAllErrors();
+
     return this._doConnect(password);
 };
 
@@ -647,6 +667,11 @@ com.zimbra.controller.Service.prototype.checkNow = function() {
 com.zimbra.controller.Service.prototype.observe = function(subject, topic, data) {
     if (topic === com.zimbra.constant.OBSERVER.PREF_SAVED) {
         this._prefs.load();
+        // Clear some errors to handle the case of a previous error on the calendar/task request
+        // and the user just desactivated the calendar/task
+        this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.CALENDAR);
+        this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.TASK);
+        // Inform that the prefs changed
         this._sendCallBackRefreshEvent();
 
         if (this._prefs.isAutoConnectEnabled() && this._prefs.isSavePasswordEnabled() &&
@@ -696,24 +721,16 @@ com.zimbra.controller.Service.prototype.callbackError = function(typeReq, status
             break;
 
         case com.zimbra.service.REQUEST_TYPE.WAIT_BLOCK:
-            if (statusReq !== com.zimbra.service.REQUEST_STATUS.TIMEOUT) {
-                this._reqInfoErrors.addError(typeReq, statusReq);
-            }
-            if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.WAITSET_BLOCK_RUN)) {
-                if (statusReq === com.zimbra.service.REQUEST_STATUS.WAITSET_INVALID) {
-                    this._planRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_CHECK, 500);
-                }
-                else {
-                    this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_NO_NEW_EVT);
-                }
-            }
-            break;
-
         case com.zimbra.service.REQUEST_TYPE.WAIT_NO_BLOCK:
-            if (statusReq !== com.zimbra.service.REQUEST_STATUS.TIMEOUT) {
+            if (statusReq === com.zimbra.service.REQUEST_STATUS.TIMEOUT) {
+                // If the request timeout or the waitset id is invalid, do not add error
+                this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.WAIT_BLOCK);
+            }
+            else if (statusReq !== com.zimbra.service.REQUEST_STATUS.WAITSET_INVALID) {
                 this._reqInfoErrors.addError(typeReq, statusReq);
             }
-            if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.WAITSET_NO_BLOCK_RUN)) {
+            if (this._checkExpectedStates([com.zimbra.controller.SERVICE_STATE.WAITSET_BLOCK_RUN,
+                                           com.zimbra.controller.SERVICE_STATE.WAITSET_NO_BLOCK_RUN])) {
                 if (statusReq === com.zimbra.service.REQUEST_STATUS.WAITSET_INVALID) {
                     this._planRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_CHECK, 500);
                 }
@@ -865,7 +882,7 @@ com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages)
             for ( var index = 0; index < messages.length; index++) {
                 var newMessage = messages[index];
                 var nbNewUnReadMail = newMessage.getNbNewUnReadMail(this._currentMessageUnRead);
-                if(nbNewUnReadMail>0) {
+                if (nbNewUnReadMail > 0) {
                     nbMail += nbNewUnReadMail;
                     if (nbMail > 1) {
                         title = this._util.getBundleString("connector.notification.nbUnreadMessages");
@@ -1103,28 +1120,58 @@ com.zimbra.controller.Service.prototype.getTasks = function() {
  */
 com.zimbra.controller.Service.prototype.getLastErrorMessage = function() {
     var message = "";
+    var reason = "";
     var lastErr = this._reqInfoErrors.getLastError();
-    if (lastErr !== null) {
 
+    if (lastErr !== null) {
         switch (lastErr.requestType) {
-        case com.zimbra.service.REQUEST_TYPE.OPEN_SESSION:
-        case com.zimbra.service.REQUEST_TYPE.CREATE_WAIT:
-        case com.zimbra.service.REQUEST_TYPE.WAIT_NO_BLOCK:
-        case com.zimbra.service.REQUEST_TYPE.WAIT_BLOCK:
-        case com.zimbra.service.REQUEST_TYPE.UNREAD_MSG:
-        case com.zimbra.service.REQUEST_TYPE.CALENDAR:
-        case com.zimbra.service.REQUEST_TYPE.TASK:
-            /* TODO
-            message = this._util.getBundleString("connector.error.authentification");
-            message = this._util.getBundleString("connector.error.request");
-            message = this._util.getBundleString("connector.error.noop");
-            message = this._util.getBundleString("connector.error.search");
-            message = this._util.getBundleString("connector.error.timeout"); */
-            message = "Erreur...";
-            break;
-        default:
-            message = "";
+            case com.zimbra.service.REQUEST_TYPE.OPEN_SESSION:
+                message = this._util.getBundleString("connector.error.authentification");
+                break;
+            case com.zimbra.service.REQUEST_TYPE.CREATE_WAIT:
+                message = this._util.getBundleString("connector.error.createwait");
+                break;
+            case com.zimbra.service.REQUEST_TYPE.WAIT_NO_BLOCK:
+            case com.zimbra.service.REQUEST_TYPE.WAIT_BLOCK:
+                message = this._util.getBundleString("connector.error.wait");
+                break;
+            case com.zimbra.service.REQUEST_TYPE.UNREAD_MSG:
+                message = this._util.getBundleString("connector.error.unreadmsg");
+                break;
+            case com.zimbra.service.REQUEST_TYPE.CALENDAR:
+                message = this._util.getBundleString("connector.error.calendar");
+                break;
+            case com.zimbra.service.REQUEST_TYPE.TASK:
+                message = this._util.getBundleString("connector.error.task");
+                break;
+            default:
+                message = this._util.getBundleString("connector.error.req.internal");
         }
+
+        switch (lastErr.lastReqStatus) {
+            case com.zimbra.service.REQUEST_STATUS.REQUEST_INVALID:
+                reason = this._util.getBundleString("connector.error.req.invalid");
+                break;
+            case com.zimbra.service.REQUEST_STATUS.TIMEOUT:
+                reason = this._util.getBundleString("connector.error.req.timeout");
+                break;
+            case com.zimbra.service.REQUEST_STATUS.SERVER_ERROR:
+                reason = this._util.getBundleString("connector.error.req.server");
+                break;
+            case com.zimbra.service.REQUEST_STATUS.NETWORK_ERROR:
+                reason = this._util.getBundleString("connector.error.req.network");
+                break;
+            case com.zimbra.service.REQUEST_STATUS.AUTH_REQUIRED:
+                reason = this._util.getBundleString("connector.error.req.authreq");
+                break;
+            case com.zimbra.service.REQUEST_STATUS.LOGIN_INVALID:
+                reason = this._util.getBundleString("connector.error.req.logininvalid");
+                break;
+            default:
+                reason = this._util.getBundleString("connector.error.req.internal");
+                break;
+        }
+        message = message.replace("%REASON%", reason);
     }
     return message;
 };

@@ -30,20 +30,20 @@
         <tabpanels>
             <tabpanel>
                 <vbox flex="1">
-                   <groupbox width="100%">
+                    <groupbox width="100%">
                         <caption label="&option.default.connection.caption;"/>
                         <checkbox id="zimbra_mail_notifier-optionAutoConnect" label="&option.default.autoConnect;" checked="true"/>
-                   </groupbox>
-                   <groupbox width="100%">
+                    </groupbox>
+                    <groupbox width="100%">
                         <caption label="&option.default.notification.caption;"/>
                         <checkbox id="zimbra_mail_notifier-optionSystemNotification" label="&option.default.systemNotification;" checked="true"/>
                         <checkbox id="zimbra_mail_notifier-optionSoundNotification" label="&option.default.soundNotification;" checked="true"/>
-                   </groupbox>
-                   <groupbox width="100%">
+                    </groupbox>
+                    <groupbox width="100%">
                         <caption label="&option.default.access.caption;"/>
                         <checkbox id="zimbra_mail_notifier-optionAccessStatusBar" label="&option.default.statusbar;" checked="true"/>
-                   </groupbox>
-               </vbox>
+                    </groupbox>
+                </vbox>
             </tabpanel>
             <tabpanel>
                 <vbox flex="1">
@@ -111,40 +111,40 @@
                </vbox>
             </tabpanel>
             <tabpanel>
-               <vbox flex="1">
-                   <checkbox id="zimbra_mail_notifier-optionTaskEnabled" label="&option.task.activate;" checked="true"/>
-                      <groupbox width="100%">
-                        <caption label="&option.task.view.caption;"/>
-                        <hbox align="center">
-                            <label value="&option.task.view.nbTasks; :"/>
-                            <menulist id="zimbra_mail_notifier-optionTaskNbDisplayed">
-                                <menupopup>
-                                    <menuitem label="5" value="5"/>
-                                    <menuitem label="10" value="10"/>
-                                    <menuitem label="15" value="15"/>
-                                    <menuitem label="20" value="20"/>
-                                  </menupopup>
-                            </menulist>
-                            <spacer flex="1"/>
-                        </hbox>
-                        <hbox align="center">
-                            <label value="&option.task.view.nbPriorities; :"/>
-                            <menulist id="zimbra_mail_notifier-optionTaskPrioritiesDisplayed">
-                                <menupopup>
-                                    <menuitem label="&option.task.view.all;" value="0"/>
-                                    <menuitem label="&option.task.view.highAndNormal;" value="1"/>
-                                    <menuitem label="&option.task.view.high;" value="2"/>
-                                    <menuitem label="&option.task.view.normal;" value="3"/>
-                                    <menuitem label="&option.task.view.low;" value="4"/>
-                                  </menupopup>
-                            </menulist>
-                            <spacer flex="1"/>
-                        </hbox>
-                   </groupbox>
-               </vbox>
+                <vbox flex="1">
+                    <checkbox id="zimbra_mail_notifier-optionTaskEnabled" label="&option.task.activate;" checked="true"/>
+                        <groupbox width="100%">
+                            <caption label="&option.task.view.caption;"/>
+                            <hbox align="center">
+                                <label value="&option.task.view.nbTasks; :"/>
+                                <menulist id="zimbra_mail_notifier-optionTaskNbDisplayed">
+                                    <menupopup>
+                                        <menuitem label="5" value="5"/>
+                                        <menuitem label="10" value="10"/>
+                                        <menuitem label="15" value="15"/>
+                                        <menuitem label="20" value="20"/>
+                                    </menupopup>
+                                </menulist>
+                                <spacer flex="1"/>
+                            </hbox>
+                            <hbox align="center">
+                                <label value="&option.task.view.nbPriorities; :"/>
+                                <menulist id="zimbra_mail_notifier-optionTaskPrioritiesDisplayed">
+                                    <menupopup>
+                                        <menuitem label="&option.task.view.all;" value="0"/>
+                                        <menuitem label="&option.task.view.highAndNormal;" value="1"/>
+                                        <menuitem label="&option.task.view.high;" value="2"/>
+                                        <menuitem label="&option.task.view.normal;" value="3"/>
+                                        <menuitem label="&option.task.view.low;" value="4"/>
+                                    </menupopup>
+                                </menulist>
+                                <spacer flex="1"/>
+                            </hbox>
+                    </groupbox>
+                </vbox>
             </tabpanel>
-             <tabpanel>
-             <vbox flex="1">
+            <tabpanel>
+                <vbox flex="1">
                     <groupbox width="100%">
                         <caption label="&option.identifiant.params.caption;"/>
                         <hbox align="center">
@@ -161,21 +161,23 @@
                             <spacer flex="1"/>
                         </hbox>
                     </groupbox>
-                   <groupbox width="100%">
+                    <groupbox width="100%">
                         <caption label="&option.identifiant.server.caption;"/>
                         <hbox align="center">
                             <label value="&option.identifiant.server.label; :" width="130"/>
                             <textbox id="zimbra_mail_notifier-optionServer" onkeyup="com.zimbra.Options.refresh()" value="" flex="1" maxlength="200"/>
                         </hbox>
-                   </groupbox>
-                   <hbox align="center">
-                           <label id="zimbra_mail_notifier-serverError" value="" width="130"/>
-                           <spacer flex="1"/>
-                           <button id="zimbra_mail_notifier-connectButton" disabled="true" label="&option.identifiant.connect.button;" oncommand="com.zimbra.Options.connect();"/>
-                           <button id="zimbra_mail_notifier-connectInProgressButton" disabled="true" label="&option.identifiant.connectInProgress.button;"/>
-                           <button id="zimbra_mail_notifier-disconnectButton" style="visibility:collapse;" label="&option.identifiant.disconnect.button;" oncommand="com.zimbra.Options.disconnect();"/>
-                   </hbox>
-               </vbox>
+                    </groupbox>
+                    <hbox align="center">
+                        <spacer flex="1"/>
+                        <button id="zimbra_mail_notifier-connectButton" disabled="true" label="&option.identifiant.connect.button;" oncommand="com.zimbra.Options.connect();"/>
+                        <button id="zimbra_mail_notifier-connectInProgressButton" disabled="true" label="&option.identifiant.connectInProgress.button;"/>
+                        <button id="zimbra_mail_notifier-disconnectButton" style="visibility:collapse;" label="&option.identifiant.disconnect.button;" oncommand="com.zimbra.Options.disconnect();"/>
+                    </hbox>
+                    <hbox align="center">
+                        <label id="zimbra_mail_notifier-serverError" value="" width="130"/>
+                    </hbox>
+                </vbox>
             </tabpanel>
         </tabpanels>
     </tabbox>
