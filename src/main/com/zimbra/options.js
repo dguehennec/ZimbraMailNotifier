@@ -36,6 +36,8 @@
 
 "use strict";
 
+Components.utils.import("resource://zimbra_mail_notifier/zimbrasingleton.jsm");
+
 if (!com) {
     var com = {};
 }
@@ -60,23 +62,23 @@ com.zimbra.Options.init = function() {
     var selectedTab = com.zimbra.constant.OPTION_SELECT_TAB.GENERAL;
 
     this._closeWhenConnected = false;
+    this._prefWereSaved = false;
     this._util = new com.zimbra.service.Util();
-    this._main = null;
+    this._service = ZimbraNotifierSingleton.getService();
 
     // show identification tab if necessary
-    if (!window.arguments || !window.arguments[0].getService) {
+    if (this._service === null) {
         this._util.setVisibility("option.tab.identification", "collapse");
         this._prefs = new com.zimbra.service.Prefs();
     }
     else {
         this._util.setVisibility("option.tab.identification", "visible");
-        // get parent
-        this._main = window.arguments[0];
-        this._main.getService().addCallBackRefresh(this);
+        // Register
+        this._service.addCallBackRefresh(this);
         // use service pref
-        this._prefs = this._main.getService().getPrefs();
+        this._prefs = this._service.getPrefs();
         // get the selected tab
-        selectedTab = window.arguments[1];
+        selectedTab = window.arguments[0];
     }
 
     // select tab
@@ -140,15 +142,15 @@ com.zimbra.Options.init = function() {
  */
 com.zimbra.Options.refresh = function(startRequest) {
 
-    if (this._main && this._closeWhenConnected === true) {
-        if (this._main.getService().isConnected()) {
+    if (this._service && this._closeWhenConnected === true) {
+        if (this._service.isConnected()) {
             this.close();
             this._closeWhenConnected = false;
             return;
         }
     }
 
-    if (this._main && !startRequest) {
+    if (this._service && !startRequest) {
 
         this._util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
         this._util.setVisibility("zimbra_mail_notifier-disconnectButton", "collapse");
@@ -163,7 +165,7 @@ com.zimbra.Options.refresh = function(startRequest) {
             this._util.setAttribute("zimbra_mail_notifier-connectButton", "disabled", true);
         }
 
-        if (this._main.getService().isConnected()) {
+        if (this._service.isConnected()) {
             this._util.setVisibility("zimbra_mail_notifier-disconnectButton", "visible");
             this._util.setAttribute("zimbra_mail_notifier-optionLogin", "disabled", true);
             this._util.setAttribute("zimbra_mail_notifier-optionPassword", "disabled", true);
@@ -176,7 +178,7 @@ com.zimbra.Options.refresh = function(startRequest) {
             this._util.removeAttribute("zimbra_mail_notifier-optionServer", "disabled");
         }
         this._util.setAttribute("zimbra_mail_notifier-serverError", "value",
-                                this._main.getService().getLastErrorMessage());
+                                this._service.getLastErrorMessage());
     }
 };
 
@@ -235,6 +237,9 @@ com.zimbra.Options.updatePrefs = function() {
     } else {
         this._prefs.setUserPassword('');
     }
+
+    this._prefs.save();
+    this._prefWereSaved = true;
 };
 
 /**
@@ -243,13 +248,8 @@ com.zimbra.Options.updatePrefs = function() {
  * @this {Option}
  */
 com.zimbra.Options.save = function() {
-    if (this._main) {
-        this._main.getService().removeCallBackRefresh(this);
-    }
     // update and save prefs
     this.updatePrefs();
-    this._prefs.save();
-    this._util.notifyObservers(com.zimbra.constant.OBSERVER.PREF_SAVED, null);
     window.close();
 };
 
@@ -259,13 +259,23 @@ com.zimbra.Options.save = function() {
  * @this {Option}
  */
 com.zimbra.Options.close = function() {
-    if (this._main) {
-        this._main.getService().removeCallBackRefresh(this);
-    }
-    if (this._closeWhenConnected === true) {
-        this._util.notifyObservers(com.zimbra.constant.OBSERVER.PREF_SAVED, null);
-    }
     window.close();
+};
+
+/**
+ * Call when the window is closed
+ *
+ * @this {Option}
+ */
+com.zimbra.Options.release = function() {
+    if (this._service) {
+        this._service.removeCallBackRefresh(this);
+        this._service = null;
+    }
+    if (this._prefWereSaved === true) {
+        this._util.notifyObservers(com.zimbra.constant.OBSERVER.PREF_SAVED, null);
+        this._prefWereSaved = false;
+    }
 };
 
 /**
@@ -274,10 +284,9 @@ com.zimbra.Options.close = function() {
  * @this {Option}
  */
 com.zimbra.Options.connect = function() {
-    if (this._main) {
+    if (this._service) {
         // update and save prefs
         this.updatePrefs();
-        this._prefs.save();
         this._closeWhenConnected = true;
         // update screen view
         this._util.setAttribute("zimbra_mail_notifier-optionLogin", "disabled", true);
@@ -287,7 +296,7 @@ com.zimbra.Options.connect = function() {
         this._util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "visible");
         this._util.setVisibility("zimbra_mail_notifier-serverError", "value", "");
         // initialize connection
-        this._main.getService().initializeConnection(
+        this._service.initializeConnection(
             this._util.getAttribute("zimbra_mail_notifier-optionPassword", "value"));
     }
 };
@@ -299,7 +308,7 @@ com.zimbra.Options.connect = function() {
  */
 com.zimbra.Options.disconnect = function() {
     this._closeWhenConnected = false;
-    if (this._main) {
-        this._main.getService().closeConnection();
+    if (this._service) {
+        this._service.closeConnection();
     }
 };

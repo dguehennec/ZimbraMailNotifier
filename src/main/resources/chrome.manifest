@@ -1,4 +1,5 @@
 content  zimbra_mail_notifier    chrome/content/
+resource zimbra_mail_notifier    modules/
 skin     zimbra_mail_notifier    classic/1.0      skin/
 locale   zimbra_mail_notifier    en-US            locale/en-US/
 locale   zimbra_mail_notifier    fr-FR            locale/fr-FR/

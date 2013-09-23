@@ -7,6 +7,7 @@
 <window title="&option.option.label;"
     orient="vertical"
     onload="com.zimbra.Options.init();"
+    onunload="com.zimbra.Options.release();"
     windowtype="window:zimbra_mail_notifierOption"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 

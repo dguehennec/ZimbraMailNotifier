@@ -161,18 +161,13 @@ com.zimbra.controller.Service.prototype._stopRemoveEvents = function() {
 };
 
 /**
- * Initialize Service.
+ * Start auto-connect if necessary
  *
  * @this {Service}
- * @param {Function}
- *            parent the parent object
  * @return {Boolean} False if we need to ask the password
  */
-com.zimbra.controller.Service.prototype.initialize = function(parent) {
-
-    this.addCallBackRefresh(parent);
-    // start auto-connect if necessary
-    if (this._prefs.isAutoConnectEnabled()) {
+com.zimbra.controller.Service.prototype.autoConnect = function() {
+    if (!this.isConnected() && this._prefs.isAutoConnectEnabled()) {
         if (this._prefs.isSavePasswordEnabled()) {
             return this.initializeConnection();
         } else {
@@ -187,7 +182,8 @@ com.zimbra.controller.Service.prototype.initialize = function(parent) {
  *
  * @this {Service}
  */
-com.zimbra.controller.Service.prototype.release = function() {
+com.zimbra.controller.Service.prototype.shutdown = function() {
+    this._logger.trace("Shutdown...");
     this._util.removeObserver(this, com.zimbra.constant.OBSERVER.PREF_SAVED);
     this._loadDefault();
     this._callbackList = [];

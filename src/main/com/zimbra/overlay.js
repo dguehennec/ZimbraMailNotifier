@@ -36,6 +36,8 @@
 
 "use strict";
 
+Components.utils.import("resource://zimbra_mail_notifier/zimbrasingleton.jsm");
+
 if (!com) {
     var com = {};
 }
@@ -59,10 +61,16 @@ com.zimbra.Main = {};
 com.zimbra.Main.init = function() {
     try {
         this._util = new com.zimbra.service.Util();
-        this._service = new com.zimbra.controller.Service();
-        if (!this._service.initialize(this)) {
+
+        if (ZimbraNotifierSingleton.getService() === null) {
+            ZimbraNotifierSingleton.setService(new com.zimbra.controller.Service());
+        }
+        this._service = ZimbraNotifierSingleton.getService();
+        this._service.addCallBackRefresh(this);
+
+        if (!this._service.autoConnect()) {
             window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
-                              'chrome, modal, dialog, centerscreen', this,
+                              'chrome, modal, dialog, centerscreen',
                               com.zimbra.constant.OPTION_SELECT_TAB.IDENTIFICATION);
         }
         this.refresh();
@@ -83,7 +91,7 @@ com.zimbra.Main.init = function() {
  */
 
 com.zimbra.Main.release = function() {
-    this._service.release();
+    this._service.removeCallBackRefresh(this);
 };
 
 /**
@@ -142,22 +150,12 @@ com.zimbra.Main.refresh = function(startRequest) {
 };
 
 /**
- * get prefs.
- *
- * @this {Main}
- * @return {Service} the service
- */
-com.zimbra.Main.getService = function() {
-    return this._service;
-};
-
-/**
  * Show Option Menu
  *
  */
 com.zimbra.Main.openOptionsDialog = function() {
     window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
-                      'chrome, modal, dialog, centerscreen', this,
+                      'chrome, modal, dialog, centerscreen',
                       com.zimbra.constant.OPTION_SELECT_TAB.GENERAL);
 };
 
@@ -184,7 +182,7 @@ com.zimbra.Main.onConnectClick = function() {
         !this._service.initializeConnection()) {
 
         window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
-                          'chrome, modal, dialog, centerscreen', this,
+                          'chrome, modal, dialog, centerscreen',
                           com.zimbra.constant.OPTION_SELECT_TAB.IDENTIFICATION);
     }
 };
@@ -203,12 +201,16 @@ com.zimbra.Main.onDisconnectClick = function() {
  *            event of the element
  */
 com.zimbra.Main.onStatusBarClick = function(evt) {
+
     if (evt === undefined || evt.button === 0) {
-        if ((this._service.getPrefs().getUserServer() !== "") && this._service.isConnected()) {
-            this._util.openURL(this._service.getPrefs().getUserServer());
-        } else {
+        var urlServer = this._service.getPrefs().getUserServer();
+
+        if ((urlServer !== "") && this._service.isConnected()) {
+            this._util.openURL(urlServer);
+        }
+        else {
             window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
-                              'chrome, modal, dialog, centerscreen', this,
+                              'chrome, modal, dialog, centerscreen',
                               com.zimbra.constant.OPTION_SELECT_TAB.IDENTIFICATION);
         }
     }
