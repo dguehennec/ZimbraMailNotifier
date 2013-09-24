@@ -195,10 +195,10 @@ com.zimbra.domain.Session.prototype.isTokenValid = function() {
 com.zimbra.domain.Session.prototype.updateToken = function(token, lifetime) {
 
     token = this._valToStr(token);
+
     if (token.length > 0 && lifetime) {
         var expDate = new Date();
-        var timeMs = expDate.getTime() + lifetime - com.zimbra.constant.SESSION.TOKEN_LIFETIME_SECU;
-        expDate.setTime(timeMs);
+        expDate.setTime(expDate.getTime() + lifetime - com.zimbra.constant.SESSION.TOKEN_LIFETIME_SECU);
 
         this._tokenExpirationTime = expDate;
         this._token = token;
@@ -288,7 +288,7 @@ com.zimbra.domain.Session.prototype.updateWaitSet = function(id, seq) {
  * @return {Boolean} True if changed
  */
 com.zimbra.domain.Session.prototype._valToStr = function(val) {
-    if (val === null) {
+    if (!val && val !== 0) {
         return '';
     }
     return '' + val;

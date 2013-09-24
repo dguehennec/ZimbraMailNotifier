@@ -220,6 +220,7 @@ com.zimbra.service.Prefs.prototype.getPreviousWaitSet = function() {
         if (this.pref_waitset_info &&
             this.pref_waitset_info.id && this.pref_waitset_info.id.length > 0 &&
             this.pref_waitset_info.seq && this.pref_waitset_info.seq.length > 0 &&
+            parseInt(this.pref_waitset_info.seq, 10) >= 0 &&
             this.pref_waitset_info.hostname && this.pref_waitset_info.hostname.length > 0 &&
             this.pref_waitset_info.user && this.pref_waitset_info.user.length > 0) {
 
@@ -243,16 +244,18 @@ com.zimbra.service.Prefs.prototype.getPreviousWaitSet = function() {
  * @param {String}
  *            id The wait set id
  * @param {String}
- *            seq The wait set sequence
+ *            seq The wait set sequence, must be a string
  * @param {String}
  *            hostname The hostname used with this wait set
  * @param {String}
  *            user The user used with this wait set
  */
 com.zimbra.service.Prefs.prototype.saveWaitSet = function(id, seq, hostname, user) {
-    if (id === null || id === '' || seq === null || seq === '') {
+    if (!id || !seq || !hostname || !user || !(parseInt(seq, 10) >= 0)) {
         id  = '';
         seq = '';
+        hostname = '';
+        user = '';
     }
     if (hostname && hostname.length > 0 && user && user.length > 0) {
         this.pref_waitset_info = { id: id, seq: seq, hostname: hostname, user: user };
