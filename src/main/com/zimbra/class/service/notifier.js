@@ -90,9 +90,7 @@ com.zimbra.service.Notifier.prototype.start = function() {
     }
     this.stop();
     if (diff >= 0 && diff < 0x3FFFFFFF) {
-        this._currentTimer = window.setTimeout(function() {
-            object._notify();
-        }, diff);
+        this._planNotify(diff);
     }
 };
 
@@ -103,7 +101,7 @@ com.zimbra.service.Notifier.prototype.start = function() {
  */
 com.zimbra.service.Notifier.prototype.stop = function() {
     if (this._currentTimer) {
-        window.clearTimeout(this._currentTimer);
+        this._currentTimer.cancel();
         this._currentTimer = null;
     }
 };
@@ -127,11 +125,21 @@ com.zimbra.service.Notifier.prototype._notify = function() {
     }
     if (this._nbRepeat > 0) {
         this._nbRepeat--;
-        var object = this;
-        this._currentTimer = window.setTimeout(function() {
-            object._notify();
-        }, com.zimbra.constant.NOTIFIER.REPEAT_DELAY_MS);
+        this._planNotify(com.zimbra.constant.NOTIFIER.REPEAT_DELAY_MS);
     }
+};
+
+/**
+ * Plan to run the notify function later
+ *
+ * @private
+ * @this {Notifier}
+ */
+com.zimbra.service.Notifier.prototype._planNotify = function(delay) {
+    var object = this;
+    this._currentTimer = com.zimbra.service.Util.setTimer(this._currentTimer, function() {
+        object._notify();
+    }, delay);
 };
 
 /**

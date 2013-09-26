@@ -108,7 +108,6 @@ com.zimbra.controller.Service.prototype._loadDefault = function() {
     this._webservice.abortRunningReq();
     // Timer for state machine
     this._stopStateTimer();
-    this._stateTimer = null;
 
     // Updated when calling initializeConnection, used for notification
     this._dateConnection = null;
@@ -219,7 +218,7 @@ com.zimbra.controller.Service.prototype._changeState = function(newState) {
  */
 com.zimbra.controller.Service.prototype._planRunState = function(newState, delayMs) {
     var object = this;
-    this._stateTimer = window.setTimeout(function() {
+    this._stateTimer = com.zimbra.service.Util.setTimer(this._stateTimer, function() {
         object._changeAndRunState(newState);
         object._stateTimer = null;
     }, delayMs);
@@ -233,7 +232,9 @@ com.zimbra.controller.Service.prototype._planRunState = function(newState, delay
  */
 com.zimbra.controller.Service.prototype._stopStateTimer = function() {
     if (this._stateTimer) {
-        window.clearTimeout(this._stateTimer);
+        this._stateTimer.cancel();
+    }
+    else {
         this._stateTimer = null;
     }
 };

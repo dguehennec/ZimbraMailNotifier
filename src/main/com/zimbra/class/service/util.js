@@ -72,12 +72,34 @@ com.zimbra.service.Util = {
 com.zimbra.service.Util.getBundleString = function(param) {
     try {
         if (this._bundle === null) {
-            this._bundle = window.document.getElementById("zimbra_mail_notifier-bundle");
+            this._bundle = window.document.getElementById("zimbra_mail_notifier-bundle").stringBundle;
         }
-        return this._bundle.getString(param);
+        return this._bundle.GetStringFromName(param);
     } catch (e) {
         return '';
     }
+};
+
+/**
+ * Create and launch a timer
+ *
+ * @this {Util}
+ *
+ * @param {nsITimer}
+ *            timer  A previous instance of a timer to reuse, can be null: create a new one
+ * @param {Function}
+ *            func   The callback fired withe the timer timeout
+ * @param {Number}
+ *            delay  The number of ms
+ *
+ * @return {nsITimer} The created timer
+ */
+com.zimbra.service.Util.setTimer = function(timer, func, delay) {
+    if (!timer) {
+        timer = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
+    }
+    timer.initWithCallback(func, delay, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+    return timer;
 };
 
 /**
@@ -165,6 +187,7 @@ com.zimbra.service.Util.openURL = function(UrlToGoTo) {
                 var currentTab = browserInstance.getBrowserAtIndex(index);
                 if (currentTab.currentURI.spec.indexOf(url) >= 0) {
                     browserInstance.selectedTab = browserInstance.tabContainer.childNodes[index];
+                    browserInstance.contentWindow.focus();
                     browserInstance.focus();
                     return true;
                 }
@@ -173,10 +196,13 @@ com.zimbra.service.Util.openURL = function(UrlToGoTo) {
         var recentWindow = wm.getMostRecentWindow("navigator:browser");
         if (recentWindow) {
             recentWindow.delayedOpenTab(UrlToGoTo, null, null, null, null);
+            recentWindow.focus();
         } else {
             window.open(UrlToGoTo);
+            window.focus();
         }
-    } catch (e) {
+    }
+    catch (e) {
         return false;
     }
     return true;
