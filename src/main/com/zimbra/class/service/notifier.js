@@ -65,7 +65,6 @@ if (!com.zimbra.service) {
  *            withSystemNotification indicate if system notification is enable
  */
 com.zimbra.service.Notifier = function(event, timeConf, nbRepeat, withSoundNotification, withSystemNotification) {
-    this._util = new com.zimbra.service.Util();
     this._event = event;
     this._timeConf = timeConf;
     this._nbRepeat = nbRepeat;
@@ -116,13 +115,14 @@ com.zimbra.service.Notifier.prototype.stop = function() {
  * @this {Notifier}
  */
 com.zimbra.service.Notifier.prototype._notify = function() {
+    var util = com.zimbra.service.Util;
     this.stop();
     if (this._withSoundNotification) {
-        this._util.playSound();
+        util.playSound();
     }
     if (this._withSystemNotification) {
-        this._util.showNotificaton(this._event.startDate.toLocaleString(),
-                                   this._util.getBundleString("connector.notification.event") +
+        util.showNotificaton(this._event.startDate.toLocaleString(),
+                                   util.getBundleString("connector.notification.event") +
                                    this._event.name, null, null);
     }
     if (this._nbRepeat > 0) {

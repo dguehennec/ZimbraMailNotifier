@@ -47,19 +47,18 @@ if (!com.zimbra.service) {
 }
 
 /**
- * Creates an instance of com.zimbra.service.Util.
+ * Creates a global instance of com.zimbra.service.Util
  *
  * @constructor
  * @this {Util}
  *
  */
-com.zimbra.service.Util = function() {
+com.zimbra.service.Util = {
+    /**
+     * @private bundle
+     */
+    _bundle: null
 };
-
-/**
- * @private bundle
- */
-com.zimbra.service.Util.prototype._bundle = null;
 
 /**
  * get bundle.
@@ -70,7 +69,7 @@ com.zimbra.service.Util.prototype._bundle = null;
  *            param parameter value to get
  * @return {String} value of parameter
  */
-com.zimbra.service.Util.prototype.getBundleString = function(param) {
+com.zimbra.service.Util.getBundleString = function(param) {
     try {
         if (this._bundle === null) {
             this._bundle = window.document.getElementById("zimbra_mail_notifier-bundle");
@@ -89,7 +88,7 @@ com.zimbra.service.Util.prototype.getBundleString = function(param) {
  *            time in seconds.
  * @return {String} time in format hh:mm:ss.
  */
-com.zimbra.service.Util.prototype.secToTimeStr = function(time) {
+com.zimbra.service.Util.secToTimeStr = function(time) {
     if (time === null || time < 0) {
         return "";
     }
@@ -110,7 +109,7 @@ com.zimbra.service.Util.prototype.secToTimeStr = function(time) {
  *            date to convert in seconds
  * @return {String} date in format jj.mm.aaaa hh:mm
  */
-com.zimbra.service.Util.prototype.formatDateTime = function(date) {
+com.zimbra.service.Util.formatDateTime = function(date) {
     if (date === null) {
         return "";
     }
@@ -129,7 +128,7 @@ com.zimbra.service.Util.prototype.formatDateTime = function(date) {
  *            length max text length.
  * @return {String} text limited with ....
  */
-com.zimbra.service.Util.prototype.maxStringLength = function(text, length) {
+com.zimbra.service.Util.maxStringLength = function(text, length) {
     if (text === null || (text.length < length)) {
         return text;
     }
@@ -150,7 +149,7 @@ com.zimbra.service.Util.prototype.maxStringLength = function(text, length) {
  *            UrlToGoTo url to open.
  * @return {Boolean} true if success
  */
-com.zimbra.service.Util.prototype.openURL = function(UrlToGoTo) {
+com.zimbra.service.Util.openURL = function(UrlToGoTo) {
     try {
         var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"].
             getService(Components.interfaces.nsIWindowMediator);
@@ -197,7 +196,7 @@ com.zimbra.service.Util.prototype.openURL = function(UrlToGoTo) {
  *
  * @return {Boolean} true if success
  */
-com.zimbra.service.Util.prototype.showNotificaton = function(title, text, callbackData, callback) {
+com.zimbra.service.Util.showNotificaton = function(title, text, callbackData, callback) {
     try {
         var textClickable = false;
         if (callback) {
@@ -219,7 +218,7 @@ com.zimbra.service.Util.prototype.showNotificaton = function(title, text, callba
  *
  * @return {Boolean} true if success
  */
-com.zimbra.service.Util.prototype.playSound = function() {
+com.zimbra.service.Util.playSound = function() {
     try {
         var sound = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
         var os = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULRuntime).OS;
@@ -245,7 +244,7 @@ com.zimbra.service.Util.prototype.playSound = function() {
  * @param {String}
  *            afterId indicate after the object Id
  */
-com.zimbra.service.Util.prototype.installButton = function(toolbarId, id, afterId) {
+com.zimbra.service.Util.installButton = function(toolbarId, id, afterId) {
     if (!window.document.getElementById(id)) {
         var toolbar = window.document.getElementById(toolbarId);
         var before = null;
@@ -271,7 +270,7 @@ com.zimbra.service.Util.prototype.installButton = function(toolbarId, id, afterI
  *
  * @this {Util}
  */
-com.zimbra.service.Util.prototype.setMenulist = function(id, value) {
+com.zimbra.service.Util.setMenulist = function(id, value) {
     var object = document.getElementById(id);
     var popup = object.menupopup;
     if (popup) {
@@ -295,7 +294,7 @@ com.zimbra.service.Util.prototype.setMenulist = function(id, value) {
  * @param {String}
  *            visibility visibility of the object
  */
-com.zimbra.service.Util.prototype.setVisibility = function(id, visibility) {
+com.zimbra.service.Util.setVisibility = function(id, visibility) {
     if (window.document.getElementById(id)) {
         window.document.getElementById(id).style.visibility = visibility;
     }
@@ -312,7 +311,7 @@ com.zimbra.service.Util.prototype.setVisibility = function(id, visibility) {
  * @param {String}
  *            value value of the attribute
  */
-com.zimbra.service.Util.prototype.setAttribute = function(id, attribute, value) {
+com.zimbra.service.Util.setAttribute = function(id, attribute, value) {
     if (window.document.getElementById(id)) {
         window.document.getElementById(id).setAttribute(attribute, value);
     }
@@ -329,7 +328,7 @@ com.zimbra.service.Util.prototype.setAttribute = function(id, attribute, value) 
  * @param {String}
  *            value value of the attribute
  */
-com.zimbra.service.Util.prototype.setTextContent = function(id, value) {
+com.zimbra.service.Util.setTextContent = function(id, value) {
     if (window.document.getElementById(id)) {
         window.document.getElementById(id).textContent = value;
     }
@@ -344,7 +343,7 @@ com.zimbra.service.Util.prototype.setTextContent = function(id, value) {
  *            attribute attribute to get
  * @return {Object} value of the attribute
  */
-com.zimbra.service.Util.prototype.getAttribute = function(id, attribute) {
+com.zimbra.service.Util.getAttribute = function(id, attribute) {
     if (window.document.getElementById(id)) {
         return window.document.getElementById(id)[attribute];
     }
@@ -360,7 +359,7 @@ com.zimbra.service.Util.prototype.getAttribute = function(id, attribute) {
  * @param {String}
  *            attribute attribute to remove
  */
-com.zimbra.service.Util.prototype.removeAttribute = function(id, attribute) {
+com.zimbra.service.Util.removeAttribute = function(id, attribute) {
     if (window.document.getElementById(id)) {
         window.document.getElementById(id).removeAttribute(attribute);
     }
@@ -375,7 +374,7 @@ com.zimbra.service.Util.prototype.removeAttribute = function(id, attribute) {
  * @param {String}
  *            topic the topic
  */
-com.zimbra.service.Util.prototype.addObserver = function(observer, topic) {
+com.zimbra.service.Util.addObserver = function(observer, topic) {
     var observerService = Components.classes["@mozilla.org/observer-service;1"].
         getService(Components.interfaces.nsIObserverService);
     observerService.addObserver(observer, topic, false);
@@ -390,7 +389,7 @@ com.zimbra.service.Util.prototype.addObserver = function(observer, topic) {
  * @param {String}
  *            topic the topic
  */
-com.zimbra.service.Util.prototype.removeObserver = function(observer, topic) {
+com.zimbra.service.Util.removeObserver = function(observer, topic) {
     var observerService = Components.classes["@mozilla.org/observer-service;1"].
         getService(Components.interfaces.nsIObserverService);
     observerService.removeObserver(observer, topic);
@@ -405,7 +404,7 @@ com.zimbra.service.Util.prototype.removeObserver = function(observer, topic) {
  * @param {String}
  *            data the data
  */
-com.zimbra.service.Util.prototype.notifyObservers = function(topic, data) {
+com.zimbra.service.Util.notifyObservers = function(topic, data) {
     var observerService = Components.classes["@mozilla.org/observer-service;1"].
         getService(Components.interfaces.nsIObserverService);
     observerService.notifyObservers(null, topic, data);

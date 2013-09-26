@@ -60,8 +60,6 @@ com.zimbra.Main = {};
  */
 com.zimbra.Main.init = function() {
     try {
-        this._util = new com.zimbra.service.Util();
-
         if (ZimbraNotifierSingleton.getService() === null) {
             ZimbraNotifierSingleton.setService(new com.zimbra.controller.Service());
         }
@@ -100,52 +98,54 @@ com.zimbra.Main.release = function() {
  * @this {Main}
  */
 com.zimbra.Main.refresh = function(startRequest) {
+    var util = com.zimbra.service.Util;
+
     if (!startRequest) {
         var nbUnreadMessages = -1;
         if (this._service.isConnected()) {
             nbUnreadMessages = this._service.getNbMessageUnread();
 
-            this._util.setAttribute("zimbra_mail_notifier-mainToolsConnect", "hidden", "true");
-            this._util.removeAttribute("zimbra_mail_notifier-mainToolsCheckNow", "hidden");
-            this._util.removeAttribute("zimbra_mail_notifier-mainToolsDisconnect", "hidden");
-            this._util.setAttribute("zimbra_mail_notifier-mainConnect", "hidden", "true");
-            this._util.removeAttribute("zimbra_mail_notifier-mainCheckNow", "hidden");
-            this._util.removeAttribute("zimbra_mail_notifier-mainDisconnect", "hidden");
-            this._util.setAttribute("zimbra_mail_notifier-status-icon", "status", "1");
-            this._util.setAttribute("zimbra_mail_notifier-toolbar-button", "status", "1");
+            util.setAttribute("zimbra_mail_notifier-mainToolsConnect", "hidden", "true");
+            util.removeAttribute("zimbra_mail_notifier-mainToolsCheckNow", "hidden");
+            util.removeAttribute("zimbra_mail_notifier-mainToolsDisconnect", "hidden");
+            util.setAttribute("zimbra_mail_notifier-mainConnect", "hidden", "true");
+            util.removeAttribute("zimbra_mail_notifier-mainCheckNow", "hidden");
+            util.removeAttribute("zimbra_mail_notifier-mainDisconnect", "hidden");
+            util.setAttribute("zimbra_mail_notifier-status-icon", "status", "1");
+            util.setAttribute("zimbra_mail_notifier-toolbar-button", "status", "1");
         }
         else {
-            this._util.removeAttribute("zimbra_mail_notifier-mainToolsConnect", "hidden");
-            this._util.setAttribute("zimbra_mail_notifier-mainToolsCheckNow", "hidden", "true");
-            this._util.setAttribute("zimbra_mail_notifier-mainToolsDisconnect", "hidden", "true");
-            this._util.removeAttribute("zimbra_mail_notifier-mainConnect", "hidden");
-            this._util.setAttribute("zimbra_mail_notifier-mainCheckNow", "hidden", "true");
-            this._util.setAttribute("zimbra_mail_notifier-mainDisconnect", "hidden", "true");
-            this._util.setAttribute("zimbra_mail_notifier-status-icon", "status", "0");
-            this._util.setAttribute("zimbra_mail_notifier-toolbar-button", "status", "0");
+            util.removeAttribute("zimbra_mail_notifier-mainToolsConnect", "hidden");
+            util.setAttribute("zimbra_mail_notifier-mainToolsCheckNow", "hidden", "true");
+            util.setAttribute("zimbra_mail_notifier-mainToolsDisconnect", "hidden", "true");
+            util.removeAttribute("zimbra_mail_notifier-mainConnect", "hidden");
+            util.setAttribute("zimbra_mail_notifier-mainCheckNow", "hidden", "true");
+            util.setAttribute("zimbra_mail_notifier-mainDisconnect", "hidden", "true");
+            util.setAttribute("zimbra_mail_notifier-status-icon", "status", "0");
+            util.setAttribute("zimbra_mail_notifier-toolbar-button", "status", "0");
         }
         // StatusBar
         if (this._service.getPrefs().isStatusBarEnabled()) {
-            this._util.setVisibility("zimbra_mail_notifier-status-icon", "visible");
+            util.setVisibility("zimbra_mail_notifier-status-icon", "visible");
             if (nbUnreadMessages >= 0) {
-                this._util.setAttribute("zimbra_mail_notifier-status-icon", "label", nbUnreadMessages);
+                util.setAttribute("zimbra_mail_notifier-status-icon", "label", nbUnreadMessages);
             } else {
-                this._util.setAttribute("zimbra_mail_notifier-status-icon", "label", "");
+                util.setAttribute("zimbra_mail_notifier-status-icon", "label", "");
             }
         }
         else {
-            this._util.setVisibility("zimbra_mail_notifier-status-icon", "collapse");
+            util.setVisibility("zimbra_mail_notifier-status-icon", "collapse");
         }
         // ToolBar
         if (nbUnreadMessages > 0) {
-            this._util.setAttribute("zimbra_mail_notifier-toolbar-button-label", "value", nbUnreadMessages);
+            util.setAttribute("zimbra_mail_notifier-toolbar-button-label", "value", nbUnreadMessages);
         } else {
-            this._util.setAttribute("zimbra_mail_notifier-toolbar-button-label", "value", "");
+            util.setAttribute("zimbra_mail_notifier-toolbar-button-label", "value", "");
         }
     }
     else {
-        this._util.setAttribute("zimbra_mail_notifier-status-icon", "status", "2");
-        this._util.setAttribute("zimbra_mail_notifier-toolbar-button", "status", "2");
+        util.setAttribute("zimbra_mail_notifier-status-icon", "status", "2");
+        util.setAttribute("zimbra_mail_notifier-toolbar-button", "status", "2");
     }
 };
 
@@ -206,7 +206,7 @@ com.zimbra.Main.onStatusBarClick = function(evt) {
         var urlServer = this._service.getPrefs().getUserServer();
 
         if ((urlServer !== "") && this._service.isConnected()) {
-            this._util.openURL(urlServer);
+            com.zimbra.service.Util.openURL(urlServer);
         }
         else {
             window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
@@ -221,51 +221,52 @@ com.zimbra.Main.onStatusBarClick = function(evt) {
  *
  */
 com.zimbra.Main.initializeTooltip = function() {
+    var util = com.zimbra.service.Util;
 
     if (this._service.isConnected()) {
 
         // show message informations
-        var msgTitle = this._util.getBundleString("tooltip.unreadMessages.title");
+        var msgTitle = util.getBundleString("tooltip.unreadMessages.title");
         msgTitle = msgTitle.replace("%NB%", this._service.getNbMessageUnread());
-        this._util.setAttribute("zimbra_mail_notifier_tooltipTitle", "value", msgTitle);
+        util.setAttribute("zimbra_mail_notifier_tooltipTitle", "value", msgTitle);
 
-        var msgDesc = this._util.getBundleString("tooltip.connected.description");
+        var msgDesc = util.getBundleString("tooltip.connected.description");
         msgDesc = msgDesc.replace("%EMAIL%", this._service.getPrefs().getUserLogin());
-        this._util.setTextContent("zimbra_mail_notifier_tooltipMessage", msgDesc);
+        util.setTextContent("zimbra_mail_notifier_tooltipMessage", msgDesc);
 
         // show calendar
         if (this._service.getPrefs().isCalendarEnabled()) {
-            this._util.removeAttribute("zimbra_mail_notifier_tooltipCalendarGroup", "hidden");
+            util.removeAttribute("zimbra_mail_notifier_tooltipCalendarGroup", "hidden");
             this.initializeTooltipCalendar();
         }
         else {
-            this._util.setAttribute("zimbra_mail_notifier_tooltipCalendarGroup", "hidden", "true");
+            util.setAttribute("zimbra_mail_notifier_tooltipCalendarGroup", "hidden", "true");
         }
 
         // show tasks
         if (this._service.getPrefs().isTaskEnabled()) {
-            this._util.removeAttribute("zimbra_mail_notifier_tooltipTaskGroup", "hidden");
+            util.removeAttribute("zimbra_mail_notifier_tooltipTaskGroup", "hidden");
             this.initializeTooltipTask();
         }
         else {
-            this._util.setAttribute("zimbra_mail_notifier_tooltipTaskGroup", "hidden", "true");
+            util.setAttribute("zimbra_mail_notifier_tooltipTaskGroup", "hidden", "true");
         }
     }
     else {
         var errorMsg = this._service.getLastErrorMessage();
         if (errorMsg !== "") {
-            this._util.setAttribute("zimbra_mail_notifier_tooltipTitle", "value",
-                                    this._util.getBundleString("tooltip.error.title"));
-            this._util.setTextContent("zimbra_mail_notifier_tooltipMessage", errorMsg);
+            util.setAttribute("zimbra_mail_notifier_tooltipTitle", "value",
+                                    util.getBundleString("tooltip.error.title"));
+            util.setTextContent("zimbra_mail_notifier_tooltipMessage", errorMsg);
         }
         else {
-            this._util.setAttribute("zimbra_mail_notifier_tooltipTitle", "value",
-                                    this._util.getBundleString("tooltip.notConnected.title"));
-            this._util.setTextContent("zimbra_mail_notifier_tooltipMessage",
-                                      this._util.getBundleString("tooltip.notConnected.description"));
+            util.setAttribute("zimbra_mail_notifier_tooltipTitle", "value",
+                                    util.getBundleString("tooltip.notConnected.title"));
+            util.setTextContent("zimbra_mail_notifier_tooltipMessage",
+                                      util.getBundleString("tooltip.notConnected.description"));
         }
-        this._util.setAttribute("zimbra_mail_notifier_tooltipCalendarGroup", "hidden", "true");
-        this._util.setAttribute("zimbra_mail_notifier_tooltipTaskGroup", "hidden", "true");
+        util.setAttribute("zimbra_mail_notifier_tooltipCalendarGroup", "hidden", "true");
+        util.setAttribute("zimbra_mail_notifier_tooltipTaskGroup", "hidden", "true");
     }
 };
 
@@ -275,6 +276,7 @@ com.zimbra.Main.initializeTooltip = function() {
  */
 com.zimbra.Main.initializeTooltipCalendar = function() {
     var index, label;
+    var util = com.zimbra.service.Util;
 
     // clean calendar
     var tooltipCalendar = document.getElementById("zimbra_mail_notifier_tooltipCalendar");
@@ -287,7 +289,7 @@ com.zimbra.Main.initializeTooltipCalendar = function() {
         label = document.createElement('label');
         label.setAttribute("flex", "1");
         label.setAttribute("class", "eventLabelDesc");
-        label.setAttribute("value", this._util.getBundleString("tooltip.noEvent"));
+        label.setAttribute("value", util.getBundleString("tooltip.noEvent"));
         tooltipCalendar.appendChild(label);
     }
     else {
@@ -300,7 +302,7 @@ com.zimbra.Main.initializeTooltipCalendar = function() {
             var startDate = currentEvent.startDate;
             var starttime = startDate.toLocaleTimeString();
             starttime = starttime.substring(0, 5) + starttime.substring(8);
-            var currentDate = this._util.getBundleString("tooltip.week").
+            var currentDate = util.getBundleString("tooltip.week").
                 replace("%WEEK%", currentEvent.startWeek) + " - " + startDate.toLocaleDateString();
             if (lastDate !== currentDate) {
                 lastDate = currentDate;
@@ -318,9 +320,9 @@ com.zimbra.Main.initializeTooltipCalendar = function() {
             label.setAttribute("flex", "1");
             if (currentEvent.duration < 86400000) {
                 label.setAttribute("value", starttime + "-" + endTime + "   " +
-                                   this._util.maxStringLength(currentEvent.name, 40));
+                                   util.maxStringLength(currentEvent.name, 40));
             } else {
-                label.setAttribute("value", this._util.maxStringLength(currentEvent.name, 50));
+                label.setAttribute("value", util.maxStringLength(currentEvent.name, 50));
             }
             tooltipCalendar.appendChild(label);
         }
@@ -332,6 +334,7 @@ com.zimbra.Main.initializeTooltipCalendar = function() {
  * @private
  */
 com.zimbra.Main.initializeTooltipTask = function() {
+    var util = com.zimbra.service.Util;
     var index, label;
 
     // clean task
@@ -360,11 +363,11 @@ com.zimbra.Main.initializeTooltipTask = function() {
                 priority = currentPriority;
                 var priorityTxt = "";
                 if (currentPriority < 5) {
-                    priorityTxt += this._util.getBundleString("tooltip.priority.high");
+                    priorityTxt += util.getBundleString("tooltip.priority.high");
                 } else if (currentPriority < 9) {
-                    priorityTxt += this._util.getBundleString("tooltip.priority.normal");
+                    priorityTxt += util.getBundleString("tooltip.priority.normal");
                 } else {
-                    priorityTxt += this._util.getBundleString("tooltip.priority.low");
+                    priorityTxt += util.getBundleString("tooltip.priority.low");
                 }
                 label = document.createElement('label');
                 label.setAttribute("class", "taskLabelPriority");
@@ -377,7 +380,7 @@ com.zimbra.Main.initializeTooltipTask = function() {
             label = document.createElement('label');
             label.setAttribute("flex", "1");
             label.setAttribute("class", "taskLabelDesc");
-            label.setAttribute("value", this._util.maxStringLength(tasks[index].name, 40));
+            label.setAttribute("value", util.maxStringLength(tasks[index].name, 40));
             taskHBox.appendChild(label);
 
             label = document.createElement('label');
@@ -392,7 +395,7 @@ com.zimbra.Main.initializeTooltipTask = function() {
         label = document.createElement('label');
         label.setAttribute("flex", "1");
         label.setAttribute("class", "taskLabelDesc");
-        label.setAttribute("value", this._util.getBundleString("tooltip.noTask"));
+        label.setAttribute("value", util.getBundleString("tooltip.noTask"));
         tooltipTask.appendChild(label);
     }
 };
@@ -402,8 +405,8 @@ com.zimbra.Main.initializeTooltipTask = function() {
  *
  */
 com.zimbra.Main.hideTooltip = function() {
-    this._util.setAttribute("zimbra_mail_notifier_tooltipTitle", "value", "");
-    this._util.setTextContent("zimbra_mail_notifier_tooltipMessage", "");
+    com.zimbra.service.Util.setAttribute("zimbra_mail_notifier_tooltipTitle", "value", "");
+    com.zimbra.service.Util.setTextContent("zimbra_mail_notifier_tooltipMessage", "");
 };
 
 /**

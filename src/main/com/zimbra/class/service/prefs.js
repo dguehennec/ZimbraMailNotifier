@@ -167,8 +167,7 @@ com.zimbra.service.Prefs.prototype.initDefaultValuesIfNecessary = function() {
     this._addPref(this.PREF.REQUEST_WAIT_TIMEOUT, 300000);
     // toolbar install
     if(current_version === null) {
-        var util = new com.zimbra.service.Util();
-        util.installButton("nav-bar", "zimbra_mail_notifier-toolbar-button");
+        com.zimbra.service.Util.installButton("nav-bar", "zimbra_mail_notifier-toolbar-button");
     }
 };
 

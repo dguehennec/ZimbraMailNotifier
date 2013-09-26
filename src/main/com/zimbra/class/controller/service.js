@@ -86,7 +86,6 @@ com.zimbra.controller.SERVICE_STATE = {
  */
 com.zimbra.controller.Service = function() {
     this._logger = new com.zimbra.service.Logger("Service");
-    this._util = new com.zimbra.service.Util();
     this._prefs = new com.zimbra.service.Prefs();
     this._prefs.load();
 
@@ -95,7 +94,7 @@ com.zimbra.controller.Service = function() {
 
     this._loadDefault();
     this._callbackList = [];
-    this._util.addObserver(this, com.zimbra.constant.OBSERVER.PREF_SAVED);
+    com.zimbra.service.Util.addObserver(this, com.zimbra.constant.OBSERVER.PREF_SAVED);
 };
 
 /**
@@ -184,7 +183,7 @@ com.zimbra.controller.Service.prototype.autoConnect = function() {
  */
 com.zimbra.controller.Service.prototype.shutdown = function() {
     this._logger.trace("Shutdown...");
-    this._util.removeObserver(this, com.zimbra.constant.OBSERVER.PREF_SAVED);
+    com.zimbra.service.Util.removeObserver(this, com.zimbra.constant.OBSERVER.PREF_SAVED);
     this._loadDefault();
     this._callbackList = [];
 };
@@ -870,6 +869,7 @@ com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages)
         }
 
         if (notify) {
+            var util = com.zimbra.service.Util;
             var title = '';
             var msg = '';
             var nbMail = 0;
@@ -881,12 +881,12 @@ com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages)
                 if (nbNewUnReadMail > 0) {
                     nbMail += nbNewUnReadMail;
                     if (nbMail > 1) {
-                        title = this._util.getBundleString("connector.notification.nbUnreadMessages");
+                        title = util.getBundleString("connector.notification.nbUnreadMessages");
                         title = title.replace("%NB%", nbMail);
                         msg += newMessage.subject + "\n";
                     }
                     else if (nbMail === 1) {
-                        title = this._util.getBundleString("connector.notification.NewMessage");
+                        title = util.getBundleString("connector.notification.NewMessage");
                         title = title.replace("%EMAIL%", newMessage.senderEmail);
                         msg += newMessage.subject + "\n";
                     }
@@ -898,15 +898,15 @@ com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages)
                 var listener = {
                     observe : function(subject, topic, data) {
                         if (topic === "alertclickcallback") {
-                            this._util.openURL(data);
+                            util.openURL(data);
                         }
                     }
                 };
                 if (this._prefs.isSoundEnabled()) {
-                    this._util.playSound();
+                    util.playSound();
                 }
                 if (this._prefs.isSystemNotificationEnabled()) {
-                    this._util.showNotificaton(title, msg, this._prefs.getUserServer(), listener);
+                    util.showNotificaton(title, msg, this._prefs.getUserServer(), listener);
                 }
             }
         }
@@ -1119,54 +1119,55 @@ com.zimbra.controller.Service.prototype.getTasks = function() {
 com.zimbra.controller.Service.prototype.getLastErrorMessage = function() {
     var message = "";
     var reason = "";
+    var util = com.zimbra.service.Util;
     var lastErr = this._reqInfoErrors.getLastError();
 
     if (lastErr !== null) {
         switch (lastErr.requestType) {
             case com.zimbra.service.REQUEST_TYPE.OPEN_SESSION:
-                message = this._util.getBundleString("connector.error.authentification");
+                message = util.getBundleString("connector.error.authentification");
                 break;
             case com.zimbra.service.REQUEST_TYPE.CREATE_WAIT:
-                message = this._util.getBundleString("connector.error.createwait");
+                message = util.getBundleString("connector.error.createwait");
                 break;
             case com.zimbra.service.REQUEST_TYPE.WAIT_NO_BLOCK:
             case com.zimbra.service.REQUEST_TYPE.WAIT_BLOCK:
-                message = this._util.getBundleString("connector.error.wait");
+                message = util.getBundleString("connector.error.wait");
                 break;
             case com.zimbra.service.REQUEST_TYPE.UNREAD_MSG:
-                message = this._util.getBundleString("connector.error.unreadmsg");
+                message = util.getBundleString("connector.error.unreadmsg");
                 break;
             case com.zimbra.service.REQUEST_TYPE.CALENDAR:
-                message = this._util.getBundleString("connector.error.calendar");
+                message = util.getBundleString("connector.error.calendar");
                 break;
             case com.zimbra.service.REQUEST_TYPE.TASK:
-                message = this._util.getBundleString("connector.error.task");
+                message = util.getBundleString("connector.error.task");
                 break;
             default:
-                message = this._util.getBundleString("connector.error.req.internal");
+                message = util.getBundleString("connector.error.req.internal");
         }
 
         switch (lastErr.lastReqStatus) {
             case com.zimbra.service.REQUEST_STATUS.REQUEST_INVALID:
-                reason = this._util.getBundleString("connector.error.req.invalid");
+                reason = util.getBundleString("connector.error.req.invalid");
                 break;
             case com.zimbra.service.REQUEST_STATUS.TIMEOUT:
-                reason = this._util.getBundleString("connector.error.req.timeout");
+                reason = util.getBundleString("connector.error.req.timeout");
                 break;
             case com.zimbra.service.REQUEST_STATUS.SERVER_ERROR:
-                reason = this._util.getBundleString("connector.error.req.server");
+                reason = util.getBundleString("connector.error.req.server");
                 break;
             case com.zimbra.service.REQUEST_STATUS.NETWORK_ERROR:
-                reason = this._util.getBundleString("connector.error.req.network");
+                reason = util.getBundleString("connector.error.req.network");
                 break;
             case com.zimbra.service.REQUEST_STATUS.AUTH_REQUIRED:
-                reason = this._util.getBundleString("connector.error.req.authreq");
+                reason = util.getBundleString("connector.error.req.authreq");
                 break;
             case com.zimbra.service.REQUEST_STATUS.LOGIN_INVALID:
-                reason = this._util.getBundleString("connector.error.req.logininvalid");
+                reason = util.getBundleString("connector.error.req.logininvalid");
                 break;
             default:
-                reason = this._util.getBundleString("connector.error.req.internal");
+                reason = util.getBundleString("connector.error.req.internal");
                 break;
         }
         message = message.replace("%REASON%", reason);

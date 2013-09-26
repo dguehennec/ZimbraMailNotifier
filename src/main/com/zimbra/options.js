@@ -60,19 +60,19 @@ com.zimbra.Options = {};
 com.zimbra.Options.init = function() {
 
     var selectedTab = com.zimbra.constant.OPTION_SELECT_TAB.GENERAL;
+    var util = com.zimbra.service.Util;
 
     this._closeWhenConnected = false;
     this._prefWereSaved = false;
-    this._util = new com.zimbra.service.Util();
     this._service = ZimbraNotifierSingleton.getService();
 
     // show identification tab if necessary
     if (this._service === null) {
-        this._util.setVisibility("option.tab.identification", "collapse");
+        util.setVisibility("option.tab.identification", "collapse");
         this._prefs = new com.zimbra.service.Prefs();
     }
     else {
-        this._util.setVisibility("option.tab.identification", "visible");
+        util.setVisibility("option.tab.identification", "visible");
         // Register
         this._service.addCallBackRefresh(this);
         // use service pref
@@ -88,47 +88,47 @@ com.zimbra.Options.init = function() {
     this._prefs.load();
 
     // identification
-    this._util.setAttribute("zimbra_mail_notifier-optionLogin","value", this._prefs.getUserLogin());
-    this._util.setAttribute("zimbra_mail_notifier-optionPassword", "value", "");
+    util.setAttribute("zimbra_mail_notifier-optionLogin","value", this._prefs.getUserLogin());
+    util.setAttribute("zimbra_mail_notifier-optionPassword", "value", "");
     if (this._prefs.isSavePasswordEnabled()) {
-        this._util.setAttribute("zimbra_mail_notifier-optionPassword",
+        util.setAttribute("zimbra_mail_notifier-optionPassword",
                                 "value", this._prefs.getUserPassword());
     }
-    this._util.setAttribute("zimbra_mail_notifier-optionServer",
+    util.setAttribute("zimbra_mail_notifier-optionServer",
                             "value", this._prefs.getUserServer());
 
     // general
-    this._util.setAttribute("zimbra_mail_notifier-optionAutoConnect",
+    util.setAttribute("zimbra_mail_notifier-optionAutoConnect",
                             "checked", this._prefs.isAutoConnectEnabled());
-    this._util.setAttribute("zimbra_mail_notifier-optionSystemNotification",
+    util.setAttribute("zimbra_mail_notifier-optionSystemNotification",
                             "checked", this._prefs.isSystemNotificationEnabled());
-    this._util.setAttribute("zimbra_mail_notifier-optionSoundNotification",
+    util.setAttribute("zimbra_mail_notifier-optionSoundNotification",
                             "checked", this._prefs.isSoundEnabled());
-    this._util.setAttribute("zimbra_mail_notifier-optionAccessStatusBar",
+    util.setAttribute("zimbra_mail_notifier-optionAccessStatusBar",
                             "checked", this._prefs.isStatusBarEnabled());
-    this._util.setAttribute("zimbra_mail_notifier-optionSavePassword",
+    util.setAttribute("zimbra_mail_notifier-optionSavePassword",
                             "checked", this._prefs.isSavePasswordEnabled());
     // calendar
-    this._util.setAttribute("zimbra_mail_notifier-optionCalendarEnabled",
+    util.setAttribute("zimbra_mail_notifier-optionCalendarEnabled",
                             "checked", this._prefs.isCalendarEnabled());
-    this._util.setAttribute("zimbra_mail_notifier-optionCalendarSystemNotification",
+    util.setAttribute("zimbra_mail_notifier-optionCalendarSystemNotification",
                             "checked", this._prefs.isCalendarSystemNotificationEnabled());
-    this._util.setAttribute("zimbra_mail_notifier-optionCalendarSoundNotification",
+    util.setAttribute("zimbra_mail_notifier-optionCalendarSoundNotification",
                             "checked", this._prefs.isCalendarSoundNotificationEnabled());
-    this._util.setMenulist("zimbra_mail_notifier-optionCalendarPeriodDisplayed",
+    util.setMenulist("zimbra_mail_notifier-optionCalendarPeriodDisplayed",
                            this._prefs.getCalendarPeriodDisplayed());
-    this._util.setMenulist("zimbra_mail_notifier-optionCalendarNbDisplayed",
+    util.setMenulist("zimbra_mail_notifier-optionCalendarNbDisplayed",
                            this._prefs.getCalendarNbDisplayed());
-    this._util.setMenulist("zimbra_mail_notifier-optionCalendarReminderTimeConf",
+    util.setMenulist("zimbra_mail_notifier-optionCalendarReminderTimeConf",
                            this._prefs.getCalendarReminderTimeConf());
-    this._util.setMenulist("zimbra_mail_notifier-optionCalendarReminderNbRepeat",
+    util.setMenulist("zimbra_mail_notifier-optionCalendarReminderNbRepeat",
                            this._prefs.getCalendarReminderNbRepeat());
     // task
-    this._util.setAttribute("zimbra_mail_notifier-optionTaskEnabled",
+    util.setAttribute("zimbra_mail_notifier-optionTaskEnabled",
                             "checked", this._prefs.isTaskEnabled());
-    this._util.setMenulist("zimbra_mail_notifier-optionTaskNbDisplayed",
+    util.setMenulist("zimbra_mail_notifier-optionTaskNbDisplayed",
                            this._prefs.getTaskNbDisplayed());
-    this._util.setMenulist("zimbra_mail_notifier-optionTaskPrioritiesDisplayed",
+    util.setMenulist("zimbra_mail_notifier-optionTaskPrioritiesDisplayed",
                            this._prefs.getTaskPrioritiesDisplayed());
 
     // refresh screen access
@@ -151,33 +151,34 @@ com.zimbra.Options.refresh = function(startRequest) {
     }
 
     if (this._service && !startRequest) {
+        var util = com.zimbra.service.Util;
 
-        this._util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
-        this._util.setVisibility("zimbra_mail_notifier-disconnectButton", "collapse");
-        this._util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "collapse");
+        util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
+        util.setVisibility("zimbra_mail_notifier-disconnectButton", "collapse");
+        util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "collapse");
 
-        if (   this._util.getAttribute("zimbra_mail_notifier-optionLogin", "value") !== ''
-            && this._util.getAttribute("zimbra_mail_notifier-optionPassword", "value") !== ''
-            && this._util.getAttribute("zimbra_mail_notifier-optionServer", "value") !== '') {
-            this._util.removeAttribute("zimbra_mail_notifier-connectButton", "disabled");
+        if (   util.getAttribute("zimbra_mail_notifier-optionLogin", "value") !== ''
+            && util.getAttribute("zimbra_mail_notifier-optionPassword", "value") !== ''
+            && util.getAttribute("zimbra_mail_notifier-optionServer", "value") !== '') {
+            util.removeAttribute("zimbra_mail_notifier-connectButton", "disabled");
         }
         else {
-            this._util.setAttribute("zimbra_mail_notifier-connectButton", "disabled", true);
+            util.setAttribute("zimbra_mail_notifier-connectButton", "disabled", true);
         }
 
         if (this._service.isConnected()) {
-            this._util.setVisibility("zimbra_mail_notifier-disconnectButton", "visible");
-            this._util.setAttribute("zimbra_mail_notifier-optionLogin", "disabled", true);
-            this._util.setAttribute("zimbra_mail_notifier-optionPassword", "disabled", true);
-            this._util.setAttribute("zimbra_mail_notifier-optionServer", "disabled", true);
+            util.setVisibility("zimbra_mail_notifier-disconnectButton", "visible");
+            util.setAttribute("zimbra_mail_notifier-optionLogin", "disabled", true);
+            util.setAttribute("zimbra_mail_notifier-optionPassword", "disabled", true);
+            util.setAttribute("zimbra_mail_notifier-optionServer", "disabled", true);
         }
         else {
-            this._util.setVisibility("zimbra_mail_notifier-connectButton", "visible");
-            this._util.removeAttribute("zimbra_mail_notifier-optionLogin", "disabled");
-            this._util.removeAttribute("zimbra_mail_notifier-optionPassword", "disabled");
-            this._util.removeAttribute("zimbra_mail_notifier-optionServer", "disabled");
+            util.setVisibility("zimbra_mail_notifier-connectButton", "visible");
+            util.removeAttribute("zimbra_mail_notifier-optionLogin", "disabled");
+            util.removeAttribute("zimbra_mail_notifier-optionPassword", "disabled");
+            util.removeAttribute("zimbra_mail_notifier-optionServer", "disabled");
         }
-        this._util.setAttribute("zimbra_mail_notifier-serverError", "value",
+        util.setAttribute("zimbra_mail_notifier-serverError", "value",
                                 this._service.getLastErrorMessage());
     }
 };
@@ -189,50 +190,52 @@ com.zimbra.Options.refresh = function(startRequest) {
  * @this {Option}
  */
 com.zimbra.Options.updatePrefs = function() {
+    var util = com.zimbra.service.Util;
+
     // general
-    this._prefs.setIsAutoConnectEnabled(this._util.getAttribute(
+    this._prefs.setIsAutoConnectEnabled(util.getAttribute(
         "zimbra_mail_notifier-optionAutoConnect", "checked"));
-    this._prefs.setIsSystemNotificationEnabled(this._util.getAttribute(
+    this._prefs.setIsSystemNotificationEnabled(util.getAttribute(
         "zimbra_mail_notifier-optionSystemNotification", "checked"));
-    this._prefs.setIsSoundEnabled(this._util.getAttribute(
+    this._prefs.setIsSoundEnabled(util.getAttribute(
         "zimbra_mail_notifier-optionSoundNotification", "checked"));
-    this._prefs.setIsStatusBarEnabled(this._util.getAttribute(
+    this._prefs.setIsStatusBarEnabled(util.getAttribute(
         "zimbra_mail_notifier-optionAccessStatusBar", "checked"));
 
     // calendar
-    this._prefs.setIsCalendarEnabled(this._util.getAttribute(
+    this._prefs.setIsCalendarEnabled(util.getAttribute(
         "zimbra_mail_notifier-optionCalendarEnabled", "checked"));
-    this._prefs.setIsCalendarSystemNotificationEnabled(this._util.getAttribute(
+    this._prefs.setIsCalendarSystemNotificationEnabled(util.getAttribute(
         "zimbra_mail_notifier-optionCalendarSystemNotification", "checked"));
-    this._prefs.setIsCalendarSoundNotificationEnabled(this._util.getAttribute(
+    this._prefs.setIsCalendarSoundNotificationEnabled(util.getAttribute(
         "zimbra_mail_notifier-optionCalendarSoundNotification", "checked"));
-    this._prefs.setCalendarPeriodDisplayed(Number(this._util.getAttribute(
+    this._prefs.setCalendarPeriodDisplayed(Number(util.getAttribute(
         "zimbra_mail_notifier-optionCalendarPeriodDisplayed", "value")));
-    this._prefs.setCalendarNbDisplayed(Number(this._util.getAttribute(
+    this._prefs.setCalendarNbDisplayed(Number(util.getAttribute(
         "zimbra_mail_notifier-optionCalendarNbDisplayed", "value")));
-    this._prefs.setCalendarReminderTimeConf(Number(this._util.getAttribute(
+    this._prefs.setCalendarReminderTimeConf(Number(util.getAttribute(
         "zimbra_mail_notifier-optionCalendarReminderTimeConf", "value")));
-    this._prefs.setCalendarReminderNbRepeat(Number(this._util.getAttribute(
+    this._prefs.setCalendarReminderNbRepeat(Number(util.getAttribute(
         "zimbra_mail_notifier-optionCalendarReminderNbRepeat", "value")));
 
     // task
-    this._prefs.setIsTaskEnabled(this._util.getAttribute(
+    this._prefs.setIsTaskEnabled(util.getAttribute(
         "zimbra_mail_notifier-optionTaskEnabled", "checked"));
-    this._prefs.setTaskNbDisplayed(Number(this._util.getAttribute(
+    this._prefs.setTaskNbDisplayed(Number(util.getAttribute(
         "zimbra_mail_notifier-optionTaskNbDisplayed", "value")));
-    this._prefs.setTaskPrioritiesDisplayed(Number(this._util.getAttribute(
+    this._prefs.setTaskPrioritiesDisplayed(Number(util.getAttribute(
         "zimbra_mail_notifier-optionTaskPrioritiesDisplayed", "value")));
 
     // identification
-    this._prefs.setIsSavePasswordEnabled(this._util.getAttribute(
+    this._prefs.setIsSavePasswordEnabled(util.getAttribute(
         "zimbra_mail_notifier-optionSavePassword", "checked"));
-    this._prefs.setUserLogin(this._util.getAttribute(
+    this._prefs.setUserLogin(util.getAttribute(
         "zimbra_mail_notifier-optionLogin", "value"));
-    this._prefs.setUserServer(this._util.getAttribute(
+    this._prefs.setUserServer(util.getAttribute(
         "zimbra_mail_notifier-optionServer", "value"));
 
     if (this._prefs.isSavePasswordEnabled()) {
-        this._prefs.setUserPassword(this._util.getAttribute(
+        this._prefs.setUserPassword(util.getAttribute(
             "zimbra_mail_notifier-optionPassword", "value"));
     } else {
         this._prefs.setUserPassword('');
@@ -273,7 +276,7 @@ com.zimbra.Options.release = function() {
         this._service = null;
     }
     if (this._prefWereSaved === true) {
-        this._util.notifyObservers(com.zimbra.constant.OBSERVER.PREF_SAVED, null);
+        com.zimbra.service.Util.notifyObservers(com.zimbra.constant.OBSERVER.PREF_SAVED, null);
         this._prefWereSaved = false;
     }
 };
@@ -285,19 +288,20 @@ com.zimbra.Options.release = function() {
  */
 com.zimbra.Options.connect = function() {
     if (this._service) {
+        var util = com.zimbra.service.Util;
         // update and save prefs
         this.updatePrefs();
         this._closeWhenConnected = true;
         // update screen view
-        this._util.setAttribute("zimbra_mail_notifier-optionLogin", "disabled", true);
-        this._util.setAttribute("zimbra_mail_notifier-optionPassword", "disabled", true);
-        this._util.setAttribute("zimbra_mail_notifier-optionServer", "disabled", true);
-        this._util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
-        this._util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "visible");
-        this._util.setVisibility("zimbra_mail_notifier-serverError", "value", "");
+        util.setAttribute("zimbra_mail_notifier-optionLogin", "disabled", true);
+        util.setAttribute("zimbra_mail_notifier-optionPassword", "disabled", true);
+        util.setAttribute("zimbra_mail_notifier-optionServer", "disabled", true);
+        util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
+        util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "visible");
+        util.setVisibility("zimbra_mail_notifier-serverError", "value", "");
         // initialize connection
         this._service.initializeConnection(
-            this._util.getAttribute("zimbra_mail_notifier-optionPassword", "value"));
+            util.getAttribute("zimbra_mail_notifier-optionPassword", "value"));
     }
 };
 
