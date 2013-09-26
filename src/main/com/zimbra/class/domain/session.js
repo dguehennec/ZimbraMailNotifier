@@ -198,7 +198,7 @@ com.zimbra.domain.Session.prototype.updateToken = function(token, lifetime) {
 
     if (token.length > 0 && lifetime) {
         var expDate = new Date();
-        expDate.setTime(expDate.getTime() + lifetime - com.zimbra.constant.SESSION.TOKEN_LIFETIME_SECU);
+        expDate.setTime(expDate.getTime() + lifetime - 1000);
 
         this._tokenExpirationTime = expDate;
         this._token = token;
@@ -226,9 +226,8 @@ com.zimbra.domain.Session.prototype.markTokenExpired = function() {
  * @return {Boolean} True if the token is going to be non valid soon
  */
 com.zimbra.domain.Session.prototype.isTokenGoingToExp = function() {
-    var nowDate = new Date();
     var timeExp = this._tokenExpirationTime.getTime() - com.zimbra.constant.SESSION.TOKEN_LIFETIME_EXPIR;
-    if (nowDate.getTime() > timeExp) {
+    if (new Date().getTime() > timeExp) {
         return true;
     }
     return false;

@@ -413,12 +413,12 @@ com.zimbra.controller.Service.prototype._runState = function(newState) {
         case com.zimbra.controller.SERVICE_STATE.CALENDAR_RUN:
             this._sendCallBackRefreshEvent(true);
 
-            if (this.getPrefs().isCalendarEnabled() &&
+            if (this._prefs.isCalendarEnabled() &&
                 this._needRunReq(com.zimbra.service.REQUEST_TYPE.CALENDAR)) {
 
                 var date = new Date();
                 var startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
-                var endDate = new Date(startDate.getTime() + 86400000 * this.getPrefs().getCalendarPeriodDisplayed());
+                var endDate = new Date(date.getTime() + 86400000 * this._prefs.getCalendarPeriodDisplayed());
 
                 if (!this._webservice.searchCalendar(startDate, endDate)) {
                     this._reqInfoErrors.addError(com.zimbra.service.REQUEST_TYPE.CALENDAR,
@@ -437,7 +437,7 @@ com.zimbra.controller.Service.prototype._runState = function(newState) {
         case com.zimbra.controller.SERVICE_STATE.TASK_RUN:
             this._sendCallBackRefreshEvent(true);
 
-            if (this.getPrefs().isTaskEnabled() && this._needRunReq(com.zimbra.service.REQUEST_TYPE.TASK)) {
+            if (this._prefs.isTaskEnabled() && this._needRunReq(com.zimbra.service.REQUEST_TYPE.TASK)) {
                 if (!this._webservice.searchTask()) {
                     this._reqInfoErrors.addError(com.zimbra.service.REQUEST_TYPE.TASK,
                                                  com.zimbra.service.REQUEST_STATUS.INTERNAL_ERROR);
@@ -456,11 +456,11 @@ com.zimbra.controller.Service.prototype._runState = function(newState) {
             this._idxLoopQuery += 1;
             // check if at least one query should be runned again
             var runagain = this._needRunReq(com.zimbra.service.REQUEST_TYPE.UNREAD_MSG);
-            if (!runagain && this.getPrefs().isCalendarEnabled() &&
+            if (!runagain && this._prefs.isCalendarEnabled() &&
                 this._needRunReq(com.zimbra.service.REQUEST_TYPE.CALENDAR)) {
                 runagain = true;
             }
-            if (!runagain && this.getPrefs().isTaskEnabled() &&
+            if (!runagain && this._prefs.isTaskEnabled() &&
                 this._needRunReq(com.zimbra.service.REQUEST_TYPE.TASK)) {
                 runagain = true;
             }
@@ -902,11 +902,11 @@ com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages)
                         }
                     }
                 };
-                if (this.getPrefs().isSoundEnabled()) {
+                if (this._prefs.isSoundEnabled()) {
                     this._util.playSound();
                 }
-                if (this.getPrefs().isSystemNotificationEnabled()) {
-                    this._util.showNotificaton(title, msg, this.getPrefs().getUserServer(), listener);
+                if (this._prefs.isSystemNotificationEnabled()) {
+                    this._util.showNotificaton(title, msg, this._prefs.getUserServer(), listener);
                 }
             }
         }
@@ -931,45 +931,47 @@ com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages)
  */
 com.zimbra.controller.Service.prototype.callbackCalendar = function(events) {
     try {
+        var newEvents = [];
         var index, indexC;
 
         for (index = 0; index < events.length; index++) {
-            var currentEvent = events[index];
-            var found = false;
+            var newEvent = events[index];
             for (indexC = 0; indexC < this._currentEvents.length; indexC++) {
-                if (this._currentEvents[indexC].id === currentEvent.id) {
-                    // refresh event
-                    currentEvent.notifier = this._currentEvents[indexC].notifier;
-                    this._currentEvents[indexC] = currentEvent;
+                var oldEvent = this._currentEvents[indexC];
+                if (oldEvent.id === newEvent.id && oldEvent.notifier) {
+                    // Keep the old notifier object
+                    newEvent.notifier = oldEvent.notifier;
+                    oldEvent.notifier = null;
                     // refresh notifier
-                    currentEvent.notifier.update(currentEvent, this.getPrefs().getCalendarReminderTimeConf(),
-                                                 this.getPrefs().getCalendarReminderNbRepeat(),
-                                                 this.getPrefs().isCalendarSoundNotificationEnabled(),
-                                                 this.getPrefs().isCalendarSystemNotificationEnabled());
-                    found = true;
+                    newEvent.notifier.update(newEvent, this._prefs.getCalendarReminderTimeConf(),
+                                             this._prefs.getCalendarReminderNbRepeat(),
+                                             this._prefs.isCalendarSoundNotificationEnabled(),
+                                             this._prefs.isCalendarSystemNotificationEnabled());
                     break;
                 }
             }
-            if (!found) {
-                currentEvent.notifier = new com.zimbra.service.Notifier(
-                        events[index], this.getPrefs().getCalendarReminderTimeConf(),
-                        this.getPrefs().getCalendarReminderNbRepeat(),
-                        this.getPrefs().isCalendarSoundNotificationEnabled(),
-                        this.getPrefs().isCalendarSystemNotificationEnabled());
-                this._currentEvents.push(currentEvent);
+            if (!newEvent.notifier) {
+                newEvent.notifier = new com.zimbra.service.Notifier(
+                        newEvent, this._prefs.getCalendarReminderTimeConf(),
+                        this._prefs.getCalendarReminderNbRepeat(),
+                        this._prefs.isCalendarSoundNotificationEnabled(),
+                        this._prefs.isCalendarSystemNotificationEnabled());
             }
+            newEvents.push(newEvent);
         }
 
-        var updateTime = new Date();
-        for (indexC = this._currentEvents.length - 1; indexC >= 0; indexC--) {
-            if (this._currentEvents[indexC].notifier.getUpdateTime() < updateTime) {
-                this._currentEvents[indexC].notifier.stop();
-                this._currentEvents.splice(indexC, 1);
-            }
-        }
-        this._currentEvents.sort(function(a, b) {
+        newEvents.sort(function(a, b) {
             return a.startDate - b.startDate;
         });
+
+        // Destroy old event that does not exist anymore and stop notifier
+        this._currentEvents.forEach(function(oldEvt){
+            if (oldEvt.notifier) {
+                oldEvt.notifier.stop();
+            }
+        });
+
+        this._currentEvents = newEvents;
     }
     catch (e) {
         this._logger.error("Failed to add event for notification: " + e);

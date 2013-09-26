@@ -84,7 +84,6 @@ com.zimbra.constant.NOTIFIER = {
  *
  */
 com.zimbra.constant.SESSION = {
-    TOKEN_LIFETIME_SECU : 20000,
     TOKEN_LIFETIME_EXPIR : 180000
 };
 
