@@ -36,18 +36,13 @@
 
 "use strict";
 
-if (!com) {
-    var com = {};
-}
-if (!com.zimbra) {
-    com.zimbra = {};
-}
-if (!com.zimbra.service) {
-    com.zimbra.service = {};
-}
+Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+
+const EXPORTED_SYMBOLS = ["zimbra_notifier_Notifier"];
 
 /**
- * Creates an instance of com.zimbra.service.Notifier.
+ * Creates an instance of zimbra_notifier_Notifier.
  *
  * @constructor
  *
@@ -64,7 +59,8 @@ if (!com.zimbra.service) {
  * @param {Boolean}
  *            withSystemNotification indicate if system notification is enable
  */
-com.zimbra.service.Notifier = function(event, timeConf, nbRepeat, withSoundNotification, withSystemNotification) {
+const zimbra_notifier_Notifier = function(event, timeConf, nbRepeat,
+                                          withSoundNotification, withSystemNotification) {
     this._event = event;
     this._timeConf = timeConf;
     this._nbRepeat = nbRepeat;
@@ -79,10 +75,8 @@ com.zimbra.service.Notifier = function(event, timeConf, nbRepeat, withSoundNotif
  *
  * @this {Notifier}
  */
-com.zimbra.service.Notifier.prototype.start = function() {
-    var object = this;
-    var currentDate = new Date();
-    var diff = this._event.startDate.getTime() - currentDate.getTime();
+zimbra_notifier_Notifier.prototype.start = function() {
+    var diff = this._event.startDate.getTime() - new Date().getTime();
     if (this._timeConf >= 0) {
         diff -= this._timeConf * 60 * 1000;
     } else {
@@ -99,7 +93,7 @@ com.zimbra.service.Notifier.prototype.start = function() {
  *
  * @this {Notifier}
  */
-com.zimbra.service.Notifier.prototype.stop = function() {
+zimbra_notifier_Notifier.prototype.stop = function() {
     if (this._currentTimer) {
         this._currentTimer.cancel();
         this._currentTimer = null;
@@ -112,20 +106,19 @@ com.zimbra.service.Notifier.prototype.stop = function() {
  * @private
  * @this {Notifier}
  */
-com.zimbra.service.Notifier.prototype._notify = function() {
-    var util = com.zimbra.service.Util;
+zimbra_notifier_Notifier.prototype._notify = function() {
     this.stop();
     if (this._withSoundNotification) {
-        util.playSound();
+        zimbra_notifier_Util.playSound();
     }
     if (this._withSystemNotification) {
-        util.showNotificaton(this._event.startDate.toLocaleString(),
-                                   util.getBundleString("connector.notification.event") +
-                                   this._event.name, null, null);
+        zimbra_notifier_Util.showNotificaton(this._event.startDate.toLocaleString(),
+                        zimbra_notifier_Util.getBundleString("connector.notification.event") +
+                        this._event.name, null, null);
     }
     if (this._nbRepeat > 0) {
         this._nbRepeat--;
-        this._planNotify(com.zimbra.constant.NOTIFIER.REPEAT_DELAY_MS);
+        this._planNotify(zimbra_notifier_Constant.NOTIFIER.REPEAT_DELAY_MS);
     }
 };
 
@@ -135,9 +128,9 @@ com.zimbra.service.Notifier.prototype._notify = function() {
  * @private
  * @this {Notifier}
  */
-com.zimbra.service.Notifier.prototype._planNotify = function(delay) {
+zimbra_notifier_Notifier.prototype._planNotify = function(delay) {
     var object = this;
-    this._currentTimer = com.zimbra.service.Util.setTimer(this._currentTimer, function() {
+    this._currentTimer = zimbra_notifier_Util.setTimer(this._currentTimer, function() {
         object._notify();
     }, delay);
 };
@@ -158,7 +151,8 @@ com.zimbra.service.Notifier.prototype._planNotify = function(delay) {
  * @param {Boolean}
  *            withSystemNotification indicate if system notification is enable
  */
-com.zimbra.service.Notifier.prototype.update = function(event, timeConf, nbRepeat, withSoundNotification, withSystemNotification) {
+zimbra_notifier_Notifier.prototype.update = function(event, timeConf, nbRepeat,
+                                                     withSoundNotification, withSystemNotification) {
     this._withSoundNotification = withSoundNotification;
     this._withSystemNotification = withSystemNotification;
 
@@ -177,4 +171,3 @@ com.zimbra.service.Notifier.prototype.update = function(event, timeConf, nbRepea
         this.start();
     }
 };
-

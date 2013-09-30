@@ -36,15 +36,9 @@
 
 "use strict";
 
-if (!com) {
-    var com = {};
-}
-if (!com.zimbra) {
-    com.zimbra = {};
-}
-if (!com.zimbra.domain) {
-    com.zimbra.domain = {};
-}
+Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+
+const EXPORTED_SYMBOLS = ["zimbra_notifier_Session"];
 
 /**
  * Creates an instance of Session.
@@ -52,7 +46,7 @@ if (!com.zimbra.domain) {
  * @constructor
  * @this {Session}
  */
-com.zimbra.domain.Session = function() {
+const zimbra_notifier_Session = function() {
     this.clear();
 };
 
@@ -61,7 +55,7 @@ com.zimbra.domain.Session = function() {
  *
  * @this {Session}
  */
-com.zimbra.domain.Session.prototype.clear = function() {
+zimbra_notifier_Session.prototype.clear = function() {
     this._user = '';
     this._hostname = '';
 
@@ -78,7 +72,7 @@ com.zimbra.domain.Session.prototype.clear = function() {
  * @this {Session}
  * @return {String} The token
  */
-com.zimbra.domain.Session.prototype.token = function() {
+zimbra_notifier_Session.prototype.token = function() {
     return this._token;
 };
 
@@ -88,7 +82,7 @@ com.zimbra.domain.Session.prototype.token = function() {
  * @this {Session}
  * @return {String} The user to login
  */
-com.zimbra.domain.Session.prototype.user = function() {
+zimbra_notifier_Session.prototype.user = function() {
     return this._user;
 };
 
@@ -98,7 +92,7 @@ com.zimbra.domain.Session.prototype.user = function() {
  * @this {Session}
  * @return {String} The wait set id
  */
-com.zimbra.domain.Session.prototype.waitId = function() {
+zimbra_notifier_Session.prototype.waitId = function() {
     return this._waitId;
 };
 
@@ -108,7 +102,7 @@ com.zimbra.domain.Session.prototype.waitId = function() {
  * @this {Session}
  * @return {String} The wait set sequence
  */
-com.zimbra.domain.Session.prototype.waitSeq = function() {
+zimbra_notifier_Session.prototype.waitSeq = function() {
     return this._waitSeq;
 };
 
@@ -120,7 +114,7 @@ com.zimbra.domain.Session.prototype.waitSeq = function() {
  *           baseUrl  The path of the url
  * @return {String} The full url with the hostname
  */
-com.zimbra.domain.Session.prototype.buildUrl = function(baseUrl) {
+zimbra_notifier_Session.prototype.buildUrl = function(baseUrl) {
     if (this._hostname.length > 0) {
         return this._hostname + baseUrl;
     }
@@ -140,8 +134,9 @@ com.zimbra.domain.Session.prototype.buildUrl = function(baseUrl) {
  *
  * @return {Boolean} True if changed
  */
-com.zimbra.domain.Session.prototype.updateLoginInfo = function(hostname, user, clearSession) {
+zimbra_notifier_Session.prototype.updateLoginInfo = function(hostname, user, clearSession) {
     var changed = false;
+
     hostname = this._valToStr(hostname);
     user = this._valToStr(user);
 
@@ -178,7 +173,7 @@ com.zimbra.domain.Session.prototype.updateLoginInfo = function(hostname, user, c
  * @this {Session}
  * @return {Boolean} true if the token and the associated info are valid
  */
-com.zimbra.domain.Session.prototype.isTokenValid = function() {
+zimbra_notifier_Session.prototype.isTokenValid = function() {
     return this._user.length > 0 && this._hostname.length > 0 &&
            this._token.length > 0 && this._tokenExpirationTime > new Date();
 };
@@ -192,7 +187,7 @@ com.zimbra.domain.Session.prototype.isTokenValid = function() {
  * @param {Number}
  *            lifetime The expiration time in ms
  */
-com.zimbra.domain.Session.prototype.updateToken = function(token, lifetime) {
+zimbra_notifier_Session.prototype.updateToken = function(token, lifetime) {
 
     token = this._valToStr(token);
 
@@ -215,7 +210,7 @@ com.zimbra.domain.Session.prototype.updateToken = function(token, lifetime) {
  *
  * @this {Session}
  */
-com.zimbra.domain.Session.prototype.markTokenExpired = function() {
+zimbra_notifier_Session.prototype.markTokenExpired = function() {
     this._tokenExpirationTime = new Date(0);
 };
 
@@ -225,8 +220,8 @@ com.zimbra.domain.Session.prototype.markTokenExpired = function() {
  * @this {Session}
  * @return {Boolean} True if the token is going to be non valid soon
  */
-com.zimbra.domain.Session.prototype.isTokenGoingToExp = function() {
-    var timeExp = this._tokenExpirationTime.getTime() - com.zimbra.constant.SESSION.TOKEN_LIFETIME_EXPIR;
+zimbra_notifier_Session.prototype.isTokenGoingToExp = function() {
+    var timeExp = this._tokenExpirationTime.getTime() - zimbra_notifier_Constant.SESSION.TOKEN_LIFETIME_EXPIR;
     if (new Date().getTime() > timeExp) {
         return true;
     }
@@ -239,7 +234,7 @@ com.zimbra.domain.Session.prototype.isTokenGoingToExp = function() {
  * @this {Session}
  * @return {Boolean} true the WaitSet is valid
  */
-com.zimbra.domain.Session.prototype.isWaitSetValid = function() {
+zimbra_notifier_Session.prototype.isWaitSetValid = function() {
     return this._waitId.length > 0 && this._waitSeq.length > 0;
 };
 
@@ -253,7 +248,7 @@ com.zimbra.domain.Session.prototype.isWaitSetValid = function() {
  *            seq The waitSet sequence
  * @return {Boolean} True if changed
  */
-com.zimbra.domain.Session.prototype.updateWaitSet = function(id, seq) {
+zimbra_notifier_Session.prototype.updateWaitSet = function(id, seq) {
     var changed = false;
 
     id = this._valToStr(id);
@@ -286,10 +281,9 @@ com.zimbra.domain.Session.prototype.updateWaitSet = function(id, seq) {
  *            val  The value
  * @return {Boolean} True if changed
  */
-com.zimbra.domain.Session.prototype._valToStr = function(val) {
+zimbra_notifier_Session.prototype._valToStr = function(val) {
     if (!val && val !== 0) {
         return '';
     }
     return '' + val;
 };
-

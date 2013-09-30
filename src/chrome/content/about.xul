@@ -10,10 +10,6 @@
     width="270" height="190"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-    <stringbundleset id="stringbundleset">
-        <stringbundle id="zimbra_mail_notifier-bundle" src="chrome://zimbra_mail_notifier/locale/zimbra_mail_notifier.properties" />
-    </stringbundleset>
-
     <groupbox orient="vertical">
         <hbox align="center">
             <vbox >

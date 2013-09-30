@@ -36,15 +36,15 @@
 
 "use strict";
 
-if (!com) {
-    var com = {};
-}
-if (!com.zimbra) {
-    com.zimbra = {};
-}
-if (!com.zimbra.service) {
-    com.zimbra.service = {};
-}
+Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/domain/calevent.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/domain/message.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/domain/task.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/domain/session.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
+
+const EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_TYPE", "zimbra_notifier_Webservice"];
 
 /**
  *
@@ -53,7 +53,7 @@ if (!com.zimbra.service) {
  * @constant
  *
  */
-com.zimbra.service.REQUEST_TYPE = {
+const zimbra_notifier_REQUEST_TYPE = {
     NONE : 0,
     OPEN_SESSION : 1,
     CREATE_WAIT : 2,
@@ -65,7 +65,7 @@ com.zimbra.service.REQUEST_TYPE = {
 };
 
 /**
- * Creates an instance of com.zimbra.service.Webservice.
+ * Creates an instance of zimbra_notifier_Webservice.
  *
  * @constructor
  * @this {Webservice}
@@ -75,11 +75,11 @@ com.zimbra.service.REQUEST_TYPE = {
  * @param {Service}
  *            parent the parent object which must implement callbacks...
  */
-com.zimbra.service.Webservice = function(timeout, parent) {
-    this._logger = new com.zimbra.service.Logger("Webservice");
+const zimbra_notifier_Webservice = function(timeout, parent) {
+    this._logger = new zimbra_notifier_Logger("Webservice");
     this._timeoutQuery = timeout;
     this._parent = parent;
-    this._session = new com.zimbra.domain.Session();
+    this._session = new zimbra_notifier_Session();
     this._runningReq = null;
 };
 
@@ -88,11 +88,11 @@ com.zimbra.service.Webservice = function(timeout, parent) {
  *
  * @this {Webservice}
  */
-com.zimbra.service.Webservice.prototype.getRunningReqType = function() {
+zimbra_notifier_Webservice.prototype.getRunningReqType = function() {
     if (this._runningReq !== null) {
         return this._runningReq.typeRequest;
     }
-    return com.zimbra.service.REQUEST_TYPE.NONE;
+    return zimbra_notifier_REQUEST_TYPE.NONE;
 };
 
 /**
@@ -100,7 +100,7 @@ com.zimbra.service.Webservice.prototype.getRunningReqType = function() {
  *
  * @this {Webservice}
  */
-com.zimbra.service.Webservice.prototype.abortRunningReq = function() {
+zimbra_notifier_Webservice.prototype.abortRunningReq = function() {
     if (this._runningReq !== null) {
         var req = this._runningReq;
         this._runningReq = null;
@@ -114,7 +114,7 @@ com.zimbra.service.Webservice.prototype.abortRunningReq = function() {
  * @this {Webservice}
  * @return {Boolean} true if connected
  */
-com.zimbra.service.Webservice.prototype.isConnected = function() {
+zimbra_notifier_Webservice.prototype.isConnected = function() {
     return this._session.isTokenValid();
 };
 
@@ -124,7 +124,7 @@ com.zimbra.service.Webservice.prototype.isConnected = function() {
  * @this {Webservice}
  * @return {Boolean} true if the creation of a new token is needed
  */
-com.zimbra.service.Webservice.prototype.needConnect = function() {
+zimbra_notifier_Webservice.prototype.needConnect = function() {
     return !this._session.isTokenValid() || this._session.isTokenGoingToExp();
 };
 
@@ -134,7 +134,7 @@ com.zimbra.service.Webservice.prototype.needConnect = function() {
  * @this {Webservice}
  * @return {Boolean} true the WaitSet is valid
  */
-com.zimbra.service.Webservice.prototype.isWaitSetValid = function() {
+zimbra_notifier_Webservice.prototype.isWaitSetValid = function() {
     return this._session.isWaitSetValid();
 };
 
@@ -151,7 +151,7 @@ com.zimbra.service.Webservice.prototype.isWaitSetValid = function() {
  * @param {String}
  *            login the user login
  */
-com.zimbra.service.Webservice.prototype.restoreWaitSet = function(id, seq, hostname, login) {
+zimbra_notifier_Webservice.prototype.restoreWaitSet = function(id, seq, hostname, login) {
     var upLogin = this._session.updateLoginInfo(hostname, login, true);
     var upWaitS = this._session.updateWaitSet(id, seq);
     if (upLogin || upWaitS) {
@@ -168,7 +168,7 @@ com.zimbra.service.Webservice.prototype.restoreWaitSet = function(id, seq, hostn
  * @param {String}
  *            login the user login
  */
-com.zimbra.service.Webservice.prototype.infoAuthUpdated = function(hostname, login) {
+zimbra_notifier_Webservice.prototype.infoAuthUpdated = function(hostname, login) {
     if (this._session.updateLoginInfo(hostname, login, true)) {
         this._parent.callbackSessionInfoChanged(this._session);
         return true;
@@ -188,13 +188,13 @@ com.zimbra.service.Webservice.prototype.infoAuthUpdated = function(hostname, log
  *            password the user password
  * @return {Boolean} true if the request was launched
  */
-com.zimbra.service.Webservice.prototype.authRequest = function(hostname, login, password) {
+zimbra_notifier_Webservice.prototype.authRequest = function(hostname, login, password) {
     try {
         if (this._runningReq !== null) {
             return false;
         }
         this.infoAuthUpdated(hostname, login);
-        this._runningReq = this._buildQueryReq(com.zimbra.service.REQUEST_TYPE.OPEN_SESSION,
+        this._runningReq = this._buildQueryReq(zimbra_notifier_REQUEST_TYPE.OPEN_SESSION,
                                                "/service/soap/AuthRequest",
                                                this._callbackAuthRequest);
         this._runningReq.setAuthRequest(login, password);
@@ -214,7 +214,7 @@ com.zimbra.service.Webservice.prototype.authRequest = function(hostname, login, 
  * @param {Request}
  *            object request
  */
-com.zimbra.service.Webservice.prototype._callbackAuthRequest = function(request) {
+zimbra_notifier_Webservice.prototype._callbackAuthRequest = function(request) {
     var isOk = false;
     try {
         if (request !== this._runningReq) {
@@ -254,7 +254,7 @@ com.zimbra.service.Webservice.prototype._callbackAuthRequest = function(request)
  * @this {Webservice}
  * @return {Boolean} true if disconnected
  */
-com.zimbra.service.Webservice.prototype.disconnect = function() {
+zimbra_notifier_Webservice.prototype.disconnect = function() {
     try {
         this._session.updateToken('', '');
         this._parent.callbackDisconnect();
@@ -273,18 +273,18 @@ com.zimbra.service.Webservice.prototype.disconnect = function() {
  * @this {Webservice}
  * @return {Boolean} true if the request was launched
  */
-com.zimbra.service.Webservice.prototype.createWaitRequest = function() {
+zimbra_notifier_Webservice.prototype.createWaitRequest = function() {
     try {
         if (!this._canRunQuery()) {
             return false;
         }
-        this._runningReq = this._buildQueryReq(com.zimbra.service.REQUEST_TYPE.CREATE_WAIT,
+        this._runningReq = this._buildQueryReq(zimbra_notifier_REQUEST_TYPE.CREATE_WAIT,
                                                "/service/soap/CreateWaitSetRequest",
                                                this._callbackCreateWaitRequest);
         var dataBody = '';
         dataBody += '"CreateWaitSetRequest":{';
         dataBody +=    '"_jsns":"urn:zimbraMail",';
-        dataBody +=    '"defTypes":"' + com.zimbra.constant.WEBSERVICE.WAITSET_WATCH_TYPES + '",';
+        dataBody +=    '"defTypes":"' + zimbra_notifier_Constant.WEBSERVICE.WAITSET_WATCH_TYPES + '",';
         dataBody +=    '"add":{';
         dataBody +=       '"a":{';
         dataBody +=          '"name":' + JSON.stringify(this._session.user());
@@ -308,7 +308,7 @@ com.zimbra.service.Webservice.prototype.createWaitRequest = function() {
  * @param {Request}
  *            object request
  */
-com.zimbra.service.Webservice.prototype._callbackCreateWaitRequest = function(request) {
+zimbra_notifier_Webservice.prototype._callbackCreateWaitRequest = function(request) {
     var isOk = false;
     try {
         if (request !== this._runningReq) {
@@ -350,17 +350,17 @@ com.zimbra.service.Webservice.prototype._callbackCreateWaitRequest = function(re
  *
  * @return {Boolean} true if the request was launched
  */
-com.zimbra.service.Webservice.prototype.waitRequest = function(timeout) {
+zimbra_notifier_Webservice.prototype.waitRequest = function(timeout) {
     try {
         if (!this._canRunQuery() || !this.isWaitSetValid()) {
             return false;
         }
-        var typeReq = com.zimbra.service.REQUEST_TYPE.WAIT_NO_BLOCK;
+        var typeReq = zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK;
         var block = false;
         var timeoutS = Math.ceil(this._timeoutQuery / 1000);
 
         if (timeout > 0) {
-            typeReq = com.zimbra.service.REQUEST_TYPE.WAIT_BLOCK;
+            typeReq = zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK;
             block = true;
             timeoutS = Math.round((timeout - 1000) / 1000);
             if (timeoutS < 1) {
@@ -404,7 +404,7 @@ com.zimbra.service.Webservice.prototype.waitRequest = function(timeout) {
  * @param {Request}
  *            object request
  */
-com.zimbra.service.Webservice.prototype._callbackWaitRequest = function(request) {
+zimbra_notifier_Webservice.prototype._callbackWaitRequest = function(request) {
     var isOk = false;
     var newEvent = false;
     var blockingReq = true;
@@ -423,7 +423,7 @@ com.zimbra.service.Webservice.prototype._callbackWaitRequest = function(request)
                 if (jsonR.Body.WaitSetResponse.a) {
                     newEvent = true;
                 }
-                if (request.typeRequest === com.zimbra.service.REQUEST_TYPE.WAIT_NO_BLOCK) {
+                if (request.typeRequest === zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK) {
                     blockingReq = false;
                 }
                 isOk = true;
@@ -452,12 +452,12 @@ com.zimbra.service.Webservice.prototype._callbackWaitRequest = function(request)
  *
  * @this {Webservice}
  */
-com.zimbra.service.Webservice.prototype.searchUnReadMsg = function() {
+zimbra_notifier_Webservice.prototype.searchUnReadMsg = function() {
     try {
         if (!this._canRunQuery()) {
             return false;
         }
-        this._runningReq = this._buildQueryReq(com.zimbra.service.REQUEST_TYPE.UNREAD_MSG,
+        this._runningReq = this._buildQueryReq(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG,
                                                "/service/soap/SearchRequest",
                                                this._callbackUnreadMsgRequest);
         var dataBody = '';
@@ -484,7 +484,7 @@ com.zimbra.service.Webservice.prototype.searchUnReadMsg = function() {
  * @param {Request}
  *            object request
  */
-com.zimbra.service.Webservice.prototype._callbackUnreadMsgRequest = function(request) {
+zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(request) {
     var isOk = false;
     var messages = [];
     try {
@@ -498,9 +498,8 @@ com.zimbra.service.Webservice.prototype._callbackUnreadMsgRequest = function(req
                 if (content) {
                     for (var index = content.length - 1; index >= 0; index--) {
                         var currMsg = content[index];
-                        var msg = new com.zimbra.domain.Message(currMsg.id, currMsg.d, currMsg.su,
-                                                                currMsg.fr, currMsg.e[currMsg.e.length-1].a,
-                                                                currMsg.m);
+                        var msg = new zimbra_notifier_Message(currMsg.id, currMsg.d, currMsg.su, currMsg.fr,
+                                                              currMsg.e[currMsg.e.length-1].a, currMsg.m);
                         messages.push(msg);
                     }
                 }
@@ -531,12 +530,12 @@ com.zimbra.service.Webservice.prototype._callbackUnreadMsgRequest = function(req
  * @param {Date}
  *            endDate the end date
  */
-com.zimbra.service.Webservice.prototype.searchCalendar = function(startDate, endDate) {
+zimbra_notifier_Webservice.prototype.searchCalendar = function(startDate, endDate) {
     try {
         if (!this._canRunQuery()) {
             return false;
         }
-        this._runningReq = this._buildQueryReq(com.zimbra.service.REQUEST_TYPE.CALENDAR,
+        this._runningReq = this._buildQueryReq(zimbra_notifier_REQUEST_TYPE.CALENDAR,
                                                "/service/soap/SearchRequest",
                                                this._callbackCalendarRequest);
         var dataBody = '';
@@ -567,7 +566,7 @@ com.zimbra.service.Webservice.prototype.searchCalendar = function(startDate, end
  * @param {Request}
  *            object request
  */
-com.zimbra.service.Webservice.prototype._callbackCalendarRequest = function(request) {
+zimbra_notifier_Webservice.prototype._callbackCalendarRequest = function(request) {
     var isOk = false;
     var events = [];
     try {
@@ -581,7 +580,7 @@ com.zimbra.service.Webservice.prototype._callbackCalendarRequest = function(requ
                 if (content) {
                     for (var index = content.length - 1; index >= 0; index--) {
                         if (content[index].inst && content[index].inst.length > 0) {
-                            var event = new com.zimbra.domain.CalEvent(
+                            var event = new zimbra_notifier_CalEvent(
                                 content[index].uid, content[index].name,
                                 content[index].inst[0].s, content[index].dur, 0);
 
@@ -624,12 +623,12 @@ com.zimbra.service.Webservice.prototype._callbackCalendarRequest = function(requ
  *
  * @this {Webservice}
  */
-com.zimbra.service.Webservice.prototype.searchTask = function() {
+zimbra_notifier_Webservice.prototype.searchTask = function() {
     try {
         if (!this._canRunQuery()) {
             return false;
         }
-        this._runningReq = this._buildQueryReq(com.zimbra.service.REQUEST_TYPE.TASK,
+        this._runningReq = this._buildQueryReq(zimbra_notifier_REQUEST_TYPE.TASK,
                                                "/service/soap/SearchRequest",
                                                this._callbackTaskRequest);
         var dataBody = '';
@@ -659,7 +658,7 @@ com.zimbra.service.Webservice.prototype.searchTask = function() {
  * @param {Request}
  *            object request
  */
-com.zimbra.service.Webservice.prototype._callbackTaskRequest = function(request) {
+zimbra_notifier_Webservice.prototype._callbackTaskRequest = function(request) {
     var isOk = false;
     var tasks = [];
     try {
@@ -674,9 +673,8 @@ com.zimbra.service.Webservice.prototype._callbackTaskRequest = function(request)
                     for (var index = content.length - 1; index >= 0; index--) {
                         if (content[index].inst && content[index].inst.length > 0) {
                             var currTask = content[index];
-                            var task = new com.zimbra.domain.Task(currTask.name, currTask.d,
-                                                                  currTask.percentComplete,
-                                                                  currTask.priority);
+                            var task = new zimbra_notifier_Task(currTask.name, currTask.d,
+                                                                currTask.percentComplete, currTask.priority);
                             tasks.push(task);
                         }
                     }
@@ -707,35 +705,35 @@ com.zimbra.service.Webservice.prototype._callbackTaskRequest = function(request)
  * @param {Request}
  *            request The information about the request
  */
-com.zimbra.service.Webservice.prototype._callbackFailed = function(request) {
+zimbra_notifier_Webservice.prototype._callbackFailed = function(request) {
     try {
         var status = request.status;
         switch (status)
         {
-            case com.zimbra.service.REQUEST_STATUS.AUTH_REQUIRED:
+            case zimbra_notifier_REQUEST_STATUS.AUTH_REQUIRED:
                 this._session.markTokenExpired();
                 this._parent.callbackSessionInfoChanged(this._session);
                 break;
 
-            case com.zimbra.service.REQUEST_STATUS.WAITSET_INVALID:
+            case zimbra_notifier_REQUEST_STATUS.WAITSET_INVALID:
                 this._session.updateWaitSet('', '');
                 this._parent.callbackSessionInfoChanged(this._session);
                 break;
 
-            case com.zimbra.service.REQUEST_STATUS.LOGIN_INVALID:
+            case zimbra_notifier_REQUEST_STATUS.LOGIN_INVALID:
                 this._session.updateToken('', '');
                 this._parent.callbackSessionInfoChanged(this._session);
                 break;
 
-            case com.zimbra.service.REQUEST_STATUS.TIMEOUT:
-            case com.zimbra.service.REQUEST_STATUS.SERVER_ERROR:
-            case com.zimbra.service.REQUEST_STATUS.CANCELED:
-            case com.zimbra.service.REQUEST_STATUS.NETWORK_ERROR:
-            case com.zimbra.service.REQUEST_STATUS.REQUEST_INVALID:
+            case zimbra_notifier_REQUEST_STATUS.TIMEOUT:
+            case zimbra_notifier_REQUEST_STATUS.SERVER_ERROR:
+            case zimbra_notifier_REQUEST_STATUS.CANCELED:
+            case zimbra_notifier_REQUEST_STATUS.NETWORK_ERROR:
+            case zimbra_notifier_REQUEST_STATUS.REQUEST_INVALID:
                 break;
 
             default:
-                status = com.zimbra.service.REQUEST_STATUS.INTERNAL_ERROR;
+                status = zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR;
                 break;
         }
         this._logger.warning("Failed run request: " + request.typeRequest + " error: " + status);
@@ -758,9 +756,9 @@ com.zimbra.service.Webservice.prototype._callbackFailed = function(request) {
  * @param {Function}
  *            callback The function to call at the end of the request
  */
-com.zimbra.service.Webservice.prototype._buildQueryReq = function(typeReq, url, callback) {
-    return new com.zimbra.service.Request(typeReq, this._timeoutQuery, this._session.buildUrl(url),
-                                          this, callback);
+zimbra_notifier_Webservice.prototype._buildQueryReq = function(typeReq, url, callback) {
+    return new zimbra_notifier_Request(typeReq, this._timeoutQuery, this._session.buildUrl(url),
+                                       this, callback);
 };
 
 /**
@@ -769,7 +767,7 @@ com.zimbra.service.Webservice.prototype._buildQueryReq = function(typeReq, url, 
  * @private
  * @this {Webservice}
  */
-com.zimbra.service.Webservice.prototype._canRunQuery = function() {
+zimbra_notifier_Webservice.prototype._canRunQuery = function() {
     if (this._runningReq !== null) {
         this._logger.warning("A query is already running");
         return false;

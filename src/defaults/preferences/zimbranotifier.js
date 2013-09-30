@@ -34,102 +34,24 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Constant"];
-const zimbra_notifier_Constant = {};
-
-/**
- * The version of the extension
- *
- * @constant
- */
-zimbra_notifier_Constant.VERSION = 0x020000;
-
-/**
- * Logger level
- *
- * @constant
- */
-zimbra_notifier_Constant.LOGGER = {
-    LEVEL : 3,
-    PRINT_STACK : true,
-    PRINT_DATE : true
-};
-
-/**
- * Oberver
- *
- * @constant
- *
- */
-zimbra_notifier_Constant.OBSERVER = {
-    PREF_SAVED : "zimbra_mail_notifier.pref.saved"
-};
-
-/**
- * The string bundle info
- *
- * @constant
- *
- */
-zimbra_notifier_Constant.STRING_BUNDLE = {
-    DEFAULT_URL : "chrome://zimbra_mail_notifier/locale/zimbra_mail_notifier.properties"
-};
-
-/**
- * Notifier
- *
- * @constant
- *
- */
-zimbra_notifier_Constant.NOTIFIER = {
-    REPEAT_DELAY_MS : 60000
-};
-
-/**
- * Session
- *
- * @constant
- *
- */
-zimbra_notifier_Constant.SESSION = {
-    TOKEN_LIFETIME_EXPIR : 180000
-};
-
-/**
- * Service
- *
- * @constant
- *
- */
-zimbra_notifier_Constant.SERVICE = {
-    CONNECT_BASE_WAIT_AFTER_FAILURE : 20000,
-    CONNECT_MAX_WAIT_AFTER_FAILURE : 300000,
-    REFRESH_WAIT_AFTER_FAILURE : 10000,
-    DELAY_NOTIFY_FIRST_UNREAD : 8000,
-    NB_RETRY_QUERY : 3
-};
-
-/**
- * WebService
- *
- * @constant
- *
- */
-zimbra_notifier_Constant.WEBSERVICE = {
-    WAITSET_WATCH_TYPES : 'all'
-};
-
-/**
- * Option select tab
- *
- * @constant
- *
- */
-zimbra_notifier_Constant.OPTION_SELECT_TAB = {
-    GENERAL : 0,
-    CALENDAR : 1,
-    TASK : 2,
-    IDENTIFICATION : 3
-};
+pref("extensions.zimbra_mail_notifier.currentVersion", 0);
+pref("extensions.zimbra_mail_notifier.accessStatusBar", true);
+pref("extensions.zimbra_mail_notifier.autoConnect", false);
+pref("extensions.zimbra_mail_notifier.systemNotificationEnabled", true);
+pref("extensions.zimbra_mail_notifier.soundEnabled", true);
+pref("extensions.zimbra_mail_notifier.calendarEnabled", false);
+pref("extensions.zimbra_mail_notifier.calendarPeriodDisplayed", 14);
+pref("extensions.zimbra_mail_notifier.calendarNbDisplayed", 5);
+pref("extensions.zimbra_mail_notifier.calendarSystemNotificationEnabled", true);
+pref("extensions.zimbra_mail_notifier.calendarSoundEnabled", true);
+pref("extensions.zimbra_mail_notifier.calendarReminderTimeConf", -1);
+pref("extensions.zimbra_mail_notifier.calendarReminderRepeatNb", 0);
+pref("extensions.zimbra_mail_notifier.taskEnabled", false);
+pref("extensions.zimbra_mail_notifier.taskNbDisplayed", 5);
+pref("extensions.zimbra_mail_notifier.taskPriorities", 0);
+pref("extensions.zimbra_mail_notifier.userlogin", '');
+pref("extensions.zimbra_mail_notifier.userSavePassword", false);
+pref("extensions.zimbra_mail_notifier.userServer", '');
+pref("extensions.zimbra_mail_notifier.waitSetInfo", '');
+pref("extensions.zimbra_mail_notifier.requestQueryTimeout", 15000);
+pref("extensions.zimbra_mail_notifier.requestWaitTimeout", 300000);

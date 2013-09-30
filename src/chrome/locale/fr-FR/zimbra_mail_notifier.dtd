@@ -67,9 +67,7 @@
 <!ENTITY option.identifiant.savePassword.label "Sauvegarde du mot de passe">
 <!ENTITY option.identifiant.server.caption "Serveur">
 <!ENTITY option.identifiant.server.label "Url du serveur de mail">
-<!ENTITY option.identifiant.connect.button "Sauvegarde &amp; Connexion">
+<!ENTITY option.identifiant.connect.button "Connexion">
 <!ENTITY option.identifiant.connectInProgress.button "En cours...">
 <!ENTITY option.identifiant.disconnect.button "Déconnexion">
 
-<!ENTITY option.close.label "Fermer">
-<!ENTITY option.save.label "Sauvegarder">

@@ -36,24 +36,19 @@
 
 "use strict";
 
-if (!com) {
-    var com = {};
-}
-if (!com.zimbra) {
-    com.zimbra = {};
-}
-if (!com.zimbra.service) {
-    com.zimbra.service = {};
-}
+Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+
+const EXPORTED_SYMBOLS = ["zimbra_notifier_Util"];
 
 /**
- * Creates a global instance of com.zimbra.service.Util
+ * Creates a global instance of zimbra_notifier_Util
  *
  * @constructor
  * @this {Util}
  *
  */
-com.zimbra.service.Util = {
+const zimbra_notifier_Util = {
     /**
      * @private bundle
      */
@@ -69,13 +64,16 @@ com.zimbra.service.Util = {
  *            param parameter value to get
  * @return {String} value of parameter
  */
-com.zimbra.service.Util.getBundleString = function(param) {
+zimbra_notifier_Util.getBundleString = function(param) {
     try {
         if (this._bundle === null) {
-            this._bundle = window.document.getElementById("zimbra_mail_notifier-bundle").stringBundle;
+            var appLocale = Services.locale.getApplicationLocale();
+            this._bundle = Services.strings.createBundle(
+                zimbra_notifier_Constant.STRING_BUNDLE.DEFAULT_URL, appLocale);
         }
         return this._bundle.GetStringFromName(param);
-    } catch (e) {
+    }
+    catch (e) {
         return '';
     }
 };
@@ -88,13 +86,13 @@ com.zimbra.service.Util.getBundleString = function(param) {
  * @param {nsITimer}
  *            timer  A previous instance of a timer to reuse, can be null: create a new one
  * @param {Function}
- *            func   The callback fired withe the timer timeout
+ *            func   The callback to be fired when the timer timeout
  * @param {Number}
  *            delay  The number of ms
  *
  * @return {nsITimer} The created timer
  */
-com.zimbra.service.Util.setTimer = function(timer, func, delay) {
+zimbra_notifier_Util.setTimer = function(timer, func, delay) {
     if (!timer) {
         timer = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
     }
@@ -110,7 +108,7 @@ com.zimbra.service.Util.setTimer = function(timer, func, delay) {
  *            time in seconds.
  * @return {String} time in format hh:mm:ss.
  */
-com.zimbra.service.Util.secToTimeStr = function(time) {
+zimbra_notifier_Util.secToTimeStr = function(time) {
     if (time === null || time < 0) {
         return "";
     }
@@ -131,7 +129,7 @@ com.zimbra.service.Util.secToTimeStr = function(time) {
  *            date to convert in seconds
  * @return {String} date in format jj.mm.aaaa hh:mm
  */
-com.zimbra.service.Util.formatDateTime = function(date) {
+zimbra_notifier_Util.formatDateTime = function(date) {
     if (date === null) {
         return "";
     }
@@ -150,7 +148,7 @@ com.zimbra.service.Util.formatDateTime = function(date) {
  *            length max text length.
  * @return {String} text limited with ....
  */
-com.zimbra.service.Util.maxStringLength = function(text, length) {
+zimbra_notifier_Util.maxStringLength = function(text, length) {
     if (text === null || (text.length < length)) {
         return text;
     }
@@ -171,12 +169,9 @@ com.zimbra.service.Util.maxStringLength = function(text, length) {
  *            UrlToGoTo url to open.
  * @return {Boolean} true if success
  */
-com.zimbra.service.Util.openURL = function(UrlToGoTo) {
+zimbra_notifier_Util.openURL = function(UrlToGoTo) {
     try {
-        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"].
-            getService(Components.interfaces.nsIWindowMediator);
-
-        var browserEnumerator = wm.getEnumerator("navigator:browser");
+        var browserEnumerator = Services.wm.getEnumerator("navigator:browser");
         var exp = /(\b(https|http):\/\/)/gi;
         var url = UrlToGoTo.replace(exp, "");
 
@@ -193,13 +188,17 @@ com.zimbra.service.Util.openURL = function(UrlToGoTo) {
                 }
             }
         }
-        var recentWindow = wm.getMostRecentWindow("navigator:browser");
+        var recentWindow = Services.wm.getMostRecentWindow("navigator:browser");
         if (recentWindow) {
             recentWindow.delayedOpenTab(UrlToGoTo, null, null, null, null);
             recentWindow.focus();
-        } else {
-            window.open(UrlToGoTo);
-            window.focus();
+        }
+        else {
+            var win = Services.ww.openWindow(Services.ww.activeWindow, UrlToGoTo, null, null, null);
+            if (Services.ww.activeWindow) {
+                Services.ww.activeWindow.focus();
+            }
+            win.focus();
         }
     }
     catch (e) {
@@ -222,14 +221,14 @@ com.zimbra.service.Util.openURL = function(UrlToGoTo) {
  *
  * @return {Boolean} true if success
  */
-com.zimbra.service.Util.showNotificaton = function(title, text, callbackData, callback) {
+zimbra_notifier_Util.showNotificaton = function(title, text, callbackData, callback) {
     try {
         var textClickable = false;
         if (callback) {
             textClickable = true;
         }
         var alertsService = Components.classes['@mozilla.org/alerts-service;1'].
-            getService(Components.interfaces.nsIAlertsService);
+                             getService(Components.interfaces.nsIAlertsService);
 
         alertsService.showAlertNotification('chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png',
                                             title, text, textClickable, callbackData, callback, "");
@@ -244,11 +243,10 @@ com.zimbra.service.Util.showNotificaton = function(title, text, callbackData, ca
  *
  * @return {Boolean} true if success
  */
-com.zimbra.service.Util.playSound = function() {
+zimbra_notifier_Util.playSound = function() {
     try {
         var sound = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
-        var os = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULRuntime).OS;
-        if (os === "Darwin") {
+        if (Services.appinfo.OS === "Darwin") {
             sound.beep();
         } else {
             sound.playEventSound(Components.interfaces.nsISound.EVENT_NEW_MAIL_RECEIVED);
@@ -260,138 +258,6 @@ com.zimbra.service.Util.playSound = function() {
 };
 
 /**
- * install button.
- *
- * @this {Util}
- * @param {String}
- *            toolbarid
- * @param {String}
- *            id
- * @param {String}
- *            afterId indicate after the object Id
- */
-com.zimbra.service.Util.installButton = function(toolbarId, id, afterId) {
-    if (!window.document.getElementById(id)) {
-        var toolbar = window.document.getElementById(toolbarId);
-        var before = null;
-        if (afterId) {
-            var elem = window.document.getElementById(afterId);
-            if (elem && elem.parentNode === toolbar) {
-                before = elem.nextElementSibling;
-            }
-        }
-
-        toolbar.insertItem(id, before);
-        toolbar.setAttribute("currentset", toolbar.currentSet);
-        window.document.persist(toolbar.id, "currentset");
-
-        if (toolbarId === "addon-bar") {
-            toolbar.collapsed = false;
-        }
-    }
-};
-
-/**
- * set menulist
- *
- * @this {Util}
- */
-com.zimbra.service.Util.setMenulist = function(id, value) {
-    var object = document.getElementById(id);
-    var popup = object.menupopup;
-    if (popup) {
-        var children = popup.childNodes;
-        for ( var index = 0; index < children.length; index++) {
-            if (Number(children[index].value) === value) {
-                object.selectedIndex = index;
-                return;
-
-            }
-        }
-    }
-};
-
-/**
- * set visibility.
- *
- * @this {Util}
- * @param {String}
- *            id
- * @param {String}
- *            visibility visibility of the object
- */
-com.zimbra.service.Util.setVisibility = function(id, visibility) {
-    if (window.document.getElementById(id)) {
-        window.document.getElementById(id).style.visibility = visibility;
-    }
-};
-
-/**
- * set attribute.
- *
- * @this {Util}
- * @param {String}
- *            id
- * @param {String}
- *            attribute attribute to set
- * @param {String}
- *            value value of the attribute
- */
-com.zimbra.service.Util.setAttribute = function(id, attribute, value) {
-    if (window.document.getElementById(id)) {
-        window.document.getElementById(id).setAttribute(attribute, value);
-    }
-};
-
-/**
- * set textContent.
- *
- * @this {Util}
- * @param {String}
- *            id
- * @param {String}
- *            attribute attribute to set
- * @param {String}
- *            value value of the attribute
- */
-com.zimbra.service.Util.setTextContent = function(id, value) {
-    if (window.document.getElementById(id)) {
-        window.document.getElementById(id).textContent = value;
-    }
-};
-/**
- * get attribute.
- *
- * @this {Util}
- * @param {String}
- *            id
- * @param {String}
- *            attribute attribute to get
- * @return {Object} value of the attribute
- */
-com.zimbra.service.Util.getAttribute = function(id, attribute) {
-    if (window.document.getElementById(id)) {
-        return window.document.getElementById(id)[attribute];
-    }
-    return undefined;
-};
-
-/**
- * remove attribute.
- *
- * @this {Util}
- * @param {String}
- *            id
- * @param {String}
- *            attribute attribute to remove
- */
-com.zimbra.service.Util.removeAttribute = function(id, attribute) {
-    if (window.document.getElementById(id)) {
-        window.document.getElementById(id).removeAttribute(attribute);
-    }
-};
-
-/**
  * addObserver.
  *
  * @this {Util}
@@ -400,10 +266,8 @@ com.zimbra.service.Util.removeAttribute = function(id, attribute) {
  * @param {String}
  *            topic the topic
  */
-com.zimbra.service.Util.addObserver = function(observer, topic) {
-    var observerService = Components.classes["@mozilla.org/observer-service;1"].
-        getService(Components.interfaces.nsIObserverService);
-    observerService.addObserver(observer, topic, false);
+zimbra_notifier_Util.addObserver = function(observer, topic) {
+    Services.obs.addObserver(observer, topic, false);
 };
 
 /**
@@ -415,10 +279,8 @@ com.zimbra.service.Util.addObserver = function(observer, topic) {
  * @param {String}
  *            topic the topic
  */
-com.zimbra.service.Util.removeObserver = function(observer, topic) {
-    var observerService = Components.classes["@mozilla.org/observer-service;1"].
-        getService(Components.interfaces.nsIObserverService);
-    observerService.removeObserver(observer, topic);
+zimbra_notifier_Util.removeObserver = function(observer, topic) {
+    Services.obs.removeObserver(observer, topic);
 };
 
 /**
@@ -430,8 +292,6 @@ com.zimbra.service.Util.removeObserver = function(observer, topic) {
  * @param {String}
  *            data the data
  */
-com.zimbra.service.Util.notifyObservers = function(topic, data) {
-    var observerService = Components.classes["@mozilla.org/observer-service;1"].
-        getService(Components.interfaces.nsIObserverService);
-    observerService.notifyObservers(null, topic, data);
+zimbra_notifier_Util.notifyObservers = function(topic, data) {
+    Services.obs.notifyObservers(null, topic, data);
 };

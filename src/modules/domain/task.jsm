@@ -36,15 +36,7 @@
 
 "use strict";
 
-if (!com) {
-    var com = {};
-}
-if (!com.zimbra) {
-    com.zimbra = {};
-}
-if (!com.zimbra.domain) {
-    com.zimbra.domain = {};
-}
+const EXPORTED_SYMBOLS = ["zimbra_notifier_Task"];
 
 /**
  * Creates an instance of Task.
@@ -61,7 +53,7 @@ if (!com.zimbra.domain) {
  * @param {Number}
  *            priority the priority
  */
-com.zimbra.domain.Task = function(name, timestamp, percentComplete, priority) {
+const zimbra_notifier_Task = function(name, timestamp, percentComplete, priority) {
     this.name = name;
     this.date = new Date(timestamp);
     this.percentComplete = percentComplete;

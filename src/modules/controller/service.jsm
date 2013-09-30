@@ -36,17 +36,20 @@
 
 "use strict";
 
-if (!com) {
-    var com = {};
-}
-if (!com.zimbra) {
-    com.zimbra = {};
-}
-if (!com.zimbra.controller) {
-    com.zimbra.controller = {};
-}
+Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/notifier.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/infoerror.jsm");
 
-com.zimbra.controller.SERVICE_STATE = {
+const EXPORTED_SYMBOLS = ["zimbra_notifier_Service", "zimbra_notifier_SERVICE_EVENT",
+                          "zimbra_notifier_SERVICE_STATE"];
+
+
+const zimbra_notifier_SERVICE_STATE = {
     DISCONNECTED         : 'DISCONNECTED',
     NOTHING_TO_DO        : 'NOTHING_TO_DO',
 
@@ -76,6 +79,22 @@ com.zimbra.controller.SERVICE_STATE = {
     WAITSET_NO_NEW_EVT   : 'WAITSET_NO_NEW_EVT'
 };
 
+const zimbra_notifier_SERVICE_EVENT = {
+    STOPPED              : 'STOPPED',
+    CONNECTING           : 'CONNECTING',
+    INVALID_LOGIN        : 'INVALID_LOGIN',
+    CONNECT_ERR          : 'CONNECT_ERR',
+    CONNECTED            : 'CONNECTED',
+    DISCONNECTED         : 'DISCONNECTED',
+    CHECKING_UNREAD_MSG  : 'CHECKING_UNREAD_MSG',
+    UNREAD_MSG_UPDATED   : 'UNREAD_MSG_UPDATED',
+    CHECKING_CALENDAR    : 'CHECKING_CALENDAR',
+    CALENDAR_UPDATED     : 'CALENDAR_UPDATED',
+    CHECKING_TASK        : 'CHECKING_TASK',
+    TASK_UPDATED         : 'TASK_UPDATED',
+    PREF_UPDATED         : 'PREF_UPDATED'
+};
+
 /* ******************* Init functions *********************** */
 
 /**
@@ -83,18 +102,18 @@ com.zimbra.controller.SERVICE_STATE = {
  *
  * @constructor
  * @this {Service}
+ * @param {Controller}
+ *             The parent listening for events
  */
-com.zimbra.controller.Service = function() {
-    this._logger = new com.zimbra.service.Logger("Service");
-    this._prefs = new com.zimbra.service.Prefs();
-    this._prefs.load();
+const zimbra_notifier_Service = function(parent) {
+    this._parent = parent;
+    this._logger = new zimbra_notifier_Logger("Service");
 
-    this._webservice = new com.zimbra.service.Webservice(this._prefs.getRequestQueryTimeout(), this);
-    this._reqInfoErrors = new com.zimbra.domain.InfoErrors();
+    this._webservice = new zimbra_notifier_Webservice(zimbra_notifier_Prefs.getRequestQueryTimeout(), this);
+    this._reqInfoErrors = new zimbra_notifier_InfoErrors();
 
     this._loadDefault();
-    this._callbackList = [];
-    com.zimbra.service.Util.addObserver(this, com.zimbra.constant.OBSERVER.PREF_SAVED);
+    zimbra_notifier_Util.addObserver(this, zimbra_notifier_Constant.OBSERVER.PREF_SAVED);
 };
 
 /**
@@ -103,7 +122,7 @@ com.zimbra.controller.Service = function() {
  * @private
  * @this {Service}
  */
-com.zimbra.controller.Service.prototype._loadDefault = function() {
+zimbra_notifier_Service.prototype._loadDefault = function() {
 
     this._webservice.abortRunningReq();
     // Timer for state machine
@@ -123,7 +142,7 @@ com.zimbra.controller.Service.prototype._loadDefault = function() {
     this._reqInfoErrors.clearAllErrors();
 
     // Current state
-    this._currentState = com.zimbra.controller.SERVICE_STATE.NOTHING_TO_DO;
+    this._currentState = zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO;
     this._idxLoopQuery = 0;
 
     // Delay before trying again the connect
@@ -133,7 +152,7 @@ com.zimbra.controller.Service.prototype._loadDefault = function() {
     this._timeStartWaitReq = 0;
 
     // Restore previous wait set
-    var wSet = this._prefs.getPreviousWaitSet();
+    var wSet = zimbra_notifier_Prefs.getPreviousWaitSet();
     if (wSet !== null) {
         this._webservice.restoreWaitSet(wSet.id, wSet.seq, wSet.hostname, wSet.user);
     }
@@ -146,7 +165,7 @@ com.zimbra.controller.Service.prototype._loadDefault = function() {
  * @private
  * @this {Service}
  */
-com.zimbra.controller.Service.prototype._stopRemoveEvents = function() {
+zimbra_notifier_Service.prototype._stopRemoveEvents = function() {
     if (this._currentEvents) {
         // stop all notifiers if exist
         while (this._currentEvents.length > 0) {
@@ -159,32 +178,14 @@ com.zimbra.controller.Service.prototype._stopRemoveEvents = function() {
 };
 
 /**
- * Start auto-connect if necessary
- *
- * @this {Service}
- * @return {Boolean} False if we need to ask the password
- */
-com.zimbra.controller.Service.prototype.autoConnect = function() {
-    if (!this.isConnected() && this._prefs.isAutoConnectEnabled()) {
-        if (this._prefs.isSavePasswordEnabled()) {
-            return this.initializeConnection();
-        } else {
-            return false;
-        }
-    }
-    return true;
-};
-
-/**
  * Release Service.
  *
  * @this {Service}
  */
-com.zimbra.controller.Service.prototype.shutdown = function() {
+zimbra_notifier_Service.prototype.shutdown = function() {
     this._logger.trace("Shutdown...");
-    com.zimbra.service.Util.removeObserver(this, com.zimbra.constant.OBSERVER.PREF_SAVED);
+    zimbra_notifier_Util.removeObserver(this, zimbra_notifier_Constant.OBSERVER.PREF_SAVED);
     this._loadDefault();
-    this._callbackList = [];
 };
 
 
@@ -198,7 +199,7 @@ com.zimbra.controller.Service.prototype.shutdown = function() {
  * @param {String}
  *            newState the new state
  */
-com.zimbra.controller.Service.prototype._changeState = function(newState) {
+zimbra_notifier_Service.prototype._changeState = function(newState) {
     var oldState = this._currentState;
     this._currentState = newState;
     if (oldState !== newState) {
@@ -216,9 +217,9 @@ com.zimbra.controller.Service.prototype._changeState = function(newState) {
  * @param {Number}
  *            delayMs the delay before calling _changeAndRunState
  */
-com.zimbra.controller.Service.prototype._planRunState = function(newState, delayMs) {
+zimbra_notifier_Service.prototype._planRunState = function(newState, delayMs) {
     var object = this;
-    this._stateTimer = com.zimbra.service.Util.setTimer(this._stateTimer, function() {
+    this._stateTimer = zimbra_notifier_Util.setTimer(this._stateTimer, function() {
         object._changeAndRunState(newState);
         object._stateTimer = null;
     }, delayMs);
@@ -230,7 +231,7 @@ com.zimbra.controller.Service.prototype._planRunState = function(newState, delay
  * @private
  * @this {Service}
  */
-com.zimbra.controller.Service.prototype._stopStateTimer = function() {
+zimbra_notifier_Service.prototype._stopStateTimer = function() {
     if (this._stateTimer) {
         this._stateTimer.cancel();
     }
@@ -249,7 +250,7 @@ com.zimbra.controller.Service.prototype._stopStateTimer = function() {
  * @param {Number}
  *            delayMs the delay before calling _changeAndRunState
  */
-com.zimbra.controller.Service.prototype._changeRunningState = function(newState, delayMs) {
+zimbra_notifier_Service.prototype._changeRunningState = function(newState, delayMs) {
     this._webservice.abortRunningReq();
     this._stopStateTimer();
     this._planRunState(newState, delayMs);
@@ -263,7 +264,7 @@ com.zimbra.controller.Service.prototype._changeRunningState = function(newState,
  * @param {String}
  *            expStates the array of expected states
  */
-com.zimbra.controller.Service.prototype._checkExpectedStates = function(expStates) {
+zimbra_notifier_Service.prototype._checkExpectedStates = function(expStates) {
     var ok = false;
     for ( var idx = 0; idx < expStates.length; idx++) {
         if (this._currentState === expStates[idx]) {
@@ -275,7 +276,7 @@ com.zimbra.controller.Service.prototype._checkExpectedStates = function(expState
         this._logger.error("Unexpected state: " + this._currentState + " instead: " + expStates);
         this._webservice.abortRunningReq();
         this._stopStateTimer();
-        this._planRunState(com.zimbra.controller.SERVICE_STATE.NOTHING_TO_DO, 100);
+        this._planRunState(zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO, 100);
     }
     return ok;
 };
@@ -288,7 +289,7 @@ com.zimbra.controller.Service.prototype._checkExpectedStates = function(expState
  * @param {String}
  *            expState the expected state
  */
-com.zimbra.controller.Service.prototype._checkExpectedState = function(expState) {
+zimbra_notifier_Service.prototype._checkExpectedState = function(expState) {
     return this._checkExpectedStates([expState]);
 };
 
@@ -300,7 +301,7 @@ com.zimbra.controller.Service.prototype._checkExpectedState = function(expState)
  * @param {Number}
  *            newState  The state to change and run
  */
-com.zimbra.controller.Service.prototype._changeAndRunState = function(newState) {
+zimbra_notifier_Service.prototype._changeAndRunState = function(newState) {
     try {
         // Change to the new state
         this._changeState(newState);
@@ -309,7 +310,7 @@ com.zimbra.controller.Service.prototype._changeAndRunState = function(newState) 
     }
     catch (e) {
         this._logger.error("Fail run state (" + newState + "): " + e);
-        this._changeRunningState(com.zimbra.controller.SERVICE_STATE.NOTHING_TO_DO, 500);
+        this._changeRunningState(zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO, 500);
     }
 }
 /**
@@ -320,221 +321,221 @@ com.zimbra.controller.Service.prototype._changeAndRunState = function(newState) 
  * @param {Number}
  *            newState  The state to run
  */
-com.zimbra.controller.Service.prototype._runState = function(newState) {
+zimbra_notifier_Service.prototype._runState = function(newState) {
     switch (newState) {
         // We cannot login or we are just disconnected
-        case com.zimbra.controller.SERVICE_STATE.DISCONNECTED:
-            this._changeState(com.zimbra.controller.SERVICE_STATE.NOTHING_TO_DO);
+        case zimbra_notifier_SERVICE_STATE.DISCONNECTED:
+            this._changeState(zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO);
 
         // Nothing to do...
-        case com.zimbra.controller.SERVICE_STATE.NOTHING_TO_DO:
-            this._sendCallBackRefreshEvent();
+        case zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO:
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.STOPPED);
             break;
 
         // The login is invalid, wait for user input...
-        case com.zimbra.controller.SERVICE_STATE.CONNECT_INV_LOGIN:
-            this._sendCallBackRefreshEvent();
-            this._planRunState(com.zimbra.controller.SERVICE_STATE.NOTHING_TO_DO, 10);
+        case zimbra_notifier_SERVICE_STATE.CONNECT_INV_LOGIN:
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.INVALID_LOGIN);
+            this._planRunState(zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO, 10);
             break;
 
         // The connect failed for any other reason, try again later
-        case com.zimbra.controller.SERVICE_STATE.CONNECT_ERR:
-            this._sendCallBackRefreshEvent();
-            this._changeState(com.zimbra.controller.SERVICE_STATE.CONNECT_WAIT);
+        case zimbra_notifier_SERVICE_STATE.CONNECT_ERR:
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.CONNECT_ERR);
+            this._changeState(zimbra_notifier_SERVICE_STATE.CONNECT_WAIT);
 
         // Wait before trying again
-        case com.zimbra.controller.SERVICE_STATE.CONNECT_WAIT:
-            this._delayWaitConnect += com.zimbra.constant.SERVICE.CONNECT_BASE_WAIT_AFTER_FAILURE;
-            if (this._delayWaitConnect > com.zimbra.constant.SERVICE.CONNECT_MAX_WAIT_AFTER_FAILURE) {
-                this._delayWaitConnect = com.zimbra.constant.SERVICE.CONNECT_MAX_WAIT_AFTER_FAILURE;
+        case zimbra_notifier_SERVICE_STATE.CONNECT_WAIT:
+            this._delayWaitConnect += zimbra_notifier_Constant.SERVICE.CONNECT_BASE_WAIT_AFTER_FAILURE;
+            if (this._delayWaitConnect > zimbra_notifier_Constant.SERVICE.CONNECT_MAX_WAIT_AFTER_FAILURE) {
+                this._delayWaitConnect = zimbra_notifier_Constant.SERVICE.CONNECT_MAX_WAIT_AFTER_FAILURE;
             }
-            this._planRunState(com.zimbra.controller.SERVICE_STATE.CONNECT_RUN, this._delayWaitConnect);
+            this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN, this._delayWaitConnect);
             break;
 
         // Launch the connect query
-        case com.zimbra.controller.SERVICE_STATE.CONNECT_RUN:
+        case zimbra_notifier_SERVICE_STATE.CONNECT_RUN:
             this._doConnect();
             break;
 
         // The connect query succeed, check if connected
-        case com.zimbra.controller.SERVICE_STATE.CONNECT_OK:
-            this._sendCallBackRefreshEvent();
-            this._changeState(com.zimbra.controller.SERVICE_STATE.CONNECT_CHECK);
+        case zimbra_notifier_SERVICE_STATE.CONNECT_OK:
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.CONNECTED);
+            this._changeState(zimbra_notifier_SERVICE_STATE.CONNECT_CHECK);
 
         // Check if we are connected
-        case com.zimbra.controller.SERVICE_STATE.CONNECT_CHECK:
+        case zimbra_notifier_SERVICE_STATE.CONNECT_CHECK:
             if (this._webservice.needConnect()) {
-                this._planRunState(com.zimbra.controller.SERVICE_STATE.CONNECT_RUN, 100);
+                this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN, 100);
                 break;
             }
             else {
-                this._changeState(com.zimbra.controller.SERVICE_STATE.WAITSET_CHECK);
+                this._changeState(zimbra_notifier_SERVICE_STATE.WAITSET_CHECK);
             }
 
         // Check if waitset is still valid
-        case com.zimbra.controller.SERVICE_STATE.WAITSET_CHECK:
+        case zimbra_notifier_SERVICE_STATE.WAITSET_CHECK:
             if (!this._webservice.isWaitSetValid()) {
-                this._planRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_CREATE_RUN, 1);
+                this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_CREATE_RUN, 1);
                 break;
             }
             else if (this._waitSetRestored === true) {
                 this._waitSetRestored = false;
-                this._planRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_NO_BLOCK_RUN, 1);
+                this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_BLOCK_RUN, 1);
                 break;
             }
             else {
-                this._changeState(com.zimbra.controller.SERVICE_STATE.REFRESH_START);
+                this._changeState(zimbra_notifier_SERVICE_STATE.REFRESH_START);
             }
 
         // Start the refresh query
-        case com.zimbra.controller.SERVICE_STATE.REFRESH_START:
+        case zimbra_notifier_SERVICE_STATE.REFRESH_START:
             this._idxLoopQuery = 0;
-            this._changeState(com.zimbra.controller.SERVICE_STATE.UNREAD_MSG_RUN);
+            this._changeState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN);
 
         // Check unread message
-        case com.zimbra.controller.SERVICE_STATE.UNREAD_MSG_RUN:
-            this._sendCallBackRefreshEvent(true);
+        case zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN:
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_UNREAD_MSG);
 
-            if (this._needRunReq(com.zimbra.service.REQUEST_TYPE.UNREAD_MSG)) {
+            if (this._needRunReq(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG)) {
                 if (!this._webservice.searchUnReadMsg()) {
-                    this._reqInfoErrors.addError(com.zimbra.service.REQUEST_TYPE.UNREAD_MSG,
-                                                 com.zimbra.service.REQUEST_STATUS.INTERNAL_ERROR);
+                    this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG,
+                                                 zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
 
-                    this._planRunState(com.zimbra.controller.SERVICE_STATE.UNREAD_MSG_ENDED, 10);
+                    this._planRunState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED, 10);
                 }
                 break;
             }
 
-        case com.zimbra.controller.SERVICE_STATE.UNREAD_MSG_ENDED:
-            this._sendCallBackRefreshEvent();
-            this._changeState(com.zimbra.controller.SERVICE_STATE.CALENDAR_RUN);
+        case zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED:
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.UNREAD_MSG_UPDATED);
+            this._changeState(zimbra_notifier_SERVICE_STATE.CALENDAR_RUN);
 
         // Check calendar
-        case com.zimbra.controller.SERVICE_STATE.CALENDAR_RUN:
-            this._sendCallBackRefreshEvent(true);
+        case zimbra_notifier_SERVICE_STATE.CALENDAR_RUN:
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_CALENDAR);
 
-            if (this._prefs.isCalendarEnabled() &&
-                this._needRunReq(com.zimbra.service.REQUEST_TYPE.CALENDAR)) {
+            if (zimbra_notifier_Prefs.isCalendarEnabled() &&
+                this._needRunReq(zimbra_notifier_REQUEST_TYPE.CALENDAR)) {
 
                 var date = new Date();
                 var startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
-                var endDate = new Date(date.getTime() + 86400000 * this._prefs.getCalendarPeriodDisplayed());
-
+                var endDate = new Date(date.getTime() +
+                                        (86400000 * zimbra_notifier_Prefs.getCalendarPeriodDisplayed()));
                 if (!this._webservice.searchCalendar(startDate, endDate)) {
-                    this._reqInfoErrors.addError(com.zimbra.service.REQUEST_TYPE.CALENDAR,
-                                                com.zimbra.service.REQUEST_STATUS.INTERNAL_ERROR);
+                    this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.CALENDAR,
+                                                zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
 
-                    this._planRunState(com.zimbra.controller.SERVICE_STATE.CALENDAR_ENDED, 10);
+                    this._planRunState(zimbra_notifier_SERVICE_STATE.CALENDAR_ENDED, 10);
                 }
                 break;
             }
 
-        case com.zimbra.controller.SERVICE_STATE.CALENDAR_ENDED:
-            this._sendCallBackRefreshEvent();
-            this._changeState(com.zimbra.controller.SERVICE_STATE.TASK_RUN);
+        case zimbra_notifier_SERVICE_STATE.CALENDAR_ENDED:
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.CALENDAR_UPDATED);
+            this._changeState(zimbra_notifier_SERVICE_STATE.TASK_RUN);
 
         // Check tasks
-        case com.zimbra.controller.SERVICE_STATE.TASK_RUN:
-            this._sendCallBackRefreshEvent(true);
+        case zimbra_notifier_SERVICE_STATE.TASK_RUN:
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_TASK);
 
-            if (this._prefs.isTaskEnabled() && this._needRunReq(com.zimbra.service.REQUEST_TYPE.TASK)) {
+            if (zimbra_notifier_Prefs.isTaskEnabled() && this._needRunReq(zimbra_notifier_REQUEST_TYPE.TASK)) {
                 if (!this._webservice.searchTask()) {
-                    this._reqInfoErrors.addError(com.zimbra.service.REQUEST_TYPE.TASK,
-                                                 com.zimbra.service.REQUEST_STATUS.INTERNAL_ERROR);
+                    this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.TASK,
+                                                 zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
 
-                    this._planRunState(com.zimbra.controller.SERVICE_STATE.TASK_ENDED, 10);
+                    this._planRunState(zimbra_notifier_SERVICE_STATE.TASK_ENDED, 10);
                 }
                 break;
             }
 
-        case com.zimbra.controller.SERVICE_STATE.TASK_ENDED:
-            this._sendCallBackRefreshEvent();
-            this._changeState(com.zimbra.controller.SERVICE_STATE.REFRESH_ENDED);
+        case zimbra_notifier_SERVICE_STATE.TASK_ENDED:
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.TASK_UPDATED);
+            this._changeState(zimbra_notifier_SERVICE_STATE.REFRESH_ENDED);
 
         // Check if we need to try again the queries
-        case com.zimbra.controller.SERVICE_STATE.REFRESH_ENDED:
+        case zimbra_notifier_SERVICE_STATE.REFRESH_ENDED:
             this._idxLoopQuery += 1;
             // check if at least one query should be runned again
-            var runagain = this._needRunReq(com.zimbra.service.REQUEST_TYPE.UNREAD_MSG);
-            if (!runagain && this._prefs.isCalendarEnabled() &&
-                this._needRunReq(com.zimbra.service.REQUEST_TYPE.CALENDAR)) {
+            var runagain = this._needRunReq(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG);
+            if (!runagain && zimbra_notifier_Prefs.isCalendarEnabled() &&
+                this._needRunReq(zimbra_notifier_REQUEST_TYPE.CALENDAR)) {
                 runagain = true;
             }
-            if (!runagain && this._prefs.isTaskEnabled() &&
-                this._needRunReq(com.zimbra.service.REQUEST_TYPE.TASK)) {
+            if (!runagain && zimbra_notifier_Prefs.isTaskEnabled() &&
+                this._needRunReq(zimbra_notifier_REQUEST_TYPE.TASK)) {
                 runagain = true;
             }
             // Do we need to retry
             if (runagain === true) {
-                this._planRunState(com.zimbra.controller.SERVICE_STATE.UNREAD_MSG_RUN,
-                                   com.zimbra.constant.SERVICE.REFRESH_WAIT_AFTER_FAILURE);
+                this._planRunState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN,
+                                   zimbra_notifier_Constant.SERVICE.REFRESH_WAIT_AFTER_FAILURE);
                 break;
             }
             else {
-                this._changeState(com.zimbra.controller.SERVICE_STATE.WAITSET_BLOCK_RUN);
+                this._changeState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN);
             }
 
         // Launch the blocking query waiting for events
-        case com.zimbra.controller.SERVICE_STATE.WAITSET_BLOCK_RUN:
+        case zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN:
             this._timeStartWaitReq = new Date().getTime();
 
-            if (!this._webservice.waitRequest(this._prefs.getRequestWaitTimeout())) {
-                this._reqInfoErrors.addError(com.zimbra.service.REQUEST_TYPE.WAIT_BLOCK,
-                                             com.zimbra.service.REQUEST_STATUS.INTERNAL_ERROR);
+            if (!this._webservice.waitRequest(zimbra_notifier_Prefs.getRequestWaitTimeout())) {
+                this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK,
+                                             zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
 
-                this._planRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_NO_NEW_EVT, 10);
+                this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT, 10);
             }
             break;
 
         // Launch the non blocking query waitset
-        case com.zimbra.controller.SERVICE_STATE.WAITSET_NO_BLOCK_RUN:
+        case zimbra_notifier_SERVICE_STATE.WAITSET_NO_BLOCK_RUN:
             this._timeStartWaitReq = 0;
 
             if (!this._webservice.waitRequest(0)) {
-                this._reqInfoErrors.addError(com.zimbra.service.REQUEST_TYPE.WAIT_NO_BLOCK,
-                                             com.zimbra.service.REQUEST_STATUS.INTERNAL_ERROR);
+                this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK,
+                                             zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
 
-                this._planRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_NO_NEW_EVT, 10);
+                this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT, 10);
             }
             break;
 
         // We received a change event
-        case com.zimbra.controller.SERVICE_STATE.WAITSET_NEW_EVT:
-            this._planRunState(com.zimbra.controller.SERVICE_STATE.CONNECT_CHECK, 1);
+        case zimbra_notifier_SERVICE_STATE.WAITSET_NEW_EVT:
+            this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_CHECK, 1);
             break;
 
         // The wait request failed, or the request did timeout (no new event)
-        case com.zimbra.controller.SERVICE_STATE.WAITSET_NO_NEW_EVT:
+        case zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT:
             var delayAfterWaitReq = 10;
             if (this._timeStartWaitReq !== 0) {
                 var timeEndW = new Date().getTime();
-                var timeExpW = this._timeStartWaitReq + this._prefs.getRequestWaitTimeout() - 1000;
+                var timeExpW = this._timeStartWaitReq + zimbra_notifier_Prefs.getRequestWaitTimeout() - 1000;
                 if (timeExpW > timeEndW) {
                     delayAfterWaitReq = timeExpW - timeEndW;
                 }
             }
-            this._planRunState(com.zimbra.controller.SERVICE_STATE.CONNECT_CHECK, delayAfterWaitReq);
+            this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_CHECK, delayAfterWaitReq);
             break;
 
         // Create the waitset
-        case com.zimbra.controller.SERVICE_STATE.WAITSET_CREATE_RUN:
+        case zimbra_notifier_SERVICE_STATE.WAITSET_CREATE_RUN:
             if (!this._webservice.createWaitRequest()) {
-                this._reqInfoErrors.addError(com.zimbra.service.REQUEST_TYPE.CREATE_WAIT,
-                                             com.zimbra.service.REQUEST_STATUS.INTERNAL_ERROR);
+                this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.CREATE_WAIT,
+                                             zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
 
-                this._planRunState(com.zimbra.controller.SERVICE_STATE.REFRESH_START, 10);
+                this._planRunState(zimbra_notifier_SERVICE_STATE.REFRESH_START, 10);
             }
             break;
 
         // create wait set ended
-        case com.zimbra.controller.SERVICE_STATE.WAITSET_CREATE_ENDED:
+        case zimbra_notifier_SERVICE_STATE.WAITSET_CREATE_ENDED:
             // Do not do any check here, if we failed, we will try again later
-            this._planRunState(com.zimbra.controller.SERVICE_STATE.REFRESH_START, 1);
+            this._planRunState(zimbra_notifier_SERVICE_STATE.REFRESH_START, 1);
             break;
 
         default:
             this._logger.error("Unknown state : " + newState);
-            this._planRunState(com.zimbra.controller.SERVICE_STATE.NOTHING_TO_DO, 100);
+            this._planRunState(zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO, 100);
             break;
     }
 };
@@ -550,7 +551,7 @@ com.zimbra.controller.Service.prototype._runState = function(newState) {
  * @param {Number}
  *            reqType the type of the request
  */
-com.zimbra.controller.Service.prototype._needRunReq = function(reqType) {
+zimbra_notifier_Service.prototype._needRunReq = function(reqType) {
     if (this._idxLoopQuery === 0) {
         this._reqInfoErrors.resetLoopErrorCounter(reqType);
     }
@@ -559,7 +560,7 @@ com.zimbra.controller.Service.prototype._needRunReq = function(reqType) {
         if (valCounter === 0) {
             return false;
         }
-        else if (valCounter >= com.zimbra.constant.SERVICE.NB_RETRY_QUERY) {
+        else if (valCounter >= zimbra_notifier_Constant.SERVICE.NB_RETRY_QUERY) {
             return false;
         }
     }
@@ -573,28 +574,28 @@ com.zimbra.controller.Service.prototype._needRunReq = function(reqType) {
  * @this {Service}
  * @return {Boolean} True if we did launch the connect query
  */
-com.zimbra.controller.Service.prototype._doConnect = function(password) {
+zimbra_notifier_Service.prototype._doConnect = function(password) {
 
     if (!password || password === '') {
-        password = this._prefs.getUserPassword();
+        password = zimbra_notifier_Prefs.getUserPassword();
         if (!password || password === '') {
             // No password, cannot login
-            this._planRunState(com.zimbra.controller.SERVICE_STATE.DISCONNECTED, 100);
+            this._planRunState(zimbra_notifier_SERVICE_STATE.DISCONNECTED, 100);
             return false;
         }
     }
 
-    if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.CONNECT_RUN)) {
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN)) {
 
-        this._sendCallBackRefreshEvent(true);
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.CONNECTING);
 
-        if (!this._webservice.authRequest(this._prefs.getUserServer(), this._prefs.getUserLogin(),
-                                          password, this)) {
+        if (!this._webservice.authRequest(zimbra_notifier_Prefs.getUserServer(),
+                                          zimbra_notifier_Prefs.getUserLogin(), password, this)) {
 
-            this._reqInfoErrors.addError(com.zimbra.service.REQUEST_TYPE.OPEN_SESSION,
-                                         com.zimbra.service.REQUEST_STATUS.INTERNAL_ERROR);
+            this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.OPEN_SESSION,
+                                         zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
             // Try again later
-            this._planRunState(com.zimbra.controller.SERVICE_STATE.CONNECT_ERR, 100);
+            this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_ERR, 100);
         }
         else {
             return true;
@@ -612,9 +613,9 @@ com.zimbra.controller.Service.prototype._doConnect = function(password) {
  * @this {Service}
  * @return {Boolean} True if we did launch the connect query
  */
-com.zimbra.controller.Service.prototype.initializeConnection = function(password) {
+zimbra_notifier_Service.prototype.initializeConnection = function(password) {
 
-    if (this._currentState === com.zimbra.controller.SERVICE_STATE.CONNECT_RUN) {
+    if (this._currentState === zimbra_notifier_SERVICE_STATE.CONNECT_RUN) {
         this._logger.warning("Already trying to connect, stop and try again...");
     }
     this._dateConnection = new Date();
@@ -623,7 +624,7 @@ com.zimbra.controller.Service.prototype.initializeConnection = function(password
 
     this._webservice.abortRunningReq();
     this._stopStateTimer();
-    this._changeState(com.zimbra.controller.SERVICE_STATE.CONNECT_RUN);
+    this._changeState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN);
 
     this._reqInfoErrors.clearAllErrors();
 
@@ -635,7 +636,7 @@ com.zimbra.controller.Service.prototype.initializeConnection = function(password
  *
  * @this {Service}
  */
-com.zimbra.controller.Service.prototype.closeConnection = function() {
+zimbra_notifier_Service.prototype.closeConnection = function() {
     this._webservice.disconnect();
 };
 
@@ -644,9 +645,9 @@ com.zimbra.controller.Service.prototype.closeConnection = function() {
  *
  * @this {Service}
  */
-com.zimbra.controller.Service.prototype.checkNow = function() {
+zimbra_notifier_Service.prototype.checkNow = function() {
     this._reqInfoErrors.clearAllErrors();
-    this._changeRunningState(com.zimbra.controller.SERVICE_STATE.REFRESH_START, 100);
+    this._changeRunningState(zimbra_notifier_SERVICE_STATE.REFRESH_START, 100);
 };
 
 /**
@@ -660,18 +661,17 @@ com.zimbra.controller.Service.prototype.checkNow = function() {
  * @param {String}
  *            data the data
  */
-com.zimbra.controller.Service.prototype.observe = function(subject, topic, data) {
-    if (topic === com.zimbra.constant.OBSERVER.PREF_SAVED) {
-        this._prefs.load();
+zimbra_notifier_Service.prototype.observe = function(subject, topic, data) {
+    if (topic === zimbra_notifier_Constant.OBSERVER.PREF_SAVED) {
         // Clear some errors to handle the case of a previous error on the calendar/task request
         // and the user just desactivated the calendar/task
-        this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.CALENDAR);
-        this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.TASK);
+        this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.CALENDAR);
+        this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.TASK);
         // Inform that the prefs changed
-        this._sendCallBackRefreshEvent();
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.PREF_UPDATED);
 
-        if (this._prefs.isAutoConnectEnabled() && this._prefs.isSavePasswordEnabled() &&
-            !this.isConnected() && this._currentState !== com.zimbra.controller.SERVICE_STATE.CONNECT_RUN) {
+        if (zimbra_notifier_Prefs.isAutoConnectEnabled() && zimbra_notifier_Prefs.isSavePasswordEnabled() &&
+            !this.isConnected() && this._currentState !== zimbra_notifier_SERVICE_STATE.CONNECT_RUN) {
 
             this.initializeConnection();
         }
@@ -689,77 +689,77 @@ com.zimbra.controller.Service.prototype.observe = function(subject, topic, data)
  * @param {Number}
  *            statusReq The error code
  */
-com.zimbra.controller.Service.prototype.callbackError = function(typeReq, statusReq) {
+zimbra_notifier_Service.prototype.callbackError = function(typeReq, statusReq) {
 
-    if (statusReq === com.zimbra.service.REQUEST_STATUS.AUTH_REQUIRED) {
-        this._planRunState(com.zimbra.controller.SERVICE_STATE.CONNECT_CHECK, 500);
+    if (statusReq === zimbra_notifier_REQUEST_STATUS.AUTH_REQUIRED) {
+        this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_CHECK, 500);
         return;
     }
 
     switch (typeReq) {
-        case com.zimbra.service.REQUEST_TYPE.OPEN_SESSION:
+        case zimbra_notifier_REQUEST_TYPE.OPEN_SESSION:
             this._reqInfoErrors.addError(typeReq, statusReq);
-            if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.CONNECT_RUN)) {
-                if (statusReq === com.zimbra.service.REQUEST_STATUS.LOGIN_INVALID) {
-                    this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.CONNECT_INV_LOGIN);
+            if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN)) {
+                if (statusReq === zimbra_notifier_REQUEST_STATUS.LOGIN_INVALID) {
+                    this._changeAndRunState(zimbra_notifier_SERVICE_STATE.CONNECT_INV_LOGIN);
                 }
                 else {
-                    this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.CONNECT_ERR);
+                    this._changeAndRunState(zimbra_notifier_SERVICE_STATE.CONNECT_ERR);
                 }
             }
             break;
 
-        case com.zimbra.service.REQUEST_TYPE.CREATE_WAIT:
+        case zimbra_notifier_REQUEST_TYPE.CREATE_WAIT:
             this._reqInfoErrors.addError(typeReq, statusReq);
-            if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.WAITSET_CREATE_RUN)) {
-                this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_CREATE_ENDED);
+            if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.WAITSET_CREATE_RUN)) {
+                this._changeAndRunState(zimbra_notifier_SERVICE_STATE.WAITSET_CREATE_ENDED);
             }
             break;
 
-        case com.zimbra.service.REQUEST_TYPE.WAIT_BLOCK:
-        case com.zimbra.service.REQUEST_TYPE.WAIT_NO_BLOCK:
-            if (statusReq === com.zimbra.service.REQUEST_STATUS.TIMEOUT) {
+        case zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK:
+        case zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK:
+            if (statusReq === zimbra_notifier_REQUEST_STATUS.TIMEOUT) {
                 // If the request timeout or the waitset id is invalid, do not add error
-                this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.WAIT_BLOCK);
+                this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK);
             }
-            else if (statusReq !== com.zimbra.service.REQUEST_STATUS.WAITSET_INVALID) {
+            else if (statusReq !== zimbra_notifier_REQUEST_STATUS.WAITSET_INVALID) {
                 this._reqInfoErrors.addError(typeReq, statusReq);
             }
-            if (this._checkExpectedStates([com.zimbra.controller.SERVICE_STATE.WAITSET_BLOCK_RUN,
-                                           com.zimbra.controller.SERVICE_STATE.WAITSET_NO_BLOCK_RUN])) {
-                if (statusReq === com.zimbra.service.REQUEST_STATUS.WAITSET_INVALID) {
-                    this._planRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_CHECK, 500);
+            if (this._checkExpectedStates([zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN,
+                                           zimbra_notifier_SERVICE_STATE.WAITSET_NO_BLOCK_RUN])) {
+                if (statusReq === zimbra_notifier_REQUEST_STATUS.WAITSET_INVALID) {
+                    this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_CHECK, 500);
                 }
                 else {
-                    this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_NO_NEW_EVT);
+                    this._changeAndRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT);
                 }
             }
             break;
 
-        case com.zimbra.service.REQUEST_TYPE.UNREAD_MSG:
+        case zimbra_notifier_REQUEST_TYPE.UNREAD_MSG:
             this._reqInfoErrors.addError(typeReq, statusReq);
-            if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.UNREAD_MSG_RUN)) {
-                this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.UNREAD_MSG_ENDED);
+            if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN)) {
+                this._changeAndRunState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED);
             }
             break;
 
-        case com.zimbra.service.REQUEST_TYPE.CALENDAR:
+        case zimbra_notifier_REQUEST_TYPE.CALENDAR:
             this._reqInfoErrors.addError(typeReq, statusReq);
-            if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.CALENDAR_RUN)) {
-                this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.CALENDAR_ENDED);
+            if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CALENDAR_RUN)) {
+                this._changeAndRunState(zimbra_notifier_SERVICE_STATE.CALENDAR_ENDED);
             }
             break;
 
-        case com.zimbra.service.REQUEST_TYPE.TASK:
+        case zimbra_notifier_REQUEST_TYPE.TASK:
             this._reqInfoErrors.addError(typeReq, statusReq);
-            if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.TASK_RUN)) {
-                this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.TASK_ENDED);
+            if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.TASK_RUN)) {
+                this._changeAndRunState(zimbra_notifier_SERVICE_STATE.TASK_ENDED);
             }
             break;
 
         default:
             this._logger.error("Unexpected request type: " + typeReq);
-            this._planRunState(com.zimbra.controller.SERVICE_STATE.NOTHING_TO_DO, 10);
+            this._planRunState(zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO, 10);
             break;
     }
 };
@@ -769,11 +769,11 @@ com.zimbra.controller.Service.prototype.callbackError = function(typeReq, status
  *
  * @this {Service}
  */
-com.zimbra.controller.Service.prototype.callbackLoginSuccess = function() {
+zimbra_notifier_Service.prototype.callbackLoginSuccess = function() {
     this._delayWaitConnect = 0;
-    this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.OPEN_SESSION);
-    if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.CONNECT_RUN)) {
-        this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.CONNECT_OK);
+    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.OPEN_SESSION);
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN)) {
+        this._changeAndRunState(zimbra_notifier_SERVICE_STATE.CONNECT_OK);
     }
 };
 
@@ -782,10 +782,10 @@ com.zimbra.controller.Service.prototype.callbackLoginSuccess = function() {
  *
  * @this {Service}
  */
-com.zimbra.controller.Service.prototype.callbackDisconnect = function() {
+zimbra_notifier_Service.prototype.callbackDisconnect = function() {
     this._loadDefault();
-    this._changeRunningState(com.zimbra.controller.SERVICE_STATE.DISCONNECTED, 10);
-    this._sendCallBackRefreshEvent();
+    this._changeRunningState(zimbra_notifier_SERVICE_STATE.DISCONNECTED, 10);
+    this._parent.event(zimbra_notifier_SERVICE_EVENT.DISCONNECTED);
 };
 
 /**
@@ -795,8 +795,9 @@ com.zimbra.controller.Service.prototype.callbackDisconnect = function() {
  * @param {Session}
  *             session  The session object
  */
-com.zimbra.controller.Service.prototype.callbackSessionInfoChanged = function(session) {
-    this._prefs.saveWaitSet(session.waitId(), session.waitSeq(), session.buildUrl(''), session.user());
+zimbra_notifier_Service.prototype.callbackSessionInfoChanged = function(session) {
+    zimbra_notifier_Prefs.saveWaitSet(session.waitId(), session.waitSeq(),
+                                      session.buildUrl(''), session.user());
 };
 
 /**
@@ -804,10 +805,10 @@ com.zimbra.controller.Service.prototype.callbackSessionInfoChanged = function(se
  *
  * @this {Service}
  */
-com.zimbra.controller.Service.prototype.callbackCreateWaitSet = function() {
-    this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.CREATE_WAIT);
-    if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.WAITSET_CREATE_RUN)) {
-        this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_CREATE_ENDED);
+zimbra_notifier_Service.prototype.callbackCreateWaitSet = function() {
+    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.CREATE_WAIT);
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.WAITSET_CREATE_RUN)) {
+        this._changeAndRunState(zimbra_notifier_SERVICE_STATE.WAITSET_CREATE_ENDED);
     }
 };
 
@@ -818,14 +819,14 @@ com.zimbra.controller.Service.prototype.callbackCreateWaitSet = function() {
  * @param {Boolean}
  *            newEvent indicate if it is necessary to refresh
  */
-com.zimbra.controller.Service.prototype.callbackWaitBlock = function(newEvent) {
-    this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.WAIT_BLOCK);
-    if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.WAITSET_BLOCK_RUN)) {
+zimbra_notifier_Service.prototype.callbackWaitBlock = function(newEvent) {
+    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK);
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN)) {
         if (newEvent) {
-            this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_NEW_EVT);
+            this._changeAndRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NEW_EVT);
         }
         else {
-            this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_NO_NEW_EVT);
+            this._changeAndRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT);
         }
     }
 };
@@ -837,14 +838,14 @@ com.zimbra.controller.Service.prototype.callbackWaitBlock = function(newEvent) {
  * @param {Boolean}
  *            newEvent indicate if it is necessary to refresh
  */
-com.zimbra.controller.Service.prototype.callbackWaitNoBlock = function(newEvent) {
-    this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.WAIT_NO_BLOCK);
-    if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.WAITSET_NO_BLOCK_RUN)) {
+zimbra_notifier_Service.prototype.callbackWaitNoBlock = function(newEvent) {
+    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK);
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_BLOCK_RUN)) {
         if (newEvent) {
-            this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_NEW_EVT);
+            this._changeAndRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NEW_EVT);
         }
         else {
-            this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.WAITSET_NO_NEW_EVT);
+            this._changeAndRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT);
         }
     }
 };
@@ -856,21 +857,21 @@ com.zimbra.controller.Service.prototype.callbackWaitNoBlock = function(newEvent)
  * @param {Message[]}
  *            messages messages unread
  */
-com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages) {
+zimbra_notifier_Service.prototype.callbackNewMessages = function(messages) {
     try {
         var notify = true;
 
         if (this._firstCallbackNewMsg) {
             this._firstCallbackNewMsg = false;
 
-            if ((this._dateConnection.getTime() + com.zimbra.constant.SERVICE.DELAY_NOTIFY_FIRST_UNREAD) >
+            if ((this._dateConnection.getTime() + zimbra_notifier_Constant.SERVICE.DELAY_NOTIFY_FIRST_UNREAD) >
                 (new Date().getTime())) {
                 notify = false;
             }
         }
 
         if (notify) {
-            var util = com.zimbra.service.Util;
+            var util = zimbra_notifier_Util;
             var title = '';
             var msg = '';
             var nbMail = 0;
@@ -878,7 +879,7 @@ com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages)
             // Find new unread messages
             for ( var index = 0; index < messages.length; index++) {
                 var newMessage = messages[index];
-                var nbNewUnReadMail = newMessage.getNbNewUnReadMail(this._currentMessageUnRead);
+                var nbNewUnReadMail = newMessage.getNbNewMail(this._currentMessageUnRead);
                 if (nbNewUnReadMail > 0) {
                     nbMail += nbNewUnReadMail;
                     if (nbMail > 1) {
@@ -903,11 +904,11 @@ com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages)
                         }
                     }
                 };
-                if (this._prefs.isSoundEnabled()) {
+                if (zimbra_notifier_Prefs.isSoundEnabled()) {
                     util.playSound();
                 }
-                if (this._prefs.isSystemNotificationEnabled()) {
-                    util.showNotificaton(title, msg, this._prefs.getUserServer(), listener);
+                if (zimbra_notifier_Prefs.isSystemNotificationEnabled()) {
+                    util.showNotificaton(title, msg, zimbra_notifier_Prefs.getUserServer(), listener);
                 }
             }
         }
@@ -917,9 +918,9 @@ com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages)
     }
     this._currentMessageUnRead = messages;
 
-    this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.UNREAD_MSG);
-    if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.UNREAD_MSG_RUN)) {
-        this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.UNREAD_MSG_ENDED);
+    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG);
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN)) {
+        this._changeAndRunState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED);
     }
 };
 
@@ -930,7 +931,7 @@ com.zimbra.controller.Service.prototype.callbackNewMessages = function(messages)
  * @param {CalEvent[]}
  *            events
  */
-com.zimbra.controller.Service.prototype.callbackCalendar = function(events) {
+zimbra_notifier_Service.prototype.callbackCalendar = function(events) {
     try {
         var newEvents = [];
         var index, indexC;
@@ -944,19 +945,19 @@ com.zimbra.controller.Service.prototype.callbackCalendar = function(events) {
                     newEvent.notifier = oldEvent.notifier;
                     oldEvent.notifier = null;
                     // refresh notifier
-                    newEvent.notifier.update(newEvent, this._prefs.getCalendarReminderTimeConf(),
-                                             this._prefs.getCalendarReminderNbRepeat(),
-                                             this._prefs.isCalendarSoundNotificationEnabled(),
-                                             this._prefs.isCalendarSystemNotificationEnabled());
+                    newEvent.notifier.update(newEvent, zimbra_notifier_Prefs.getCalendarReminderTimeConf(),
+                                             zimbra_notifier_Prefs.getCalendarReminderNbRepeat(),
+                                             zimbra_notifier_Prefs.isCalendarSoundNotificationEnabled(),
+                                             zimbra_notifier_Prefs.isCalendarSystemNotificationEnabled());
                     break;
                 }
             }
             if (!newEvent.notifier) {
-                newEvent.notifier = new com.zimbra.service.Notifier(
-                        newEvent, this._prefs.getCalendarReminderTimeConf(),
-                        this._prefs.getCalendarReminderNbRepeat(),
-                        this._prefs.isCalendarSoundNotificationEnabled(),
-                        this._prefs.isCalendarSystemNotificationEnabled());
+                newEvent.notifier = new zimbra_notifier_Notifier(
+                        newEvent, zimbra_notifier_Prefs.getCalendarReminderTimeConf(),
+                        zimbra_notifier_Prefs.getCalendarReminderNbRepeat(),
+                        zimbra_notifier_Prefs.isCalendarSoundNotificationEnabled(),
+                        zimbra_notifier_Prefs.isCalendarSystemNotificationEnabled());
             }
             newEvents.push(newEvent);
         }
@@ -978,9 +979,9 @@ com.zimbra.controller.Service.prototype.callbackCalendar = function(events) {
         this._logger.error("Failed to add event for notification: " + e);
     }
 
-    this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.CALENDAR);
-    if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.CALENDAR_RUN)) {
-        this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.CALENDAR_ENDED);
+    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.CALENDAR);
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CALENDAR_RUN)) {
+        this._changeAndRunState(zimbra_notifier_SERVICE_STATE.CALENDAR_ENDED);
     }
 };
 
@@ -991,7 +992,7 @@ com.zimbra.controller.Service.prototype.callbackCalendar = function(events) {
  * @param {Task[]}
  *            tasks
  */
-com.zimbra.controller.Service.prototype.callbackTask = function(tasks) {
+zimbra_notifier_Service.prototype.callbackTask = function(tasks) {
 
     tasks.sort(function(a, b) {
         if (a.priority === b.priority) {
@@ -1002,70 +1003,13 @@ com.zimbra.controller.Service.prototype.callbackTask = function(tasks) {
     });
     this._currentTasks = tasks;
 
-    this._reqInfoErrors.clearError(com.zimbra.service.REQUEST_TYPE.TASK);
-    if (this._checkExpectedState(com.zimbra.controller.SERVICE_STATE.TASK_RUN)) {
-        this._changeAndRunState(com.zimbra.controller.SERVICE_STATE.TASK_ENDED);
-    }
-};
-
-/* ************************** Callback refresh *************************** */
-
-/**
- * Add CallBack to Refresh
- *
- * @this {Service}
- * @param {Object}
- *            callback Object which has this function : refresh(startRequest)
- */
-com.zimbra.controller.Service.prototype.addCallBackRefresh = function(callback) {
-    this._callbackList.push(callback);
-};
-
-/**
- * Remove CallBack to Refresh
- *
- * @this {Service}
- * @param {Object}
- *            callback Object which has this function : refresh(startRequest)
- */
-com.zimbra.controller.Service.prototype.removeCallBackRefresh = function(callback) {
-    for ( var index = 0; index < this._callbackList.length; index++) {
-        if (this._callbackList[index] === callback) {
-            this._callbackList.splice(index, 1);
-            break;
-        }
-    }
-};
-
-/**
- * Send CallBack Refresh Event
- *
- * @private
- * @this {Service}
- * @param {Boolean}
- *            startRequest true indicate that a query is started
- *                         false if there is new information
- */
-com.zimbra.controller.Service.prototype._sendCallBackRefreshEvent = function(startRequest) {
-    for ( var index = 0; index < this._callbackList.length; index++) {
-        var callback = this._callbackList[index];
-        if (callback !== null) {
-            callback.refresh(startRequest);
-        }
+    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.TASK);
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.TASK_RUN)) {
+        this._changeAndRunState(zimbra_notifier_SERVICE_STATE.TASK_ENDED);
     }
 };
 
 /* ************************** Getter *************************** */
-
-/**
- * Get prefs
- *
- * @this {Service}
- * @return {Prefs} prefs
- */
-com.zimbra.controller.Service.prototype.getPrefs = function() {
-    return this._prefs;
-};
 
 /**
  * Indicate if connected
@@ -1073,7 +1017,7 @@ com.zimbra.controller.Service.prototype.getPrefs = function() {
  * @this {Service}
  * @return {Boolean} true if connected
  */
-com.zimbra.controller.Service.prototype.isConnected = function() {
+zimbra_notifier_Service.prototype.isConnected = function() {
     return this._webservice.isConnected();
 };
 
@@ -1083,10 +1027,10 @@ com.zimbra.controller.Service.prototype.isConnected = function() {
  * @this {Service}
  * @return {Number} nb of unread messages
  */
-com.zimbra.controller.Service.prototype.getNbMessageUnread = function() {
+zimbra_notifier_Service.prototype.getNbMessageUnread = function() {
     var nbMessage = 0;
     for ( var index = 0; index < this._currentMessageUnRead.length; index++) {
-        nbMessage += this._currentMessageUnRead[index].nbMail;
+        nbMessage += this._currentMessageUnRead[index].nbMail();
     }
     return nbMessage;
 };
@@ -1097,7 +1041,7 @@ com.zimbra.controller.Service.prototype.getNbMessageUnread = function() {
  * @this {Service}
  * @return {CalEvent[]} events
  */
-com.zimbra.controller.Service.prototype.getEvents = function() {
+zimbra_notifier_Service.prototype.getEvents = function() {
     return this._currentEvents;
 };
 
@@ -1107,72 +1051,16 @@ com.zimbra.controller.Service.prototype.getEvents = function() {
  * @this {Service}
  * @return {Task[]} tasks
  */
-com.zimbra.controller.Service.prototype.getTasks = function() {
+zimbra_notifier_Service.prototype.getTasks = function() {
     return this._currentTasks;
 };
 
 /**
- * Get last error message
+ * Get last error
  *
  * @this {Service}
- * @return {String} the last server error message
+ * @return {ReqInfoError} the info about the last error
  */
-com.zimbra.controller.Service.prototype.getLastErrorMessage = function() {
-    var message = "";
-    var reason = "";
-    var util = com.zimbra.service.Util;
-    var lastErr = this._reqInfoErrors.getLastError();
-
-    if (lastErr !== null) {
-        switch (lastErr.requestType) {
-            case com.zimbra.service.REQUEST_TYPE.OPEN_SESSION:
-                message = util.getBundleString("connector.error.authentification");
-                break;
-            case com.zimbra.service.REQUEST_TYPE.CREATE_WAIT:
-                message = util.getBundleString("connector.error.createwait");
-                break;
-            case com.zimbra.service.REQUEST_TYPE.WAIT_NO_BLOCK:
-            case com.zimbra.service.REQUEST_TYPE.WAIT_BLOCK:
-                message = util.getBundleString("connector.error.wait");
-                break;
-            case com.zimbra.service.REQUEST_TYPE.UNREAD_MSG:
-                message = util.getBundleString("connector.error.unreadmsg");
-                break;
-            case com.zimbra.service.REQUEST_TYPE.CALENDAR:
-                message = util.getBundleString("connector.error.calendar");
-                break;
-            case com.zimbra.service.REQUEST_TYPE.TASK:
-                message = util.getBundleString("connector.error.task");
-                break;
-            default:
-                message = util.getBundleString("connector.error.req.internal");
-        }
-
-        switch (lastErr.lastReqStatus) {
-            case com.zimbra.service.REQUEST_STATUS.REQUEST_INVALID:
-                reason = util.getBundleString("connector.error.req.invalid");
-                break;
-            case com.zimbra.service.REQUEST_STATUS.TIMEOUT:
-                reason = util.getBundleString("connector.error.req.timeout");
-                break;
-            case com.zimbra.service.REQUEST_STATUS.SERVER_ERROR:
-                reason = util.getBundleString("connector.error.req.server");
-                break;
-            case com.zimbra.service.REQUEST_STATUS.NETWORK_ERROR:
-                reason = util.getBundleString("connector.error.req.network");
-                break;
-            case com.zimbra.service.REQUEST_STATUS.AUTH_REQUIRED:
-                reason = util.getBundleString("connector.error.req.authreq");
-                break;
-            case com.zimbra.service.REQUEST_STATUS.LOGIN_INVALID:
-                reason = util.getBundleString("connector.error.req.logininvalid");
-                break;
-            default:
-                reason = util.getBundleString("connector.error.req.internal");
-                break;
-        }
-        message = message.replace("%REASON%", reason);
-    }
-    return message;
+zimbra_notifier_Service.prototype.getLastError = function() {
+    return this._reqInfoErrors.getLastError();
 };
-

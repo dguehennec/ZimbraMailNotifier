@@ -36,15 +36,7 @@
 
 "use strict";
 
-if (!com) {
-    var com = {};
-}
-if (!com.zimbra) {
-    com.zimbra = {};
-}
-if (!com.zimbra.domain) {
-    com.zimbra.domain = {};
-}
+const EXPORTED_SYMBOLS = ["zimbra_notifier_InfoErrors"];
 
 /**
  * Creates an instance of ReqInfoError.
@@ -56,7 +48,7 @@ if (!com.zimbra.domain) {
  * @param {Number}
  *            reqStatus the error code of the request
  */
-com.zimbra.domain.ReqInfoError = function(reqType, reqStatus) {
+const zimbra_notifier_ReqInfoError = function(reqType, reqStatus) {
     this.requestType = reqType;
     this.lastReqStatus = reqStatus;
     this.nbTotalFail = 1;
@@ -70,7 +62,7 @@ com.zimbra.domain.ReqInfoError = function(reqType, reqStatus) {
  * @constructor
  * @this {InfoErrors}
  */
-com.zimbra.domain.InfoErrors = function() {
+const zimbra_notifier_InfoErrors = function() {
     this._lstReqInfoErr = [];
 };
 
@@ -83,7 +75,7 @@ com.zimbra.domain.InfoErrors = function() {
  * @param {Number}
  *            reqStatus the error code of the request
  */
-com.zimbra.domain.InfoErrors.prototype.addError = function(reqType, reqStatus) {
+zimbra_notifier_InfoErrors.prototype.addError = function(reqType, reqStatus) {
     var reqInfo = null;
 
     // Get a reference of the request info error and remove it from the array
@@ -103,7 +95,7 @@ com.zimbra.domain.InfoErrors.prototype.addError = function(reqType, reqStatus) {
         reqInfo.lastReqStatus = reqStatus;
     }
     else {
-        reqInfo = new com.zimbra.domain.ReqInfoError(reqType, reqStatus);
+        reqInfo = new zimbra_notifier_ReqInfoError(reqType, reqStatus);
     }
     // Add the error to the front
     this._lstReqInfoErr.unshift(reqInfo);
@@ -116,7 +108,7 @@ com.zimbra.domain.InfoErrors.prototype.addError = function(reqType, reqStatus) {
  * @param {Number}
  *            reqType the type of the request
  */
-com.zimbra.domain.InfoErrors.prototype.resetLoopErrorCounter = function(reqType) {
+zimbra_notifier_InfoErrors.prototype.resetLoopErrorCounter = function(reqType) {
 
     for ( var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
 
@@ -137,7 +129,7 @@ com.zimbra.domain.InfoErrors.prototype.resetLoopErrorCounter = function(reqType)
  *
  * @return {Number} The loop counter, 0 if does not exist
  */
-com.zimbra.domain.InfoErrors.prototype.getLoopErrorCounter = function(reqType) {
+zimbra_notifier_InfoErrors.prototype.getLoopErrorCounter = function(reqType) {
 
     for ( var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
 
@@ -156,7 +148,7 @@ com.zimbra.domain.InfoErrors.prototype.getLoopErrorCounter = function(reqType) {
  * @param {Number}
  *            reqType the type of the request
  */
-com.zimbra.domain.InfoErrors.prototype.clearError = function(reqType) {
+zimbra_notifier_InfoErrors.prototype.clearError = function(reqType) {
 
     for ( var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
 
@@ -172,7 +164,7 @@ com.zimbra.domain.InfoErrors.prototype.clearError = function(reqType) {
  *
  * @this {InfoErrors}
  */
-com.zimbra.domain.InfoErrors.prototype.clearAllErrors = function() {
+zimbra_notifier_InfoErrors.prototype.clearAllErrors = function() {
     this._lstReqInfoErr = [];
 };
 
@@ -182,7 +174,7 @@ com.zimbra.domain.InfoErrors.prototype.clearAllErrors = function() {
  * @this {InfoErrors}
  * @return {ReqInfoError} The information about the error
  */
-com.zimbra.domain.InfoErrors.prototype.getLastError = function() {
+zimbra_notifier_InfoErrors.prototype.getLastError = function() {
     if (this._lstReqInfoErr.length > 0) {
         return this._lstReqInfoErr[0];
     }

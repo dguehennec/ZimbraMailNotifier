@@ -36,15 +36,9 @@
 
 "use strict";
 
-if (!com) {
-    var com = {};
-}
-if (!com.zimbra) {
-    com.zimbra = {};
-}
-if (!com.zimbra.service) {
-    com.zimbra.service = {};
-}
+Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+
+const EXPORTED_SYMBOLS = ["zimbra_notifier_Logger"];
 
 /**
  * Creates an instance of logger.
@@ -53,7 +47,7 @@ if (!com.zimbra.service) {
  * @this {Logger}
  *
  */
-com.zimbra.service.Logger = function(name) {
+const zimbra_notifier_Logger = function(name) {
     this._name = name;
 };
 
@@ -64,8 +58,8 @@ com.zimbra.service.Logger = function(name) {
  * @param {String}
  *            message message of the trace
  */
-com.zimbra.service.Logger.prototype.error = function(message) {
-    if (com.zimbra.constant.LOGGER.LEVEL > 0) {
+zimbra_notifier_Logger.prototype.error = function(message) {
+    if (zimbra_notifier_Constant.LOGGER.LEVEL > 0) {
         this._printStack();
         dump(this._getStrDate() + "ERROR in " + this._name + " : " + message + "\n");
     }
@@ -78,8 +72,8 @@ com.zimbra.service.Logger.prototype.error = function(message) {
  * @param {String}
  *            message message of the trace
  */
-com.zimbra.service.Logger.prototype.warning = function(message) {
-    if (com.zimbra.constant.LOGGER.LEVEL > 1) {
+zimbra_notifier_Logger.prototype.warning = function(message) {
+    if (zimbra_notifier_Constant.LOGGER.LEVEL > 1) {
         this._printStack();
         dump(this._getStrDate() + "WARNING in " + this._name + " : " + message + "\n");
     }
@@ -92,8 +86,8 @@ com.zimbra.service.Logger.prototype.warning = function(message) {
  * @param {String}
  *            message message of the trace
  */
-com.zimbra.service.Logger.prototype.trace = function(message) {
-    if (com.zimbra.constant.LOGGER.LEVEL > 2) {
+zimbra_notifier_Logger.prototype.trace = function(message) {
+    if (zimbra_notifier_Constant.LOGGER.LEVEL > 2) {
         this._printStack();
         dump(this._getStrDate() + "TRACE in " + this._name + " : " + message + "\n");
     }
@@ -105,8 +99,8 @@ com.zimbra.service.Logger.prototype.trace = function(message) {
  * @private
  * @this {Logger}
  */
-com.zimbra.service.Logger.prototype._printStack = function() {
-    if (com.zimbra.constant.LOGGER.PRINT_STACK === true) {
+zimbra_notifier_Logger.prototype._printStack = function() {
+    if (zimbra_notifier_Constant.LOGGER.PRINT_STACK === true) {
         try {
             throw Error('');
         } catch(err) {
@@ -122,8 +116,8 @@ com.zimbra.service.Logger.prototype._printStack = function() {
  * @private
  * @this {Logger}
  */
-com.zimbra.service.Logger.prototype._getStrDate = function() {
-    if (com.zimbra.constant.LOGGER.PRINT_DATE === true) {
+zimbra_notifier_Logger.prototype._getStrDate = function() {
+    if (zimbra_notifier_Constant.LOGGER.PRINT_DATE === true) {
         var date = new Date();
         var h = date.getHours();
         var m = date.getMinutes();

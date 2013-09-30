@@ -36,15 +36,7 @@
 
 "use strict";
 
-if (!com) {
-    var com = {};
-}
-if (!com.zimbra) {
-    com.zimbra = {};
-}
-if (!com.zimbra.domain) {
-    com.zimbra.domain = {};
-}
+const EXPORTED_SYMBOLS = ["zimbra_notifier_Message"];
 
 /**
  * Creates an instance of Message.
@@ -65,38 +57,50 @@ if (!com.zimbra.domain) {
  * @param {Number}
  *            nbMail the number of messages
  */
-com.zimbra.domain.Message = function(id, timestamp, subject, content, senderMail, mailIdList) {
+const zimbra_notifier_Message = function(id, timestamp, subject, content, senderMail, mailIdList) {
     this.id = id;
     this.date = new Date(timestamp);
     this.subject = subject;
     this.content = content;
     this.senderEmail = senderMail;
-    this.nbMail = mailIdList.length;
     this.mailIdList = mailIdList;
 };
 
 /**
- * Indicate the number of new unread mail in message
+ * Indicate the number of mail in this message list
+ *
+ * @this {Message}
+ * @return {Number} Number of mail in message
+ */
+zimbra_notifier_Message.prototype.nbMail = function(messageList) {
+    return this.mailIdList.length;
+};
+
+/**
+ * Indicate the number of new mail in message
  *
  * @this {Message}
  * @param {Array}
  *            message list to compare
  * @return {Number} Number of new mail in message
  */
-com.zimbra.domain.Message.prototype.getNbNewUnReadMail = function(messageList) {
-    var newUnReadMail = this.mailIdList.length;
+zimbra_notifier_Message.prototype.getNbNewMail = function(messageList) {
+    var nbNewMail = this.mailIdList.length;
+    // Find this message list inside the old message list
     for ( var index = 0; index < messageList.length; index++) {
-        var message = messageList[index];
-        if(message.id === this.id) {
+        var oldMsg = messageList[index];
+        if (oldMsg.id === this.id) {
+            // Old message list found, check if new mail were added to mail list
             for (var i = 0; i < this.mailIdList.length; i++) {
-                for (var j = 0; j < message.mailIdList.length; j++) {
-                    if(this.mailIdList[i].id === message.mailIdList[j].id) {
-                        newUnReadMail--;
+                for (var j = 0; j < oldMsg.mailIdList.length; j++) {
+                    if (this.mailIdList[i].id === oldMsg.mailIdList[j].id) {
+                        nbNewMail--;
                         break;
                     }
                 }
             }
+            break;
         }
     }
-    return newUnReadMail;
-}
+    return nbNewMail;
+};

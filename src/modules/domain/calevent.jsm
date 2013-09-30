@@ -36,15 +36,7 @@
 
 "use strict";
 
-if (!com) {
-    var com = {};
-}
-if (!com.zimbra) {
-    com.zimbra = {};
-}
-if (!com.zimbra.domain) {
-    com.zimbra.domain = {};
-}
+const EXPORTED_SYMBOLS = ["zimbra_notifier_CalEvent"];
 
 /**
  * Creates an instance of CalEvent.
@@ -63,7 +55,7 @@ if (!com.zimbra.domain) {
  * @param {Number}
  *            timeConf the time configuration
  */
-com.zimbra.domain.CalEvent = function(id, name, timestamp, duration, timeConf) {
+const zimbra_notifier_CalEvent = function(id, name, timestamp, duration, timeConf) {
     this.id = id;
     this.name = name;
     this.startDate = new Date(timestamp);
@@ -71,8 +63,43 @@ com.zimbra.domain.CalEvent = function(id, name, timestamp, duration, timeConf) {
     this.duration = duration;
     this.timeConf = timeConf;
     this.notifier = null;
-    // calculate week
-    var onejan = new Date(this.startDate.getFullYear(), 0, 1, 0, 0, 0, 0);
-    var diffDays = Math.floor((this.startDate.getTime() - onejan.getTime()) / 86400000);
-    this.startWeek = Math.floor((diffDays + onejan.getDay()) / 7) + 1;
+    this.startWeek = this.weekDate(this.startDate);
+};
+
+
+/**
+ * Indicate the week date / Week number of the specified date
+ * @see http://en.wikipedia.org/wiki/ISO_week_date
+ *
+ * @this {CalEvent}
+ * @param {Date}
+ *            date The date
+ * @return {Number} Week number
+ */
+zimbra_notifier_CalEvent.prototype.weekDate = function(date) {
+    // If we are in december, this is possible that we are in W1 of the next year
+    if (date.getMonth() === 11) {
+        var dateW1NextY = this.dateBeginW1(date.getFullYear() + 1);
+        if (date >= dateW1NextY) {
+            // We are in the first week of the next year
+            return 1;
+        }
+    }
+    // General case
+    var dateW1 = this.dateBeginW1(date.getFullYear());
+    var diffDays = Math.floor((date.getTime() - dateW1.getTime()) / 86400000);
+    return Math.floor(diffDays / 7) + 1;
+};
+
+/**
+ * Find the date corresponding of the first day of W1
+ *
+ * @this {CalEvent}
+ * @param {Number}
+ *            year  The year
+ * @return {Date} The date of the first day of W1
+ */
+zimbra_notifier_CalEvent.prototype.dateBeginW1 = function(year) {
+    var dateDay4 = new Date(year, 0, 4, 0, 0, 0, 0);
+    return new Date(dateDay4.getTime() - (dateDay4.getDay() * 86400000));
 };
