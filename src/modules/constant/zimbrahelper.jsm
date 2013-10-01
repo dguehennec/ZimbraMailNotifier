@@ -121,15 +121,3 @@ zimbra_notifier_Constant.WEBSERVICE = {
     WAITSET_WATCH_TYPES : 'all'
 };
 
-/**
- * Option select tab
- *
- * @constant
- *
- */
-zimbra_notifier_Constant.OPTION_SELECT_TAB = {
-    GENERAL : 0,
-    CALENDAR : 1,
-    TASK : 2,
-    IDENTIFICATION : 3
-};

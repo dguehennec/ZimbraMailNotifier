@@ -53,6 +53,19 @@ if (!com.zimbra) {
 com.zimbra.UiUtil = { };
 
 /**
+ * Option select tab
+ *
+ * @constant
+ *
+ */
+com.zimbra.UiUtil.OPTION_SELECT_TAB = {
+    GENERAL         : "option-tab-default",
+    CALENDAR        : "option-tab-calendar",
+    TASK            : "option-tab-task",
+    IDENTIFICATION  : "option-tab-identifiant"
+};
+
+/**
  * install button.
  *
  * @this {UiUtil}

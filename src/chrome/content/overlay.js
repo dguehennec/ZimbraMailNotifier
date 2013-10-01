@@ -43,7 +43,6 @@ if (!com.zimbra) {
     com.zimbra = {};
 }
 
-Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/controller/service.jsm", com);
@@ -67,9 +66,7 @@ com.zimbra.Main.init = function() {
         com.zimbra_notifier_Controller.addCallBackRefresh(this);
 
         if (!com.zimbra_notifier_Controller.autoConnect()) {
-            window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
-                              'chrome, modal, dialog, centerscreen',
-                              com.zimbra_notifier_Constant.OPTION_SELECT_TAB.IDENTIFICATION);
+            this._openPrefsDialog(com.zimbra.UiUtil.OPTION_SELECT_TAB.IDENTIFICATION);
         }
         this.refresh(com.zimbra_notifier_SERVICE_EVENT.STOPPED);
 
@@ -164,9 +161,7 @@ com.zimbra.Main.refresh = function(event) {
  *
  */
 com.zimbra.Main.openOptionsDialog = function() {
-    window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
-                      'chrome, modal, dialog, centerscreen',
-                      com.zimbra_notifier_Constant.OPTION_SELECT_TAB.GENERAL);
+    this._openPrefsDialog(com.zimbra.UiUtil.OPTION_SELECT_TAB.GENERAL);
 };
 
 /**
@@ -191,9 +186,7 @@ com.zimbra.Main.onConnectClick = function() {
     if (!com.zimbra_notifier_Prefs.isSavePasswordEnabled() ||
         !com.zimbra_notifier_Controller.initializeConnection()) {
 
-        window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
-                          'chrome, modal, dialog, centerscreen',
-                          com.zimbra_notifier_Constant.OPTION_SELECT_TAB.IDENTIFICATION);
+        this._openPrefsDialog(com.zimbra.UiUtil.OPTION_SELECT_TAB.IDENTIFICATION);
     }
 };
 
@@ -219,12 +212,22 @@ com.zimbra.Main.onStatusBarClick = function(evt) {
             com.zimbra_notifier_Util.openURL(urlServer);
         }
         else {
-            window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
-                              'chrome, modal, dialog, centerscreen',
-                              com.zimbra_notifier_Constant.OPTION_SELECT_TAB.IDENTIFICATION);
+            this._openPrefsDialog(com.zimbra.UiUtil.OPTION_SELECT_TAB.IDENTIFICATION);
         }
     }
 };
+
+/**
+ * Show Option Menu and select the desired tab
+ * @see com.zimbra.UiUtil.OPTION_SELECT_TAB
+ *
+ * @private
+ */
+com.zimbra.Main._openPrefsDialog = function(tab) {
+    window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
+                      "chrome,titlebar,toolbar,centerscreen,modal", tab);
+};
+
 
 /**
  * Initiliaze tooltip

@@ -110,8 +110,6 @@ zimbra_notifier_Prefs.load = function() {
     this.pref_task_priorities      = this._getPref(this.PREF.TASK_PRIORITIES);
     // user
     this.pref_user_login           = this._getPref(this.PREF.USER_LOGIN);
-    this.pref_user_password        = this._getPassword(this.PREF.USER_PASSWORD_HOSTNAME,
-                                                this.PREF.USER_PASSWORD_ACTIONURL, this.pref_user_login);
     this.pref_user_server          = this._getPref(this.PREF.USER_SERVER);
     this.pref_user_savePassword    = this._getPref(this.PREF.USER_SAVEPASSWORD);
     // Last Wait set
@@ -244,24 +242,31 @@ zimbra_notifier_Prefs.observe = function(subject, topic, data) {
     }
 };
 
-
 /**
- * Save user login information
+ * Set temporary login information
  *
  * @this {Prefs}
  */
-zimbra_notifier_Prefs.saveLogin = function(server, user) {
+zimbra_notifier_Prefs.setTemporaryLogin = function(server, user) {
     if (!server) {
         server = '';
     }
     this.pref_user_server = server;
-    this._prefs.setCharPref(this.PREF.USER_SERVER, server);
 
     if (!user) {
         user = '';
     }
     this.pref_user_login = user;
-    this._prefs.setCharPref(this.PREF.USER_LOGIN, user);
+};
+
+/**
+ * Load from preferences the login information (server + user)
+ *
+ * @this {Prefs}
+ */
+zimbra_notifier_Prefs.reloadLogin = function() {
+    this.pref_user_login  = this._getPref(this.PREF.USER_LOGIN);
+    this.pref_user_server = this._getPref(this.PREF.USER_SERVER);
 };
 
 /**
