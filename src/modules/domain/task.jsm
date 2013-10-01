@@ -19,6 +19,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ * Benjamin ROBIN
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -40,10 +41,10 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Task"];
 
 /**
  * Creates an instance of Task.
- * 
+ *
  * @constructor
  * @this {Task}
- * 
+ *
  * @param {String}
  *            name the task name
  * @param {Number}

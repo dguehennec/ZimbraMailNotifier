@@ -14,7 +14,7 @@
  * The Original Code is Zimbra Mail Notifier.
  *
  * The Initial Developer of the Original Code is
- * David GUEHENNEC.
+ * Benjamin ROBIN
  * Portions created by the Initial Developer are Copyright (C) 2013
  * the Initial Developer. All Rights Reserved.
  *
