@@ -57,7 +57,8 @@ Components.utils.import("resource://zimbra_mail_notifier/controller/controller.j
  * @this {Options}
  */
 com.zimbra.Options = {
-    _closeWhenConnected: false
+    _closeWhenConnected: false,
+    _prefInstantApply: false
 };
 
 /**
@@ -79,6 +80,14 @@ com.zimbra.Options.init = function() {
         util.setAttribute("zimbra_mail_notifier-optionPassword", "value", prefs.getUserPassword());
     }
 
+    // Do we have a OK/Cancel button, or modification is applied immediately
+    var prefMng = Components.classes["@mozilla.org/preferences-service;1"].
+                   getService(Components.interfaces.nsIPrefBranch);
+
+    if (prefMng.getBoolPref("browser.preferences.instantApply")) {
+        this._prefInstantApply = true;
+    }
+
     // refresh screen access
     this.refresh();
 };
@@ -94,10 +103,9 @@ com.zimbra.Options.refresh = function(event) {
 
         this._closeWhenConnected = false;
         try {
-            window.acceptDialog();
+            document.getElementById("zimbra_mail_notifier-Preferences").acceptDialog();
         }
         catch (e) {
-            window.close();
         }
         return;
     }
@@ -143,10 +151,7 @@ com.zimbra.Options.release = function() {
     com.zimbra_notifier_Controller.removeCallBackRefresh(this);
     com.zimbra_notifier_Prefs.reloadLogin();
 
-    var prefMng = Components.classes["@mozilla.org/preferences-service;1"].
-                   getService(Components.interfaces.nsIPrefBranch);
-
-    if (prefMng.getBoolPref("browser.preferences.instantApply")) {
+    if (this._prefInstantApply) {
         this.validated();
     }
 };
