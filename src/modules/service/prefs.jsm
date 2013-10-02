@@ -50,8 +50,8 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Prefs"];
  */
 const zimbra_notifier_Prefs = {
     _prefs: null,
-    pref_current_version: 0,
-    is_first_launch: false
+    _is_first_launch: false,
+    _previous_version: 0
 };
 
 /**
@@ -60,29 +60,30 @@ const zimbra_notifier_Prefs = {
  * @constant
  */
 zimbra_notifier_Prefs.PREF = {
-    CURRENT_VERSION : "currentVersion",
-    AUTOCONNECT : "autoConnect",
-    SYSTEM_NOTIFICATION_ENABLED : "systemNotificationEnabled",
-    SOUND_ENABLED : "soundEnabled",
-    ACCESS_STATUSBAR : "accessStatusBar",
-    CALENDAR_ENABLED : "calendarEnabled",
-    CALENDAR_PERIOD_DISPLAYED : "calendarPeriodDisplayed",
-    CALENDAR_NB_DISPLAYED : "calendarNbDisplayed",
-    CALENDAR_SYSTEM_NOTIFICATION_ENABLED : "calendarSystemNotificationEnabled",
-    CALENDAR_SOUND_ENABLED : "calendarSoundEnabled",
-    CALENDAR_REMINDER_TIME_CONF : "calendarReminderTimeConf",
-    CALENDAR_REMINDER_NB_REPEAT : "calendarReminderRepeatNb",
-    TASK_ENABLED : "taskEnabled",
-    TASK_NB_DISPLAYED : "taskNbDisplayed",
-    TASK_PRIORITIES : "taskPriorities",
-    USER_LOGIN : "userlogin",
-    USER_PASSWORD_HOSTNAME : "chrome://zimbra_mail_notifier/",
-    USER_PASSWORD_ACTIONURL : "defaultPassword",
-    USER_SAVEPASSWORD : "userSavePassword",
-    USER_SERVER : "userServer",
-    WAITSET_INFO : "waitSetInfo",
-    REQUEST_QUERY_TIMEOUT : "requestQueryTimeout",
-    REQUEST_WAIT_TIMEOUT : "requestWaitTimeout"
+    CURRENT_VERSION                       : "currentVersion",
+    AUTOCONNECT                           : "autoConnect",
+    SYSTEM_NOTIFICATION_ENABLED           : "systemNotificationEnabled",
+    SOUND_ENABLED                         : "soundEnabled",
+    ACCESS_STATUSBAR                      : "accessStatusBar",
+    CALENDAR_ENABLED                      : "calendarEnabled",
+    CALENDAR_PERIOD_DISPLAYED             : "calendarPeriodDisplayed",
+    CALENDAR_NB_DISPLAYED                 : "calendarNbDisplayed",
+    CALENDAR_SYSTEM_NOTIFICATION_ENABLED  : "calendarSystemNotificationEnabled",
+    CALENDAR_SOUND_ENABLED                : "calendarSoundEnabled",
+    CALENDAR_REMINDER_TIME_CONF           : "calendarReminderTimeConf",
+    CALENDAR_REMINDER_NB_REPEAT           : "calendarReminderRepeatNb",
+    TASK_ENABLED                          : "taskEnabled",
+    TASK_NB_DISPLAYED                     : "taskNbDisplayed",
+    TASK_PRIORITIES                       : "taskPriorities",
+    USER_LOGIN                            : "userlogin",
+    USER_SAVEPASSWORD                     : "userSavePassword",
+    USER_SERVER                           : "userServer",
+    WAITSET_INFO                          : "waitSetInfo",
+    REQUEST_QUERY_TIMEOUT                 : "requestQueryTimeout",
+    REQUEST_WAIT_TIMEOUT                  : "requestWaitTimeout",
+
+    USER_PASSWORD_HOSTNAME   : "chrome://zimbra_mail_notifier/",
+    USER_PASSWORD_ACTIONURL  : "defaultPassword"
 };
 
 /**
@@ -92,7 +93,6 @@ zimbra_notifier_Prefs.PREF = {
  */
 zimbra_notifier_Prefs.load = function() {
     // default
-    this.pref_current_version              = this._getPref(this.PREF.CURRENT_VERSION);
     this.pref_autoConnect                  = this._getPref(this.PREF.AUTOCONNECT);
     this.pref_system_notification_enabled  = this._getPref(this.PREF.SYSTEM_NOTIFICATION_ENABLED);
     this.pref_sound_enabled                = this._getPref(this.PREF.SOUND_ENABLED);
@@ -119,12 +119,16 @@ zimbra_notifier_Prefs.load = function() {
     this.pref_request_queryTimeout = this._getPref(this.PREF.REQUEST_QUERY_TIMEOUT);
     this.pref_request_waitTimeout  = this._getPref(this.PREF.REQUEST_WAIT_TIMEOUT);
 
+    // Get the previous version
+    this._previous_version = this._getPref(this.PREF.CURRENT_VERSION);
+
     // Check if this is the first time the extension is started
-    if (!this.pref_current_version) {
-        this.pref_current_version = zimbra_notifier_Constant.VERSION;
-        this._prefs.setIntPref(this.PREF.CURRENT_VERSION, this.pref_current_version);
-        this.is_first_launch = true;
+    if (!this._previous_version) {
+        this._is_first_launch = true;
     }
+    // Set the current version
+    this.pref_current_version = zimbra_notifier_Constant.VERSION;
+    this._prefs.setIntPref(this.PREF.CURRENT_VERSION, this.pref_current_version);
 };
 
 /**
@@ -244,7 +248,22 @@ zimbra_notifier_Prefs.observe = function(subject, topic, data) {
 };
 
 /**
- * Set temporary login information
+ * Check if this is the first start of the extension
+ *
+ * @this {Prefs}
+ * @param {Boolean} True if the flag should be reseted
+ */
+zimbra_notifier_Prefs.isFirstStart = function(reset) {
+    var ret = this._is_first_launch;
+    if (reset) {
+        this._is_first_launch = false;
+    }
+    return ret;
+};
+
+/**
+ * Set temporary login information.
+ * Do not save the information to the preference system
  *
  * @this {Prefs}
  */
@@ -272,6 +291,7 @@ zimbra_notifier_Prefs.reloadLogin = function() {
 
 /**
  * Save user password
+ * @see _setPassword
  *
  * @this {Prefs}
  */

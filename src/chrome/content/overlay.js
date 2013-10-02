@@ -66,6 +66,11 @@ com.zimbra.Main.init = function() {
     try {
         com.zimbra_notifier_Controller.addCallBackRefresh(this);
 
+        // Install the button in the nav-bar if necessary
+        if (com.zimbra_notifier_Prefs.isFirstStart(true)) {
+            com.zimbra.UiUtil.installButton("nav-bar", "zimbra_mail_notifier-toolbar-button");
+        }
+
         if (!com.zimbra_notifier_Controller.autoConnect()) {
             this._openPrefsDialog(com.zimbra.UiUtil.OPTION_SELECT_TAB.IDENTIFICATION);
         }

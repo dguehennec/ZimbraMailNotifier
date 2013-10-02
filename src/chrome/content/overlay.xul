@@ -56,7 +56,8 @@
     </menupopup>
 
     <statusbar id="status-bar">
-        <statusbarpanel tooltip="zimbra_mail_notifier-tip" style="visibility:collapse;" status="0" context="zimbra_mail_notifier_clipmenu" class="statusbarpanel-iconic-text" label="" id="zimbra_mail_notifier-status-icon" onclick="return com.zimbra.Main.onStatusBarClick(event);">
+        <statusbarpanel tooltip="zimbra_mail_notifier-tip" style="visibility:collapse;" status="0" context="zimbra_mail_notifier_clipmenu"
+                        class="statusbarpanel-iconic-text" label="" id="zimbra_mail_notifier-status-icon" onclick="return com.zimbra.Main.onStatusBarClick(event);">
         </statusbarpanel>
     </statusbar>
 
