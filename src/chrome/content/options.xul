@@ -12,7 +12,7 @@
     onunload="com.zimbra.Options.release();"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-    <prefpane id="option-tab-default" label="&option.default.label;">
+    <prefpane id="option-tab-default" label="&option.default.label;" image="chrome://zimbra_mail_notifier/skin/images/prefs/general.png">
         <preferences id="option-prefs-default">
             <preference id="zimbra_mail_notifier-optionAccessStatusBar" name="extensions.zimbra_mail_notifier.accessStatusBar" type="bool"/>
             <preference id="zimbra_mail_notifier-optionAutoConnect" name="extensions.zimbra_mail_notifier.autoConnect" type="bool"/>
@@ -36,7 +36,7 @@
             </groupbox>
         </vbox>
     </prefpane>
-    <prefpane id="option-tab-calendar" label="&option.calendar.label;">
+    <prefpane id="option-tab-calendar" label="&option.calendar.label;" image="chrome://zimbra_mail_notifier/skin/images/prefs/calendar.png">
         <preferences id="option-prefs-calendar">
             <preference id="zimbra_mail_notifier-optionCalendarEnabled" name="extensions.zimbra_mail_notifier.calendarEnabled" type="bool"/>
             <preference id="zimbra_mail_notifier-optionCalendarPeriodDisplayed" name="extensions.zimbra_mail_notifier.calendarPeriodDisplayed" type="int"/>
@@ -111,7 +111,7 @@
             </groupbox>
         </vbox>
     </prefpane>
-    <prefpane id="option-tab-task" label="&option.task.label;">
+    <prefpane id="option-tab-task" label="&option.task.label;" image="chrome://zimbra_mail_notifier/skin/images/prefs/task.png">
         <preferences id="option-prefs-task">
             <preference id="zimbra_mail_notifier-optionTaskEnabled" name="extensions.zimbra_mail_notifier.taskEnabled" type="bool"/>
             <preference id="zimbra_mail_notifier-optionTaskNbDisplayed" name="extensions.zimbra_mail_notifier.taskNbDisplayed" type="int"/>
@@ -150,7 +150,7 @@
             </groupbox>
         </vbox>
     </prefpane>
-    <prefpane id="option-tab-identifiant" label="&option.identifiant.label;">
+    <prefpane id="option-tab-identifiant" label="&option.identifiant.label;" image="chrome://zimbra_mail_notifier/skin/images/prefs/auth.png">
         <preferences id="option-prefs-identifiant">
             <preference id="zimbra_mail_notifier-optionLogin" name="extensions.zimbra_mail_notifier.userlogin" type="string"/>
             <preference id="zimbra_mail_notifier-optionSavePassword" name="extensions.zimbra_mail_notifier.userSavePassword" type="bool"/>
@@ -183,7 +183,7 @@
             <hbox align="center">
                 <spacer flex="1"/>
                 <button id="zimbra_mail_notifier-connectButton" disabled="true" label="&option.identifiant.connect.button;" oncommand="com.zimbra.Options.connect();"/>
-                <button id="zimbra_mail_notifier-connectInProgressButton" disabled="true" label="&option.identifiant.connectInProgress.button;"/>
+                <button id="zimbra_mail_notifier-connectInProgressButton" style="visibility:collapse;" disabled="true" label="&option.identifiant.connectInProgress.button;"/>
                 <button id="zimbra_mail_notifier-disconnectButton" style="visibility:collapse;" label="&option.identifiant.disconnect.button;" oncommand="com.zimbra.Options.disconnect();"/>
             </hbox>
             <hbox align="center">

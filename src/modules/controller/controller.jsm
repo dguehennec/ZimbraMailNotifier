@@ -36,7 +36,6 @@
 
 "use strict";
 
-Components.utils.import("resource://gre/modules/ctypes.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
@@ -202,6 +201,19 @@ zimbra_notifier_Controller.checkNow = function() {
 zimbra_notifier_Controller.isConnected = function() {
     if (this._service) {
         return this._service.isConnected();
+    }
+    return false;
+};
+
+/**
+ * Indicate if is connecting
+ *
+ * @this {Controller}
+ * @return {Boolean} true if connecting
+ */
+zimbra_notifier_Controller.isConnecting = function() {
+    if (this._service) {
+        return this._service.getCurrentState() === zimbra_notifier_SERVICE_STATE.CONNECT_RUN;
     }
     return false;
 };

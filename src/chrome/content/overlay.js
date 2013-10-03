@@ -231,9 +231,8 @@ com.zimbra.Main.onStatusBarClick = function(evt) {
  */
 com.zimbra.Main._openPrefsDialog = function(tab) {
     window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
-                      "chrome,titlebar,toolbar,centerscreen,modal", tab);
+                      "chrome,titlebar,toolbar,centerscreen,modal,dialog=yes", tab);
 };
-
 
 /**
  * Initiliaze tooltip

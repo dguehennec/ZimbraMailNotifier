@@ -135,7 +135,6 @@ zimbra_notifier_Service.prototype._loadDefault = function() {
 
     // Calendar events / tasks / unread messages
     this._stopRemoveEvents();
-    this._currentEvents = [];
     this._currentTasks = [];
     this._currentMessageUnRead = [];
 
@@ -176,6 +175,7 @@ zimbra_notifier_Service.prototype._stopRemoveEvents = function() {
             this._currentEvents.shift();
         }
     }
+    this._currentEvents = [];
 };
 
 /**
@@ -678,10 +678,26 @@ zimbra_notifier_Service.prototype.checkNow = function() {
  */
 zimbra_notifier_Service.prototype.observe = function(subject, topic, data) {
     if (topic === zimbra_notifier_Constant.OBSERVER.PREF_SAVED) {
-        // Clear some errors to handle the case of a previous error on the calendar/task request
-        // and the user just desactivated the calendar/task
-        this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.CALENDAR);
-        this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.TASK);
+        var needRefresh = false;
+
+        if (!zimbra_notifier_Prefs.isCalendarEnabled()) {
+            // Clear previous error related to calendar request, and remove any calendar events
+            this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.CALENDAR);
+            this._stopRemoveEvents();
+        }
+        else {
+            needRefresh = true;
+        }
+
+        if (!zimbra_notifier_Prefs.isTaskEnabled()) {
+            // Clear previous error related to task request, and remove any task
+            this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.TASK);
+            this._currentTasks = [];
+        }
+        else {
+            needRefresh = true;
+        }
+
         // Inform that the prefs changed
         this._parent.event(zimbra_notifier_SERVICE_EVENT.PREF_UPDATED);
 
@@ -689,6 +705,9 @@ zimbra_notifier_Service.prototype.observe = function(subject, topic, data) {
             !this.isConnected() && this._currentState !== zimbra_notifier_SERVICE_STATE.CONNECT_RUN) {
 
             this.initializeConnection();
+        }
+        else if (this.isConnected() && needRefresh) {
+            this.checkNow();
         }
     }
 };
@@ -1034,6 +1053,16 @@ zimbra_notifier_Service.prototype.callbackTask = function(tasks) {
  */
 zimbra_notifier_Service.prototype.isConnected = function() {
     return this._webservice.isConnected();
+};
+
+/**
+ * Get the current state of the state machine
+ *
+ * @this {Service}
+ * @return {SERVICE_STATE} The current running state
+ */
+zimbra_notifier_Service.prototype.getCurrentState = function() {
+    return this._currentState;
 };
 
 /**

@@ -257,7 +257,7 @@ zimbra_notifier_Webservice.prototype._callbackAuthRequest = function(request) {
  */
 zimbra_notifier_Webservice.prototype.disconnect = function() {
     try {
-        this._session.updateToken('', '');
+        this._session.updateToken('', 0);
         this._parent.callbackDisconnect();
         this._parent.callbackSessionInfoChanged(this._session);
         return true;
@@ -722,7 +722,7 @@ zimbra_notifier_Webservice.prototype._callbackFailed = function(request) {
                 break;
 
             case zimbra_notifier_REQUEST_STATUS.LOGIN_INVALID:
-                this._session.updateToken('', '');
+                this._session.updateToken('', 0);
                 this._parent.callbackSessionInfoChanged(this._session);
                 break;
 
