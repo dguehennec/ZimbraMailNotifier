@@ -140,9 +140,8 @@ com.zimbra.Options.refresh = function(event) {
         util.removeAttribute("zimbra_mail_notifier-textboxServer", "disabled");
     }
 
-    var srvErr = com.zimbra_notifier_Controller.getLastErrorMessage();
-    util.setAttribute("zimbra_mail_notifier-serverError", "value", srvErr);
-    util.setVisibility("zimbra_mail_notifier-serverError", srvErr ? "visible" : "collapse");
+    util.setTextContent("zimbra_mail_notifier-serverError",
+                        com.zimbra_notifier_Controller.getLastErrorMessage());
 };
 
 /**
@@ -198,8 +197,7 @@ com.zimbra.Options.connect = function() {
     util.setAttribute("zimbra_mail_notifier-textboxServer", "disabled", true);
     util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
     util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "visible");
-    util.setAttribute("zimbra_mail_notifier-serverError", "value", "");
-    util.setVisibility("zimbra_mail_notifier-serverError", "collapse");
+    util.setTextContent("zimbra_mail_notifier-serverError", "");
 
     // initialize connection
     this._closeWhenConnected = true;

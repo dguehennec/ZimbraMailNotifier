@@ -119,7 +119,7 @@
         </preferences>
 
         <vbox flex="1">
-            <checkbox id="zimbra_mail_notifier-optionTaskEnabled" label="&option.task.activate;" checked="false"/>
+            <checkbox preference="zimbra_mail_notifier-optionTaskEnabled" label="&option.task.activate;" checked="false"/>
                 <groupbox width="100%">
                     <caption label="&option.task.view.caption;"/>
                     <hbox align="center">
@@ -181,13 +181,10 @@
                 </hbox>
             </groupbox>
             <hbox align="center">
-                <spacer flex="1"/>
+                <description flex="1" id="zimbra_mail_notifier-serverError"/>
                 <button id="zimbra_mail_notifier-connectButton" disabled="true" label="&option.identifiant.connect.button;" oncommand="com.zimbra.Options.connect();"/>
                 <button id="zimbra_mail_notifier-connectInProgressButton" style="visibility:collapse;" disabled="true" label="&option.identifiant.connectInProgress.button;"/>
                 <button id="zimbra_mail_notifier-disconnectButton" style="visibility:collapse;" label="&option.identifiant.disconnect.button;" oncommand="com.zimbra.Options.disconnect();"/>
-            </hbox>
-            <hbox align="center">
-                <label id="zimbra_mail_notifier-serverError" value="" width="130"/>
             </hbox>
         </vbox>
     </prefpane>
