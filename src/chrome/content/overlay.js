@@ -44,6 +44,7 @@ if (!com.zimbra) {
     com.zimbra = {};
 }
 
+Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/controller/service.jsm", com);
@@ -230,8 +231,9 @@ com.zimbra.Main.onStatusBarClick = function(evt) {
  * @private
  */
 com.zimbra.Main._openPrefsDialog = function(tab) {
-    window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "",
-                      "chrome,titlebar,toolbar,centerscreen,modal,dialog=yes", tab);
+    var features = "chrome,titlebar,toolbar,centerscreen," +
+        ((Services.appinfo.OS === "Darwin") ? "dialog=yes" : "modal");
+    window.openDialog('chrome://zimbra_mail_notifier/content/options.xul', "", features, tab);
 };
 
 /**
