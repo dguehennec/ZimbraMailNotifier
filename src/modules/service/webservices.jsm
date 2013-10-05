@@ -85,6 +85,15 @@ const zimbra_notifier_Webservice = function(timeout, parent) {
 };
 
 /**
+ * Destroy and cleanup webservice
+ *
+ * @this {Webservice}
+ */
+zimbra_notifier_Webservice.prototype.release = function() {
+
+};
+
+/**
  * Get the running request type id, NONE if no request is running
  *
  * @this {Webservice}

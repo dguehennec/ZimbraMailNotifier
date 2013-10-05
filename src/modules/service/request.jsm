@@ -241,6 +241,15 @@ zimbra_notifier_Request.prototype.isSuccess = function() {
 };
 
 /**
+ * The raw response
+ *
+ * @this {Request}
+ */
+zimbra_notifier_Request.prototype.rawResponse = function() {
+    return this._dataRcv;
+};
+
+/**
  * Parse the response and return the JSON object
  *
  * @this {Request}
