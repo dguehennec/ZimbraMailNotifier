@@ -759,7 +759,7 @@ zimbra_notifier_Webservice.prototype._callbackFailed = function(request) {
  */
 zimbra_notifier_Webservice.prototype._buildQueryReq = function(typeReq, url, callback) {
     return new zimbra_notifier_Request(typeReq, this._timeoutQuery, this._session.buildUrl(url),
-                                       this, callback);
+                                       this, callback, true);
 };
 
 /**

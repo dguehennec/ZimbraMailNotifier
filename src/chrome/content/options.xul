@@ -179,13 +179,13 @@
                     <label value="&option.identifiant.server.label; :" width="130"/>
                     <textbox id="zimbra_mail_notifier-textboxServer" preference="zimbra_mail_notifier-optionServer" onkeyup="com.zimbra.Options.refresh()" value="" flex="1" maxlength="200"/>
                 </hbox>
+                <hbox align="center">
+                    <description flex="1" id="zimbra_mail_notifier-serverError"/>
+                    <button id="zimbra_mail_notifier-connectButton" disabled="true" label="&option.identifiant.connect.button;" oncommand="com.zimbra.Options.connect();"/>
+                    <button id="zimbra_mail_notifier-connectInProgressButton" style="visibility:collapse;" disabled="true" label="&option.identifiant.connectInProgress.button;"/>
+                    <button id="zimbra_mail_notifier-disconnectButton" style="visibility:collapse;" label="&option.identifiant.disconnect.button;" oncommand="com.zimbra.Options.disconnect();"/>
+                </hbox>
             </groupbox>
-            <hbox align="center">
-                <description flex="1" id="zimbra_mail_notifier-serverError"/>
-                <button id="zimbra_mail_notifier-connectButton" disabled="true" label="&option.identifiant.connect.button;" oncommand="com.zimbra.Options.connect();"/>
-                <button id="zimbra_mail_notifier-connectInProgressButton" style="visibility:collapse;" disabled="true" label="&option.identifiant.connectInProgress.button;"/>
-                <button id="zimbra_mail_notifier-disconnectButton" style="visibility:collapse;" label="&option.identifiant.disconnect.button;" oncommand="com.zimbra.Options.disconnect();"/>
-            </hbox>
         </vbox>
     </prefpane>
     <script type="application/x-javascript" src="chrome://zimbra_mail_notifier/content/class/uiutil.js"/>
