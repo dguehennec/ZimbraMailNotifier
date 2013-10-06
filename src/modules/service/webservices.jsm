@@ -45,6 +45,7 @@ Components.utils.import("resource://zimbra_mail_notifier/domain/session.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
 
 const EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_TYPE", "zimbra_notifier_Webservice"];
 
@@ -339,28 +340,32 @@ zimbra_notifier_Webservice.prototype._callbackCreateWaitRequest = function(reque
 };
 
 /**
+ * Get the timeout in ms of the blocking wait request
+ *
+ * @this {Webservice}
+ */
+zimbra_notifier_Webservice.prototype.getWaitSetTimeout = function() {
+    return zimbra_notifier_Prefs.getRequestWaitTimeout();
+};
+
+/**
  * Wait for events
  *
  * @this {Webservice}
  *
- * @param {Number}
- *            timeout The timeout in second of the request
- *            If non 0, do a blocking request
- *            If equals to 0, run as a normal query
+ * @param {Boolean}
+ *            blocking  True if the query is a blocking request
  */
-zimbra_notifier_Webservice.prototype.waitRequest = function(timeout) {
+zimbra_notifier_Webservice.prototype.waitRequest = function(blocking) {
     var object = this;
-    var typeReq = (timeout > 0) ? zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK :
-                                  zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK;
+    var typeReq = blocking ? zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK :
+                             zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK;
 
     this._launchQuery(typeReq, true, true, function() {
 
-        var block = false;
         var timeoutS = Math.ceil(object._timeoutQuery / 1000);
-
-        if (timeout > 0) {
-            block = true;
-            timeoutS = Math.round((timeout - 1000) / 1000);
+        if (blocking) {
+            timeoutS = Math.round((object.getWaitSetTimeout() - 1000) / 1000);
             if (timeoutS < 1) {
                 timeoutS = 1;
             }
@@ -368,15 +373,15 @@ zimbra_notifier_Webservice.prototype.waitRequest = function(timeout) {
 
         object._runningReq = object._buildQueryReq(typeReq, "/service/soap/WaitSetRequest",
                                                    object._callbackWaitRequest);
-        if (block === true) {
-            object._runningReq.setTimeout((timeoutS + 8) * 1000);
+        if (blocking === true) {
+            object._runningReq.setTimeout((timeoutS + 10) * 1000);
         }
         var dataBody = '';
         dataBody += '"WaitSetRequest":{';
         dataBody +=    '"_jsns":"urn:zimbraMail",';
         dataBody +=    '"waitSet":' + JSON.stringify(object._session.waitId()) + ',';
         dataBody +=    '"seq":' + JSON.stringify(object._session.waitSeq()) + ',';
-        dataBody +=    '"block":' + ((block === true) ? '1' : '0') + ',';
+        dataBody +=    '"block":' + ((blocking === true) ? '1' : '0') + ',';
         dataBody +=    '"timeout":' + timeoutS + ',';
         dataBody +=    '"add":{';
         dataBody +=    '},';
