@@ -296,3 +296,79 @@ zimbra_notifier_Util.removeObserver = function(observer, topic) {
 zimbra_notifier_Util.notifyObservers = function(topic, data) {
     Services.obs.notifyObservers(null, topic, data);
 };
+
+/**
+ * Get the cookie value
+ *
+ * @this {Util}
+ * @param {String}
+ *            url  The URL associated with the cookie
+ * @param {String}
+ *            key  The key of the cookie
+ */
+zimbra_notifier_Util.getCookieValue = function(url, key) {
+    if (url && key) {
+        var cookieUri = Services.io.newURI(url, null, null);
+        var enumCookies = Services.cookies.getCookiesFromHost(cookieUri.host);
+
+        while (enumCookies.hasMoreElements()) {
+            var cookie = enumCookies.getNext().QueryInterface(Components.interfaces.nsICookie);
+            if (cookie.name === key) {
+                return cookie.value;
+            }
+        }
+    }
+    return null;
+};
+
+/**
+ * Set a new session cookie
+ *
+ * @this {Util}
+ * @param {String}
+ *            url  The URL associated with the cookie
+ * @param {String}
+ *            key  The key of the cookie
+ * @param {String}
+ *            value  The value of the cookie
+ */
+zimbra_notifier_Util.addSessionCookie = function(url, key, value) {
+    if (url && key) {
+        var cookieUri = Services.io.newURI(url, null, null);
+        Services.cookies.add(cookieUri.host, cookieUri.path, key, value,
+                             cookieUri.schemeIs("https"), false, true, 0);
+    }
+};
+
+/**
+ * Remove a cookie
+ *
+ * @this {Util}
+ * @param {String}
+ *            url  The URL associated with the cookie
+ * @param {String}
+ *            key  The key of the cookie
+ */
+zimbra_notifier_Util.removeCookie = function(url, key) {
+    if (url && key) {
+        var cookieUri = Services.io.newURI(url, null, null);
+        Services.cookies.remove(cookieUri.host, key, cookieUri.path, false);
+    }
+};
+
+/**
+ * Extend the Object properties
+ *
+ * @param {Object}
+ *            base The base object
+ * @param {Object}
+ *            sub  The sub object
+ */
+zimbra_notifier_Util.extend = function(base, sub) {
+    var tmp = function() {};
+    // Copy the prototype from the base to setup inheritance
+    tmp.prototype = base.prototype;
+    sub.prototype = new tmp();
+    // The constructor property was set wrong, let's fix it
+    sub.prototype.constructor = sub;
+};

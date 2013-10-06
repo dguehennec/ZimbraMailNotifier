@@ -119,6 +119,7 @@ zimbra_notifier_Constant.SERVICE = {
  *
  */
 zimbra_notifier_Constant.WEBSERVICE = {
-    WAITSET_WATCH_TYPES : 'all'
+    WAITSET_WATCH_TYPES : 'all',
+    COOKIE_KEY_TOKEN : "ZM_AUTH_TOKEN"
 };
 

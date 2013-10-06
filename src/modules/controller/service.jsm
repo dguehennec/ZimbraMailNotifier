@@ -45,6 +45,7 @@ Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/infoerror.jsm");
+//Components.utils.import("resource://zimbra_mail_notifier/specific/free.jsm");
 
 const EXPORTED_SYMBOLS = ["zimbra_notifier_Service", "zimbra_notifier_SERVICE_EVENT",
                           "zimbra_notifier_SERVICE_STATE"];
