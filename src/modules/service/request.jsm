@@ -67,7 +67,7 @@ const zimbra_notifier_REQUEST_STATUS = {
  *
  * @constructor
  * @this {Request}
- * @param {Number}
+ * @param {String}
  *            typeRequest The type of the request
  * @param {Number}
  *            timeout The timeout in ms

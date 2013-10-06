@@ -43,7 +43,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_InfoErrors"];
  *
  * @constructor
  * @this {ReqInfoError}
- * @param {Number}
+ * @param {String}
  *            reqType the type of the request.
  * @param {Number}
  *            reqStatus the error code of the request
@@ -70,7 +70,7 @@ const zimbra_notifier_InfoErrors = function() {
  * Increment the error counter of the specified request
  *
  * @this {InfoErrors}
- * @param {Number}
+ * @param {String}
  *            reqType the type of the request.
  * @param {Number}
  *            reqStatus the error code of the request
@@ -105,7 +105,7 @@ zimbra_notifier_InfoErrors.prototype.addError = function(reqType, reqStatus) {
  * Reset the loop error counter of the specified request
  *
  * @this {InfoErrors}
- * @param {Number}
+ * @param {String}
  *            reqType the type of the request
  */
 zimbra_notifier_InfoErrors.prototype.resetLoopErrorCounter = function(reqType) {
@@ -124,7 +124,7 @@ zimbra_notifier_InfoErrors.prototype.resetLoopErrorCounter = function(reqType) {
  * Get the loop error counter of the specified request
  *
  * @this {InfoErrors}
- * @param {Number}
+ * @param {String}
  *            reqType the type of the request
  *
  * @return {Number} The loop counter, 0 if does not exist
@@ -145,7 +145,7 @@ zimbra_notifier_InfoErrors.prototype.getLoopErrorCounter = function(reqType) {
  * Clear the errors of the specified request
  *
  * @this {InfoErrors}
- * @param {Number}
+ * @param {String}
  *            reqType the type of the request
  */
 zimbra_notifier_InfoErrors.prototype.clearError = function(reqType) {

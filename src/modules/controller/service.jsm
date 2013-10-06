@@ -183,7 +183,7 @@ zimbra_notifier_Service.prototype._stopRemoveEvents = function() {
  * @this {Service}
  */
 zimbra_notifier_Service.prototype.shutdown = function() {
-    this._logger.trace("Shutdown...");
+    this._logger.info("Shutdown...");
     zimbra_notifier_Util.removeObserver(this, zimbra_notifier_Constant.OBSERVER.PREF_SAVED);
     this._loadDefault();
 };
@@ -197,7 +197,7 @@ zimbra_notifier_Service.prototype.shutdown = function() {
 zimbra_notifier_Service.prototype._getWebService = function() {
     if (!this._webservice) {
 
-        this._webservice = new zimbra_notifier_Webservice(
+        this._webservice = new zimbra_notifier_Webservice( // TODO
             zimbra_notifier_Prefs.getRequestQueryTimeout(), this);
 
         // Restore previous wait set
@@ -225,7 +225,7 @@ zimbra_notifier_Service.prototype._changeState = function(newState) {
     var oldState = this._currentState;
     this._currentState = newState;
     if (oldState !== newState) {
-        this._logger.trace("Change state " + oldState + " -> " + newState);
+        this._logger.info("Change state " + oldState + " -> " + newState);
     }
 };
 
@@ -421,12 +421,7 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
             this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_UNREAD_MSG);
 
             if (this._needRunReq(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG)) {
-                if (!this._getWebService().searchUnReadMsg()) {
-                    this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG,
-                                                 zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
-
-                    this._planRunState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED, 10);
-                }
+                this._getWebService().searchUnReadMsg();
                 break;
             }
 
@@ -445,12 +440,7 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
                 var startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
                 var endDate = new Date(date.getTime() +
                                         (86400000 * zimbra_notifier_Prefs.getCalendarPeriodDisplayed()));
-                if (!this._getWebService().searchCalendar(startDate, endDate)) {
-                    this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.CALENDAR,
-                                                zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
-
-                    this._planRunState(zimbra_notifier_SERVICE_STATE.CALENDAR_ENDED, 10);
-                }
+                this._getWebService().searchCalendar(startDate, endDate);
                 break;
             }
 
@@ -463,12 +453,7 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
             this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_TASK);
 
             if (zimbra_notifier_Prefs.isTaskEnabled() && this._needRunReq(zimbra_notifier_REQUEST_TYPE.TASK)) {
-                if (!this._getWebService().searchTask()) {
-                    this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.TASK,
-                                                 zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
-
-                    this._planRunState(zimbra_notifier_SERVICE_STATE.TASK_ENDED, 10);
-                }
+                this._getWebService().searchTask();
                 break;
             }
 
@@ -509,25 +494,13 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
         case zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN:
             this._runBlockingWaitAfterNoBlock = false;
             this._timeStartWaitReq = new Date().getTime();
-
-            if (!this._getWebService().waitRequest(zimbra_notifier_Prefs.getRequestWaitTimeout())) {
-                this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK,
-                                             zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
-
-                this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT, 10);
-            }
+            this._getWebService().waitRequest(zimbra_notifier_Prefs.getRequestWaitTimeout());
             break;
 
         // Launch the non blocking query waitset
         case zimbra_notifier_SERVICE_STATE.WAITSET_NO_BLOCK_RUN:
             this._timeStartWaitReq = 0;
-
-            if (!this._getWebService().waitRequest(0)) {
-                this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK,
-                                             zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
-
-                this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT, 10);
-            }
+            this._getWebService().waitRequest(0);
             break;
 
         // We received a change event
@@ -560,12 +533,7 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
 
         // Create the waitset
         case zimbra_notifier_SERVICE_STATE.WAITSET_CREATE_RUN:
-            if (!this._getWebService().createWaitRequest()) {
-                this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.CREATE_WAIT,
-                                             zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
-
-                this._planRunState(zimbra_notifier_SERVICE_STATE.REFRESH_START, 10);
-            }
+            this._getWebService().createWaitRequest();
             break;
 
         // create wait set ended
@@ -589,7 +557,7 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
  *
  * @private
  * @this {Service}
- * @param {Number}
+ * @param {String}
  *            reqType the type of the request
  */
 zimbra_notifier_Service.prototype._needRunReq = function(reqType) {
@@ -629,18 +597,9 @@ zimbra_notifier_Service.prototype._doConnect = function(password) {
     if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN)) {
 
         this._parent.event(zimbra_notifier_SERVICE_EVENT.CONNECTING);
-
-        if (!this._getWebService().authRequest(zimbra_notifier_Prefs.getUrlWebService(),
-                                               zimbra_notifier_Prefs.getUserLogin(), password)) {
-
-            this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.OPEN_SESSION,
-                                         zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
-            // Try again later
-            this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_ERR, 100);
-        }
-        else {
-            return true;
-        }
+        this._getWebService().authRequest(zimbra_notifier_Prefs.getUrlWebService(),
+                                          zimbra_notifier_Prefs.getUserLogin(), password);
+        return true;
     }
     return false;
 };
@@ -761,7 +720,7 @@ zimbra_notifier_Service.prototype.observe = function(subject, topic, data) {
  * callbackError
  *
  * @this {Service}
- * @param {Number}
+ * @param {String}
  *            typeReq The type of request
  * @param {Number}
  *            statusReq The error code
@@ -774,7 +733,7 @@ zimbra_notifier_Service.prototype.callbackError = function(typeReq, statusReq) {
     }
 
     switch (typeReq) {
-        case zimbra_notifier_REQUEST_TYPE.OPEN_SESSION:
+        case zimbra_notifier_REQUEST_TYPE.CONNECT:
             this._reqInfoErrors.addError(typeReq, statusReq);
             if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN)) {
                 if (statusReq === zimbra_notifier_REQUEST_STATUS.LOGIN_INVALID) {
@@ -848,7 +807,7 @@ zimbra_notifier_Service.prototype.callbackError = function(typeReq, statusReq) {
  */
 zimbra_notifier_Service.prototype.callbackLoginSuccess = function() {
     this._delayWaitConnect = 0;
-    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.OPEN_SESSION);
+    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.CONNECT);
     if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN)) {
         this._changeAndRunState(zimbra_notifier_SERVICE_STATE.CONNECT_OK);
     }

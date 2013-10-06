@@ -168,17 +168,14 @@ zimbra_notifier_Util.extend(zimbra_notifier_Webservice, zimbra_notifier_Webservi
  * @this {WebserviceFree}
  */
 zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, login, password) {
-    try {
-        if (this._runningReq !== null) {
-            return false;
-        }
+    var object = this;
+    var typeReq = zimbra_notifier_REQUEST_TYPE.CONNECT;
+    this._launchQuery(typeReq, false, false, function() {
 
-        this.infoAuthUpdated(urlWebService, login);
-        this._runningReq = new zimbra_notifier_RequestFree(zimbra_notifier_REQUEST_TYPE.OPEN_SESSION,
-                                    this._timeoutQuery, this._session.buildUrl('/zimbra.pl'),
-                                    this, this._callbackAuthRequest, false);
+        object.infoAuthUpdated(urlWebService, login);
+        object._runningReq = object._buildQueryReq(typeReq, "/zimbra.pl", object._callbackAuthRequest);
 
-        this._runningReq._setInfoRequest = function() {
+        object._runningReq._setInfoRequest = function() {
             this._request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         };
 
@@ -187,13 +184,9 @@ zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, l
         dataReq += "&password=" + encodeURIComponent(password);
         dataReq += "&Envoyer=S%27identifier";
 
-        this._runningReq.setDataRequest(dataReq);
-        return this._runningReq.send();
-    }
-    catch (e) {
-        this._logger.error("Auth request error: " + e);
-    }
-    return false;
+        object._runningReq.setDataRequest(dataReq);
+        return true;
+    });
 };
 
 /**
@@ -251,4 +244,29 @@ zimbra_notifier_WebserviceFree.prototype._callbackFailed = function(request) {
 zimbra_notifier_WebserviceFree.prototype._buildQueryReq = function(typeReq, url, callback) {
     return new zimbra_notifier_RequestFree(typeReq, this._timeoutQuery, this._session.buildUrl(url),
                                            this, callback, false);
+};
+
+/**
+ * Check if the query can be runned
+ *
+ * @private
+ * @this {WebserviceFree}
+ */
+zimbra_notifier_WebserviceFree.prototype._canRunQuery = function(typeReq, connectRequired, waitSetRequired) {
+    if (this._runningReq !== null) {
+        this._logger.warning("A query is already running");
+        // Do nothing, do not inform the parent, this should never happen
+        return false;
+    }
+    if (connectRequired && !this.isConnected()) {
+        this._logger.warning("Can not run query: Not connected");
+        this._runCallbackFailLaunch(typeReq, zimbra_notifier_REQUEST_STATUS.AUTH_REQUIRED);
+        return false;
+    }
+    if (waitSetRequired && !this.isWaitSetValid()) {
+        this._logger.warning("Can not run query: WaitSet invalid");
+        this._runCallbackFailLaunch(typeReq, zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
+        return false;
+    }
+    return true;
 };

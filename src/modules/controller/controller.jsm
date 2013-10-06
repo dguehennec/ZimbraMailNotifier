@@ -262,7 +262,7 @@ zimbra_notifier_Controller.getLastErrorMessage = function() {
 
     if (lastErr !== null) {
         switch (lastErr.requestType) {
-            case zimbra_notifier_REQUEST_TYPE.OPEN_SESSION:
+            case zimbra_notifier_REQUEST_TYPE.CONNECT:
                 message = util.getBundleString("connector.error.authentification");
                 break;
             case zimbra_notifier_REQUEST_TYPE.CREATE_WAIT:

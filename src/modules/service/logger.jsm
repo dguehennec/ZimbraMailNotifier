@@ -81,6 +81,20 @@ zimbra_notifier_Logger.prototype.warning = function(message) {
 };
 
 /**
+ * generate info trace.
+ *
+ * @this {Logger}
+ * @param {String}
+ *            message message of the trace
+ */
+zimbra_notifier_Logger.prototype.info = function(message) {
+    if (zimbra_notifier_Constant.LOGGER.LEVEL > 2) {
+        this._printStack();
+        dump(this._getStrDate() + "INFO in " + this._name + " : " + message + "\n");
+    }
+};
+
+/**
  * generate trace trace.
  *
  * @this {Logger}
@@ -88,7 +102,7 @@ zimbra_notifier_Logger.prototype.warning = function(message) {
  *            message message of the trace
  */
 zimbra_notifier_Logger.prototype.trace = function(message) {
-    if (zimbra_notifier_Constant.LOGGER.LEVEL > 2) {
+    if (zimbra_notifier_Constant.LOGGER.LEVEL > 3) {
         this._printStack();
         dump(this._getStrDate() + "TRACE in " + this._name + " : " + message + "\n");
     }
