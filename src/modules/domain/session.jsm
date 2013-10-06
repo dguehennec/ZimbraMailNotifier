@@ -58,7 +58,7 @@ const zimbra_notifier_Session = function() {
  */
 zimbra_notifier_Session.prototype.clear = function() {
     this._user = '';
-    this._hostname = '';
+    this._urlWebService = '';
 
     this._token = '';
     this._tokenExpirationTime = new Date();
@@ -113,11 +113,11 @@ zimbra_notifier_Session.prototype.waitSeq = function() {
  * @this {Session}
  * @param {String}
  *           baseUrl  The path of the url
- * @return {String} The full url with the hostname
+ * @return {String} The full url with the scheme, hostname and path
  */
 zimbra_notifier_Session.prototype.buildUrl = function(baseUrl) {
-    if (this._hostname.length > 0) {
-        return this._hostname + baseUrl;
+    if (this._urlWebService.length > 0) {
+        return this._urlWebService + baseUrl;
     }
     return '';
 };
@@ -129,33 +129,33 @@ zimbra_notifier_Session.prototype.buildUrl = function(baseUrl) {
  * @param {String}
  *            user  The username
  * @param {String}
- *            hostname The hostname to login to
+ *            urlWebService The URL of the webservice to login to
  * @param {Boolean}
  *            clearSession True if we need to clear the session if the information changed
  *
  * @return {Boolean} True if changed
  */
-zimbra_notifier_Session.prototype.updateLoginInfo = function(hostname, user, clearSession) {
+zimbra_notifier_Session.prototype.updateLoginInfo = function(urlWebService, user, clearSession) {
     var changed = false;
 
-    hostname = this._valToStr(hostname);
+    urlWebService = this._valToStr(urlWebService);
     user = this._valToStr(user);
 
-    if (user.length > 0 && hostname.length > 0) {
+    if (user.length > 0 && urlWebService.length > 0) {
 
-        if (hostname.lastIndexOf('/') === hostname.length - 1) {
-            hostname = hostname.slice(0, -1);
+        if (urlWebService.lastIndexOf('/') === urlWebService.length - 1) {
+            urlWebService = urlWebService.slice(0, -1);
         }
-        if (this._user !== user || this._hostname !== hostname) {
+        if (this._user !== user || this._urlWebService !== urlWebService) {
             changed = true;
         }
     }
     else {
-        if (this._user.length > 0 || this._hostname.length > 0) {
+        if (this._user.length > 0 || this._urlWebService.length > 0) {
             changed = true;
         }
         user = '';
-        hostname = '';
+        urlWebService = '';
     }
 
     if (changed === true && clearSession) {
@@ -163,7 +163,7 @@ zimbra_notifier_Session.prototype.updateLoginInfo = function(hostname, user, cle
     }
 
     this._user = user;
-    this._hostname = hostname;
+    this._urlWebService = urlWebService;
 
     return changed;
 };
@@ -175,7 +175,7 @@ zimbra_notifier_Session.prototype.updateLoginInfo = function(hostname, user, cle
  * @return {Boolean} true if the token and the associated info are valid
  */
 zimbra_notifier_Session.prototype.isTokenValid = function() {
-    return this._user.length > 0 && this._hostname.length > 0 &&
+    return this._user.length > 0 && this._urlWebService.length > 0 &&
            this._token.length > 0 && this._tokenExpirationTime > new Date();
 };
 

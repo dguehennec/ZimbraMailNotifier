@@ -66,7 +66,10 @@
 <!ENTITY option.identifiant.password.label "Password">
 <!ENTITY option.identifiant.savePassword.label "Remember password.">
 <!ENTITY option.identifiant.server.caption "Server">
-<!ENTITY option.identifiant.server.label "Server  URL">
+<!ENTITY option.identifiant.urlwebservice.label "Web service URL">
+<!ENTITY option.identifiant.urlwebservice.tooltip "The URL of the mail service, most of the time the same as the web interface URL">
+<!ENTITY option.identifiant.urlwebinterface.label "Web interface URL">
+<!ENTITY option.identifiant.urlwebinterface.tooltip "The URL displayed in the Web browser when connected (Optional)">
 <!ENTITY option.identifiant.connect.button "Connect">
 <!ENTITY option.identifiant.connectInProgress.button "In progress...">
 <!ENTITY option.identifiant.disconnect.button "Disconnect">

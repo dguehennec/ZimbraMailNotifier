@@ -52,6 +52,7 @@ pref("extensions.zimbra_mail_notifier.taskPriorities", 0);
 pref("extensions.zimbra_mail_notifier.userlogin", '');
 pref("extensions.zimbra_mail_notifier.userSavePassword", false);
 pref("extensions.zimbra_mail_notifier.userServer", '');
+pref("extensions.zimbra_mail_notifier.userUrlWebInteface", '');
 pref("extensions.zimbra_mail_notifier.waitSetInfo", '');
 pref("extensions.zimbra_mail_notifier.requestQueryTimeout", 15000);
 pref("extensions.zimbra_mail_notifier.requestWaitTimeout", 300000);

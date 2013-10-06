@@ -77,7 +77,8 @@ zimbra_notifier_Prefs.PREF = {
     TASK_PRIORITIES                       : "taskPriorities",
     USER_LOGIN                            : "userlogin",
     USER_SAVEPASSWORD                     : "userSavePassword",
-    USER_SERVER                           : "userServer",
+    USER_URL_WEB_SERVICE                  : "userServer",
+    USER_URL_WEB_INTERFACE                : "userUrlWebInteface",
     WAITSET_INFO                          : "waitSetInfo",
     REQUEST_QUERY_TIMEOUT                 : "requestQueryTimeout",
     REQUEST_WAIT_TIMEOUT                  : "requestWaitTimeout",
@@ -110,9 +111,10 @@ zimbra_notifier_Prefs.load = function() {
     this.pref_task_nb_displayed    = this._getPref(this.PREF.TASK_NB_DISPLAYED);
     this.pref_task_priorities      = this._getPref(this.PREF.TASK_PRIORITIES);
     // user
-    this.pref_user_login           = this._getPref(this.PREF.USER_LOGIN);
-    this.pref_user_server          = this._getPref(this.PREF.USER_SERVER);
-    this.pref_user_savePassword    = this._getPref(this.PREF.USER_SAVEPASSWORD);
+    this.pref_user_login             = this._getPref(this.PREF.USER_LOGIN);
+    this.pref_user_url_web_service   = this._getPref(this.PREF.USER_URL_WEB_SERVICE);
+    this.pref_user_url_web_interface = this._getPref(this.PREF.USER_URL_WEB_INTERFACE);
+    this.pref_user_savePassword      = this._getPref(this.PREF.USER_SAVEPASSWORD);
     // Last Wait set
     this.pref_waitset_info         = this._getComplexPref(this.PREF.WAITSET_INFO);
     // Request
@@ -229,8 +231,12 @@ zimbra_notifier_Prefs.observe = function(subject, topic, data) {
             this.pref_user_login = this._getPref(data);
             break;
 
-        case this.PREF.USER_SERVER:
-            this.pref_user_server = this._getPref(data);
+        case this.PREF.USER_URL_WEB_SERVICE:
+            this.pref_user_url_web_service = this._getPref(data);
+            break;
+
+        case this.PREF.USER_URL_WEB_INTERFACE:
+            this.pref_user_url_web_interface = this._getPref(data);
             break;
 
         case this.PREF.USER_SAVEPASSWORD:
@@ -267,11 +273,11 @@ zimbra_notifier_Prefs.isFirstStart = function(reset) {
  *
  * @this {Prefs}
  */
-zimbra_notifier_Prefs.setTemporaryLogin = function(server, user) {
-    if (!server) {
-        server = '';
+zimbra_notifier_Prefs.setTemporaryLogin = function(urlServ, user) {
+    if (!urlServ) {
+        urlServ = '';
     }
-    this.pref_user_server = server;
+    this.pref_user_url_web_service = urlServ;
 
     if (!user) {
         user = '';
@@ -280,13 +286,13 @@ zimbra_notifier_Prefs.setTemporaryLogin = function(server, user) {
 };
 
 /**
- * Load from preferences the login information (server + user)
+ * Load from preferences the login information (url of webservice + user)
  *
  * @this {Prefs}
  */
 zimbra_notifier_Prefs.reloadLogin = function() {
     this.pref_user_login  = this._getPref(this.PREF.USER_LOGIN);
-    this.pref_user_server = this._getPref(this.PREF.USER_SERVER);
+    this.pref_user_url_web_service = this._getPref(this.PREF.USER_URL_WEB_SERVICE);
 };
 
 /**
@@ -312,13 +318,13 @@ zimbra_notifier_Prefs.getPreviousWaitSet = function() {
             this.pref_waitset_info.id && this.pref_waitset_info.id.length > 0 &&
             this.pref_waitset_info.seq && this.pref_waitset_info.seq.length > 0 &&
             parseInt(this.pref_waitset_info.seq, 10) >= 0 &&
-            this.pref_waitset_info.hostname && this.pref_waitset_info.hostname.length > 0 &&
+            this.pref_waitset_info.urlWebService && this.pref_waitset_info.urlWebService.length > 0 &&
             this.pref_waitset_info.user && this.pref_waitset_info.user.length > 0) {
 
             return {
                 id: this.pref_waitset_info.id,
                 seq: this.pref_waitset_info.seq,
-                hostname : this.pref_waitset_info.hostname,
+                urlWebService : this.pref_waitset_info.urlWebService,
                 user : this.pref_waitset_info.user
             };
         }
@@ -337,17 +343,17 @@ zimbra_notifier_Prefs.getPreviousWaitSet = function() {
  * @param {String}
  *            seq The wait set sequence, must be a string
  * @param {String}
- *            hostname The hostname used with this wait set
+ *            urlWebService The URL of the webservice used with this wait set
  * @param {String}
  *            user The user used with this wait set
  */
-zimbra_notifier_Prefs.saveWaitSet = function(id, seq, hostname, user) {
+zimbra_notifier_Prefs.saveWaitSet = function(id, seq, urlWebService, user) {
     if (!id || !seq || !(parseInt(seq, 10) >= 0)) {
         id  = '';
         seq = '';
     }
-    if (hostname && hostname.length > 0 && user && user.length > 0) {
-        this.pref_waitset_info = { id: id, seq: seq, hostname: hostname, user: user };
+    if (urlWebService && urlWebService.length > 0 && user && user.length > 0) {
+        this.pref_waitset_info = { id: id, seq: seq, urlWebService: urlWebService, user: user };
         this._prefs.setCharPref(this.PREF.WAITSET_INFO, JSON.stringify(this.pref_waitset_info));
     }
 };
@@ -363,13 +369,27 @@ zimbra_notifier_Prefs.getCurrentVersion = function() {
 };
 
 /**
- * indicate the server
+ * indicate the URL of the webservice. May contain a trailling slash
  *
  * @this {Prefs}
- * @return {String} the server
+ * @return {String} the URL
  */
-zimbra_notifier_Prefs.getUserServer = function() {
-    return this.pref_user_server;
+zimbra_notifier_Prefs.getUrlWebService = function() {
+    return this.pref_user_url_web_service;
+};
+
+/**
+ * indicate the URL of the Web interface
+ * If not set, return the URl of the webservice
+ *
+ * @this {Prefs}
+ * @return {String} the URL
+ */
+zimbra_notifier_Prefs.getUrlUserInterface = function() {
+    if (this.pref_user_url_web_interface) {
+        return this.pref_user_url_web_interface;
+    }
+    return this.pref_user_url_web_service;
 };
 
 /**
@@ -624,16 +644,16 @@ zimbra_notifier_Prefs._getComplexPref = function(pref) {
  *
  * @this {Prefs}
  * @param {String}
- *            hostname
+ *            url
  * @param {String}
  *            actionURL
  * @param {String}
  *            username
  * @return {String} password
  */
-zimbra_notifier_Prefs._getPassword = function(hostname, actionURL, username) {
+zimbra_notifier_Prefs._getPassword = function(url, actionURL, username) {
     try {
-        var logins = Services.logins.findLogins({}, hostname, actionURL, null);
+        var logins = Services.logins.findLogins({}, url, actionURL, null);
         var password = "";
         for ( var i = 0; i < logins.length; i++) {
             if (logins[i].username === username) {
@@ -655,7 +675,7 @@ zimbra_notifier_Prefs._getPassword = function(hostname, actionURL, username) {
  *
  * @this {Prefs}
  * @param {String}
- *            hostname
+ *            url
  * @param {String}
  *            actionURL
  * @param {String}
@@ -666,9 +686,9 @@ zimbra_notifier_Prefs._getPassword = function(hostname, actionURL, username) {
  *            withSave
  * @return {Boolean} true if success.
  */
-zimbra_notifier_Prefs._setPassword = function(hostname, actionURL, username, password, withSave) {
+zimbra_notifier_Prefs._setPassword = function(url, actionURL, username, password, withSave) {
     try {
-        var logins = Services.logins.findLogins({}, hostname, actionURL, null);
+        var logins = Services.logins.findLogins({}, url, actionURL, null);
         var currentLoginInfo = null;
         for ( var i = 0; i < logins.length; i++) {
             if (logins[i].username === username) {
@@ -678,7 +698,7 @@ zimbra_notifier_Prefs._setPassword = function(hostname, actionURL, username, pas
         var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",
                                                      Components.interfaces.nsILoginInfo, "init");
         if (withSave) {
-            var newLogin = new nsLoginInfo(hostname, actionURL, null, username, password, "", "");
+            var newLogin = new nsLoginInfo(url, actionURL, null, username, password, "", "");
             if (currentLoginInfo !== null) {
                 Services.logins.modifyLogin(currentLoginInfo, newLogin);
             }

@@ -202,7 +202,7 @@ zimbra_notifier_Service.prototype._getWebService = function() {
         // Restore previous wait set
         var wSet = zimbra_notifier_Prefs.getPreviousWaitSet();
         if (wSet !== null) {
-            this._webservice.restoreWaitSet(wSet.id, wSet.seq, wSet.hostname, wSet.user);
+            this._webservice.restoreWaitSet(wSet.id, wSet.seq, wSet.urlWebService, wSet.user);
         }
         this._needCheckWaitSet = this._webservice.isWaitSetValid();
     }
@@ -629,8 +629,8 @@ zimbra_notifier_Service.prototype._doConnect = function(password) {
 
         this._parent.event(zimbra_notifier_SERVICE_EVENT.CONNECTING);
 
-        if (!this._getWebService().authRequest(zimbra_notifier_Prefs.getUserServer(),
-                                          zimbra_notifier_Prefs.getUserLogin(), password, this)) {
+        if (!this._getWebService().authRequest(zimbra_notifier_Prefs.getUrlWebService(),
+                                               zimbra_notifier_Prefs.getUserLogin(), password)) {
 
             this._reqInfoErrors.addError(zimbra_notifier_REQUEST_TYPE.OPEN_SESSION,
                                          zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
@@ -987,7 +987,7 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(messages) {
                     util.playSound();
                 }
                 if (zimbra_notifier_Prefs.isSystemNotificationEnabled()) {
-                    util.showNotificaton(title, msg, zimbra_notifier_Prefs.getUserServer(), listener);
+                    util.showNotificaton(title, msg, zimbra_notifier_Prefs.getUrlUserInterface(), listener);
                 }
             }
         }

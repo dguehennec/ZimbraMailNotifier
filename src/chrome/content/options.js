@@ -115,7 +115,7 @@ com.zimbra.Options.refresh = function(event) {
 
     if (   util.getAttribute("zimbra_mail_notifier-textboxLogin", "value") !== ''
         && util.getAttribute("zimbra_mail_notifier-optionPassword", "value") !== ''
-        && util.getAttribute("zimbra_mail_notifier-textboxServer", "value") !== '') {
+        && util.getAttribute("zimbra_mail_notifier-textboxUrlWebService", "value") !== '') {
 
         util.removeAttribute("zimbra_mail_notifier-connectButton", "disabled");
     }
@@ -128,7 +128,7 @@ com.zimbra.Options.refresh = function(event) {
         util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "collapse");
         util.setAttribute("zimbra_mail_notifier-textboxLogin", "disabled", true);
         util.setAttribute("zimbra_mail_notifier-optionPassword", "disabled", true);
-        util.setAttribute("zimbra_mail_notifier-textboxServer", "disabled", true);
+        util.setAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled", true);
     }
     else if (!this._connectFirstTry || !com.zimbra_notifier_Controller.isConnecting()) {
 
@@ -137,7 +137,7 @@ com.zimbra.Options.refresh = function(event) {
         util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "collapse");
         util.removeAttribute("zimbra_mail_notifier-textboxLogin", "disabled");
         util.removeAttribute("zimbra_mail_notifier-optionPassword", "disabled");
-        util.removeAttribute("zimbra_mail_notifier-textboxServer", "disabled");
+        util.removeAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled");
     }
 
     util.setTextContent("zimbra_mail_notifier-serverError",
@@ -189,12 +189,12 @@ com.zimbra.Options.connect = function() {
     var util = com.zimbra.UiUtil;
 
     // update and save login info
-    com.zimbra_notifier_Prefs.setTemporaryLogin(util.getAttribute("zimbra_mail_notifier-textboxServer", "value"),
+    com.zimbra_notifier_Prefs.setTemporaryLogin(util.getAttribute("zimbra_mail_notifier-textboxUrlWebService", "value"),
                                                 util.getAttribute("zimbra_mail_notifier-textboxLogin", "value"));
     // update screen view
     util.setAttribute("zimbra_mail_notifier-textboxLogin", "disabled", true);
     util.setAttribute("zimbra_mail_notifier-optionPassword", "disabled", true);
-    util.setAttribute("zimbra_mail_notifier-textboxServer", "disabled", true);
+    util.setAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled", true);
     util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
     util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "visible");
     util.setTextContent("zimbra_mail_notifier-serverError", "");

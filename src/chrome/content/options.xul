@@ -154,7 +154,8 @@
         <preferences id="option-prefs-identifiant">
             <preference id="zimbra_mail_notifier-optionLogin" name="extensions.zimbra_mail_notifier.userlogin" type="string"/>
             <preference id="zimbra_mail_notifier-optionSavePassword" name="extensions.zimbra_mail_notifier.userSavePassword" type="bool"/>
-            <preference id="zimbra_mail_notifier-optionServer" name="extensions.zimbra_mail_notifier.userServer" type="string"/>
+            <preference id="zimbra_mail_notifier-optionUrlWebService" name="extensions.zimbra_mail_notifier.userServer" type="string"/>
+            <preference id="zimbra_mail_notifier-optionUrlWebInterface" name="extensions.zimbra_mail_notifier.userUrlWebInteface" type="string"/>
         </preferences>
         <vbox flex="1">
             <groupbox width="100%">
@@ -176,8 +177,13 @@
             <groupbox width="100%">
                 <caption label="&option.identifiant.server.caption;"/>
                 <hbox align="center">
-                    <label value="&option.identifiant.server.label; :" width="130"/>
-                    <textbox id="zimbra_mail_notifier-textboxServer" preference="zimbra_mail_notifier-optionServer" onkeyup="com.zimbra.Options.refresh()" value="" flex="1" maxlength="200"/>
+                    <label tooltiptext="&option.identifiant.urlwebservice.tooltip;" value="&option.identifiant.urlwebservice.label; :" width="130"/>
+                    <textbox tooltiptext="&option.identifiant.urlwebservice.tooltip;" id="zimbra_mail_notifier-textboxUrlWebService"
+                             preference="zimbra_mail_notifier-optionUrlWebService" onkeyup="com.zimbra.Options.refresh()" value="" flex="1" maxlength="200"/>
+                </hbox>
+                <hbox align="center">
+                    <label tooltiptext="&option.identifiant.urlwebinterface.tooltip;" value="&option.identifiant.urlwebinterface.label; :" width="130"/>
+                    <textbox tooltiptext="&option.identifiant.urlwebinterface.tooltip;" preference="zimbra_mail_notifier-optionUrlWebInterface" value="" flex="1" maxlength="200"/>
                 </hbox>
                 <hbox align="center">
                     <description flex="1" id="zimbra_mail_notifier-serverError"/>

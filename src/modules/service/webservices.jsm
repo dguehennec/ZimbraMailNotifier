@@ -157,12 +157,12 @@ zimbra_notifier_Webservice.prototype.isWaitSetValid = function() {
  * @param {String}
  *            seq The wait set sequence
  * @param {String}
- *            hostname the server hostname
+ *            urlWebService the URL of the webservice
  * @param {String}
  *            login the user login
  */
-zimbra_notifier_Webservice.prototype.restoreWaitSet = function(id, seq, hostname, login) {
-    var upLogin = this._session.updateLoginInfo(hostname, login, true);
+zimbra_notifier_Webservice.prototype.restoreWaitSet = function(id, seq, urlWebService, login) {
+    var upLogin = this._session.updateLoginInfo(urlWebService, login, true);
     var upWaitS = this._session.updateWaitSet(id, seq);
     if (upLogin || upWaitS) {
         this._parent.callbackSessionInfoChanged(this._session);
@@ -170,16 +170,16 @@ zimbra_notifier_Webservice.prototype.restoreWaitSet = function(id, seq, hostname
 };
 
 /**
- * Inform that user and/or hostname may have changed
+ * Inform that user and/or the url of the webservice may have changed
  *
  * @this {Webservice}
  * @param {String}
- *            hostname the server hostname
+ *            urlWebService the URL of the webservice
  * @param {String}
  *            login the user login
  */
-zimbra_notifier_Webservice.prototype.infoAuthUpdated = function(hostname, login) {
-    if (this._session.updateLoginInfo(hostname, login, true)) {
+zimbra_notifier_Webservice.prototype.infoAuthUpdated = function(urlWebService, login) {
+    if (this._session.updateLoginInfo(urlWebService, login, true)) {
         this._parent.callbackSessionInfoChanged(this._session);
         return true;
     }
@@ -191,19 +191,19 @@ zimbra_notifier_Webservice.prototype.infoAuthUpdated = function(hostname, login)
  *
  * @this {Webservice}
  * @param {String}
- *            hostname the server hostname
+ *            urlWebService the URL of the webservice
  * @param {String}
  *            login the user login
  * @param {String}
  *            password the user password
  * @return {Boolean} true if the request was launched
  */
-zimbra_notifier_Webservice.prototype.authRequest = function(hostname, login, password) {
+zimbra_notifier_Webservice.prototype.authRequest = function(urlWebService, login, password) {
     try {
         if (this._runningReq !== null) {
             return false;
         }
-        this.infoAuthUpdated(hostname, login);
+        this.infoAuthUpdated(urlWebService, login);
         this._runningReq = this._buildQueryReq(zimbra_notifier_REQUEST_TYPE.OPEN_SESSION,
                                                "/service/soap/AuthRequest",
                                                this._callbackAuthRequest);
@@ -762,7 +762,7 @@ zimbra_notifier_Webservice.prototype._callbackFailed = function(request) {
  * @param {Number}
  *            typeReq The type of the request
  * @param {String}
- *            url The path of the url (no hostname)
+ *            url The path of the url (no scheme or hostname)
  * @param {Function}
  *            callback The function to call at the end of the request
  */

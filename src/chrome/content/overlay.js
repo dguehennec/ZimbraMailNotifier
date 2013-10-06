@@ -213,10 +213,10 @@ com.zimbra.Main.onDisconnectClick = function() {
 com.zimbra.Main.onStatusBarClick = function(evt) {
 
     if (evt === undefined || evt.button === 0) {
-        var urlServer = com.zimbra_notifier_Prefs.getUserServer();
+        var urlInterface = com.zimbra_notifier_Prefs.getUrlUserInterface();
 
-        if ((urlServer !== "") && com.zimbra_notifier_Controller.isConnected()) {
-            com.zimbra_notifier_Util.openURL(urlServer);
+        if (urlInterface !== "" && com.zimbra_notifier_Controller.isConnected()) {
+            com.zimbra_notifier_Util.openURL(urlInterface);
         }
         else {
             this._openPrefsDialog(com.zimbra.UiUtil.OPTION_SELECT_TAB.IDENTIFICATION);
