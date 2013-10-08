@@ -66,6 +66,8 @@
 <!ENTITY option.identifiant.password.label "Password">
 <!ENTITY option.identifiant.savePassword.label "Remember password.">
 <!ENTITY option.identifiant.server.caption "Server">
+<!ENTITY option.identifiant.authtype.label "Authentication">
+<!ENTITY option.identifiant.authtype.normal "Normal">
 <!ENTITY option.identifiant.urlwebservice.label "Web service URL">
 <!ENTITY option.identifiant.urlwebservice.tooltip "The URL of the mail service, most of the time the same as the web interface URL">
 <!ENTITY option.identifiant.urlwebinterface.label "Web interface URL">

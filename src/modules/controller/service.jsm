@@ -45,7 +45,6 @@ Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/infoerror.jsm");
-//Components.utils.import("resource://zimbra_mail_notifier/specific/free.jsm");
 
 const EXPORTED_SYMBOLS = ["zimbra_notifier_Service", "zimbra_notifier_SERVICE_EVENT",
                           "zimbra_notifier_SERVICE_STATE"];
@@ -200,9 +199,16 @@ zimbra_notifier_Service.prototype.shutdown = function() {
 zimbra_notifier_Service.prototype._getWebService = function() {
     if (!this._webservice) {
 
-        this._webservice = new zimbra_notifier_Webservice( // TODO
-            zimbra_notifier_Prefs.getRequestQueryTimeout(), this);
-
+        if (zimbra_notifier_Prefs.isFreeWebmail()) {
+            Components.utils.import("resource://zimbra_mail_notifier/specific/free.jsm");
+            this._webservice = new zimbra_notifier_WebserviceFree(
+                zimbra_notifier_Prefs.getRequestQueryTimeout(), 52000, this);
+        }
+        else {
+            this._webservice = new zimbra_notifier_Webservice(
+                zimbra_notifier_Prefs.getRequestQueryTimeout(),
+                zimbra_notifier_Prefs.getRequestWaitTimeout(), this);
+        }
         // Restore previous wait set
         var wSet = zimbra_notifier_Prefs.getPreviousWaitSet();
         if (wSet !== null) {
@@ -541,7 +547,7 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
                     delayAfterWaitReq = timeExpW - timeEndW;
                 }
                 // Check if we need to run again a blocking wait set
-                var timeEndLoop = this._timeStartLoopWaitReq + (1000 * 60 * 9); // TODO create pref
+                var timeEndLoop = this._timeStartLoopWaitReq + zimbra_notifier_Prefs.getRequestWaitLoopTime();
                 if (timeEndLoop > timeEndW) {
                     this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN, delayAfterWaitReq);
                 }

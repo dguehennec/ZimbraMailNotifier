@@ -45,7 +45,6 @@ Components.utils.import("resource://zimbra_mail_notifier/domain/session.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
 
 const EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_TYPE", "zimbra_notifier_Webservice"];
 
@@ -78,12 +77,14 @@ const zimbra_notifier_REQUEST_TYPE = {
  * @param {Service}
  *            parent the parent object which must implement callbacks...
  */
-const zimbra_notifier_Webservice = function(timeout, parent) {
+const zimbra_notifier_Webservice = function(timeoutQuery, timeoutWait, parent) {
     this._logger = new zimbra_notifier_Logger("Webservice");
-    this._timeoutQuery = timeout;
-    this._parent = parent;
     this._session = new zimbra_notifier_Session();
+    this._timeoutQuery = timeoutQuery;
+    this._timeoutWait = timeoutWait;
+    this._parent = parent;
     this._runningReq = null;
+    this._timerFailure = null;
 };
 
 /**
@@ -93,6 +94,15 @@ const zimbra_notifier_Webservice = function(timeout, parent) {
  */
 zimbra_notifier_Webservice.prototype.release = function() {
 
+};
+
+/**
+ * Get the timeout in ms of the blocking wait request
+ *
+ * @this {Webservice}
+ */
+zimbra_notifier_Webservice.prototype.getWaitSetTimeout = function() {
+    return this._timeoutWait;
 };
 
 /**
@@ -118,6 +128,10 @@ zimbra_notifier_Webservice.prototype.abortRunningReq = function() {
         var req = this._runningReq;
         this._runningReq = null;
         req.abort();
+    }
+    if (this._timerFailure !== null) {
+        this._timerFailure.cancel();
+        this._timerFailure = null;
     }
 };
 
@@ -337,15 +351,6 @@ zimbra_notifier_Webservice.prototype._callbackCreateWaitRequest = function(reque
             this._parent.callbackCreateWaitSet();
         }
     }
-};
-
-/**
- * Get the timeout in ms of the blocking wait request
- *
- * @this {Webservice}
- */
-zimbra_notifier_Webservice.prototype.getWaitSetTimeout = function() {
-    return zimbra_notifier_Prefs.getRequestWaitTimeout();
 };
 
 /**
@@ -795,19 +800,24 @@ zimbra_notifier_Webservice.prototype._launchQuery = function(typeReq, connectReq
  *            waitSetRequired True if we need a valid WaitSet to launch the query
  */
 zimbra_notifier_Webservice.prototype._canRunQuery = function(typeReq, connectRequired, waitSetRequired) {
+    if (this._timerFailure) {
+        this._logger.error("A timer is running");
+        // Do nothing, do not inform the parent, this should never happen
+        return false;
+    }
     if (this._runningReq !== null) {
-        this._logger.warning("A query is already running");
+        this._logger.error("A query is already running");
         // Do nothing, do not inform the parent, this should never happen
         return false;
     }
     if (connectRequired && !this.isConnected()) {
         this._logger.warning("Can not run query: Not connected");
-        this._runCallbackFailLaunch(typeReq, zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
+        this._runCallbackFailLaunch(typeReq, zimbra_notifier_REQUEST_STATUS.AUTH_REQUIRED);
         return false;
     }
     if (waitSetRequired && !this.isWaitSetValid()) {
         this._logger.warning("Can not run query: WaitSet invalid");
-        this._runCallbackFailLaunch(typeReq, zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
+        this._runCallbackFailLaunch(typeReq, zimbra_notifier_REQUEST_STATUS.WAITSET_INVALID);
         return false;
     }
     return true;
@@ -825,9 +835,10 @@ zimbra_notifier_Webservice.prototype._canRunQuery = function(typeReq, connectReq
  */
 zimbra_notifier_Webservice.prototype._runCallbackFailLaunch = function(typeReq, status) {
     var object = this;
-    zimbra_notifier_Util.setTimer(null, function() {
+    this._timerFailure = zimbra_notifier_Util.setTimer(null, function() {
         object._logger.warning("Failed launch request: " + typeReq + " error: " + status);
+        object._timerFailure = null;
         object._parent.callbackError(typeReq, status);
-    }, 500);
+    }, 1000);
 };
 

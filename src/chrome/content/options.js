@@ -80,6 +80,7 @@ com.zimbra.Options.init = function() {
     if (prefs.isSavePasswordEnabled()) {
         util.setAttribute("zimbra_mail_notifier-optionPassword", "value", prefs.getUserPassword());
     }
+    util.setMenulist("zimbra_mail_notifier-listAuthType", prefs.isFreeWebmail() ? "free" : "default");
 
     // Do we have a OK/Cancel button, or modification is applied immediately
     if (Application.prefs.getValue("browser.preferences.instantApply", null) === true) {
@@ -87,7 +88,7 @@ com.zimbra.Options.init = function() {
     }
 
     // refresh screen access
-    this.refresh();
+    this.authTypeChanged();
 };
 
 /**
@@ -137,11 +138,44 @@ com.zimbra.Options.refresh = function(event) {
         util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "collapse");
         util.removeAttribute("zimbra_mail_notifier-textboxLogin", "disabled");
         util.removeAttribute("zimbra_mail_notifier-optionPassword", "disabled");
-        util.removeAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled");
+
+        if (util.getAttribute("zimbra_mail_notifier-listAuthType", "value") === "default") {
+            util.removeAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled");
+        }
     }
 
     util.setTextContent("zimbra_mail_notifier-serverError",
                         com.zimbra_notifier_Controller.getLastErrorMessage());
+};
+
+/**
+ * Called when the authentication changed
+ *
+ * @this {Option}
+ */
+com.zimbra.Options.authTypeChanged = function() {
+
+    var util = com.zimbra.UiUtil;
+
+    if (util.getAttribute("zimbra_mail_notifier-listAuthType", "value") === "free") {
+
+        util.setAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled", true);
+        util.setTextboxPref("zimbra_mail_notifier-textboxUrlWebService",
+                            "http://zimbra.free.fr", "option-tab-identifiant");
+
+        util.setAttribute("zimbra_mail_notifier-textboxUrlWebInterface", "disabled", true);
+        util.setTextboxPref("zimbra_mail_notifier-textboxUrlWebInterface",
+                            "http://zimbra.free.fr/zimbra/mail", "option-tab-identifiant");
+    }
+    else {
+        if (util.getAttribute("zimbra_mail_notifier-textboxUrlWebService", "value") === "http://zimbra.free.fr") {
+            util.setTextboxPref("zimbra_mail_notifier-textboxUrlWebService", "", "option-tab-identifiant");
+            util.setTextboxPref("zimbra_mail_notifier-textboxUrlWebInterface", "", "option-tab-identifiant");
+        }
+        util.removeAttribute("zimbra_mail_notifier-textboxUrlWebInterface", "disabled");
+    }
+
+    this.refresh();
 };
 
 /**

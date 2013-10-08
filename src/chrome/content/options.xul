@@ -177,13 +177,23 @@
             <groupbox width="100%">
                 <caption label="&option.identifiant.server.caption;"/>
                 <hbox align="center">
+                    <label value="&option.identifiant.authtype.label; :" width="130"/>
+                    <menulist id="zimbra_mail_notifier-listAuthType" oncommand="com.zimbra.Options.authTypeChanged()">
+                        <menupopup>
+                            <menuitem label="&option.identifiant.authtype.normal;" value="default"/>
+                            <menuitem label="Free" value="free"/>
+                        </menupopup>
+                    </menulist>
+                </hbox>
+                <hbox align="center">
                     <label tooltiptext="&option.identifiant.urlwebservice.tooltip;" value="&option.identifiant.urlwebservice.label; :" width="130"/>
                     <textbox tooltiptext="&option.identifiant.urlwebservice.tooltip;" id="zimbra_mail_notifier-textboxUrlWebService"
                              preference="zimbra_mail_notifier-optionUrlWebService" onkeyup="com.zimbra.Options.refresh()" value="" flex="1" maxlength="200"/>
                 </hbox>
                 <hbox align="center">
                     <label tooltiptext="&option.identifiant.urlwebinterface.tooltip;" value="&option.identifiant.urlwebinterface.label; :" width="130"/>
-                    <textbox tooltiptext="&option.identifiant.urlwebinterface.tooltip;" preference="zimbra_mail_notifier-optionUrlWebInterface" value="" flex="1" maxlength="200"/>
+                    <textbox tooltiptext="&option.identifiant.urlwebinterface.tooltip;" id="zimbra_mail_notifier-textboxUrlWebInterface"
+                             preference="zimbra_mail_notifier-optionUrlWebInterface" value="" flex="1" maxlength="200"/>
                 </hbox>
                 <hbox align="center">
                     <description flex="1" id="zimbra_mail_notifier-serverError"/>

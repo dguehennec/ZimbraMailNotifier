@@ -109,10 +109,9 @@ com.zimbra.UiUtil.setMenulist = function(id, value) {
     if (popup) {
         var children = popup.childNodes;
         for ( var index = 0; index < children.length; index++) {
-            if (Number(children[index].value) === value) {
+            if (('' + children[index].value) === ('' + value)) {
                 object.selectedIndex = index;
                 return;
-
             }
         }
     }
@@ -147,6 +146,43 @@ com.zimbra.UiUtil.setVisibility = function(id, visibility) {
 com.zimbra.UiUtil.setAttribute = function(id, attribute, value) {
     if (window.document.getElementById(id)) {
         window.document.getElementById(id).setAttribute(attribute, value);
+    }
+};
+
+/**
+ * set the value of the textbox.
+ *
+ * @this {UiUtil}
+ * @param {String}
+ *            id
+ * @param {String}
+ *            value value to set
+ */
+com.zimbra.UiUtil.setTextboxValue = function(id,value) {
+    if (window.document.getElementById(id)) {
+        window.document.getElementById(id).value = value;
+    }
+};
+
+/**
+ * set the value of the textbox.
+ *
+ * @this {UiUtil}
+ * @param {String}
+ *            id
+ * @param {String}
+ *            value value to set
+ * @param {String}
+ *            prefid The prefpane id
+ */
+com.zimbra.UiUtil.setTextboxPref = function(id, value, prefid) {
+    var obj = window.document.getElementById(id);
+    if (obj) {
+        obj.value = value;
+    }
+    var prefpan = window.document.getElementById(prefid);
+    if (prefpan) {
+        prefpan.userChangedValue(obj);
     }
 };
 

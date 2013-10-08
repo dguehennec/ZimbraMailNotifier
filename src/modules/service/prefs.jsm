@@ -82,6 +82,7 @@ zimbra_notifier_Prefs.PREF = {
     WAITSET_INFO                          : "waitSetInfo",
     REQUEST_QUERY_TIMEOUT                 : "requestQueryTimeout",
     REQUEST_WAIT_TIMEOUT                  : "requestWaitTimeout",
+    REQUEST_WAIT_LOOP_TIME                : "requestWaitLoopTime",
 
     USER_PASSWORD_HOSTNAME   : "chrome://zimbra_mail_notifier/",
     USER_PASSWORD_ACTIONURL  : "defaultPassword"
@@ -115,11 +116,11 @@ zimbra_notifier_Prefs.load = function() {
     this.pref_user_url_web_service   = this._getPref(this.PREF.USER_URL_WEB_SERVICE);
     this.pref_user_url_web_interface = this._getPref(this.PREF.USER_URL_WEB_INTERFACE);
     this.pref_user_savePassword      = this._getPref(this.PREF.USER_SAVEPASSWORD);
-    // Last Wait set
+    // About Wait set
     this.pref_waitset_info         = this._getComplexPref(this.PREF.WAITSET_INFO);
-    // Request
     this.pref_request_queryTimeout = this._getPref(this.PREF.REQUEST_QUERY_TIMEOUT);
     this.pref_request_waitTimeout  = this._getPref(this.PREF.REQUEST_WAIT_TIMEOUT);
+    this.pref_request_waitLoopTime = this._getPref(this.PREF.REQUEST_WAIT_LOOP_TIME);
 
     // Get the previous version
     this._previous_version = this._getPref(this.PREF.CURRENT_VERSION);
@@ -250,6 +251,13 @@ zimbra_notifier_Prefs.observe = function(subject, topic, data) {
         case this.PREF.REQUEST_WAIT_TIMEOUT:
             this.pref_request_waitTimeout = this._getPref(data);
             break;
+
+        case this.PREF.REQUEST_WAIT_LOOP_TIME:
+            this.pref_request_waitLoopTime = this._getPref(data);
+            break;
+
+        default:
+            break;
     }
 };
 
@@ -366,6 +374,19 @@ zimbra_notifier_Prefs.saveWaitSet = function(id, seq, urlWebService, user) {
  */
 zimbra_notifier_Prefs.getCurrentVersion = function() {
     return this.pref_current_version;
+};
+
+/**
+ * Indicate if it is a free webmail
+ *
+ * @this {Prefs}
+ * @return {Boolean} True if the url of the webservice contain the free domain
+ */
+zimbra_notifier_Prefs.isFreeWebmail = function() {
+    if (this.pref_user_url_web_service) {
+        return this.pref_user_url_web_service.search("zimbra.free.fr") > 0;
+    }
+    return false;
 };
 
 /**
@@ -583,6 +604,15 @@ zimbra_notifier_Prefs.getRequestWaitTimeout = function() {
     return this.pref_request_waitTimeout;
 };
 
+/**
+ * Get the maximum duration (ms) of consecutive Wait Set requests
+ *
+ * @this {Prefs}
+ * @return {Number}
+ */
+zimbra_notifier_Prefs.getRequestWaitLoopTime = function() {
+    return this.pref_request_waitLoopTime;
+};
 
 /**
  * get preference

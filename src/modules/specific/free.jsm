@@ -65,7 +65,7 @@ zimbra_notifier_Util.extend(zimbra_notifier_Session, zimbra_notifier_SessionFree
  */
 zimbra_notifier_SessionFree.prototype.isTokenValid = function() {
     this.updateToken('*', 1);
-    return zimbra_notifier_Session.prototype.isTokenValid.call(this);
+    return this._super.isTokenValid.call(this);
 };
 
 /**
@@ -101,7 +101,7 @@ zimbra_notifier_Session.prototype.updateToken = function(token, lifetime) {
  * @this {RequestFree}
  */
 const zimbra_notifier_RequestFree = function(typeRequest, timeout, url, objCallback, callback, anonymous) {
-    zimbra_notifier_Request.call(this, typeRequest, timeout, url, objCallback, callback, anonymous);
+    this._super.constructor.call(this, typeRequest, timeout, url, objCallback, callback, anonymous);
 };
 zimbra_notifier_Util.extend(zimbra_notifier_Request, zimbra_notifier_RequestFree);
 
@@ -139,7 +139,7 @@ zimbra_notifier_RequestFree.prototype._setErrorInfoFree = function(reqStatus) {
  * @this {RequestFree}
  */
 zimbra_notifier_RequestFree.prototype._setErrorInfo = function(reqStatus) {
-    if (zimbra_notifier_Request.prototype._setErrorInfo.call(this, reqStatus)) {
+    if (this._super._setErrorInfo.call(this, reqStatus)) {
         return true;
     }
     return this._setErrorInfoFree(reqStatus);
@@ -153,12 +153,14 @@ zimbra_notifier_RequestFree.prototype._setErrorInfo = function(reqStatus) {
  * @constructor
  * @this {WebserviceFree}
  */
-const zimbra_notifier_WebserviceFree = function(timeout, parent) {
+const zimbra_notifier_WebserviceFree = function(timeoutQuery, timeoutWait, parent) {
     this._logger = new zimbra_notifier_Logger("WebserviceFree");
-    this._timeoutQuery = timeout;
-    this._parent = parent;
     this._session = new zimbra_notifier_SessionFree();
+    this._timeoutQuery = timeoutQuery;
+    this._timeoutWait = timeoutWait;
+    this._parent = parent;
     this._runningReq = null;
+    this._timerFailure = null;
 };
 zimbra_notifier_Util.extend(zimbra_notifier_Webservice, zimbra_notifier_WebserviceFree);
 
@@ -232,7 +234,7 @@ zimbra_notifier_WebserviceFree.prototype._callbackFailed = function(request) {
     if (request.status === zimbra_notifier_REQUEST_STATUS.NO_ERROR) {
         request._setErrorInfoFree(200);
     }
-    zimbra_notifier_Webservice.prototype._callbackFailed.call(this, request);
+    this._super._callbackFailed.call(this, request);
 };
 
 /**
@@ -244,29 +246,4 @@ zimbra_notifier_WebserviceFree.prototype._callbackFailed = function(request) {
 zimbra_notifier_WebserviceFree.prototype._buildQueryReq = function(typeReq, url, callback) {
     return new zimbra_notifier_RequestFree(typeReq, this._timeoutQuery, this._session.buildUrl(url),
                                            this, callback, false);
-};
-
-/**
- * Check if the query can be runned
- *
- * @private
- * @this {WebserviceFree}
- */
-zimbra_notifier_WebserviceFree.prototype._canRunQuery = function(typeReq, connectRequired, waitSetRequired) {
-    if (this._runningReq !== null) {
-        this._logger.warning("A query is already running");
-        // Do nothing, do not inform the parent, this should never happen
-        return false;
-    }
-    if (connectRequired && !this.isConnected()) {
-        this._logger.warning("Can not run query: Not connected");
-        this._runCallbackFailLaunch(typeReq, zimbra_notifier_REQUEST_STATUS.AUTH_REQUIRED);
-        return false;
-    }
-    if (waitSetRequired && !this.isWaitSetValid()) {
-        this._logger.warning("Can not run query: WaitSet invalid");
-        this._runCallbackFailLaunch(typeReq, zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR);
-        return false;
-    }
-    return true;
 };

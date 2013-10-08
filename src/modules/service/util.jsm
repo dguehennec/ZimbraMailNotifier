@@ -371,4 +371,5 @@ zimbra_notifier_Util.extend = function(base, sub) {
     sub.prototype = new tmp();
     // The constructor property was set wrong, let's fix it
     sub.prototype.constructor = sub;
+    sub.prototype._super = base.prototype;
 };

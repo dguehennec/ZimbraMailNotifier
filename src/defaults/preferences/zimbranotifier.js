@@ -56,3 +56,4 @@ pref("extensions.zimbra_mail_notifier.userUrlWebInteface", '');
 pref("extensions.zimbra_mail_notifier.waitSetInfo", '');
 pref("extensions.zimbra_mail_notifier.requestQueryTimeout", 15000);
 pref("extensions.zimbra_mail_notifier.requestWaitTimeout", 300000);
+pref("extensions.zimbra_mail_notifier.requestWaitLoopTime", 500000);
