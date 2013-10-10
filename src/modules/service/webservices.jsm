@@ -84,7 +84,7 @@ const zimbra_notifier_Webservice = function(timeoutQuery, timeoutWait, parent) {
     this._timeoutWait = timeoutWait;
     this._parent = parent;
     this._runningReq = null;
-    this._timerFailure = null;
+    this._timerLaunchCallback = null;
 };
 
 /**
@@ -129,9 +129,9 @@ zimbra_notifier_Webservice.prototype.abortRunningReq = function() {
         this._runningReq = null;
         req.abort();
     }
-    if (this._timerFailure !== null) {
-        this._timerFailure.cancel();
-        this._timerFailure = null;
+    if (this._timerLaunchCallback !== null) {
+        this._timerLaunchCallback.cancel();
+        this._timerLaunchCallback = null;
     }
 };
 
@@ -215,14 +215,13 @@ zimbra_notifier_Webservice.prototype.infoAuthUpdated = function(urlWebService, l
  *            password the user password
  */
 zimbra_notifier_Webservice.prototype.authRequest = function(urlWebService, login, password) {
-    var object = this;
     var typeReq = zimbra_notifier_REQUEST_TYPE.CONNECT;
     this._launchQuery(typeReq, false, false, function() {
 
-        object.infoAuthUpdated(urlWebService, login);
-        object._runningReq = object._buildQueryReq(typeReq, "/service/soap/AuthRequest",
-                                                   object._callbackAuthRequest);
-        object._runningReq.setAuthRequest(login, password);
+        this.infoAuthUpdated(urlWebService, login);
+        this._runningReq = this._buildQueryReq(typeReq, "/service/soap/AuthRequest",
+                                               this._callbackAuthRequest);
+        this._runningReq.setAuthRequest(login, password);
         return true;
     });
 };
@@ -294,23 +293,22 @@ zimbra_notifier_Webservice.prototype.disconnect = function() {
  * @this {Webservice}
  */
 zimbra_notifier_Webservice.prototype.createWaitRequest = function() {
-    var object = this;
     var typeReq = zimbra_notifier_REQUEST_TYPE.CREATE_WAIT;
     this._launchQuery(typeReq, true, false, function() {
 
-        object._runningReq = object._buildQueryReq(typeReq, "/service/soap/CreateWaitSetRequest",
-                                                   object._callbackCreateWaitRequest);
+        this._runningReq = this._buildQueryReq(typeReq, "/service/soap/CreateWaitSetRequest",
+                                               this._callbackCreateWaitRequest);
         var dataBody = '';
         dataBody += '"CreateWaitSetRequest":{';
         dataBody +=    '"_jsns":"urn:zimbraMail",';
         dataBody +=    '"defTypes":"' + zimbra_notifier_Constant.WEBSERVICE.WAITSET_WATCH_TYPES + '",';
         dataBody +=    '"add":{';
         dataBody +=       '"a":{';
-        dataBody +=          '"name":' + JSON.stringify(object._session.user());
+        dataBody +=          '"name":' + JSON.stringify(this._session.user());
         dataBody +=       '}';
         dataBody +=    '}';
         dataBody += '}';
-        object._runningReq.setQueryRequest(object._session, dataBody);
+        this._runningReq.setQueryRequest(this._session, dataBody);
         return true;
     });
 };
@@ -362,30 +360,29 @@ zimbra_notifier_Webservice.prototype._callbackCreateWaitRequest = function(reque
  *            blocking  True if the query is a blocking request
  */
 zimbra_notifier_Webservice.prototype.waitRequest = function(blocking) {
-    var object = this;
     var typeReq = blocking ? zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK :
                              zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK;
 
     this._launchQuery(typeReq, true, true, function() {
 
-        var timeoutS = Math.ceil(object._timeoutQuery / 1000);
+        var timeoutS = Math.ceil(this._timeoutQuery / 1000);
         if (blocking) {
-            timeoutS = Math.round((object.getWaitSetTimeout() - 1000) / 1000);
+            timeoutS = Math.round((this.getWaitSetTimeout() - 1000) / 1000);
             if (timeoutS < 1) {
                 timeoutS = 1;
             }
         }
 
-        object._runningReq = object._buildQueryReq(typeReq, "/service/soap/WaitSetRequest",
-                                                   object._callbackWaitRequest);
+        this._runningReq = this._buildQueryReq(typeReq, "/service/soap/WaitSetRequest",
+                                               this._callbackWaitRequest);
         if (blocking === true) {
-            object._runningReq.setTimeout((timeoutS + 10) * 1000);
+            this._runningReq.setTimeout((timeoutS + 10) * 1000);
         }
         var dataBody = '';
         dataBody += '"WaitSetRequest":{';
         dataBody +=    '"_jsns":"urn:zimbraMail",';
-        dataBody +=    '"waitSet":' + JSON.stringify(object._session.waitId()) + ',';
-        dataBody +=    '"seq":' + JSON.stringify(object._session.waitSeq()) + ',';
+        dataBody +=    '"waitSet":' + JSON.stringify(this._session.waitId()) + ',';
+        dataBody +=    '"seq":' + JSON.stringify(this._session.waitSeq()) + ',';
         dataBody +=    '"block":' + ((blocking === true) ? '1' : '0') + ',';
         dataBody +=    '"timeout":' + timeoutS + ',';
         dataBody +=    '"add":{';
@@ -395,7 +392,7 @@ zimbra_notifier_Webservice.prototype.waitRequest = function(blocking) {
         dataBody +=    '"remove":{';
         dataBody +=    '}';
         dataBody += '}';
-        object._runningReq.setQueryRequest(object._session, dataBody);
+        this._runningReq.setQueryRequest(this._session, dataBody);
         return true;
     });
 };
@@ -457,12 +454,11 @@ zimbra_notifier_Webservice.prototype._callbackWaitRequest = function(request) {
  * @this {Webservice}
  */
 zimbra_notifier_Webservice.prototype.searchUnReadMsg = function() {
-    var object = this;
     var typeReq = zimbra_notifier_REQUEST_TYPE.UNREAD_MSG;
     this._launchQuery(typeReq, true, false, function() {
 
-        object._runningReq = object._buildQueryReq(typeReq, "/service/soap/SearchRequest",
-                                                   object._callbackUnreadMsgRequest);
+        this._runningReq = this._buildQueryReq(typeReq, "/service/soap/SearchRequest",
+                                               this._callbackUnreadMsgRequest);
         var dataBody = '';
         dataBody += '"SearchRequest":{';
         dataBody +=    '"_jsns":"urn:zimbraMail",';
@@ -470,7 +466,7 @@ zimbra_notifier_Webservice.prototype.searchUnReadMsg = function() {
         dataBody +=       '"_content":"is:unread"';
         dataBody +=    '}';
         dataBody += '}';
-        object._runningReq.setQueryRequest(object._session, dataBody);
+        this._runningReq.setQueryRequest(this._session, dataBody);
         return true;
     });
 };
@@ -530,12 +526,11 @@ zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(reques
  *            endDate the end date
  */
 zimbra_notifier_Webservice.prototype.searchCalendar = function(startDate, endDate) {
-    var object = this;
     var typeReq = zimbra_notifier_REQUEST_TYPE.CALENDAR;
     this._launchQuery(typeReq, true, false, function() {
 
-        object._runningReq = object._buildQueryReq(typeReq, "/service/soap/SearchRequest",
-                                                   object._callbackCalendarRequest);
+        this._runningReq = this._buildQueryReq(typeReq, "/service/soap/SearchRequest",
+                                               this._callbackCalendarRequest);
         var dataBody = '';
         dataBody += '"SearchRequest":{';
         dataBody +=    '"_jsns":"urn:zimbraMail",';
@@ -547,7 +542,7 @@ zimbra_notifier_Webservice.prototype.searchCalendar = function(startDate, endDat
         dataBody +=       '"_content":"inid:10"';
         dataBody +=    '}';
         dataBody += '}';
-        object._runningReq.setQueryRequest(object._session, dataBody);
+        this._runningReq.setQueryRequest(this._session, dataBody);
         return true;
     });
 };
@@ -618,12 +613,11 @@ zimbra_notifier_Webservice.prototype._callbackCalendarRequest = function(request
  * @this {Webservice}
  */
 zimbra_notifier_Webservice.prototype.searchTask = function() {
-    var object = this;
     var typeReq = zimbra_notifier_REQUEST_TYPE.TASK;
     this._launchQuery(typeReq, true, false, function() {
 
-        object._runningReq = object._buildQueryReq(typeReq, "/service/soap/SearchRequest",
-                                                   object._callbackTaskRequest);
+        this._runningReq = this._buildQueryReq(typeReq, "/service/soap/SearchRequest",
+                                               this._callbackTaskRequest);
         var dataBody = '';
         dataBody += '"SearchRequest":{';
         dataBody +=    '"_jsns":"urn:zimbraMail",';
@@ -634,7 +628,7 @@ zimbra_notifier_Webservice.prototype.searchTask = function() {
         dataBody +=       '"_content":"in:tasks"';
         dataBody +=    '}';
         dataBody += '}';
-        object._runningReq.setQueryRequest(object._session, dataBody);
+        this._runningReq.setQueryRequest(this._session, dataBody);
         return true;
     });
 };
@@ -800,7 +794,7 @@ zimbra_notifier_Webservice.prototype._launchQuery = function(typeReq, connectReq
  *            waitSetRequired True if we need a valid WaitSet to launch the query
  */
 zimbra_notifier_Webservice.prototype._canRunQuery = function(typeReq, connectRequired, waitSetRequired) {
-    if (this._timerFailure) {
+    if (this._timerLaunchCallback) {
         this._logger.error("A timer is running");
         // Do nothing, do not inform the parent, this should never happen
         return false;
@@ -835,9 +829,9 @@ zimbra_notifier_Webservice.prototype._canRunQuery = function(typeReq, connectReq
  */
 zimbra_notifier_Webservice.prototype._runCallbackFailLaunch = function(typeReq, status) {
     var object = this;
-    this._timerFailure = zimbra_notifier_Util.setTimer(null, function() {
+    this._timerLaunchCallback = zimbra_notifier_Util.setTimer(null, function() {
         object._logger.warning("Failed launch request: " + typeReq + " error: " + status);
-        object._timerFailure = null;
+        object._timerLaunchCallback = null;
         object._parent.callbackError(typeReq, status);
     }, 1000);
 };

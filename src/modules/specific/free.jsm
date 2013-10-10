@@ -160,7 +160,7 @@ const zimbra_notifier_WebserviceFree = function(timeoutQuery, timeoutWait, paren
     this._timeoutWait = timeoutWait;
     this._parent = parent;
     this._runningReq = null;
-    this._timerFailure = null;
+    this._timerLaunchCallback = null;
 };
 zimbra_notifier_Util.extend(zimbra_notifier_Webservice, zimbra_notifier_WebserviceFree);
 
@@ -170,14 +170,29 @@ zimbra_notifier_Util.extend(zimbra_notifier_Webservice, zimbra_notifier_Webservi
  * @this {WebserviceFree}
  */
 zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, login, password) {
-    var object = this;
     var typeReq = zimbra_notifier_REQUEST_TYPE.CONNECT;
+
+    try {
+        if (this.isConnected()) {
+            var object = this;
+            this._timerLaunchCallback = zimbra_notifier_Util.setTimer(this._timerLaunchCallback, function() {
+                object._timerLaunchCallback = null;
+                object._parent.callbackSessionInfoChanged(object._session);
+                object._parent.callbackLoginSuccess();
+            }, 100);
+            return;
+        }
+    }
+    catch (e) {
+        this._logger.error("Failed to check if connected: " + e);
+    }
+
     this._launchQuery(typeReq, false, false, function() {
 
-        object.infoAuthUpdated(urlWebService, login);
-        object._runningReq = object._buildQueryReq(typeReq, "/zimbra.pl", object._callbackAuthRequest);
+        this.infoAuthUpdated(urlWebService, login);
+        this._runningReq = this._buildQueryReq(typeReq, "/zimbra.pl", this._callbackAuthRequest);
 
-        object._runningReq._setInfoRequest = function() {
+        this._runningReq._setInfoRequest = function() {
             this._request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         };
 
@@ -186,7 +201,7 @@ zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, l
         dataReq += "&password=" + encodeURIComponent(password);
         dataReq += "&Envoyer=S%27identifier";
 
-        object._runningReq.setDataRequest(dataReq);
+        this._runningReq.setDataRequest(dataReq);
         return true;
     });
 };
