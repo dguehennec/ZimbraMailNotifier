@@ -635,7 +635,7 @@ zimbra_notifier_Prefs._getPref = function(pref) {
             value = this._prefs.getIntPref(pref);
         }
         else if (this._prefs.getPrefType(pref) === this._prefs.PREF_STRING) {
-            value = this._prefs.getCharPref(pref);
+            value = this._prefs.getCharPref(pref).trim();
         }
     }
     return value;

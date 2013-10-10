@@ -753,7 +753,9 @@ zimbra_notifier_Service.prototype.observe = function(subject, topic, data) {
  */
 zimbra_notifier_Service.prototype.callbackError = function(typeReq, statusReq) {
 
-    if (statusReq === zimbra_notifier_REQUEST_STATUS.AUTH_REQUIRED) {
+    if (statusReq === zimbra_notifier_REQUEST_STATUS.AUTH_REQUIRED &&
+        typeReq !== zimbra_notifier_REQUEST_TYPE.CONNECT) {
+
         this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_CHECK, 500);
         return;
     }
