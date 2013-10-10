@@ -73,7 +73,7 @@ zimbra_notifier_SessionFree.prototype.isTokenValid = function() {
  *
  * @this {SessionFree}
  */
-zimbra_notifier_Session.prototype.updateToken = function(token, lifetime) {
+zimbra_notifier_SessionFree.prototype.updateToken = function(token, lifetime) {
     if (lifetime) {
         var t = zimbra_notifier_Util.getCookieValue(this._urlWebService,
                       zimbra_notifier_Constant.WEBSERVICE.COOKIE_KEY_TOKEN);

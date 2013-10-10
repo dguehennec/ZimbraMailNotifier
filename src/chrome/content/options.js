@@ -99,8 +99,6 @@ com.zimbra.Options.init = function() {
 com.zimbra.Options.refresh = function(event) {
 
     if (this._closeWhenConnected === true && com.zimbra_notifier_Controller.isConnected()) {
-
-        this._closeWhenConnected = false;
         try {
             document.getElementById("zimbra_mail_notifier-Preferences").acceptDialog();
         }
@@ -198,7 +196,12 @@ com.zimbra.Options.release = function() {
  * @this {Option}
  */
 com.zimbra.Options.validated = function() {
+    var wasConnecting = this._closeWhenConnected;
     var util = com.zimbra.UiUtil;
+
+    // Do not call this function again
+    this._prefInstantApply = false;
+    this._closeWhenConnected = false;
 
     // Save password
     if (util.getAttribute("zimbra_mail_notifier-checkboxSavePassword", "checked")) {
@@ -210,7 +213,9 @@ com.zimbra.Options.validated = function() {
     }
 
     // Inform that the preferences may have changed
-    com.zimbra_notifier_Util.notifyObservers(com.zimbra_notifier_Constant.OBSERVER.PREF_SAVED);
+    com.zimbra_notifier_Controller.removeCallBackRefresh(this);
+    com.zimbra_notifier_Util.notifyObservers(com.zimbra_notifier_Constant.OBSERVER.PREF_SAVED,
+                                             wasConnecting);
     return true;
 };
 

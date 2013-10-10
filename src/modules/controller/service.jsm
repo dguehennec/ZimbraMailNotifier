@@ -113,6 +113,7 @@ const zimbra_notifier_Service = function(parent) {
     this._logger = new zimbra_notifier_Logger("Service");
     this._reqInfoErrors = new zimbra_notifier_InfoErrors();
 
+    this._currentState = zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO;
     this._loadDefault();
     zimbra_notifier_Util.addObserver(this, zimbra_notifier_Constant.OBSERVER.PREF_SAVED);
 };
@@ -142,13 +143,10 @@ zimbra_notifier_Service.prototype._loadDefault = function() {
     this._stopRemoveEvents();
     this._currentTasks = [];
     this._currentMessageUnRead = [];
+    this._idxLoopQuery = 0;
 
     // error
     this._reqInfoErrors.clearAllErrors();
-
-    // Current state
-    this._currentState = zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO;
-    this._idxLoopQuery = 0;
 
     // Delay before trying again the connect
     this._delayWaitConnect = 0;
@@ -734,7 +732,7 @@ zimbra_notifier_Service.prototype.observe = function(subject, topic, data) {
 
             this.initializeConnection();
         }
-        else if (this.isConnected() && needRefresh) {
+        else if (this.isConnected() && needRefresh && !data) {
             this.checkNow();
         }
     }
@@ -865,7 +863,7 @@ zimbra_notifier_Service.prototype.callbackLoginSuccess = function() {
  */
 zimbra_notifier_Service.prototype.callbackDisconnect = function() {
     this._loadDefault();
-    this._changeRunningState(zimbra_notifier_SERVICE_STATE.DISCONNECTED, 10);
+    this._planRunState(zimbra_notifier_SERVICE_STATE.DISCONNECTED, 10);
     this._parent.event(zimbra_notifier_SERVICE_EVENT.DISCONNECTED);
 };
 
