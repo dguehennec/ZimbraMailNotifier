@@ -336,7 +336,7 @@ zimbra_notifier_Util.addSessionCookie = function(url, key, value) {
     if (url && key) {
         var cookieUri = Services.io.newURI(url, null, null);
         Services.cookies.add(cookieUri.host, cookieUri.path, key, value,
-                             cookieUri.schemeIs("https"), false, true, 0);
+                             cookieUri.schemeIs("https"), true, true, 0);
     }
 };
 
@@ -372,4 +372,41 @@ zimbra_notifier_Util.extend = function(base, sub) {
     // The constructor property was set wrong, let's fix it
     sub.prototype.constructor = sub;
     sub.prototype._super = base.prototype;
+};
+
+/**
+ * Dump the content of an object
+ *
+ * @param {Object}
+ *            obj The object to dump
+ */
+zimbra_notifier_Util.dump = function(obj, pref) {
+    if (!pref) {
+        pref = '';
+    }
+
+    for (var p in obj) {
+        try {
+            dump("=> " + pref + p);
+            var v = obj[p];
+            if (v) {
+                if (typeof(v) == 'object') {
+                    dump("\n");
+                    zimbra_notifier_Util.dump(v, pref + p + '.');
+                }
+                else if (typeof(v) != 'function') {
+                    dump(" : " + v + ";");
+                }
+            }
+            else {
+                dump(" : " + v + ";");
+            }
+        }
+        catch (e) {
+            dump(" ... ");
+        }
+        finally {
+            dump("\n");
+        }
+    }
 };
