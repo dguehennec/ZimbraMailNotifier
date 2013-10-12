@@ -59,13 +59,22 @@ const zimbra_notifier_SessionFree = function() {
 zimbra_notifier_Util.extend(zimbra_notifier_Session, zimbra_notifier_SessionFree);
 
 /**
+ * Clear the session
+ *
+ * @this {SessionFree}
+ */
+zimbra_notifier_SessionFree.prototype.clear = function() {
+    this._super.clear.call(this);
+    this._sid = '';
+};
+
+/**
  * Check if the Session is valid
  *
  * @this {SessionFree}
  */
 zimbra_notifier_SessionFree.prototype.isTokenValid = function() {
-    this.updateToken('*', 1);
-    return this._super.isTokenValid.call(this);
+    return this._super.isTokenValid.call(this) && this._sid.length > 0;
 };
 
 /**
@@ -73,21 +82,21 @@ zimbra_notifier_SessionFree.prototype.isTokenValid = function() {
  *
  * @this {SessionFree}
  */
-zimbra_notifier_SessionFree.prototype.updateToken = function(token, lifetime) {
-    if (lifetime) {
-        var t = zimbra_notifier_Util.getCookieValue(this._urlWebService,
-                      zimbra_notifier_Constant.WEBSERVICE.COOKIE_KEY_TOKEN);
-        if (!t || !zimbra_notifier_Util.getCookieValue(this._urlWebService, "SID")) {
-            t = '';
+zimbra_notifier_SessionFree.prototype.updateToken = function(token, lifetime, sid) {
+    token = this._valToStr(token);
+    if (token === 'null') {
+        token = '';
+    }
+    this._super.updateToken.call(this, token, lifetime);
+
+    if (this._token.length > 0) {
+        this._sid = this._valToStr(sid);
+        if (this._sid === 'null') {
+            this._sid = '';
         }
-        this._token = t;
-        this._tokenExpirationTime = new Date(new Date().getTime() + (1000 * 3600 * 12));
     }
     else {
-        zimbra_notifier_Util.removeCookie(this._urlWebService,
-                      zimbra_notifier_Constant.WEBSERVICE.COOKIE_KEY_TOKEN);
-        this._tokenExpirationTime = new Date(0);
-        this._token = '';
+        this._sid = '';
     }
 };
 
@@ -145,6 +154,19 @@ zimbra_notifier_RequestFree.prototype._setErrorInfo = function(reqStatus) {
     return this._setErrorInfoFree(reqStatus);
 };
 
+/**
+ * Set the cookies
+ *
+ * @private
+ * @this {RequestFree}
+ */
+zimbra_notifier_RequestFree.prototype._setInfoRequest = function() {
+    this._super._setInfoRequest.call(this);
+    var session = this._objCallback._session;
+    this.addCookieToRequestHeader('ZM_AUTH_TOKEN', session.token());
+    this.addCookieToRequestHeader('SID', session._sid);
+};
+
 /********************** Webservice **********************/
 
 /**
@@ -171,28 +193,14 @@ zimbra_notifier_Util.extend(zimbra_notifier_Webservice, zimbra_notifier_Webservi
  */
 zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, login, password) {
     var typeReq = zimbra_notifier_REQUEST_TYPE.CONNECT;
-
-    try {
-        if (this.isConnected()) {
-            var object = this;
-            this._timerLaunchCallback = zimbra_notifier_Util.setTimer(this._timerLaunchCallback, function() {
-                object._timerLaunchCallback = null;
-                object._parent.callbackSessionInfoChanged(object._session);
-                object._parent.callbackLoginSuccess();
-            }, 100);
-            return;
-        }
-    }
-    catch (e) {
-        this._logger.error("Failed to check if connected: " + e);
-    }
-
     this._launchQuery(typeReq, false, false, function() {
 
         this.infoAuthUpdated(urlWebService, login);
         this._runningReq = this._buildQueryReq(typeReq, "/zimbra.pl", this._callbackAuthRequest);
 
+        this._runningReq._expectedStatus = 0;
         this._runningReq._setInfoRequest = function() {
+            this._request.channel.redirectionLimit = 1;
             this._request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         };
 
@@ -219,6 +227,8 @@ zimbra_notifier_WebserviceFree.prototype._callbackAuthRequest = function(request
             this._logger.error("The running auth request != callback object");
         }
         if (request.isSuccess()) {
+            var cookies = request.getCookieFromResponseHeader();
+            this._session.updateToken(cookies['ZM_AUTH_TOKEN'], 43200000, cookies['SID']);
             if (this._session.isTokenValid()) {
                 this._parent.callbackSessionInfoChanged(this._session);
                 isOk = true;
@@ -259,6 +269,6 @@ zimbra_notifier_WebserviceFree.prototype._callbackFailed = function(request) {
  * @this {WebserviceFree}
  */
 zimbra_notifier_WebserviceFree.prototype._buildQueryReq = function(typeReq, url, callback) {
-    return new zimbra_notifier_RequestFree(typeReq, this._timeoutQuery, this._session.buildUrl(url),
-                                           this, callback, false);
+    return new zimbra_notifier_RequestFree(typeReq, this._timeoutQuery,
+                                           this._session.buildUrl(url), this, callback);
 };

@@ -78,7 +78,7 @@ const zimbra_notifier_REQUEST_STATUS = {
  * @param {Function}
  *            callback function to call at the end of the request
  */
-const zimbra_notifier_Request = function(typeRequest, timeout, url, objCallback, callback, anonymous) {
+const zimbra_notifier_Request = function(typeRequest, timeout, url, objCallback, callback) {
     this._logger = new zimbra_notifier_Logger("Request");
     this.status = zimbra_notifier_REQUEST_STATUS.NOT_STARTED;
     this.errorInfo = null;
@@ -87,7 +87,8 @@ const zimbra_notifier_Request = function(typeRequest, timeout, url, objCallback,
     this._url = url;
     this._objCallback = objCallback;
     this._callback = callback;
-    this._anonymous = anonymous;
+    this._anonymous = true;
+    this._expectedStatus = 200;
     this._dataToSend = null;
     this._dataRcv = null;
     this._request = null;
@@ -268,6 +269,53 @@ zimbra_notifier_Request.prototype.jsonResponse = function() {
 };
 
 /**
+ * Parse the http header and extract the cookies
+ *
+ * @this {Request}
+ */
+zimbra_notifier_Request.prototype.getCookieFromResponseHeader = function() {
+    var cookies = [];
+    try {
+        var raw = this._request.getResponseHeader("Set-Cookie");
+        if (raw && raw.length > 0) {
+            var rawCookies = raw.split("\n");
+            for (var idx = 0; idx < rawCookies.length; idx++) {
+                var rawCookie = rawCookies[idx];
+                var posSt = rawCookie.indexOf('=');
+                var posEnd = rawCookie.indexOf(';', posSt);
+                if (posEnd > posSt) {
+                    cookies[rawCookie.substring(0, posSt)] =
+                        decodeURIComponent(rawCookie.substring(posSt + 1, posEnd));
+                }
+                else {
+                    cookies[rawCookie.substring(0, posSt)] =
+                        decodeURIComponent(rawCookie.substring(posSt + 1));
+                }
+            }
+        }
+    }
+    catch (e) {
+        this._logger.error("Fail parse http header to retrieve cookies: " + e);
+    }
+    return cookies;
+};
+
+/**
+ * Add a cookie to the request header
+ *
+ * @this {Request}
+ */
+zimbra_notifier_Request.prototype.addCookieToRequestHeader = function(key, val) {
+    try {
+        var cookieStr = key + "=" + encodeURIComponent(val);
+        this._request.channel.setRequestHeader("Cookie", cookieStr, true);
+    }
+    catch (e) {
+        this._logger.error("Fail to add cookie: " + e);
+    }
+};
+
+/**
  * Send the request
  *
  * @private
@@ -286,19 +334,24 @@ zimbra_notifier_Request.prototype.send = function() {
         request.QueryInterface(Components.interfaces.nsIXMLHttpRequest);
 
         request.open("POST", this._url, true);
-        request.withCredentials = true;
         request.timeout = this._timeout;
+
         if (this._anonymous) {
             request.channel.loadFlags |= Components.interfaces.nsIRequest.LOAD_ANONYMOUS;
+            request.withCredentials = false;
+        }
+        else {
+            request.withCredentials = true;
         }
 
         request.addEventListener("loadend", function() {
 
             if (object._request !== null) {
+
                 object._dataRcv = request.responseText;
                 object._logger.trace("Response (" + request.status + "): \n" + object._dataRcv + "\n");
 
-                if (request.status === 200) {
+                if (request.status === object._expectedStatus) {
                     object.status = zimbra_notifier_REQUEST_STATUS.NO_ERROR;
                 }
                 else if (request.status === 0) {
@@ -327,6 +380,7 @@ zimbra_notifier_Request.prototype.send = function() {
             }
         }, false);
 
+        request.channel.QueryInterface(Components.interfaces.nsIHttpChannel);
         this._request = request;
         this._setInfoRequest();
 
@@ -339,7 +393,6 @@ zimbra_notifier_Request.prototype.send = function() {
     catch (e) {
         this._logger.error(this._url + " -> \n" + this._dataToSend + "\n> error: " + e);
         this.status = zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR;
-        this._runCallback();
         this._request = null;
     }
     return false;
