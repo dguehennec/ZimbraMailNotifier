@@ -45,6 +45,7 @@ Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/infoerror.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/browser.jsm");
 
 const EXPORTED_SYMBOLS = ["zimbra_notifier_Service", "zimbra_notifier_SERVICE_EVENT",
                           "zimbra_notifier_SERVICE_STATE"];
@@ -131,6 +132,9 @@ zimbra_notifier_Service.prototype._loadDefault = function() {
         this._webservice.release();
         this._webservice = null;
     }
+
+    // Remove auth cookies
+    zimbra_notifier_Browser.updateCookies('', []);
 
     // Timer for state machine
     this._stopStateTimer();
@@ -877,6 +881,8 @@ zimbra_notifier_Service.prototype.callbackDisconnect = function() {
 zimbra_notifier_Service.prototype.callbackSessionInfoChanged = function(session) {
     zimbra_notifier_Prefs.saveWaitSet(session.waitId(), session.waitSeq(),
                                       session.buildUrl(''), session.user());
+
+    zimbra_notifier_Browser.updateCookies(session.buildUrl(''), session.getAuthCookies());
 };
 
 /**
@@ -987,7 +993,7 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(messages) {
                 var listener = {
                     observe : function(subject, topic, data) {
                         if (topic === "alertclickcallback") {
-                            util.openURL(data);
+                            zimbra_notifier_Browser.openZimbraWebInterface();
                         }
                     }
                 };
@@ -995,7 +1001,7 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(messages) {
                     util.playSound();
                 }
                 if (zimbra_notifier_Prefs.isSystemNotificationEnabled()) {
-                    util.showNotificaton(title, msg, zimbra_notifier_Prefs.getUrlUserInterface(), listener);
+                    util.showNotificaton(title, msg, null, listener);
                 }
             }
         }

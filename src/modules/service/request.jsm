@@ -263,7 +263,7 @@ zimbra_notifier_Request.prototype.jsonResponse = function() {
         }
     }
     catch (e) {
-        this._logger.error("Invalid JSON: \n" + this._dataRcv + "\n : " + e);
+        this._logger.errorReqData("Invalid JSON, " + e, this._dataRcv);
     }
     return null;
 };
@@ -274,7 +274,7 @@ zimbra_notifier_Request.prototype.jsonResponse = function() {
  * @this {Request}
  */
 zimbra_notifier_Request.prototype.getCookieFromResponseHeader = function() {
-    var cookies = [];
+    var cookies = {};
     try {
         var raw = this._request.getResponseHeader("Set-Cookie");
         if (raw && raw.length > 0) {
@@ -349,18 +349,18 @@ zimbra_notifier_Request.prototype.send = function() {
             if (object._request !== null) {
 
                 object._dataRcv = request.responseText;
-                object._logger.trace("Response (" + request.status + "): \n" + object._dataRcv + "\n");
+                object._logger.traceReqData("Response (" + request.status + ")", object._dataRcv);
 
                 if (request.status === object._expectedStatus) {
                     object.status = zimbra_notifier_REQUEST_STATUS.NO_ERROR;
                 }
                 else if (request.status === 0) {
-                    object._logger.error("Error network : " + object._url + " ->\n" + object._dataToSend + "\n");
+                    object._logger.errorReqData("Error network : " + object._url, object._dataToSend);
                     object.status = zimbra_notifier_REQUEST_STATUS.NETWORK_ERROR;
                 }
                 else {
-                    object._logger.error("Error, status: " + request.status + " : " + object._url +
-                                        " ->\n" + object._dataToSend + "\n");
+                    object._logger.errorReqData("Error, status: " + request.status + " : " + object._url,
+                                                object._dataToSend);
                     object.status = zimbra_notifier_REQUEST_STATUS.SERVER_ERROR;
                     object._setErrorInfo(request.status);
                 }
@@ -373,7 +373,7 @@ zimbra_notifier_Request.prototype.send = function() {
         request.addEventListener("timeout", function() {
 
             if (object._request !== null) {
-                object._logger.warning("Request timeout: " + object._url + " ->\n" + object._dataToSend + "\n");
+                object._logger.warningReqData("Request timeout: " + object._url, object._dataToSend);
                 object.status = zimbra_notifier_REQUEST_STATUS.TIMEOUT;
                 object._runCallback();
                 object._request = null;
@@ -385,13 +385,13 @@ zimbra_notifier_Request.prototype.send = function() {
         this._setInfoRequest();
 
         this.status = zimbra_notifier_REQUEST_STATUS.RUNNING;
-        this._logger.trace("Send : " + this._url + " ->\n" + this._dataToSend + "\n");
+        this._logger.traceReqData("Send : " + this._url, this._dataToSend);
         request.send(this._dataToSend);
 
         return true;
     }
     catch (e) {
-        this._logger.error(this._url + " -> \n" + this._dataToSend + "\n> error: " + e);
+        this._logger.errorReqData(this._url + " -- error: " + e, this._dataToSend);
         this.status = zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR;
         this._request = null;
     }

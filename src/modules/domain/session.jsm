@@ -273,6 +273,17 @@ zimbra_notifier_Session.prototype.updateWaitSet = function(id, seq) {
     return changed;
 };
 
+/**
+ * Get an array of required authentication cookies
+ *
+ * @this {Session}
+ * @return {Object[]} Cookies
+ */
+zimbra_notifier_Session.prototype.getAuthCookies = function() {
+    var cookies = [];
+    cookies.push({ key: 'ZM_AUTH_TOKEN', val: this._token});
+    return cookies;
+};
 
 /**
  * Get the value as string

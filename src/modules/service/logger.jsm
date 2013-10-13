@@ -109,6 +109,62 @@ zimbra_notifier_Logger.prototype.trace = function(message) {
 };
 
 /**
+ * generate error trace and conditionally display the data of the request
+ *
+ * @this {Logger}
+ * @param {String}
+ *            message message of the trace
+ * @param {String}
+ *            data The request data to display conditionally
+ */
+zimbra_notifier_Logger.prototype.errorReqData = function(message, data) {
+    if (zimbra_notifier_Constant.LOGGER.PRINT_DATA_REQUEST) {
+        this.error(message + " ->\n" + data + "\n");
+    }
+    else {
+        this.error(message);
+    }
+};
+
+/**
+ * generate warning trace and conditionally display the data of the request
+ *
+ * @this {Logger}
+ * @param {String}
+ *            message message of the trace
+ * @param {String}
+ *            data The request data to display conditionally
+ */
+zimbra_notifier_Logger.prototype.warningReqData = function(message, data) {
+    if (zimbra_notifier_Constant.LOGGER.PRINT_DATA_REQUEST) {
+        this.warning(message + " ->\n" + data + "\n");
+    }
+    else {
+        this.warning(message);
+    }
+};
+
+/**
+ * generate trace trace and conditionally display the data of the request
+ *
+ * @this {Logger}
+ * @param {String}
+ *            message message of the trace
+ * @param {String}
+ *            data The request data to display conditionally
+ */
+zimbra_notifier_Logger.prototype.traceReqData = function(message, data) {
+    if (zimbra_notifier_Constant.LOGGER.PRINT_DATA_REQUEST) {
+        this.trace(message + " ->\n" + data + "\n");
+    }
+    else {
+        this.trace(message);
+    }
+};
+
+
+
+/**
  * Print the stack trace
  *
  * @private

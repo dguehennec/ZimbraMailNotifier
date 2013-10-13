@@ -79,12 +79,14 @@ const zimbra_notifier_REQUEST_TYPE = {
  */
 const zimbra_notifier_Webservice = function(timeoutQuery, timeoutWait, parent) {
     this._logger = new zimbra_notifier_Logger("Webservice");
-    this._session = new zimbra_notifier_Session();
+    this._session = this.createSession();
     this._timeoutQuery = timeoutQuery;
     this._timeoutWait = timeoutWait;
     this._parent = parent;
     this._runningReq = null;
     this._timerLaunchCallback = null;
+
+    this._parent.callbackSessionInfoChanged(this._session);
 };
 
 /**
@@ -94,6 +96,15 @@ const zimbra_notifier_Webservice = function(timeoutQuery, timeoutWait, parent) {
  */
 zimbra_notifier_Webservice.prototype.release = function() {
 
+};
+
+/**
+ * Create a new session object
+ *
+ * @this {Webservice}
+ */
+zimbra_notifier_Webservice.prototype.createSession = function() {
+    return new zimbra_notifier_Session();
 };
 
 /**
@@ -247,10 +258,8 @@ zimbra_notifier_Webservice.prototype._callbackAuthRequest = function(request) {
 
                 this._session.updateToken(jsonResponse.Body.AuthResponse.authToken[0]._content,
                                           jsonResponse.Body.AuthResponse.lifetime);
-                if (this._session.isTokenValid()) {
-                    this._parent.callbackSessionInfoChanged(this._session);
-                    isOk = true;
-                }
+                this._parent.callbackSessionInfoChanged(this._session);
+                isOk = this._session.isTokenValid();
             }
         }
     }
@@ -277,8 +286,8 @@ zimbra_notifier_Webservice.prototype._callbackAuthRequest = function(request) {
 zimbra_notifier_Webservice.prototype.disconnect = function() {
     try {
         this._session.updateToken('', 0);
-        this._parent.callbackDisconnect();
         this._parent.callbackSessionInfoChanged(this._session);
+        this._parent.callbackDisconnect();
         return true;
     }
     catch (e) {
@@ -829,7 +838,7 @@ zimbra_notifier_Webservice.prototype._canRunQuery = function(typeReq, connectReq
  */
 zimbra_notifier_Webservice.prototype._runCallbackFailLaunch = function(typeReq, status) {
     var object = this;
-    this._timerLaunchCallback = zimbra_notifier_Util.setTimer(null, function() {
+    this._timerLaunchCallback = zimbra_notifier_Util.setTimer(this._timerLaunchCallback, function() {
         object._logger.warning("Failed launch request: " + typeReq + " error: " + status);
         object._timerLaunchCallback = null;
         object._parent.callbackError(typeReq, status);

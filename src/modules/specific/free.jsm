@@ -100,6 +100,19 @@ zimbra_notifier_SessionFree.prototype.updateToken = function(token, lifetime, si
     }
 };
 
+/**
+ * Get an array of required authentication cookies
+ *
+ * @this {SessionFree}
+ * @return {Object[]} Cookies
+ */
+zimbra_notifier_SessionFree.prototype.getAuthCookies = function() {
+    var cookies = [];
+    cookies.push({ key: 'ZM_AUTH_TOKEN', val: this._token});
+    cookies.push({ key: 'SID', val: this._sid});
+    return cookies;
+};
+
 
 /********************** Request **********************/
 
@@ -176,15 +189,19 @@ zimbra_notifier_RequestFree.prototype._setInfoRequest = function() {
  * @this {WebserviceFree}
  */
 const zimbra_notifier_WebserviceFree = function(timeoutQuery, timeoutWait, parent) {
-    this._logger = new zimbra_notifier_Logger("WebserviceFree");
-    this._session = new zimbra_notifier_SessionFree();
-    this._timeoutQuery = timeoutQuery;
-    this._timeoutWait = timeoutWait;
-    this._parent = parent;
-    this._runningReq = null;
-    this._timerLaunchCallback = null;
+    this._super.constructor.call(this, timeoutQuery, timeoutWait, parent);
+    this._logger._name += 'Free';
 };
 zimbra_notifier_Util.extend(zimbra_notifier_Webservice, zimbra_notifier_WebserviceFree);
+
+/**
+ * Create a new session object
+ *
+ * @this {WebserviceFree}
+ */
+zimbra_notifier_WebserviceFree.prototype.createSession = function() {
+    return new zimbra_notifier_SessionFree();
+};
 
 /**
  * Get authentication.
@@ -229,10 +246,8 @@ zimbra_notifier_WebserviceFree.prototype._callbackAuthRequest = function(request
         if (request.isSuccess()) {
             var cookies = request.getCookieFromResponseHeader();
             this._session.updateToken(cookies['ZM_AUTH_TOKEN'], 43200000, cookies['SID']);
-            if (this._session.isTokenValid()) {
-                this._parent.callbackSessionInfoChanged(this._session);
-                isOk = true;
-            }
+            this._parent.callbackSessionInfoChanged(this._session);
+            isOk = this._session.isTokenValid();
         }
     }
     catch (e) {

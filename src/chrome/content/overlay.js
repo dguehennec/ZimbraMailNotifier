@@ -49,6 +49,7 @@ Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm", com
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/controller/service.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/controller/controller.jsm", com);
+Components.utils.import("resource://zimbra_mail_notifier/service/browser.jsm", com);
 
 /**
  * The Class Main.
@@ -213,10 +214,9 @@ com.zimbra.Main.onDisconnectClick = function() {
 com.zimbra.Main.onStatusBarClick = function(evt) {
 
     if (evt === undefined || evt.button === 0) {
-        var urlInterface = com.zimbra_notifier_Prefs.getUrlUserInterface();
 
-        if (urlInterface !== "" && com.zimbra_notifier_Controller.isConnected()) {
-            com.zimbra_notifier_Util.openURL(urlInterface);
+        if (com.zimbra_notifier_Controller.isConnected()) {
+            com.zimbra_notifier_Browser.openZimbraWebInterface();
         }
         else {
             this._openPrefsDialog(com.zimbra.UiUtil.OPTION_SELECT_TAB.IDENTIFICATION);

@@ -81,6 +81,7 @@ zimbra_notifier_Util.getBundleString = function(param) {
 
 /**
  * Create and launch a timer
+ * @warning You must keep a reference of the timer as long as he lives
  *
  * @this {Util}
  *
@@ -160,52 +161,6 @@ zimbra_notifier_Util.maxStringLength = function(text, length) {
         return text.substring(0, length);
     }
     return text.substring(0, length - 3) + "...";
-};
-
-/**
- * open url in a new browser tab
- *
- * @this {Util}
- * @param {String}
- *            UrlToGoTo url to open.
- * @return {Boolean} true if success
- */
-zimbra_notifier_Util.openURL = function(UrlToGoTo) {
-    try {
-        var browserEnumerator = Services.wm.getEnumerator("navigator:browser");
-        var exp = /(\b(https|http):\/\/)/gi;
-        var url = UrlToGoTo.replace(exp, "");
-
-        while (browserEnumerator.hasMoreElements()) {
-            var browserInstance = browserEnumerator.getNext().getBrowser();
-            var numTabs = browserInstance.mPanelContainer.childNodes.length;
-            for ( var index = 0; index < numTabs; index++) {
-                var currentTab = browserInstance.getBrowserAtIndex(index);
-                if (currentTab.currentURI.spec.indexOf(url) >= 0) {
-                    browserInstance.selectedTab = browserInstance.tabContainer.childNodes[index];
-                    browserInstance.contentWindow.focus();
-                    browserInstance.focus();
-                    return true;
-                }
-            }
-        }
-        var recentWindow = Services.wm.getMostRecentWindow("navigator:browser");
-        if (recentWindow) {
-            recentWindow.delayedOpenTab(UrlToGoTo, null, null, null, null);
-            recentWindow.focus();
-        }
-        else {
-            var win = Services.ww.openWindow(Services.ww.activeWindow, UrlToGoTo, null, null, null);
-            if (Services.ww.activeWindow) {
-                Services.ww.activeWindow.focus();
-            }
-            win.focus();
-        }
-    }
-    catch (e) {
-        return false;
-    }
-    return true;
 };
 
 /**
@@ -298,65 +253,6 @@ zimbra_notifier_Util.notifyObservers = function(topic, data) {
 };
 
 /**
- * Get the cookie value
- *
- * @this {Util}
- * @param {String}
- *            url  The URL associated with the cookie
- * @param {String}
- *            key  The key of the cookie
- */
-zimbra_notifier_Util.getCookieValue = function(url, key) {
-    if (url && key) {
-        var cookieUri = Services.io.newURI(url, null, null);
-        var enumCookies = Services.cookies.getCookiesFromHost(cookieUri.host);
-
-        while (enumCookies.hasMoreElements()) {
-            var cookie = enumCookies.getNext().QueryInterface(Components.interfaces.nsICookie);
-            if (cookie.name === key) {
-                return cookie.value;
-            }
-        }
-    }
-    return null;
-};
-
-/**
- * Set a new session cookie
- *
- * @this {Util}
- * @param {String}
- *            url  The URL associated with the cookie
- * @param {String}
- *            key  The key of the cookie
- * @param {String}
- *            value  The value of the cookie
- */
-zimbra_notifier_Util.addSessionCookie = function(url, key, value) {
-    if (url && key) {
-        var cookieUri = Services.io.newURI(url, null, null);
-        Services.cookies.add(cookieUri.host, cookieUri.path, key, value,
-                             cookieUri.schemeIs("https"), true, true, 0);
-    }
-};
-
-/**
- * Remove a cookie
- *
- * @this {Util}
- * @param {String}
- *            url  The URL associated with the cookie
- * @param {String}
- *            key  The key of the cookie
- */
-zimbra_notifier_Util.removeCookie = function(url, key) {
-    if (url && key) {
-        var cookieUri = Services.io.newURI(url, null, null);
-        Services.cookies.remove(cookieUri.host, key, cookieUri.path, false);
-    }
-};
-
-/**
  * Extend the Object properties
  *
  * @param {Object}
@@ -379,15 +275,16 @@ zimbra_notifier_Util.extend = function(base, sub) {
  *
  * @param {Object}
  *            obj The object to dump
+ * @param {String}
+ *            pref The prefix to display for each line
  */
 zimbra_notifier_Util.dump = function(obj, pref) {
-    if (!pref) {
-        pref = '';
+    if (!pref && pref !== '') {
+        pref = '=> ';
     }
-
     for (var p in obj) {
         try {
-            dump("=> " + pref + p);
+            dump(pref + p);
             var v = obj[p];
             if (v) {
                 if (typeof(v) == 'object') {

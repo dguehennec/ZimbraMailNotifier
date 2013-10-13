@@ -53,9 +53,10 @@ zimbra_notifier_Constant.VERSION = 0x020000;
  * @constant
  */
 zimbra_notifier_Constant.LOGGER = {
-    LEVEL : 3,
+    LEVEL : 4,
     PRINT_STACK : false,
-    PRINT_DATE : true
+    PRINT_DATE : true,
+    PRINT_DATA_REQUEST : false
 };
 
 /**
