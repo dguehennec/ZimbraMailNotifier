@@ -36,6 +36,8 @@
 <!ENTITY option.default.soundNotification "Sound notification">
 <!ENTITY option.default.access.caption "Extension access">
 <!ENTITY option.default.statusbar "Statusbar">
+<!ENTITY option.default.browser.caption "Web interface">
+<!ENTITY option.default.browserSetCookies "Auto connection">
 
 <!ENTITY option.calendar.label "Calendar">
 <!ENTITY option.calendar.activate "Enable calendar management">

@@ -108,8 +108,8 @@ zimbra_notifier_SessionFree.prototype.updateToken = function(token, lifetime, si
  */
 zimbra_notifier_SessionFree.prototype.getAuthCookies = function() {
     var cookies = [];
-    cookies.push({ key: 'ZM_AUTH_TOKEN', val: this._token});
-    cookies.push({ key: 'SID', val: this._sid});
+    cookies.push({ key: 'ZM_AUTH_TOKEN', val: this._token, httpOnly: false});
+    cookies.push({ key: 'SID', val: this._sid, httpOnly: false});
     return cookies;
 };
 

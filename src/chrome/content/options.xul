@@ -18,6 +18,7 @@
             <preference id="zimbra_mail_notifier-optionAutoConnect" name="extensions.zimbra_mail_notifier.autoConnect" type="bool"/>
             <preference id="zimbra_mail_notifier-optionSystemNotification" name="extensions.zimbra_mail_notifier.systemNotificationEnabled" type="bool"/>
             <preference id="zimbra_mail_notifier-optionSoundNotification" name="extensions.zimbra_mail_notifier.soundEnabled" type="bool"/>
+            <preference id="zimbra_mail_notifier-optionBrowserSetCookies" name="extensions.zimbra_mail_notifier.browserSetCookies" type="bool"/>
         </preferences>
 
         <vbox flex="1">
@@ -33,6 +34,10 @@
             <groupbox width="100%">
                 <caption label="&option.default.access.caption;"/>
                 <checkbox preference="zimbra_mail_notifier-optionAccessStatusBar" label="&option.default.statusbar;" checked="true"/>
+            </groupbox>
+            <groupbox width="100%">
+                <caption label="&option.default.browser.caption;"/>
+                <checkbox preference="zimbra_mail_notifier-optionBrowserSetCookies" label="&option.default.browserSetCookies;" checked="true"/>
             </groupbox>
         </vbox>
     </prefpane>

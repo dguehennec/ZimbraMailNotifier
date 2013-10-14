@@ -36,6 +36,8 @@
 <!ENTITY option.default.soundNotification "Émettre un son">
 <!ENTITY option.default.access.caption "Moyen d'accès au module">
 <!ENTITY option.default.statusbar "Barre des modules">
+<!ENTITY option.default.browser.caption "Interface Web">
+<!ENTITY option.default.browserSetCookies "Connexion automatique">
 
 <!ENTITY option.calendar.label "Calendrier">
 <!ENTITY option.calendar.activate "Activer la gestion du calendrier">

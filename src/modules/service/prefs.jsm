@@ -83,6 +83,8 @@ zimbra_notifier_Prefs.PREF = {
     REQUEST_QUERY_TIMEOUT                 : "requestQueryTimeout",
     REQUEST_WAIT_TIMEOUT                  : "requestWaitTimeout",
     REQUEST_WAIT_LOOP_TIME                : "requestWaitLoopTime",
+    BROWSER_SET_COOKIES                   : "browserSetCookies",
+    BROWSER_COOKIE_HTTP_ONLY              : "browserCookieHttpOnly",
 
     USER_PASSWORD_HOSTNAME   : "chrome://zimbra_mail_notifier/",
     USER_PASSWORD_ACTIONURL  : "defaultPassword"
@@ -99,6 +101,9 @@ zimbra_notifier_Prefs.load = function() {
     this.pref_system_notification_enabled  = this._getPref(this.PREF.SYSTEM_NOTIFICATION_ENABLED);
     this.pref_sound_enabled                = this._getPref(this.PREF.SOUND_ENABLED);
     this.pref_access_statusBar             = this._getPref(this.PREF.ACCESS_STATUSBAR);
+    // Browser
+    this.pref_browserSetCookies            = this._getPref(this.PREF.BROWSER_SET_COOKIES);
+    this.pref_browserCookieHttpOnly        = this._getPref(this.PREF.BROWSER_COOKIE_HTTP_ONLY);
     // calendar
     this.pref_calendar_enabled                     = this._getPref(this.PREF.CALENDAR_ENABLED);
     this.pref_calendar_period_displayed            = this._getPref(this.PREF.CALENDAR_PERIOD_DISPLAYED);
@@ -254,6 +259,14 @@ zimbra_notifier_Prefs.observe = function(subject, topic, data) {
 
         case this.PREF.REQUEST_WAIT_LOOP_TIME:
             this.pref_request_waitLoopTime = this._getPref(data);
+            break;
+
+        case this.PREF.BROWSER_SET_COOKIES:
+            this.pref_browserSetCookies = this._getPref(data);
+            break;
+
+        case this.PREF.BROWSER_COOKIE_HTTP_ONLY:
+            this.pref_browserCookieHttpOnly = this._getPref(data);
             break;
 
         default:
@@ -613,6 +626,27 @@ zimbra_notifier_Prefs.getRequestWaitTimeout = function() {
 zimbra_notifier_Prefs.getRequestWaitLoopTime = function() {
     return this.pref_request_waitLoopTime;
 };
+
+/**
+ * Do we need to add cookie to the browser when opening the web interface
+ *
+ * @this {Prefs}
+ * @return {Boolean}
+ */
+zimbra_notifier_Prefs.getBrowserSetCookies = function() {
+    return this.pref_browserSetCookies;
+};
+
+/**
+ * Check if the created cookie need to be http only
+ *
+ * @this {Prefs}
+ * @return {Boolean}
+ */
+zimbra_notifier_Prefs.isBrowserCookieHttpOnly = function() {
+    return this.pref_browserCookieHttpOnly;
+};
+
 
 /**
  * get preference

@@ -37,6 +37,7 @@
 "use strict";
 
 Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
 
 const EXPORTED_SYMBOLS = ["zimbra_notifier_Browser"];
@@ -49,6 +50,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Browser"];
  *
  */
 const zimbra_notifier_Browser = {
+    _logger: new zimbra_notifier_Logger("Browser"),
     _urlWebService: null,
     _cookies: []
 };
@@ -89,21 +91,26 @@ zimbra_notifier_Browser.selectOpenedTab = function(url) {
             var browserInstance = browserEnumerator.getNext().getBrowser();
             var numTabs = browserInstance.mPanelContainer.childNodes.length;
             for ( var index = 0; index < numTabs; index++) {
+                // browserInstance <=> https://developer.mozilla.org/en/docs/XUL/tabbrowser
+                // currentTab      <=> https://developer.mozilla.org/en/docs/XUL/browser
                 var currentTab = browserInstance.getBrowserAtIndex(index);
                 if (currentTab.currentURI.spec.indexOf(url) >= 0) {
                     browserInstance.selectedTab = browserInstance.tabContainer.childNodes[index];
                     try {
-                        // browserInstance <=> https://developer.mozilla.org/en-US/docs/XUL/browser
                         browserInstance.contentWindow.focus();
                         browserInstance.focus();
                     }
-                    catch (e) { }
-                    return browserInstance;
+                    catch (e) {
+                        this._logger.warning("Fail to get focus on selected tab: " + e);
+                    }
+                    return currentTab;
                 }
             }
         }
     }
-    catch (e) { }
+    catch (e) {
+        this._logger.error("Fail to selected tab from url (" + url + "): " + e);
+    }
     return null;
 };
 
@@ -128,14 +135,19 @@ zimbra_notifier_Browser.openNewTab = function(url) {
                     Services.ww.activeWindow.focus();
                 }
             }
-            catch (e) { }
+            catch (e) {
+                this._logger.warning("Fail to get focus on active window: " + e);
+            }
         }
         try {
             win.focus();
         }
-        catch (e) { }
+        catch (e) {
+            this._logger.warning("Fail to get focus on opened window: " + e);
+        }
     }
     catch (e) {
+        this._logger.error("Fail to open new tab, url (" + url + "): " + e);
         return false;
     }
     return true;
@@ -150,23 +162,30 @@ zimbra_notifier_Browser.openZimbraWebInterface = function() {
     try {
         var needReload = false;
         var urlWebInterface = zimbra_notifier_Prefs.getUrlUserInterface();
-        if (urlWebInterface && this._urlWebService) {
+        if (urlWebInterface) {
 
             // Inject cookie if needed
-            if (true) { // TODO
-                // Check if browser token cookie is the same that the token use in this app
-                var tokenBrowser = this.getCookieValue(this._urlWebService, 'ZM_AUTH_TOKEN');
-                var tokenWebServ = this._getTokenCookieValue();
-                if (tokenBrowser !== tokenWebServ) {
-                    needReload = true;
+            if (zimbra_notifier_Prefs.getBrowserSetCookies() && this._urlWebService) {
+
+                var tokenWebServ = this._getTokenWebService();
+                if (tokenWebServ !== null) {
+                    // Check if browser token cookie is the same that the token use in this app
+                    var tokenBrowser = this.getCookieValue(this._urlWebService, 'ZM_AUTH_TOKEN');
+                    if (tokenBrowser !== tokenWebServ) {
+                        needReload = true;
+                    }
+                    // Sync cookies used in this module and the browser cookies
+                    this._setAuthCookies();
                 }
-                // Sync cookies used in this module and the browser cookies
-                this._setAuthCookies();
             }
-            var browserInstance = this.selectOpenedTab(urlWebInterface);
-            if (browserInstance !== null) {
-                if (needReload) {
-                    browserInstance.reload();
+            // Open the URL
+            var tab = this.selectOpenedTab(urlWebInterface);
+            if (tab !== null) {
+                if (tab.currentURI.path.indexOf("loginOp=") >= 0) {
+                    tab.loadURI(urlWebInterface);
+                }
+                else if (needReload) {
+                    tab.reload();
                 }
             }
             else {
@@ -175,6 +194,7 @@ zimbra_notifier_Browser.openZimbraWebInterface = function() {
         }
     }
     catch (e) {
+        this._logger.error("Fail to open zimbra web interface: " + e);
     }
 };
 
@@ -188,10 +208,16 @@ zimbra_notifier_Browser._setAuthCookies = function() {
     try {
         for (var idx = 0; idx < this._cookies.length; idx++) {
             var c = this._cookies[idx];
-            this.addSessionCookie(this._urlWebService, c.key, c.val);
+            var httpOnly = c.httpOnly;
+            if (httpOnly === undefined) {
+                httpOnly = zimbra_notifier_Prefs.isBrowserCookieHttpOnly();
+            }
+            this.addSessionCookie(this._urlWebService, c.key, c.val, httpOnly);
         }
     }
-    catch (e) { }
+    catch (e) {
+        this._logger.error("Fail to set authentication cookies: " + e);
+    }
 };
 
 /**
@@ -200,7 +226,7 @@ zimbra_notifier_Browser._setAuthCookies = function() {
  * @this {Browser}
  * @private
  */
-zimbra_notifier_Browser._getTokenCookieValue = function() {
+zimbra_notifier_Browser._getTokenWebService = function() {
     try {
         for (var idx = 0; idx < this._cookies.length; idx++) {
             var c = this._cookies[idx];
@@ -209,8 +235,10 @@ zimbra_notifier_Browser._getTokenCookieValue = function() {
             }
         }
     }
-    catch (e) { }
-    return '';
+    catch (e) {
+        this._logger.error("Fail to get token cookie value: " + e);
+    }
+    return null;
 };
 
 
@@ -248,13 +276,15 @@ zimbra_notifier_Browser.getCookieValue = function(url, key) {
  *            key  The key of the cookie
  * @param {String}
  *            value  The value of the cookie
+ * @param {Boolean}
+ *            httpOnly  True if the cookie is httpOnly
  */
-zimbra_notifier_Browser.addSessionCookie = function(url, key, value) {
+zimbra_notifier_Browser.addSessionCookie = function(url, key, value, httpOnly) {
     if (url && key) {
         var cookieUri = Services.io.newURI(url, null, null);
         var expir = ((new Date().getTime()) / 1000) + (48 * 3600);
         Services.cookies.add(cookieUri.host, cookieUri.path, key, value,
-                             cookieUri.schemeIs("https"), false, true, expir);
+                             cookieUri.schemeIs("https"), httpOnly, true, expir);
     }
 };
 
