@@ -25,6 +25,7 @@
             <groupbox width="100%">
                 <caption label="&option.default.connection.caption;"/>
                 <checkbox preference="zimbra_mail_notifier-optionAutoConnect" label="&option.default.autoConnect;" checked="true"/>
+                <checkbox preference="zimbra_mail_notifier-optionBrowserSetCookies" label="&option.default.browserSetCookies;" checked="true"/>
             </groupbox>
             <groupbox width="100%">
                 <caption label="&option.default.notification.caption;"/>
@@ -34,10 +35,6 @@
             <groupbox width="100%">
                 <caption label="&option.default.access.caption;"/>
                 <checkbox preference="zimbra_mail_notifier-optionAccessStatusBar" label="&option.default.statusbar;" checked="true"/>
-            </groupbox>
-            <groupbox width="100%">
-                <caption label="&option.default.browser.caption;"/>
-                <checkbox preference="zimbra_mail_notifier-optionBrowserSetCookies" label="&option.default.browserSetCookies;" checked="true"/>
             </groupbox>
         </vbox>
     </prefpane>

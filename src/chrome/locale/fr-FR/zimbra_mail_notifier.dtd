@@ -31,13 +31,12 @@
 <!ENTITY option.default.label "Général">
 <!ENTITY option.default.connection.caption "Connexion">
 <!ENTITY option.default.autoConnect "Connexion automatique au lancement du module">
+<!ENTITY option.default.browserSetCookies "Connexion automatique à l'interface Web">
 <!ENTITY option.default.notification.caption "Notification">
 <!ENTITY option.default.systemNotification "Notification système">
 <!ENTITY option.default.soundNotification "Émettre un son">
 <!ENTITY option.default.access.caption "Moyen d'accès au module">
 <!ENTITY option.default.statusbar "Barre des modules">
-<!ENTITY option.default.browser.caption "Interface Web">
-<!ENTITY option.default.browserSetCookies "Connexion automatique">
 
 <!ENTITY option.calendar.label "Calendrier">
 <!ENTITY option.calendar.activate "Activer la gestion du calendrier">

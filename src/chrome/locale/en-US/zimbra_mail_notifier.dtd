@@ -30,14 +30,13 @@
 <!ENTITY option.option.label "Preferences">
 <!ENTITY option.default.label "General">
 <!ENTITY option.default.connection.caption "Connection">
-<!ENTITY option.default.autoConnect "Automatically log in">
+<!ENTITY option.default.autoConnect "Auto connection on startup">
+<!ENTITY option.default.browserSetCookies "Auto connection on the web interface">
 <!ENTITY option.default.notification.caption "Notification">
 <!ENTITY option.default.systemNotification "System notification">
 <!ENTITY option.default.soundNotification "Sound notification">
 <!ENTITY option.default.access.caption "Extension access">
 <!ENTITY option.default.statusbar "Statusbar">
-<!ENTITY option.default.browser.caption "Web interface">
-<!ENTITY option.default.browserSetCookies "Auto connection">
 
 <!ENTITY option.calendar.label "Calendar">
 <!ENTITY option.calendar.activate "Enable calendar management">
