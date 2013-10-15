@@ -549,7 +549,7 @@ zimbra_notifier_Webservice.prototype.searchCalendar = function(startDate, endDat
         dataBody +=    '"types":"appointment",';
         dataBody +=    '"sortBy":"dateAsc",';
         dataBody +=    '"query":{';
-        dataBody +=       '"_content":"underid:1"';
+        dataBody +=       '"_content":"underid:1 AND NOT inid:3"';
         dataBody +=    '}';
         dataBody += '}';
         this._runningReq.setQueryRequest(this._session, dataBody);
