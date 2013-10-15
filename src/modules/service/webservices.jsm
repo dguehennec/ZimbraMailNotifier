@@ -527,6 +527,7 @@ zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(reques
 
 /**
  * Search calendar request.
+ * @see http://wiki.zimbra.com/index.php?title=Search_Tips
  *
  * @this {Webservice}
  * @param {Date}
@@ -548,7 +549,7 @@ zimbra_notifier_Webservice.prototype.searchCalendar = function(startDate, endDat
         dataBody +=    '"types":"appointment",';
         dataBody +=    '"sortBy":"dateAsc",';
         dataBody +=    '"query":{';
-        dataBody +=       '"_content":"inid:10"';
+        dataBody +=       '"_content":"underid:1"';
         dataBody +=    '}';
         dataBody += '}';
         this._runningReq.setQueryRequest(this._session, dataBody);
