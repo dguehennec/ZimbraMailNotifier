@@ -395,9 +395,10 @@ zimbra_notifier_Prefs.getCurrentVersion = function() {
  * @this {Prefs}
  * @return {Boolean} True if the url of the webservice contain the free domain
  */
-zimbra_notifier_Prefs.isFreeWebmail = function() {
+zimbra_notifier_Prefs.isFreeWebService = function() {
     if (this.pref_user_url_web_service) {
-        return this.pref_user_url_web_service.search("zimbra.free.fr") > 0;
+        return (this.pref_user_url_web_service.search("zimbra.free.fr") > 0) ||
+               (this.pref_user_url_web_service.search("zimbra.aliceadsl.fr") > 0);
     }
     return false;
 };

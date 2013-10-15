@@ -185,8 +185,9 @@
                     <label value="&option.identifiant.authtype.label; :" width="130"/>
                     <menulist id="zimbra_mail_notifier-listAuthType" oncommand="com.zimbra.Options.authTypeChanged()">
                         <menupopup>
-                            <menuitem label="&option.identifiant.authtype.normal;" value="default"/>
-                            <menuitem label="Free" value="free"/>
+                            <menuitem label="&option.identifiant.authtype.normal;" value=""/>
+                            <menuitem label="Free" value="http://zimbra.free.fr|http://zimbra.free.fr/zimbra/mail"/>
+                            <menuitem label="Alice Adsl" value="http://zimbra.aliceadsl.fr|http://zimbra.aliceadsl.fr/zimbra/mail"/>
                         </menupopup>
                     </menulist>
                 </hbox>

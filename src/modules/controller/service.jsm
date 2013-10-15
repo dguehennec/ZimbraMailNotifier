@@ -201,7 +201,7 @@ zimbra_notifier_Service.prototype.shutdown = function() {
 zimbra_notifier_Service.prototype._getWebService = function() {
     if (!this._webservice) {
 
-        if (zimbra_notifier_Prefs.isFreeWebmail()) {
+        if (zimbra_notifier_Prefs.isFreeWebService()) {
             Components.utils.import("resource://zimbra_mail_notifier/specific/free.jsm");
             this._webservice = new zimbra_notifier_WebserviceFree(
                 zimbra_notifier_Prefs.getRequestQueryTimeout(), 52000, this);

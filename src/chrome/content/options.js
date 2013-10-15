@@ -59,7 +59,8 @@ Components.utils.import("resource://zimbra_mail_notifier/controller/controller.j
 com.zimbra.Options = {
     _closeWhenConnected: false,
     _connectFirstTry: false,
-    _prefInstantApply: false
+    _prefInstantApply: false,
+    _previousAuthType: ''
 };
 
 /**
@@ -80,7 +81,9 @@ com.zimbra.Options.init = function() {
     if (prefs.isSavePasswordEnabled()) {
         util.setAttribute("zimbra_mail_notifier-optionPassword", "value", prefs.getUserPassword());
     }
-    util.setMenulist("zimbra_mail_notifier-listAuthType", prefs.isFreeWebmail() ? "free" : "default");
+    var authT = util.getAttribute("zimbra_mail_notifier-textboxUrlWebService", "value") + "|" +
+                util.getAttribute("zimbra_mail_notifier-textboxUrlWebInterface", "value");
+    util.setMenulist("zimbra_mail_notifier-listAuthType", authT);
 
     // Do we have a OK/Cancel button, or modification is applied immediately
     if (Application.prefs.getValue("browser.preferences.instantApply", null) === true) {
@@ -128,6 +131,7 @@ com.zimbra.Options.refresh = function(event) {
         util.setAttribute("zimbra_mail_notifier-textboxLogin", "disabled", true);
         util.setAttribute("zimbra_mail_notifier-optionPassword", "disabled", true);
         util.setAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled", true);
+        util.setAttribute("zimbra_mail_notifier-listAuthType", "disabled", true);
     }
     else if (!this._connectFirstTry || !com.zimbra_notifier_Controller.isConnecting()) {
 
@@ -136,8 +140,9 @@ com.zimbra.Options.refresh = function(event) {
         util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "collapse");
         util.removeAttribute("zimbra_mail_notifier-textboxLogin", "disabled");
         util.removeAttribute("zimbra_mail_notifier-optionPassword", "disabled");
+        util.removeAttribute("zimbra_mail_notifier-listAuthType", "disabled");
 
-        if (util.getAttribute("zimbra_mail_notifier-listAuthType", "value") === "default") {
+        if (util.getAttribute("zimbra_mail_notifier-listAuthType", "value") === "") {
             util.removeAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled");
         }
     }
@@ -154,23 +159,24 @@ com.zimbra.Options.refresh = function(event) {
 com.zimbra.Options.authTypeChanged = function() {
 
     var util = com.zimbra.UiUtil;
+    var newAuthType = util.getAttribute("zimbra_mail_notifier-listAuthType", "value");
 
-    if (util.getAttribute("zimbra_mail_notifier-listAuthType", "value") === "free") {
+    if (this._previousAuthType !== newAuthType) {
 
-        util.setAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled", true);
-        util.setTextboxPref("zimbra_mail_notifier-textboxUrlWebService",
-                            "http://zimbra.free.fr", "option-tab-identifiant");
+        if (newAuthType !== '') {
+            var urls = newAuthType.split('|', 2);
+            util.setAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled", true);
+            util.setTextboxPref("zimbra_mail_notifier-textboxUrlWebService", urls[0], "option-tab-identifiant");
 
-        util.setAttribute("zimbra_mail_notifier-textboxUrlWebInterface", "disabled", true);
-        util.setTextboxPref("zimbra_mail_notifier-textboxUrlWebInterface",
-                            "http://zimbra.free.fr/zimbra/mail", "option-tab-identifiant");
-    }
-    else {
-        if (util.getAttribute("zimbra_mail_notifier-textboxUrlWebService", "value") === "http://zimbra.free.fr") {
+            util.setAttribute("zimbra_mail_notifier-textboxUrlWebInterface", "disabled", true);
+            util.setTextboxPref("zimbra_mail_notifier-textboxUrlWebInterface", urls[1], "option-tab-identifiant");
+        }
+        else {
             util.setTextboxPref("zimbra_mail_notifier-textboxUrlWebService", "", "option-tab-identifiant");
             util.setTextboxPref("zimbra_mail_notifier-textboxUrlWebInterface", "", "option-tab-identifiant");
+            util.removeAttribute("zimbra_mail_notifier-textboxUrlWebInterface", "disabled");
         }
-        util.removeAttribute("zimbra_mail_notifier-textboxUrlWebInterface", "disabled");
+        this._previousAuthType = newAuthType;
     }
 
     this.refresh();
