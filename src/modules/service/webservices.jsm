@@ -285,6 +285,7 @@ zimbra_notifier_Webservice.prototype._callbackAuthRequest = function(request) {
  */
 zimbra_notifier_Webservice.prototype.disconnect = function() {
     try {
+        this.abortRunningReq();
         this._session.updateToken('', 0);
         this._parent.callbackSessionInfoChanged(this._session);
         this._parent.callbackDisconnect();

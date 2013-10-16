@@ -74,6 +74,6 @@
 <!ENTITY option.identifiant.urlwebinterface.label "Web interface URL">
 <!ENTITY option.identifiant.urlwebinterface.tooltip "The URL displayed in the Web browser when connected (Optional)">
 <!ENTITY option.identifiant.connect.button "Connect">
-<!ENTITY option.identifiant.connectInProgress.button "In progress...">
+<!ENTITY option.identifiant.connectCancel.button "Cancel...">
 <!ENTITY option.identifiant.disconnect.button "Disconnect">
 

@@ -201,7 +201,7 @@
                 <hbox align="center">
                     <description flex="1" id="zimbra_mail_notifier-serverError"/>
                     <button id="zimbra_mail_notifier-connectButton" disabled="true" label="&option.identifiant.connect.button;" oncommand="com.zimbra.Options.connect();"/>
-                    <button id="zimbra_mail_notifier-connectInProgressButton" style="visibility:collapse;" disabled="true" label="&option.identifiant.connectInProgress.button;"/>
+                    <button id="zimbra_mail_notifier-connectCancelButton" style="visibility:collapse;" label="&option.identifiant.connectCancel.button;" oncommand="com.zimbra.Options.disconnect();"/>
                     <button id="zimbra_mail_notifier-disconnectButton" style="visibility:collapse;" label="&option.identifiant.disconnect.button;" oncommand="com.zimbra.Options.disconnect();"/>
                 </hbox>
             </groupbox>

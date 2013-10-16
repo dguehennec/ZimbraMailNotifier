@@ -149,9 +149,6 @@ zimbra_notifier_Service.prototype._loadDefault = function() {
     this._currentMessageUnRead = [];
     this._idxLoopQuery = 0;
 
-    // error
-    this._reqInfoErrors.clearAllErrors();
-
     // Delay before trying again the connect
     this._delayWaitConnect = 0;
 
@@ -190,6 +187,7 @@ zimbra_notifier_Service.prototype.shutdown = function() {
     this._logger.info("Shutdown...");
     zimbra_notifier_Util.removeObserver(this, zimbra_notifier_Constant.OBSERVER.PREF_SAVED);
     this._loadDefault();
+    this._reqInfoErrors.clearAllErrors();
 };
 
 /**
@@ -359,10 +357,14 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
     switch (newState) {
         // We cannot login or we are just disconnected
         case zimbra_notifier_SERVICE_STATE.DISCONNECTED:
-            this._changeState(zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO);
+            this._reqInfoErrors.clearAllErrors();
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.DISCONNECTED);
+            this._planRunState(zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO, 10);
+            break;
 
         // Nothing to do...
         case zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO:
+            this._loadDefault();
             this._parent.event(zimbra_notifier_SERVICE_EVENT.STOPPED);
             break;
 
@@ -677,6 +679,7 @@ zimbra_notifier_Service.prototype.initializeConnection = function(password) {
  * @this {Service}
  */
 zimbra_notifier_Service.prototype.closeConnection = function() {
+    this._stopStateTimer();
     if (this._webservice) {
         this._webservice.disconnect();
     }
@@ -866,9 +869,7 @@ zimbra_notifier_Service.prototype.callbackLoginSuccess = function() {
  * @this {Service}
  */
 zimbra_notifier_Service.prototype.callbackDisconnect = function() {
-    this._loadDefault();
-    this._planRunState(zimbra_notifier_SERVICE_STATE.DISCONNECTED, 10);
-    this._parent.event(zimbra_notifier_SERVICE_EVENT.DISCONNECTED);
+    this._changeAndRunState(zimbra_notifier_SERVICE_STATE.DISCONNECTED);
 };
 
 /**

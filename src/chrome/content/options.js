@@ -58,7 +58,6 @@ Components.utils.import("resource://zimbra_mail_notifier/controller/controller.j
  */
 com.zimbra.Options = {
     _closeWhenConnected: false,
-    _connectFirstTry: false,
     _prefInstantApply: false,
     _previousAuthType: ''
 };
@@ -112,9 +111,6 @@ com.zimbra.Options.refresh = function(event) {
 
     var util = com.zimbra.UiUtil;
 
-    util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
-    util.setVisibility("zimbra_mail_notifier-disconnectButton", "collapse");
-
     if (   util.getAttribute("zimbra_mail_notifier-textboxLogin", "value") !== ''
         && util.getAttribute("zimbra_mail_notifier-optionPassword", "value") !== ''
         && util.getAttribute("zimbra_mail_notifier-textboxUrlWebService", "value") !== '') {
@@ -126,25 +122,36 @@ com.zimbra.Options.refresh = function(event) {
     }
 
     if (com.zimbra_notifier_Controller.isConnected()) {
+        util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
         util.setVisibility("zimbra_mail_notifier-disconnectButton", "visible");
-        util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "collapse");
+        util.setVisibility("zimbra_mail_notifier-connectCancelButton", "collapse");
         util.setAttribute("zimbra_mail_notifier-textboxLogin", "disabled", true);
         util.setAttribute("zimbra_mail_notifier-optionPassword", "disabled", true);
         util.setAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled", true);
         util.setAttribute("zimbra_mail_notifier-listAuthType", "disabled", true);
     }
-    else if (!this._connectFirstTry || !com.zimbra_notifier_Controller.isConnecting()) {
-
-        this._connectFirstTry = false;
+    else if (com.zimbra_notifier_Controller.isConnecting()) {
+        util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
+        util.setVisibility("zimbra_mail_notifier-disconnectButton", "collapse");
+        util.setVisibility("zimbra_mail_notifier-connectCancelButton", "visible");
+        util.setAttribute("zimbra_mail_notifier-textboxLogin", "disabled", true);
+        util.setAttribute("zimbra_mail_notifier-optionPassword", "disabled", true);
+        util.setAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled", true);
+        util.setAttribute("zimbra_mail_notifier-listAuthType", "disabled", true);
+    }
+    else {
         util.setVisibility("zimbra_mail_notifier-connectButton", "visible");
-        util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "collapse");
+        util.setVisibility("zimbra_mail_notifier-disconnectButton", "collapse");
+        util.setVisibility("zimbra_mail_notifier-connectCancelButton", "collapse");
         util.removeAttribute("zimbra_mail_notifier-textboxLogin", "disabled");
         util.removeAttribute("zimbra_mail_notifier-optionPassword", "disabled");
-        util.removeAttribute("zimbra_mail_notifier-listAuthType", "disabled");
-
         if (util.getAttribute("zimbra_mail_notifier-listAuthType", "value") === "") {
             util.removeAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled");
         }
+        else {
+            util.setAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled", true);
+        }
+        util.removeAttribute("zimbra_mail_notifier-listAuthType", "disabled");
     }
 
     util.setTextContent("zimbra_mail_notifier-serverError",
@@ -237,16 +244,17 @@ com.zimbra.Options.connect = function() {
     com.zimbra_notifier_Prefs.setTemporaryLogin(util.getAttribute("zimbra_mail_notifier-textboxUrlWebService", "value"),
                                                 util.getAttribute("zimbra_mail_notifier-textboxLogin", "value"));
     // update screen view
+    util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
+    util.setVisibility("zimbra_mail_notifier-disconnectButton", "collapse");
+    util.setVisibility("zimbra_mail_notifier-connectCancelButton", "visible");
     util.setAttribute("zimbra_mail_notifier-textboxLogin", "disabled", true);
     util.setAttribute("zimbra_mail_notifier-optionPassword", "disabled", true);
     util.setAttribute("zimbra_mail_notifier-textboxUrlWebService", "disabled", true);
-    util.setVisibility("zimbra_mail_notifier-connectButton", "collapse");
-    util.setVisibility("zimbra_mail_notifier-connectInProgressButton", "visible");
+    util.setAttribute("zimbra_mail_notifier-listAuthType", "disabled", true);
     util.setTextContent("zimbra_mail_notifier-serverError", "");
 
     // initialize connection
     this._closeWhenConnected = true;
-    this._connectFirstTry = true;
     com.zimbra_notifier_Controller.initializeConnection(
         util.getAttribute("zimbra_mail_notifier-optionPassword", "value"));
 };

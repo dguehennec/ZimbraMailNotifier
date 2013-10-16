@@ -213,7 +213,10 @@ zimbra_notifier_Controller.isConnected = function() {
  */
 zimbra_notifier_Controller.isConnecting = function() {
     if (this._service) {
-        return this._service.getCurrentState() === zimbra_notifier_SERVICE_STATE.CONNECT_RUN;
+        var cSt = this._service.getCurrentState();
+        return cSt === zimbra_notifier_SERVICE_STATE.CONNECT_RUN ||
+               cSt === zimbra_notifier_SERVICE_STATE.CONNECT_ERR ||
+               cSt === zimbra_notifier_SERVICE_STATE.CONNECT_WAIT;
     }
     return false;
 };
