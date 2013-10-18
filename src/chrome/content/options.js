@@ -47,7 +47,6 @@ if (!com.zimbra) {
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm", com);
-Components.utils.import("resource://zimbra_mail_notifier/controller/service.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/controller/controller.jsm", com);
 
 /**
@@ -100,15 +99,6 @@ com.zimbra.Options.init = function() {
  */
 com.zimbra.Options.refresh = function(event) {
 
-    if (this._closeWhenConnected === true && com.zimbra_notifier_Controller.isConnected()) {
-        try {
-            document.getElementById("zimbra_mail_notifier-Preferences").acceptDialog();
-        }
-        catch (e) {
-        }
-        return;
-    }
-
     var util = com.zimbra.UiUtil;
 
     if (   util.getAttribute("zimbra_mail_notifier-textboxLogin", "value") !== ''
@@ -156,6 +146,14 @@ com.zimbra.Options.refresh = function(event) {
 
     util.setTextContent("zimbra_mail_notifier-serverError",
                         com.zimbra_notifier_Controller.getLastErrorMessage());
+
+    if (this._closeWhenConnected === true && com.zimbra_notifier_Controller.isConnected()) {
+        try {
+            document.getElementById("zimbra_mail_notifier-Preferences").acceptDialog();
+        }
+        catch (e) {
+        }
+    }
 };
 
 /**
