@@ -37,7 +37,7 @@
 
 "use strict";
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Message"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Message"];
 
 /**
  * Creates an instance of Message.
@@ -58,7 +58,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Message"];
  * @param {Number}
  *            nbMail the number of messages
  */
-const zimbra_notifier_Message = function(id, timestamp, subject, content, senderMail, mailIdList) {
+var zimbra_notifier_Message = function(id, timestamp, subject, content, senderMail, mailIdList) {
     this.id = id;
     this.date = new Date(timestamp);
     this.subject = subject;

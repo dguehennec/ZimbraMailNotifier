@@ -38,7 +38,7 @@
 
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_STATUS", "zimbra_notifier_Request"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_STATUS", "zimbra_notifier_Request"];
 
 /**
  *
@@ -47,7 +47,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_STATUS", "zimbra_notifier_Req
  * @constant
  *
  */
-const zimbra_notifier_REQUEST_STATUS = {
+var zimbra_notifier_REQUEST_STATUS = {
     NOT_STARTED : -2,
     RUNNING : -1,
     NO_ERROR : 0,
@@ -78,7 +78,7 @@ const zimbra_notifier_REQUEST_STATUS = {
  * @param {Function}
  *            callback function to call at the end of the request
  */
-const zimbra_notifier_Request = function(typeRequest, timeout, url, objCallback, callback) {
+var zimbra_notifier_Request = function(typeRequest, timeout, url, objCallback, callback) {
     this._logger = new zimbra_notifier_Logger("Request");
     this.status = zimbra_notifier_REQUEST_STATUS.NOT_STARTED;
     this.errorInfo = null;

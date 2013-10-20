@@ -40,7 +40,7 @@ Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Browser"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Browser"];
 
 /**
  * Creates a global instance of zimbra_notifier_Browser
@@ -49,7 +49,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Browser"];
  * @this {Browser}
  *
  */
-const zimbra_notifier_Browser = {
+var zimbra_notifier_Browser = {
     _logger: new zimbra_notifier_Logger("Browser"),
     _urlWebService: null,
     _cookies: []

@@ -43,7 +43,7 @@ Components.utils.import("resource://zimbra_mail_notifier/domain/session.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_WebserviceFree"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_WebserviceFree"];
 
 /********************** Session **********************/
 
@@ -53,7 +53,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_WebserviceFree"];
  * @constructor
  * @this {SessionFree}
  */
-const zimbra_notifier_SessionFree = function() {
+var zimbra_notifier_SessionFree = function() {
     this.clear();
 };
 zimbra_notifier_Util.extend(zimbra_notifier_Session, zimbra_notifier_SessionFree);
@@ -122,7 +122,7 @@ zimbra_notifier_SessionFree.prototype.getAuthCookies = function() {
  * @constructor
  * @this {RequestFree}
  */
-const zimbra_notifier_RequestFree = function(typeRequest, timeout, url, objCallback, callback, anonymous) {
+var zimbra_notifier_RequestFree = function(typeRequest, timeout, url, objCallback, callback, anonymous) {
     this._super.constructor.call(this, typeRequest, timeout, url, objCallback, callback, anonymous);
 };
 zimbra_notifier_Util.extend(zimbra_notifier_Request, zimbra_notifier_RequestFree);
@@ -188,7 +188,7 @@ zimbra_notifier_RequestFree.prototype._setInfoRequest = function() {
  * @constructor
  * @this {WebserviceFree}
  */
-const zimbra_notifier_WebserviceFree = function(timeoutQuery, timeoutWait, parent) {
+var zimbra_notifier_WebserviceFree = function(timeoutQuery, timeoutWait, parent) {
     this._super.constructor.call(this, timeoutQuery, timeoutWait, parent);
     this._logger._name += 'Free';
 };

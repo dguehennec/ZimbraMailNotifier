@@ -40,7 +40,7 @@
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Notifier"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Notifier"];
 
 /**
  * Creates an instance of zimbra_notifier_Notifier.
@@ -60,7 +60,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Notifier"];
  * @param {Boolean}
  *            withSystemNotification indicate if system notification is enable
  */
-const zimbra_notifier_Notifier = function(event, timeConf, nbRepeat,
+var zimbra_notifier_Notifier = function(event, timeConf, nbRepeat,
                                           withSoundNotification, withSystemNotification) {
     this._event = event;
     this._timeConf = timeConf;

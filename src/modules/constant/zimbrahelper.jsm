@@ -37,8 +37,8 @@
 
 "use strict";
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Constant"];
-const zimbra_notifier_Constant = {};
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Constant"];
+var zimbra_notifier_Constant = {};
 
 /**
  * The version of the extension

@@ -37,7 +37,7 @@
 
 "use strict";
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_CalEvent"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_CalEvent"];
 
 /**
  * Creates an instance of CalEvent.
@@ -56,7 +56,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_CalEvent"];
  * @param {Number}
  *            timeConf the time configuration
  */
-const zimbra_notifier_CalEvent = function(id, name, timestamp, duration, timeConf) {
+var zimbra_notifier_CalEvent = function(id, name, timestamp, duration, timeConf) {
     this.id = id;
     this.name = name;
     this.startDate = new Date(timestamp);

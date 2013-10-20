@@ -14,6 +14,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<withCompletion>false</withCompletion>
 		<sonar.language>js</sonar.language>
+		<sonar.javascript.file.suffixes>jsm,js</sonar.javascript.file.suffixes>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.host.url>http://127.0.0.1:9000</sonar.host.url>
 	</properties>
@@ -44,11 +45,11 @@
 									<template>jsdoc</template>
 									<directory>${project.build.directory}/jsdoc</directory>
 									<recurse>10</recurse>
-									<ext>js</ext>
+									<extension>js,jsm</extension>
 									<allfunctions>true</allfunctions>
 									<Allfunctions>true</Allfunctions>
 									<privateOption>true</privateOption>
-									<srcDir>${basedir}/src/main/</srcDir>
+									<srcDir>${basedir}/src/</srcDir>
 								</configuration>
 								<goals>
 									<goal>jsdoc-report</goal>

@@ -40,7 +40,7 @@
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Prefs"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Prefs"];
 
 /**
  * Creates an instance of Prefs.
@@ -48,7 +48,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Prefs"];
  * @constructor
  * @this {Prefs}
  */
-const zimbra_notifier_Prefs = {
+var zimbra_notifier_Prefs = {
     _prefs: null,
     _is_first_launch: false,
     _previous_version: 0

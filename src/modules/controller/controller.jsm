@@ -58,7 +58,7 @@ XPCOMUtils.defineLazyServiceGetter(
 );
 
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Controller"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Controller"];
 
 /**
  * Creates an instance of Controller.
@@ -66,7 +66,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Controller"];
  * @constructor
  * @this {Controller}
  */
-const zimbra_notifier_Controller = {
+var zimbra_notifier_Controller = {
     _service: null,
     _callbackList: []
 };
@@ -318,7 +318,7 @@ zimbra_notifier_Controller.getLastErrorMessage = function() {
 
 /* ******************* Detect application close events *********************** */
 
-const zimbra_notifier_Observer = {
+var zimbra_notifier_Observer = {
     register: function() {
         Services.obs.addObserver(zimbra_notifier_Observer, "quit-application", false);
         Services.obs.addObserver(zimbra_notifier_Observer, "quit-application-granted", false);

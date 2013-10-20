@@ -39,7 +39,7 @@
 
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Logger"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Logger"];
 
 /**
  * Creates an instance of logger.
@@ -48,7 +48,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Logger"];
  * @this {Logger}
  *
  */
-const zimbra_notifier_Logger = function(name) {
+var zimbra_notifier_Logger = function(name) {
     this._name = name;
 };
 

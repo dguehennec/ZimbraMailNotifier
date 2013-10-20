@@ -47,11 +47,11 @@ Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm
 Components.utils.import("resource://zimbra_mail_notifier/service/infoerror.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/browser.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Service", "zimbra_notifier_SERVICE_EVENT",
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Service", "zimbra_notifier_SERVICE_EVENT",
                           "zimbra_notifier_SERVICE_STATE"];
 
 
-const zimbra_notifier_SERVICE_STATE = {
+var zimbra_notifier_SERVICE_STATE = {
     DISCONNECTED         : 'DISCONNECTED',
     NOTHING_TO_DO        : 'NOTHING_TO_DO',
 
@@ -83,7 +83,7 @@ const zimbra_notifier_SERVICE_STATE = {
     WAITSET_NO_NEW_EVT   : 'WAITSET_NO_NEW_EVT'
 };
 
-const zimbra_notifier_SERVICE_EVENT = {
+var zimbra_notifier_SERVICE_EVENT = {
     STOPPED              : 'STOPPED',
     CONNECTING           : 'CONNECTING',
     INVALID_LOGIN        : 'INVALID_LOGIN',
@@ -109,7 +109,7 @@ const zimbra_notifier_SERVICE_EVENT = {
  * @param {Controller}
  *             The parent listening for events
  */
-const zimbra_notifier_Service = function(parent) {
+var zimbra_notifier_Service = function(parent) {
     this._parent = parent;
     this._logger = new zimbra_notifier_Logger("Service");
     this._reqInfoErrors = new zimbra_notifier_InfoErrors();

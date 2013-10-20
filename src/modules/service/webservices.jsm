@@ -46,7 +46,7 @@ Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_TYPE", "zimbra_notifier_Webservice"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_TYPE", "zimbra_notifier_Webservice"];
 
 /**
  *
@@ -55,7 +55,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_TYPE", "zimbra_notifier_Webse
  * @constant
  *
  */
-const zimbra_notifier_REQUEST_TYPE = {
+var zimbra_notifier_REQUEST_TYPE = {
     NONE           : 'NONE',
     CONNECT        : 'CONNECT',
     CREATE_WAIT    : 'CREATE_WAIT',
@@ -77,7 +77,7 @@ const zimbra_notifier_REQUEST_TYPE = {
  * @param {Service}
  *            parent the parent object which must implement callbacks...
  */
-const zimbra_notifier_Webservice = function(timeoutQuery, timeoutWait, parent) {
+var zimbra_notifier_Webservice = function(timeoutQuery, timeoutWait, parent) {
     this._logger = new zimbra_notifier_Logger("Webservice");
     this._session = this.createSession();
     this._timeoutQuery = timeoutQuery;

@@ -40,7 +40,7 @@
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Util"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Util"];
 
 /**
  * Creates a global instance of zimbra_notifier_Util
@@ -49,7 +49,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Util"];
  * @this {Util}
  *
  */
-const zimbra_notifier_Util = {
+var zimbra_notifier_Util = {
     /**
      * @private bundle
      */
