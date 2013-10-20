@@ -22,7 +22,7 @@
 
 <!ENTITY about.homepage.label "Site Web :">
 <!ENTITY about.about.label "&main.about.label;">
-<!ENTITY about.createdby.label "Crée par :">
+<!ENTITY about.createdby.label "Créé par :">
 <!ENTITY about.version.label "Version">
 <!ENTITY about.legal.label "Cette extension n&apos;est pas affiliée à VMware ni soutenue par cette entreprise.">
 <!ENTITY about.close.label "Fermer">
@@ -42,7 +42,7 @@
 <!ENTITY option.calendar.activate "Activer la gestion du calendrier">
 <!ENTITY option.calendar.view.caption "Visualisation">
 <!ENTITY option.calendar.view.period.label "Période affichée">
-<!ENTITY option.calendar.view.nbMax.label "Nombre de rendez-vous maximum affichées">
+<!ENTITY option.calendar.view.nbMax.label "Nombre de rendez-vous maximum affichés">
 <!ENTITY option.calendar.notification.caption "Notification">
 <!ENTITY option.calendar.systemNotification "Notification système">
 <!ENTITY option.calendar.soundNotification "Notification sonore">
