@@ -472,6 +472,7 @@ zimbra_notifier_Webservice.prototype.searchUnReadMsg = function() {
         var dataBody = '';
         dataBody += '"SearchRequest":{';
         dataBody +=    '"_jsns":"urn:zimbraMail",';
+        dataBody +=    '"limit":999,';
         dataBody +=    '"query":{';
         dataBody +=       '"_content":"is:unread"';
         dataBody +=    '}';
