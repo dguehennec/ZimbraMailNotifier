@@ -73,7 +73,7 @@ var zimbra_notifier_Message = function(id, timestamp, subject, content, senderMa
  * @this {Message}
  * @return {Number} Number of mail in message
  */
-zimbra_notifier_Message.prototype.nbMail = function(messageList) {
+zimbra_notifier_Message.prototype.nbMail = function() {
     return this.mailIdList.length;
 };
 

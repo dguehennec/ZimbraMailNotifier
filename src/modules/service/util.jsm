@@ -287,11 +287,11 @@ zimbra_notifier_Util.dump = function(obj, pref) {
             dump(pref + p);
             var v = obj[p];
             if (v) {
-                if (typeof(v) == 'object') {
+                if (typeof(v) === 'object') {
                     dump("\n");
                     zimbra_notifier_Util.dump(v, pref + p + '.');
                 }
-                else if (typeof(v) != 'function') {
+                else if (typeof(v) !== 'function') {
                     dump(" : " + v + ";");
                 }
             }

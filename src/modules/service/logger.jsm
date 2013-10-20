@@ -175,7 +175,7 @@ zimbra_notifier_Logger.prototype._printStack = function() {
         try {
             throw Error('');
         } catch(err) {
-            var stack = err.stack.split("\n").slice(2).join("\n")
+            var stack = err.stack.split("\n").slice(2).join("\n");
             dump("--------\n" + stack + "--------\n");
         }
     }

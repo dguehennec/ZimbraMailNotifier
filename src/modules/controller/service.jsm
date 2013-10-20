@@ -217,7 +217,7 @@ zimbra_notifier_Service.prototype._getWebService = function() {
         this._needCheckWaitSet = this._webservice.isWaitSetValid();
     }
     return this._webservice;
-}
+};
 
 
 /* ******************* Manage state machine *********************** */
@@ -344,7 +344,8 @@ zimbra_notifier_Service.prototype._changeAndRunState = function(newState) {
         this._logger.error("Fail run state (" + newState + "): " + e);
         this._changeRunningState(zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO, 500);
     }
-}
+};
+
 /**
  * Execute the code of specified state
  *

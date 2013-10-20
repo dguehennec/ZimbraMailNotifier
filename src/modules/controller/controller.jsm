@@ -328,7 +328,7 @@ var zimbra_notifier_Observer = {
         Services.obs.removeObserver(zimbra_notifier_Observer, "quit-application");
     },
     observe: function(s, topic, data) {
-        if (topic == "quit-application-granted" || topic == "quit-application") {
+        if (topic === "quit-application-granted" || topic === "quit-application") {
             this.unregister();
             Services.appstartup.enterLastWindowClosingSurvivalArea();
             try {
