@@ -502,10 +502,16 @@ zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(reques
             if (jsonResponse && jsonResponse.Body) {
                 var content = jsonResponse.Body.SearchResponse.c;
                 if (content) {
-                    for (var index = content.length - 1; index >= 0; index--) {
-                        var currMsg = content[index];
-                        var msg = new zimbra_notifier_Message(currMsg.id, currMsg.d, currMsg.su, currMsg.fr,
-                                                              currMsg.e[currMsg.e.length-1].a, currMsg.m);
+                    for (var iConv = 0; iConv < content.length; ++iConv) {
+                        var currMsg = content[iConv];
+                        var msgIdList = [];
+                        for (var iMsg = 0; iMsg < currMsg.m.length; ++iMsg) {
+                            msgIdList.push(currMsg.m[iMsg].id);
+                        }
+                        var msg = new zimbra_notifier_Conversation(
+                            currMsg.id, currMsg.d, currMsg.su, currMsg.fr,
+                            currMsg.e[currMsg.e.length-1].a, msgIdList);
+
                         messages.push(msg);
                     }
                 }

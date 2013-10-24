@@ -228,7 +228,7 @@ zimbra_notifier_Controller.isConnecting = function() {
  * @return {Number} nb of unread messages
  */
 zimbra_notifier_Controller.getNbMessageUnread = function() {
-    return this._getService().getNbMessageUnread();
+    return this._getService().getMessageManager().nbMessages();
 };
 
 /**

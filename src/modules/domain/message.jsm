@@ -37,16 +37,16 @@
 
 "use strict";
 
-var EXPORTED_SYMBOLS = ["zimbra_notifier_Message"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Conversation", "zimbra_notifier_MessageManager"];
 
 /**
- * Creates an instance of Message.
+ * Creates an instance of Conversation.
  *
  * @constructor
- * @this {Message}
+ * @this {Conversation}
  *
  * @param {String}
- *            id the message id
+ *            convId the conversation id
  * @param {Number}
  *            timestamp the timestamp message date
  * @param {String}
@@ -55,11 +55,11 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Message"];
  *            content the message content
  * @param {String}
  *            senderMail the message sender
- * @param {Number}
- *            nbMail the number of messages
+ * @param {String}
+ *            mailIdList the message id list
  */
-var zimbra_notifier_Message = function(id, timestamp, subject, content, senderMail, mailIdList) {
-    this.id = id;
+var zimbra_notifier_Conversation = function(convId, timestamp, subject, content, senderMail, mailIdList) {
+    this.convId = convId;
     this.date = new Date(timestamp);
     this.subject = subject;
     this.content = content;
@@ -68,40 +68,103 @@ var zimbra_notifier_Message = function(id, timestamp, subject, content, senderMa
 };
 
 /**
- * Indicate the number of mail in this message list
+ * Creates an instance of MessageManager.
+ * Used to detect new unread message
  *
- * @this {Message}
- * @return {Number} Number of mail in message
+ * @constructor
+ * @this {MessageManager}
  */
-zimbra_notifier_Message.prototype.nbMail = function() {
-    return this.mailIdList.length;
+var zimbra_notifier_MessageManager = function() {
+    this._oldNbMessages = 0;
+    this._nbMessages = 0;
+    this._tmpNbMessages = 0;
+
+    this._listConversations = [];
+    this._tmpListConversations = [];
+
+    this._mapMsgId2ConvId = {};
+    this._tmpMapMsgId2ConvId = {};
+
+    this._mapConvId2IdxList = {};
+    this._tmpMapConvId2IdxList = {};
 };
 
 /**
- * Indicate the number of new mail in message
+ * Get the current number of messages
  *
- * @this {Message}
- * @param {Array}
- *            message list to compare
- * @return {Number} Number of new mail in message
+ * @this {MessageManager}
+ *
+ * @return {Number} Number of messages
  */
-zimbra_notifier_Message.prototype.getNbNewMail = function(messageList) {
-    var nbNewMail = this.mailIdList.length;
-    // Find this message list inside the old message list
-    for ( var index = 0; index < messageList.length; index++) {
-        var oldMsg = messageList[index];
-        if (oldMsg.id === this.id) {
-            // Old message list found, check if new mail were added to mail list
-            for (var i = 0; i < this.mailIdList.length; i++) {
-                for (var j = 0; j < oldMsg.mailIdList.length; j++) {
-                    if (this.mailIdList[i].id === oldMsg.mailIdList[j].id) {
-                        nbNewMail--;
-                        break;
-                    }
-                }
+zimbra_notifier_MessageManager.prototype.nbMessages = function() {
+    return this._nbMessages;
+};
+
+/**
+ * End of adding messages
+ *
+ * @this {MessageManager}
+ *
+ * @return {Number} Number of new message since the last call
+ */
+zimbra_notifier_MessageManager.prototype.endAddingMessages = function() {
+    // Get the number of new messages since the last call
+    var diff = this._nbMessages - this._oldNbMessages;
+    this._oldNbMessages = this._nbMessages;
+    this._nbMessages = this._tmpNbMessages;
+    this._tmpNbMessages = 0;
+
+    // Update the list of message from the temporary list...
+    this._listConversations = this._tmpListConversations;
+    this._tmpListConversations = [];
+    this._mapMsgId2ConvId = this._tmpMapMsgId2ConvId;
+    this._tmpMapMsgId2ConvId = {};
+    this._mapConvId2IdxList = this._tmpMapConvId2IdxList;
+    this._tmpMapConvId2IdxList = {};
+
+    return diff;
+};
+
+/**
+ * Add the message and indicate the number of new messages
+ *
+ * @this {MessageManager}
+ *
+ * @param {Conversation}
+ *            conv  The conversation to add
+ * @return {Number} Number of new mail
+ */
+zimbra_notifier_MessageManager.prototype.addConversation = function(conv) {
+    var nbNewMsg = 0;
+
+    // For each message of the conversation
+    for (var idxMail = 0; idxMail < conv.mailIdList.length; ++idxMail) {
+        var msgId = conv.mailIdList[idxMail];
+
+        // First check if the message doesn't already exist in temporary list
+        if (this._tmpMapMsgId2ConvId[msgId] !== conv.convId) {
+
+            // Add the message to the map msg id -> conv id
+            this._tmpMapMsgId2ConvId[msgId] = conv.convId;
+
+            // Check if the message is in the old list
+            if (this._mapMsgId2ConvId[msgId] !== conv.convId) {
+                nbNewMsg++;
+                this._nbMessages++;
             }
-            break;
+            this._tmpNbMessages++;
+        }
+
+        // Update or add the conversation info
+        var idxConv = this._tmpMapConvId2IdxList[conv.convId];
+        if (idxConv >= 0) {
+            this._tmpListConversations[idxConv] = conv;
+        }
+        else {
+            this._tmpMapConvId2IdxList[conv.convId] = this._tmpListConversations.length;
+            this._tmpListConversations.push(conv);
         }
     }
-    return nbNewMail;
+
+    return nbNewMsg;
 };

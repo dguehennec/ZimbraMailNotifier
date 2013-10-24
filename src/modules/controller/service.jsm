@@ -38,6 +38,7 @@
 "use strict";
 
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/domain/message.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/notifier.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
@@ -146,7 +147,7 @@ zimbra_notifier_Service.prototype._loadDefault = function() {
     // Calendar events / tasks / unread messages
     this._stopRemoveEvents();
     this._currentTasks = [];
-    this._currentMessageUnRead = [];
+    this._messageUnReadManager = new zimbra_notifier_MessageManager();
     this._idxLoopQuery = 0;
 
     // Delay before trying again the connect
@@ -946,13 +947,36 @@ zimbra_notifier_Service.prototype.callbackWaitNoBlock = function(newEvent) {
  * Generate and notify new message
  *
  * @this {Service}
- * @param {Message[]}
- *            messages messages unread
+ * @param {Conversation[]}
+ *            listConv messages unread
  */
-zimbra_notifier_Service.prototype.callbackNewMessages = function(messages) {
+zimbra_notifier_Service.prototype.callbackNewMessages = function(listConv) {
+    var listNewSubject = [];
+    var nbNewMsg = 0;
+    var lastSender = '';
+
+    try {
+        // Add message received to the message manager
+        for (var idxConv = 0; idxConv < listConv.length; idxConv++) {
+            var conv = listConv[idxConv];
+            var nb = this._messageUnReadManager.addConversation(conv);
+            if (nb > 0) {
+                nbNewMsg += nb;
+                listNewSubject.push(conv.subject);
+                lastSender = conv.senderEmail;
+            }
+        }
+        this._messageUnReadManager.endAddingMessages();
+    }
+    catch (e) {
+        this._logger.error("Failed to read new messages: " + e);
+    }
+
     try {
         var notify = true;
 
+        // Check if we need to notify the user of new messages
+        // Notify the user for the first refresh if the delay between the connect is 'long'
         if (this._firstCallbackNewMsg) {
             this._firstCallbackNewMsg = false;
 
@@ -965,53 +989,47 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(messages) {
             }
         }
 
-        if (notify) {
-            var util = zimbra_notifier_Util;
+        if (notify && nbNewMsg > 0) {
             var title = '';
             var msg = '';
-            var nbMail = 0;
 
-            // Find new unread messages
-            for ( var index = 0; index < messages.length; index++) {
-                var newMessage = messages[index];
-                var nbNewUnReadMail = newMessage.getNbNewMail(this._currentMessageUnRead);
-                if (nbNewUnReadMail > 0) {
-                    nbMail += nbNewUnReadMail;
-                    if (nbMail > 1) {
-                        title = util.getBundleString("connector.notification.nbUnreadMessages");
-                        title = title.replace("%NB%", nbMail);
-                        msg += newMessage.subject + "\n";
-                    }
-                    else if (nbMail === 1) {
-                        title = util.getBundleString("connector.notification.NewMessage");
-                        title = title.replace("%EMAIL%", newMessage.senderEmail);
-                        msg += newMessage.subject + "\n";
-                    }
-                }
+            // Build title
+            if (nbNewMsg > 1) {
+                title = zimbra_notifier_Util.getBundleString("connector.notification.nbUnreadMessages");
+                title = title.replace("%NB%", nbNewMsg);
+            }
+            else {
+                title = zimbra_notifier_Util.getBundleString("connector.notification.NewMessage");
+                title = title.replace("%EMAIL%", lastSender);
+            }
+
+            // Build message
+            for (var idx = 0; idx < listNewSubject.length &&
+                              idx < zimbra_notifier_Constant.SERVICE.NOTIFY_MAX_NB_MSG; ++idx) {
+
+                msg += "\n" + zimbra_notifier_Util.maxStringLength(
+                    listNewSubject[idx], zimbra_notifier_Constant.SERVICE.NOTIFY_MAX_LEN_TITLE) + "\n";
             }
 
             // Notify
-            if (nbMail > 0) {
-                var listener = {
-                    observe : function(subject, topic, data) {
-                        if (topic === "alertclickcallback") {
-                            zimbra_notifier_Browser.openZimbraWebInterface();
-                        }
+            var listener = {
+                observe : function(subject, topic, data) {
+                    if (topic === "alertclickcallback") {
+                        zimbra_notifier_Browser.openZimbraWebInterface();
                     }
-                };
-                if (zimbra_notifier_Prefs.isSoundEnabled()) {
-                    util.playSound();
                 }
-                if (zimbra_notifier_Prefs.isSystemNotificationEnabled()) {
-                    util.showNotificaton(title, msg, null, listener);
-                }
+            };
+            if (zimbra_notifier_Prefs.isSoundEnabled()) {
+                zimbra_notifier_Util.playSound();
+            }
+            if (zimbra_notifier_Prefs.isSystemNotificationEnabled()) {
+                zimbra_notifier_Util.showNotificaton(title, msg, null, listener);
             }
         }
     }
     catch (e) {
         this._logger.error("Failed to notify new messages: " + e);
     }
-    this._currentMessageUnRead = messages;
 
     this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG);
     if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN)) {
@@ -1130,17 +1148,13 @@ zimbra_notifier_Service.prototype.getCurrentState = function() {
 };
 
 /**
- * Get nb of unread messages
+ * Get unread messages manager
  *
  * @this {Service}
- * @return {Number} nb of unread messages
+ * @return {MessageManager} The manager
  */
-zimbra_notifier_Service.prototype.getNbMessageUnread = function() {
-    var nbMessage = 0;
-    for ( var index = 0; index < this._currentMessageUnRead.length; index++) {
-        nbMessage += this._currentMessageUnRead[index].nbMail();
-    }
-    return nbMessage;
+zimbra_notifier_Service.prototype.getMessageManager = function() {
+    return this._messageUnReadManager;
 };
 
 /**
