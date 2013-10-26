@@ -436,7 +436,7 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
             this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_UNREAD_MSG);
 
             if (this._needRunReq(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG)) {
-                this._getWebService().searchUnReadMsg();
+                this._getWebService().searchUnReadMsg(0, 0, 0);
                 break;
             }
 
@@ -947,23 +947,27 @@ zimbra_notifier_Service.prototype.callbackWaitNoBlock = function(newEvent) {
  * Generate and notify new message
  *
  * @this {Service}
- * @param {Conversation[]}
- *            listConv messages unread
+ * @param {Message[]}
+ *            listMsg messages unread
  */
-zimbra_notifier_Service.prototype.callbackNewMessages = function(listConv) {
+zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg) {
+    var mapConvId = {};
     var listNewSubject = [];
     var nbNewMsg = 0;
-    var lastSender = '';
+    var lastSender = null;
 
     try {
         // Add message received to the message manager
-        for (var idxConv = 0; idxConv < listConv.length; idxConv++) {
-            var conv = listConv[idxConv];
-            var nb = this._messageUnReadManager.addConversation(conv);
+        for (var idx = 0; idx < listMsg.length; idx++) {
+            var msg = listMsg[idx];
+            var nb = this._messageUnReadManager.addMessage(msg);
             if (nb > 0) {
                 nbNewMsg += nb;
-                listNewSubject.push(conv.subject);
-                lastSender = conv.senderEmail;
+                lastSender = msg.senderEmail;
+                if (msg.subject && msg.convId && !mapConvId[msg.convId]) {
+                    listNewSubject.push(msg.subject);
+                    mapConvId[msg.convId] = true;
+                }
             }
         }
         this._messageUnReadManager.endAddingMessages();
@@ -994,7 +998,7 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listConv) {
             var msg = '';
 
             // Build title
-            if (nbNewMsg > 1) {
+            if (nbNewMsg > 1 || !lastSender) {
                 title = zimbra_notifier_Util.getBundleString("connector.notification.nbUnreadMessages");
                 title = title.replace("%NB%", nbNewMsg);
             }
@@ -1009,6 +1013,9 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listConv) {
 
                 msg += "\n" + zimbra_notifier_Util.maxStringLength(
                     listNewSubject[idx], zimbra_notifier_Constant.SERVICE.NOTIFY_MAX_LEN_TITLE) + "\n";
+            }
+            if (listNewSubject.length > zimbra_notifier_Constant.SERVICE.NOTIFY_MAX_NB_MSG) {
+                msg += "\n...\n";
             }
 
             // Notify

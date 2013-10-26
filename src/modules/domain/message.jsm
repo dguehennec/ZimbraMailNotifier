@@ -37,16 +37,16 @@
 
 "use strict";
 
-var EXPORTED_SYMBOLS = ["zimbra_notifier_Conversation", "zimbra_notifier_MessageManager"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Message", "zimbra_notifier_MessageManager"];
 
 /**
- * Creates an instance of Conversation.
+ * Creates an instance of Message.
  *
  * @constructor
- * @this {Conversation}
+ * @this {Message}
  *
  * @param {String}
- *            convId the conversation id
+ *            id the message id
  * @param {Number}
  *            timestamp the timestamp message date
  * @param {String}
@@ -56,15 +56,15 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Conversation", "zimbra_notifier_Message
  * @param {String}
  *            senderMail the message sender
  * @param {String}
- *            mailIdList the message id list
+ *            convId the conversation id
  */
-var zimbra_notifier_Conversation = function(convId, timestamp, subject, content, senderMail, mailIdList) {
-    this.convId = convId;
-    this.date = new Date(timestamp);
+var zimbra_notifier_Message = function(id, timestamp, subject, content, senderMail, convId) {
+    this.id = id;
+    this.date = timestamp ? (new Date(timestamp)) : null;
     this.subject = subject;
     this.content = content;
     this.senderEmail = senderMail;
-    this.mailIdList = mailIdList;
+    this.convId = convId;
 };
 
 /**
@@ -79,14 +79,11 @@ var zimbra_notifier_MessageManager = function() {
     this._nbMessages = 0;
     this._tmpNbMessages = 0;
 
-    this._listConversations = [];
-    this._tmpListConversations = [];
+    this._listMessages = [];
+    this._tmpListMessages = [];
 
-    this._mapMsgId2ConvId = {};
-    this._tmpMapMsgId2ConvId = {};
-
-    this._mapConvId2IdxList = {};
-    this._tmpMapConvId2IdxList = {};
+    this._mapMsgId2IdxList = {};
+    this._tmpMapMsgId2IdxList = {};
 };
 
 /**
@@ -115,12 +112,10 @@ zimbra_notifier_MessageManager.prototype.endAddingMessages = function() {
     this._tmpNbMessages = 0;
 
     // Update the list of message from the temporary list...
-    this._listConversations = this._tmpListConversations;
-    this._tmpListConversations = [];
-    this._mapMsgId2ConvId = this._tmpMapMsgId2ConvId;
-    this._tmpMapMsgId2ConvId = {};
-    this._mapConvId2IdxList = this._tmpMapConvId2IdxList;
-    this._tmpMapConvId2IdxList = {};
+    this._listMessages = this._tmpListMessages;
+    this._tmpListMessages = [];
+    this._mapMsgId2IdxList = this._tmpMapMsgId2IdxList;
+    this._tmpMapMsgId2IdxList = {};
 
     return diff;
 };
@@ -130,40 +125,29 @@ zimbra_notifier_MessageManager.prototype.endAddingMessages = function() {
  *
  * @this {MessageManager}
  *
- * @param {Conversation}
- *            conv  The conversation to add
- * @return {Number} Number of new mail
+ * @param {Message}
+ *            msg  The message to add
+ * @return {Number} Number of new mail (0 or 1)
  */
-zimbra_notifier_MessageManager.prototype.addConversation = function(conv) {
+zimbra_notifier_MessageManager.prototype.addMessage = function(msg) {
     var nbNewMsg = 0;
 
-    // For each message of the conversation
-    for (var idxMail = 0; idxMail < conv.mailIdList.length; ++idxMail) {
-        var msgId = conv.mailIdList[idxMail];
-
-        // First check if the message doesn't already exist in temporary list
-        if (this._tmpMapMsgId2ConvId[msgId] !== conv.convId) {
-
-            // Add the message to the map msg id -> conv id
-            this._tmpMapMsgId2ConvId[msgId] = conv.convId;
-
-            // Check if the message is in the old list
-            if (this._mapMsgId2ConvId[msgId] !== conv.convId) {
-                nbNewMsg++;
-                this._nbMessages++;
-            }
-            this._tmpNbMessages++;
+    // First check if the message doesn't already exist in temporary list
+    var idxList = this._tmpMapMsgId2IdxList[msg.id];
+    if (idxList === undefined) {
+        // Check if the message is in the old list
+        if (this._mapMsgId2IdxList[msg.id] === undefined) {
+            nbNewMsg++;
+            this._nbMessages++;
         }
-
-        // Update or add the conversation info
-        var idxConv = this._tmpMapConvId2IdxList[conv.convId];
-        if (idxConv >= 0) {
-            this._tmpListConversations[idxConv] = conv;
-        }
-        else {
-            this._tmpMapConvId2IdxList[conv.convId] = this._tmpListConversations.length;
-            this._tmpListConversations.push(conv);
-        }
+        // Add the message to the temporary list
+        this._tmpMapMsgId2IdxList[msg.id] = this._tmpListMessages.length;
+        this._tmpListMessages.push(msg);
+        this._tmpNbMessages++;
+    }
+    else {
+        // Update the message
+        this._tmpListMessages[idxList] = msg;
     }
 
     return nbNewMsg;

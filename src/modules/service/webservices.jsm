@@ -462,8 +462,14 @@ zimbra_notifier_Webservice.prototype._callbackWaitRequest = function(request) {
  * Search unread message request.
  *
  * @this {Webservice}
+ * @param {Number}
+ *            offset The start index of the returned query
+ * @param {Number}
+ *            limit  The maximum number of result
+ * @param {Boolean}
+ *            onlyId Only message id should be retrieved
  */
-zimbra_notifier_Webservice.prototype.searchUnReadMsg = function() {
+zimbra_notifier_Webservice.prototype.searchUnReadMsg = function(offset, limit, onlyId) {
     var typeReq = zimbra_notifier_REQUEST_TYPE.UNREAD_MSG;
     this._launchQuery(typeReq, true, false, function() {
 
@@ -472,7 +478,19 @@ zimbra_notifier_Webservice.prototype.searchUnReadMsg = function() {
         var dataBody = '';
         dataBody += '"SearchRequest":{';
         dataBody +=    '"_jsns":"urn:zimbraMail",';
-        dataBody +=    '"limit":999,';
+        dataBody +=    '"types":"message",';
+        if (offset > 0) {
+            dataBody += '"offset":' + offset + ',';
+        }
+        if (limit > 0) {
+            dataBody += '"limit":' + limit + ',';
+        }
+        else {
+            dataBody += '"limit":999,';
+        }
+        if (onlyId) {
+            dataBody += '"resultMode":"IDS",';
+        }
         dataBody +=    '"query":{';
         dataBody +=       '"_content":"is:unread"';
         dataBody +=    '}';
@@ -500,19 +518,23 @@ zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(reques
         if (request.isSuccess()) {
             var jsonResponse = request.jsonResponse();
             if (jsonResponse && jsonResponse.Body) {
-                var content = jsonResponse.Body.SearchResponse.c;
+                var content = jsonResponse.Body.SearchResponse.m;
                 if (content) {
-                    for (var iConv = 0; iConv < content.length; ++iConv) {
-                        var currMsg = content[iConv];
-                        var msgIdList = [];
-                        for (var iMsg = 0; iMsg < currMsg.m.length; ++iMsg) {
-                            msgIdList.push(currMsg.m[iMsg].id);
+                    for (var iMsg = 0; iMsg < content.length; ++iMsg) {
+                        var currMsg = content[iMsg];
+                        var eMsg = null;
+                        if (currMsg.e && currMsg.e.length > 0) {
+                            eMsg = currMsg.e[0].a;
                         }
-                        var msg = new zimbra_notifier_Conversation(
-                            currMsg.id, currMsg.d, currMsg.su, currMsg.fr,
-                            currMsg.e[currMsg.e.length-1].a, msgIdList);
-
-                        messages.push(msg);
+                        messages.push(new zimbra_notifier_Message(
+                            currMsg.id, currMsg.d, currMsg.su, currMsg.fr, eMsg, currMsg.cid));
+                    }
+                }
+                content = jsonResponse.Body.SearchResponse.hit;
+                if (content) {
+                    for (var iMsg = 0; iMsg < content.length; ++iMsg) {
+                        messages.push(new zimbra_notifier_Message(
+                            content[iMsg].id, 0, '', '', 0, null));
                     }
                 }
                 isOk = true;
