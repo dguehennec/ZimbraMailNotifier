@@ -1,10 +1,6 @@
- * If SearchRequest set the 'more' flag, read the next results...
-
  * Add systray (Gtk+ code...)
 
  * If WaitSet request failed / timeout, the error may not be displayed : check that
-
- * Rewrite the module that handle error handling
 
  * Automatically detect the max timeout of WaitSet query
 

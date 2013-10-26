@@ -510,6 +510,8 @@ zimbra_notifier_Webservice.prototype.searchUnReadMsg = function(offset, limit, o
  */
 zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(request) {
     var isOk = false;
+    var currentOffset = -1;
+    var nextOffset = -1;
     var messages = [];
     try {
         if (request !== this._runningReq) {
@@ -518,7 +520,16 @@ zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(reques
         if (request.isSuccess()) {
             var jsonResponse = request.jsonResponse();
             if (jsonResponse && jsonResponse.Body) {
-                var content = jsonResponse.Body.SearchResponse.m;
+                // Read message with only id
+                var content = jsonResponse.Body.SearchResponse.hit;
+                if (content) {
+                    for (var iMsg = 0; iMsg < content.length; ++iMsg) {
+                        messages.push(new zimbra_notifier_Message(
+                            content[iMsg].id, 0, '', '', 0, null));
+                    }
+                }
+                // Read message with content
+                content = jsonResponse.Body.SearchResponse.m;
                 if (content) {
                     for (var iMsg = 0; iMsg < content.length; ++iMsg) {
                         var currMsg = content[iMsg];
@@ -530,12 +541,10 @@ zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(reques
                             currMsg.id, currMsg.d, currMsg.su, currMsg.fr, eMsg, currMsg.cid));
                     }
                 }
-                content = jsonResponse.Body.SearchResponse.hit;
-                if (content) {
-                    for (var iMsg = 0; iMsg < content.length; ++iMsg) {
-                        messages.push(new zimbra_notifier_Message(
-                            content[iMsg].id, 0, '', '', 0, null));
-                    }
+                // Get offset and next offset if there is more data to read
+                currentOffset = jsonResponse.Body.SearchResponse.offset;
+                if (jsonResponse.Body.SearchResponse.more) {
+                    nextOffset = currentOffset + messages.length;
                 }
                 isOk = true;
             }
@@ -550,7 +559,7 @@ zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(reques
             this._callbackFailed(request);
         }
         else {
-            this._parent.callbackNewMessages(messages);
+            this._parent.callbackNewMessages(messages, currentOffset, nextOffset);
         }
     }
 };
