@@ -357,6 +357,8 @@ zimbra_notifier_Service.prototype._changeAndRunState = function(newState) {
  *            newState  The state to run
  */
 zimbra_notifier_Service.prototype._runState = function(newState) {
+    var sendRefreshEvent = true;
+
     switch (newState) {
         // We cannot login or we are just disconnected
         case zimbra_notifier_SERVICE_STATE.DISCONNECTED:
@@ -438,55 +440,48 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
 
         // Check unread message
         case zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_UNREAD_MSG);
-
+            sendRefreshEvent = false;
             if (this._needRunReq(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG)) {
-                var onlyId = false;
-                var limit = zimbra_notifier_Constant.SERVICE.NB_MAX_MSG_WITH_CONTENT;
-                if ((this._unreadMessageOffset + 1) >= limit) {
-                    onlyId = true;
-                    limit = 0;
-                }
-                this._getWebService().searchUnReadMsg(this._unreadMessageOffset, limit, onlyId);
+                this._doSearchUnReadMsg();
                 break;
             }
 
         case zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.UNREAD_MSG_UPDATED);
+            if (sendRefreshEvent) {
+                this._parent.event(zimbra_notifier_SERVICE_EVENT.UNREAD_MSG_UPDATED);
+            }
             this._changeState(zimbra_notifier_SERVICE_STATE.CALENDAR_RUN);
 
         // Check calendar
         case zimbra_notifier_SERVICE_STATE.CALENDAR_RUN:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_CALENDAR);
-
+            sendRefreshEvent = false;
             if (zimbra_notifier_Prefs.isCalendarEnabled() &&
                 this._needRunReq(zimbra_notifier_REQUEST_TYPE.CALENDAR)) {
 
-                var date = new Date();
-                var startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
-                var endDate = new Date(date.getTime() +
-                                        (86400000 * zimbra_notifier_Prefs.getCalendarPeriodDisplayed()));
-                this._getWebService().searchCalendar(startDate, endDate);
+                this._doSearchCalendar();
                 break;
             }
 
         case zimbra_notifier_SERVICE_STATE.CALENDAR_ENDED:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.CALENDAR_UPDATED);
+            if (sendRefreshEvent) {
+                this._parent.event(zimbra_notifier_SERVICE_EVENT.CALENDAR_UPDATED);
+            }
             this._changeState(zimbra_notifier_SERVICE_STATE.TASK_RUN);
 
         // Check tasks
         case zimbra_notifier_SERVICE_STATE.TASK_RUN:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_TASK);
-
+            sendRefreshEvent = false;
             if (zimbra_notifier_Prefs.isTaskEnabled() &&
                 this._needRunReq(zimbra_notifier_REQUEST_TYPE.TASK)) {
 
-                this._getWebService().searchTask();
+                this._doSearchTask();
                 break;
             }
 
         case zimbra_notifier_SERVICE_STATE.TASK_ENDED:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.TASK_UPDATED);
+            if (sendRefreshEvent) {
+                this._parent.event(zimbra_notifier_SERVICE_EVENT.TASK_UPDATED);
+            }
             this._changeState(zimbra_notifier_SERVICE_STATE.REFRESH_ENDED);
 
         // Check if we need to try again the queries
@@ -645,6 +640,64 @@ zimbra_notifier_Service.prototype._doConnect = function(password) {
         return true;
     }
     return false;
+};
+
+/**
+ * Run the search query for unread message
+ *
+ * @private
+ * @this {Service}
+ */
+zimbra_notifier_Service.prototype._doSearchUnReadMsg = function() {
+
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN)) {
+
+        var onlyId = false;
+        var limit = zimbra_notifier_Constant.SERVICE.NB_MAX_MSG_WITH_CONTENT;
+        if ((this._unreadMessageOffset + 2) >= limit) {
+            onlyId = true;
+            limit = 0;
+        }
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_UNREAD_MSG);
+        this._getWebService().searchUnReadMsg(this._unreadMessageOffset, limit, onlyId);
+    }
+};
+
+/**
+ * Run the search query for calendar events
+ *
+ * @private
+ * @this {Service}
+ */
+zimbra_notifier_Service.prototype._doSearchCalendar = function() {
+
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CALENDAR_RUN)) {
+
+        var date = new Date();
+        var duration = 86400000 * zimbra_notifier_Prefs.getCalendarPeriodDisplayed();
+        var endDate = new Date(date.getTime() + duration);
+        var startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+        startDate = new Date(startDate.getTime() -
+                             zimbra_notifier_Constant.SERVICE.EVENTS_DELTA_START_FROM_NOW);
+
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_CALENDAR);
+        this._getWebService().searchCalendar(startDate, endDate);
+    }
+};
+
+/**
+ * Run the search query for tasks
+ *
+ * @private
+ * @this {Service}
+ */
+zimbra_notifier_Service.prototype._doSearchTask = function() {
+
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.TASK_RUN)) {
+
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_TASK);
+        this._getWebService().searchTask();
+    }
 };
 
 /**
