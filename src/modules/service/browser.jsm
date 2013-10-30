@@ -61,10 +61,19 @@ var zimbra_notifier_Browser = {
  * @this {Browser}
  * @param {String}
  *            urlWebService  The url of the webservice associated with the cookies
- * @param {Object}
+ * @param {Object[]}
  *            cookies  Array of cookies (object: key, val) needed for authentication
  */
 zimbra_notifier_Browser.updateCookies = function(urlWebService, cookies) {
+
+    if (zimbra_notifier_Prefs.getBrowserSetCookies() && this._urlWebService) {
+        // If we are just disconnected, remove the browser cookie
+        if (!this._getAuthTokenFromList(cookies) &&
+            this._getAuthTokenFromList(this._cookies)) {
+
+            this.removeCookie(this._urlWebService, 'ZM_AUTH_TOKEN');
+        }
+    }
     this._urlWebService = urlWebService;
     this._cookies = cookies;
 };
@@ -166,7 +175,7 @@ zimbra_notifier_Browser.openZimbraWebInterface = function() {
             // Inject cookie if needed
             if (zimbra_notifier_Prefs.getBrowserSetCookies() && this._urlWebService) {
 
-                var tokenWebServ = this._getTokenWebService();
+                var tokenWebServ = this._getAuthTokenFromList(this._cookies);
                 if (tokenWebServ !== null) {
                     // Check if browser token cookie is the same that the token use in this app
                     var tokenBrowser = this.getCookieValue(this._urlWebService, 'ZM_AUTH_TOKEN');
@@ -220,22 +229,18 @@ zimbra_notifier_Browser._setAuthCookies = function() {
 };
 
 /**
- * Find from the cookie array the token cookie value
+ * Find from the cookie array, the auth token value
  *
  * @this {Browser}
  * @private
  */
-zimbra_notifier_Browser._getTokenWebService = function() {
-    try {
-        for (var idx = 0; idx < this._cookies.length; idx++) {
-            var c = this._cookies[idx];
-            if (c.key === 'ZM_AUTH_TOKEN') {
-                return c.val;
+zimbra_notifier_Browser._getAuthTokenFromList = function(cookies) {
+    if (cookies) {
+        for (var idx = 0; idx < cookies.length; idx++) {
+            if (cookies[idx].key === 'ZM_AUTH_TOKEN') {
+                return cookies[idx].val;
             }
         }
-    }
-    catch (e) {
-        this._logger.error("Fail to get token cookie value: " + e);
     }
     return null;
 };
