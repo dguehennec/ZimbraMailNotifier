@@ -78,6 +78,7 @@ var zimbra_notifier_SERVICE_STATE = {
     TASK_ENDED           : 'TASK_ENDED',
     REFRESH_ENDED        : 'REFRESH_ENDED',
 
+    WAITSET_LOOP_START   : 'WAITSET_LOOP_START',
     WAITSET_BLOCK_RUN    : 'WAITSET_BLOCK_RUN',
     WAITSET_NO_BLOCK_RUN : 'WAITSET_NO_BLOCK_RUN',
     WAITSET_NEW_EVT      : 'WAITSET_NEW_EVT',
@@ -503,8 +504,15 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
                                    zimbra_notifier_Constant.SERVICE.REFRESH_WAIT_AFTER_FAILURE);
                 break;
             }
-            else if (this._needCheckAgainWaitSet === true) {
-                // Check again the wait set, fix the bug when a blocking WaitSet query is canceled
+            else {
+                this._changeState(zimbra_notifier_SERVICE_STATE.WAITSET_LOOP_START);
+            }
+
+        // Start the wait set loop
+        case zimbra_notifier_SERVICE_STATE.WAITSET_LOOP_START:
+            this._timeStartLoopWaitReq = new Date().getTime();
+            // Check again the wait set, fix the bug when a blocking WaitSet query is canceled
+            if (this._needCheckAgainWaitSet === true) {
                 this._needCheckAgainWaitSet = false;
                 this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_BLOCK_RUN, 10);
                 break;
@@ -516,16 +524,12 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
         // Launch the blocking query waiting for events
         case zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN:
             this._timeStartWaitReq = new Date().getTime();
-            if (this._timeStartLoopWaitReq === 0) {
-                this._timeStartLoopWaitReq = this._timeStartWaitReq;
-            }
             this._getWebService().waitRequest(true);
             break;
 
         // Launch the non blocking query waitset
         case zimbra_notifier_SERVICE_STATE.WAITSET_NO_BLOCK_RUN:
             this._timeStartWaitReq = 0;
-            this._timeStartLoopWaitReq = new Date().getTime();
             this._getWebService().waitRequest(false);
             break;
 
@@ -542,13 +546,11 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
         // We received a change event
         case zimbra_notifier_SERVICE_STATE.WAITSET_NEW_EVT:
             this._needCheckAgainWaitSet = false;
-            this._timeStartLoopWaitReq = 0;
             this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_CHECK, 1);
             break;
 
         // The wait request failed, or the request did timeout (no new event)
         case zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT:
-            this._needCheckAgainWaitSet = false;
             if (this._timeStartWaitReq === 0) {
                 this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN, 500);
             }
@@ -556,16 +558,24 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
                 var timeEndW = new Date().getTime();
                 // Get the delay to sleep before calling the next state
                 var delayAfterWaitReq = 10;
-                var timeExpW = this._timeStartWaitReq + this._getWebService().getWaitSetTimeout() - 1000;
-                if (timeExpW > timeEndW) {
-                    delayAfterWaitReq = timeExpW - timeEndW;
+                var timeMinW = this._timeStartWaitReq + zimbra_notifier_Constant.SERVICE.WAITSET_MIN_DURATION;
+                if (timeMinW > timeEndW) {
+                    delayAfterWaitReq = timeMinW - timeEndW;
                 }
                 // Check if we need to run again a blocking wait set
                 var timeEndLoop = this._timeStartLoopWaitReq + zimbra_notifier_Prefs.getRequestWaitLoopTime();
                 if (timeEndLoop > timeEndW) {
-                    this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN, delayAfterWaitReq);
+                    // Loop again, check the wait set if necessary
+                    if (this._needCheckAgainWaitSet === true) {
+                        this._needCheckAgainWaitSet = false;
+                        this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_BLOCK_RUN, delayAfterWaitReq);
+                    }
+                    else {
+                        this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN, delayAfterWaitReq);
+                    }
                 }
                 else {
+                    // End of loop
                     this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_CHECK, delayAfterWaitReq);
                 }
             }
@@ -673,12 +683,9 @@ zimbra_notifier_Service.prototype._doSearchCalendar = function() {
 
     if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CALENDAR_RUN)) {
 
-        var date = new Date();
-        var duration = 86400000 * zimbra_notifier_Prefs.getCalendarPeriodDisplayed();
-        var endDate = new Date(date.getTime() + duration);
-        var startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
-        startDate = new Date(startDate.getTime() -
-                             zimbra_notifier_Constant.SERVICE.EVENTS_DELTA_START_FROM_NOW);
+        var dateN = (new Date()).getTime();
+        var endDate = new Date(dateN + (86400000 * zimbra_notifier_Prefs.getCalendarPeriodDisplayed()));
+        var startDate = new Date(dateN - zimbra_notifier_Constant.SERVICE.EVENTS_DELTA_START_FROM_NOW);
 
         this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_CALENDAR);
         this._getWebService().searchCalendar(startDate, endDate);
@@ -864,6 +871,8 @@ zimbra_notifier_Service.prototype.callbackError = function(typeReq, statusReq) {
                     this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_CHECK, 500);
                 }
                 else {
+                    // If the wait query failed, we need to check the wait set
+                    this._needCheckAgainWaitSet = true;
                     this._changeAndRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT);
                 }
             }

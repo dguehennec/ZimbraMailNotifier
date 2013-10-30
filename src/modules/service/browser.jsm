@@ -80,12 +80,9 @@ zimbra_notifier_Browser.updateCookies = function(urlWebService, cookies) {
 zimbra_notifier_Browser.selectOpenedTab = function(url) {
     try {
         var browserEnumerator = Services.wm.getEnumerator("navigator:browser");
-        // Clean url
-        var exp = /(\b(https|http):\/\/)/gi;
-        url = url.replace(exp, "");
-        if (url.lastIndexOf('/') === url.length - 1) {
-            url = url.slice(0, -1);
-        }
+        var uriToMatch = Services.io.newURI(url, null, null);
+        var hostToMatch = uriToMatch.asciiHost;
+        var pathToMatch = uriToMatch.path.match(/^[^?&#]*/)[0];
 
         while (browserEnumerator.hasMoreElements()) {
             var browserInstance = browserEnumerator.getNext().getBrowser();
@@ -94,7 +91,9 @@ zimbra_notifier_Browser.selectOpenedTab = function(url) {
                 // browserInstance <=> https://developer.mozilla.org/en/docs/XUL/tabbrowser
                 // currentTab      <=> https://developer.mozilla.org/en/docs/XUL/browser
                 var currentTab = browserInstance.getBrowserAtIndex(index);
-                if (currentTab.currentURI.spec.indexOf(url) >= 0) {
+                if ((currentTab.currentURI.asciiHost === hostToMatch) &&
+                    (currentTab.currentURI.path.indexOf(pathToMatch) === 0)) {
+
                     browserInstance.selectedTab = browserInstance.tabContainer.childNodes[index];
                     try {
                         browserInstance.contentWindow.focus();
