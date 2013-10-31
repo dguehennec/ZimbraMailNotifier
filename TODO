@@ -1,11 +1,7 @@
  * Add systray (Gtk+ code...)
 
- * If WaitSet request failed / timeout, the error may not be displayed : check that
-
- * Automatically detect the max timeout of WaitSet query
-
  * Calendar events : handle recurring events, and more
 
  * Check if notification (new email) can be displayed longer (Windows + Linux)
- 
+
  * Add new language ES, DE, IT...

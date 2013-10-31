@@ -1,49 +1,49 @@
 .window {
     font-size: 12px;
 }
-#zimbra_mail_notifier-status-icon
-{
+
+#zimbra_mail_notifier-status-icon {
    list-style-image: url("chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier_icon.png");
    -moz-image-region: rect(24px 16px 40px 0px);
 }
-
-#zimbra_mail_notifier-status-icon[status="1"]
-{
+#zimbra_mail_notifier-status-icon[status="1"] {
     -moz-image-region: rect(24px 32px 40px 16px);
 }
-
-#zimbra_mail_notifier-status-icon[status="2"]
-{
+#zimbra_mail_notifier-status-icon[status="2"] {
     -moz-image-region: rect(24px 48px 40px 32px);
+}
+#zimbra_mail_notifier-status-icon[status="3"] {
+    -moz-image-region: rect(24px 64px 40px 48px);
 }
 
 #zimbra_mail_notifier-toolbar-button {
   list-style-image: url("chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier_icon.png");
   -moz-image-region: rect(0px 24px 24px 0px);
 }
-
 toolbar #zimbra_mail_notifier-toolbar-button {
   -moz-binding: url('chrome://zimbra_mail_notifier/content/overlay.xml#zimbra_mail_notifier-toolbarbutton');
 }
-
 toolbar #zimbra_mail_notifier-toolbar-button[status="1"]{
   -moz-image-region: rect(0px 48px 24px 24px);
 }
-
 toolbar #zimbra_mail_notifier-toolbar-button[status="2"]{
   -moz-image-region: rect(0px 72px 24px 48px);
+}
+toolbar #zimbra_mail_notifier-toolbar-button[status="3"]{
+  -moz-image-region: rect(0px 96px 24px 72px);
 }
 
 toolbar[iconsize="small"] #zimbra_mail_notifier-toolbar-button{
   -moz-image-region: rect(24px 16px 40px 0px);
 }
-
 toolbar[iconsize="small"] #zimbra_mail_notifier-toolbar-button[status="1"]{
   -moz-image-region: rect(24px 32px 40px 16px);
 }
-
 toolbar[iconsize="small"] #zimbra_mail_notifier-toolbar-button[status="2"]{
   -moz-image-region: rect(24px 48px 40px 32px);
+}
+toolbar[iconsize="small"] #zimbra_mail_notifier-toolbar-button[status="3"]{
+  -moz-image-region: rect(24px 64px 40px 48px);
 }
 
 toolbar #zimbra_mail_notifier-toolbar-button-label{

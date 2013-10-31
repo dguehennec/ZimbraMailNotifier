@@ -859,12 +859,14 @@ zimbra_notifier_Service.prototype.callbackError = function(typeReq, statusReq) {
             break;
 
         case zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK:
-            if (statusReq === zimbra_notifier_REQUEST_STATUS.TIMEOUT) {
-                // If the request timeout or the waitset id is invalid, do not add error
-                this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK);
-            }
-            else if (statusReq !== zimbra_notifier_REQUEST_STATUS.WAITSET_INVALID) {
+            // Only add an error if the query return quickly
+            if (this._timeStartWaitReq < 1000 || (new Date().getTime()) <
+                (zimbra_notifier_Constant.SERVICE.WAITSET_MIN_DURATION + this._timeStartWaitReq - 500)) {
+
                 this._reqInfoErrors.addError(typeReq, statusReq);
+            }
+            else {
+                this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK);
             }
             if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN)) {
                 if (statusReq === zimbra_notifier_REQUEST_STATUS.WAITSET_INVALID) {
@@ -880,6 +882,7 @@ zimbra_notifier_Service.prototype.callbackError = function(typeReq, statusReq) {
 
         case zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK:
             if (statusReq !== zimbra_notifier_REQUEST_STATUS.WAITSET_INVALID) {
+                // Do not add error for invalid waitset id
                 this._reqInfoErrors.addError(typeReq, statusReq);
             }
             if (this._checkExpectedStates([zimbra_notifier_SERVICE_STATE.WAITSET_CHECK_RUN,
