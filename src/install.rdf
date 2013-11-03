@@ -4,32 +4,16 @@
     <Description about="urn:mozilla:install-manifest">
 
         <em:id>zimbra_mail_notifier@davidguehennec.com</em:id>
-        <em:version>2.0.0</em:version>
+        <em:version>2.1.0</em:version>
         <em:type>2</em:type>
         <em:creator>David GUEHENNEC</em:creator>
         <em:developer>Benjamin ROBIN</em:developer>
         <em:aboutURL>chrome://zimbra_mail_notifier/content/about.xul</em:aboutURL>
         <em:iconURL>chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png</em:iconURL>
         <em:optionsURL>chrome://zimbra_mail_notifier/content/options.xul</em:optionsURL>
-
         <em:name>Zimbra Mail Notifier</em:name>
         <em:description>This extension notifies you when new messages arrive in your zimbra mailbox.</em:description>
-        <em:localized>
-            <Description>
-                <em:locale>en-US</em:locale>
-                <em:name>Zimbra Mail Notifier</em:name>
-                <em:description>This extension notifies you when new messages arrive in your zimbra mailbox.</em:description>
-            </Description>
-        </em:localized>
-        <em:localized>
-            <Description>
-                <em:locale>fr-FR</em:locale>
-                <em:name>Zimbra Mail Notifier</em:name>
-                <em:description>Cette extension vous notifie d'un nouveau mail sur votre messagerie Zimbra</em:description>
-            </Description>
-        </em:localized>
-
-
+       
         <em:targetApplication>
             <Description>
                 <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>

@@ -3,5 +3,9 @@ resource zimbra_mail_notifier    modules/
 skin     zimbra_mail_notifier    classic/1.0      chrome/skin/
 locale   zimbra_mail_notifier    en-US            chrome/locale/en-US/
 locale   zimbra_mail_notifier    fr-FR            chrome/locale/fr-FR/
+locale   zimbra_mail_notifier    de-DE            chrome/locale/de-DE/
+locale   zimbra_mail_notifier    es-ES            chrome/locale/es-ES/
+locale   zimbra_mail_notifier    it-IT            chrome/locale/it-IT/
+locale   zimbra_mail_notifier    pt-BR            chrome/locale/pt-BR/
 style    chrome://global/content/customizeToolbar.xul  chrome://zimbra_mail_notifier/skin/global.css
 overlay  chrome://browser/content/browser.xul          chrome://zimbra_mail_notifier/content/overlay.xul
