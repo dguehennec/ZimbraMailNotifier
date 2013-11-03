@@ -1,0 +1,79 @@
+<!ENTITY title "Zimbra Mail Notifier">
+
+<!ENTITY yes "Ja">
+<!ENTITY no "Keine">
+<!ENTITY week "Woche">
+<!ENTITY weeks "Wochen">
+<!ENTITY time "lal">
+<!ENTITY atTime "Jetzt">
+<!ENTITY minuteBefore "minute vor">
+<!ENTITY minutesBefore "minuten vor">
+<!ENTITY hourBefore "stunde vor">
+<!ENTITY hoursBefore "stunden vor">
+
+<!ENTITY main.checkNow "Aktualisieren...">
+<!ENTITY main.connect "Schließen">
+<!ENTITY main.disconnect "Unterbrechen">
+<!ENTITY main.options.label "Einstellungen">
+<!ENTITY main.about.label "über &title;">
+
+<!ENTITY tooltip.calendar.caption "Nächste Veranstaltungen">
+<!ENTITY tooltip.task.caption "Aktuelle Aufgaben">
+
+<!ENTITY about.homepage.label "Web Site :">
+<!ENTITY about.about.label "&main.about.label;">
+<!ENTITY about.createdby.label "Von :">
+<!ENTITY about.version.label "Version">
+<!ENTITY about.legal.label "Diese Erweiterung ist nicht oder indossiert durch VMware.">
+<!ENTITY about.close.label "Schließen">
+
+<!ENTITY option.option.label "Einstellungen">
+<!ENTITY option.default.label "Allgemeine">
+<!ENTITY option.default.connection.caption "Anschluss">
+<!ENTITY option.default.autoConnect "Auto-Verbindung beim Start">
+<!ENTITY option.default.browserSetCookies "Auto-Verbindung auf das Webinterface">
+<!ENTITY option.default.notification.caption "Benachrichtigung">
+<!ENTITY option.default.systemNotification "System Benachrichtigung">
+<!ENTITY option.default.soundNotification "Akustische Benachrichtigung">
+<!ENTITY option.default.access.caption "Erweiterung Zugang">
+<!ENTITY option.default.statusbar "Statusbar">
+
+<!ENTITY option.calendar.label "Kalender">
+<!ENTITY option.calendar.activate "Aktivieren Kalender Management">
+<!ENTITY option.calendar.view.caption "Angezeigte">
+<!ENTITY option.calendar.view.period.label "Zeitraum angezeigt">
+<!ENTITY option.calendar.view.nbMax.label "Anzahl der Termine maximal angezeigt">
+<!ENTITY option.calendar.notification.caption "Benachrichtigung">
+<!ENTITY option.calendar.systemNotification "System Benachrichtigung">
+<!ENTITY option.calendar.soundNotification "Akustische Benachrichtigung">
+<!ENTITY option.calendar.repeat "Wiederholen">
+
+<!ENTITY option.task.label "Aufgaben">
+<!ENTITY option.task.activate "Aktivieren Aufgaben Management">
+<!ENTITY option.task.view.caption "Angezeigte">
+<!ENTITY option.task.view.reminder "Reminder">
+<!ENTITY option.task.view.confZimbra "Zimbra Konfiguration">
+<!ENTITY option.task.view.nbTasks "Anzahl der Aufgaben maximal angezeigt">
+<!ENTITY option.task.view.nbPriorities "Prioritäten gesetzt">
+<!ENTITY option.task.view.all "Alle">
+<!ENTITY option.task.view.highAndNormal "Hoch und normale">
+<!ENTITY option.task.view.high "Hoch">
+<!ENTITY option.task.view.normal "Normale">
+<!ENTITY option.task.view.low "Niedrig">
+
+<!ENTITY option.identifiant.label "Identifier">
+<!ENTITY option.identifiant.params.caption "Rechnung">
+<!ENTITY option.identifiant.login.label "Anmelden">
+<!ENTITY option.identifiant.password.label "Kennwort">
+<!ENTITY option.identifiant.savePassword.label "Passwort speichern.">
+<!ENTITY option.identifiant.server.caption "Server">
+<!ENTITY option.identifiant.authtype.label "Beglaubigung">
+<!ENTITY option.identifiant.authtype.normal "Normale">
+<!ENTITY option.identifiant.urlwebservice.label "Webdienst-URL">
+<!ENTITY option.identifiant.urlwebservice.tooltip "Die URL der Mail-Dienst, die meiste Zeit das gleiche wie das Web-Interface URL">
+<!ENTITY option.identifiant.urlwebinterface.label "Web interface URL">
+<!ENTITY option.identifiant.urlwebinterface.tooltip "Die URL im Webbrowser angezeigt, wenn verbunden (Optional)">
+<!ENTITY option.identifiant.connect.button "Schließen">
+<!ENTITY option.identifiant.connectCancel.button "Stornieren...">
+<!ENTITY option.identifiant.disconnect.button "Unterbrechen">
+

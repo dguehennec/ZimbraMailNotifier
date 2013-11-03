@@ -17,7 +17,7 @@
                 <hbox flex="1" align="center">
                     <spacer flex="1"/>
                     <text value="&about.version.label;" style="margin-top:4px;"/>
-                    <label value="2.0.0" style="font-weight: bold; font-size: 18px;"/>
+                    <label value="2.1.0" style="font-weight: bold; font-size: 18px;"/>
                 </hbox>
                 <separator class="thin" />
                 <text value="&about.createdby.label;" style="font-weight: bold;" />

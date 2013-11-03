@@ -59,3 +59,6 @@ pref("extensions.zimbra_mail_notifier.requestWaitTimeout", 300000);
 pref("extensions.zimbra_mail_notifier.requestWaitLoopTime", 500000);
 pref("extensions.zimbra_mail_notifier.browserSetCookies", true);
 pref("extensions.zimbra_mail_notifier.browserCookieHttpOnly", false);
+
+//Description
+pref("extensions.zimbra_mail_notifier@davidguehennec.com.description", "chrome://zimbra_mail_notifier/locale/zimbra_mail_notifier.properties");

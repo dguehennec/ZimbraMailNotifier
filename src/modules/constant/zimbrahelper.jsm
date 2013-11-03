@@ -45,7 +45,7 @@ var zimbra_notifier_Constant = {};
  *
  * @constant
  */
-zimbra_notifier_Constant.VERSION = 0x020000;
+zimbra_notifier_Constant.VERSION = 0x020100;
 
 /**
  * Logger level
@@ -53,7 +53,7 @@ zimbra_notifier_Constant.VERSION = 0x020000;
  * @constant
  */
 zimbra_notifier_Constant.LOGGER = {
-    LEVEL : 4,
+    LEVEL : 0,
     PRINT_STACK : false,
     PRINT_DATE : true,
     PRINT_DATA_REQUEST : false
