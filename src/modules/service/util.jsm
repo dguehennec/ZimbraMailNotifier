@@ -214,32 +214,6 @@ zimbra_notifier_Util.playSound = function() {
 };
 
 /**
- * addObserver.
- *
- * @this {Util}
- * @param {Observer}
- *            observer the observer
- * @param {String}
- *            topic the topic
- */
-zimbra_notifier_Util.addObserver = function(observer, topic) {
-    Services.obs.addObserver(observer, topic, false);
-};
-
-/**
- * removeObserver.
- *
- * @this {Util}
- * @param {Observer}
- *            observer the observer
- * @param {String}
- *            topic the topic
- */
-zimbra_notifier_Util.removeObserver = function(observer, topic) {
-    Services.obs.removeObserver(observer, topic);
-};
-
-/**
  * notifyObservers.
  *
  * @this {Util}
@@ -259,15 +233,20 @@ zimbra_notifier_Util.notifyObservers = function(topic, data) {
  *            base The base object
  * @param {Object}
  *            sub  The sub object
+ * @param {String}
+ *            superPropName The name of the property to access of parent "class"
  */
-zimbra_notifier_Util.extend = function(base, sub) {
+zimbra_notifier_Util.extend = function(base, sub, superPropName) {
     var tmp = function() {};
     // Copy the prototype from the base to setup inheritance
     tmp.prototype = base.prototype;
     sub.prototype = new tmp();
     // The constructor property was set wrong, let's fix it
     sub.prototype.constructor = sub;
-    sub.prototype._super = base.prototype;
+    if (!superPropName) {
+        superPropName = '_super';
+    }
+    sub.prototype[superPropName] = base.prototype;
 };
 
 /**

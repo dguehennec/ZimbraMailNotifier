@@ -46,7 +46,6 @@ Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/infoerror.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/browser.jsm");
 
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Service", "zimbra_notifier_SERVICE_EVENT",
                           "zimbra_notifier_SERVICE_STATE"];
@@ -118,7 +117,6 @@ var zimbra_notifier_Service = function(parent) {
 
     this._currentState = zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO;
     this._loadDefault();
-    zimbra_notifier_Util.addObserver(this, zimbra_notifier_Constant.OBSERVER.PREF_SAVED);
 };
 
 /**
@@ -136,7 +134,7 @@ zimbra_notifier_Service.prototype._loadDefault = function() {
     }
 
     // Remove auth cookies
-    zimbra_notifier_Browser.updateCookies('', []);
+    this._parent.getBrowser().updateCookies('', []);
 
     // Timer for state machine
     this._stopStateTimer();
@@ -188,7 +186,6 @@ zimbra_notifier_Service.prototype._stopRemoveEvents = function() {
  */
 zimbra_notifier_Service.prototype.shutdown = function() {
     this._logger.info("Shutdown...");
-    zimbra_notifier_Util.removeObserver(this, zimbra_notifier_Constant.OBSERVER.PREF_SAVED);
     this._loadDefault();
     this._reqInfoErrors.clearAllErrors();
 };
@@ -301,7 +298,7 @@ zimbra_notifier_Service.prototype._changeRunningState = function(newState, delay
  */
 zimbra_notifier_Service.prototype._checkExpectedStates = function(expStates) {
     var ok = false;
-    for ( var idx = 0; idx < expStates.length; idx++) {
+    for (var idx = 0; idx < expStates.length; idx++) {
         if (this._currentState === expStates[idx]) {
             ok = true;
             break;
@@ -772,47 +769,44 @@ zimbra_notifier_Service.prototype.checkNow = function() {
 };
 
 /**
- * observe
+ * Inform that the preferences changed
  *
  * @this {Service}
- * @param {ISupports}
- *            subject the subject
- * @param {String}
- *            topic the topic
- * @param {String}
- *            data the data
+ * @param {Boolean}
+ *            connecting True if the user requested to connect from pref pane
  */
-zimbra_notifier_Service.prototype.observe = function(subject, topic, data) {
-    if (topic === zimbra_notifier_Constant.OBSERVER.PREF_SAVED) {
-        var needRefresh = false;
+zimbra_notifier_Service.prototype.prefUpdated = function(connecting) {
 
-        if (!zimbra_notifier_Prefs.isCalendarEnabled()) {
-            // Clear previous error related to calendar request, and remove any calendar events
-            this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.CALENDAR);
-            this._stopRemoveEvents();
-        }
-        else {
-            needRefresh = true;
-        }
+    var needRefresh = false;
 
-        if (!zimbra_notifier_Prefs.isTaskEnabled()) {
-            // Clear previous error related to task request, and remove any task
-            this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.TASK);
-            this._currentTasks = [];
-        }
-        else {
-            needRefresh = true;
-        }
+    if (!zimbra_notifier_Prefs.isCalendarEnabled()) {
+        // Clear previous error related to calendar request, and remove any calendar events
+        this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.CALENDAR);
+        this._stopRemoveEvents();
+    }
+    else {
+        needRefresh = true;
+    }
 
-        // Inform that the prefs changed
-        this._parent.event(zimbra_notifier_SERVICE_EVENT.PREF_UPDATED);
+    if (!zimbra_notifier_Prefs.isTaskEnabled()) {
+        // Clear previous error related to task request, and remove any task
+        this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.TASK);
+        this._currentTasks = [];
+    }
+    else {
+        needRefresh = true;
+    }
 
-        if (zimbra_notifier_Prefs.isAutoConnectEnabled() && zimbra_notifier_Prefs.isSavePasswordEnabled() &&
-            !this.isConnected() && this._currentState !== zimbra_notifier_SERVICE_STATE.CONNECT_RUN) {
+    // Inform that the prefs changed
+    this._parent.event(zimbra_notifier_SERVICE_EVENT.PREF_UPDATED);
+
+    if (!connecting) {
+        if (zimbra_notifier_Prefs.isAutoConnectEnabled() && zimbra_notifier_Prefs.isSavePasswordEnabled()
+            && !this.isConnected() && this._currentState !== zimbra_notifier_SERVICE_STATE.CONNECT_RUN) {
 
             this.initializeConnection();
         }
-        else if (this.isConnected() && needRefresh && !data) {
+        else if (this.isConnected() && needRefresh) {
             this.checkNow();
         }
     }
@@ -961,7 +955,7 @@ zimbra_notifier_Service.prototype.callbackSessionInfoChanged = function(session)
     zimbra_notifier_Prefs.saveWaitSet(session.waitId(), session.waitSeq(),
                                       session.buildUrl(''), session.user());
 
-    zimbra_notifier_Browser.updateCookies(session.buildUrl(''), session.getAuthCookies());
+    this._parent.getBrowser().updateCookies(session.buildUrl(''), session.getAuthCookies());
 };
 
 /**
@@ -1038,8 +1032,8 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOf
 
     try {
         // Add message received to the message manager
-        for (var idx = 0; idx < listMsg.length; idx++) {
-            var msg = listMsg[idx];
+        for (var idxMsg = 0; idxMsg < listMsg.length; idxMsg++) {
+            var msg = listMsg[idxMsg];
             var nb = this._unreadMessageManager.addMessage(msg);
             if (nb > 0) {
                 nbNewMsg += nb;
@@ -1079,7 +1073,7 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOf
 
         if (notify && nbNewMsg > 0) {
             var title = '';
-            var msg = '';
+            var msgTxt = '';
 
             // Build title
             if (nbNewMsg > 1 || !lastSender) {
@@ -1095,18 +1089,18 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOf
             for (var idx = 0; idx < listNewSubject.length &&
                               idx < zimbra_notifier_Constant.SERVICE.NOTIFY_MAX_NB_MSG; ++idx) {
 
-                msg += "\n" + zimbra_notifier_Util.maxStringLength(
+                msgTxt += "\n" + zimbra_notifier_Util.maxStringLength(
                     listNewSubject[idx], zimbra_notifier_Constant.SERVICE.NOTIFY_MAX_LEN_TITLE) + "\n";
             }
             if (listNewSubject.length > zimbra_notifier_Constant.SERVICE.NOTIFY_MAX_NB_MSG) {
-                msg += "\n...\n";
+                msgTxt += "\n...\n";
             }
 
             // Notify
             var listener = {
                 observe : function(subject, topic, data) {
                     if (topic === "alertclickcallback") {
-                        zimbra_notifier_Browser.openZimbraWebInterface();
+                        this._parent.getBrowser().openWebPage();
                     }
                 }
             };
@@ -1114,7 +1108,7 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOf
                 zimbra_notifier_Util.playSound();
             }
             if (zimbra_notifier_Prefs.isSystemNotificationEnabled()) {
-                zimbra_notifier_Util.showNotificaton(title, msg, null, listener);
+                zimbra_notifier_Util.showNotificaton(title, msgTxt, null, listener);
             }
         }
     }

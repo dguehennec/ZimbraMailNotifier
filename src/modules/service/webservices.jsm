@@ -523,16 +523,16 @@ zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(reques
                 // Read message with only id
                 var content = jsonResponse.Body.SearchResponse.hit;
                 if (content) {
-                    for (var iMsg = 0; iMsg < content.length; ++iMsg) {
+                    for (var iMsgId = 0; iMsgId < content.length; ++iMsgId) {
                         messages.push(new zimbra_notifier_Message(
-                            content[iMsg].id, 0, '', '', 0, null));
+                            content[iMsgId].id, 0, '', '', 0, null));
                     }
                 }
                 // Read message with content
                 content = jsonResponse.Body.SearchResponse.m;
                 if (content) {
-                    for (var iMsg = 0; iMsg < content.length; ++iMsg) {
-                        var currMsg = content[iMsg];
+                    for (var iMsgC = 0; iMsgC < content.length; ++iMsgC) {
+                        var currMsg = content[iMsgC];
                         var eMsg = null;
                         if (currMsg.e && currMsg.e.length > 0) {
                             eMsg = currMsg.e[0].a;
