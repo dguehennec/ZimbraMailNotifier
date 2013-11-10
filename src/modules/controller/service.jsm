@@ -1097,18 +1097,12 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOf
             }
 
             // Notify
-            var listener = {
-                observe : function(subject, topic, data) {
-                    if (topic === "alertclickcallback") {
-                        this._parent.getBrowser().openWebPage();
-                    }
-                }
-            };
             if (zimbra_notifier_Prefs.isSoundEnabled()) {
                 zimbra_notifier_Util.playSound();
             }
             if (zimbra_notifier_Prefs.isSystemNotificationEnabled()) {
-                zimbra_notifier_Util.showNotificaton(title, msgTxt, null, listener);
+                var browser = this._parent.getBrowser();
+                zimbra_notifier_Util.showNotification(title, msgTxt, 0, browser.openWebPage, browser);
             }
         }
     }

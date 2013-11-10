@@ -167,28 +167,59 @@ zimbra_notifier_Util.maxStringLength = function(text, length) {
  * Show notification
  *
  * @param {String}
- *            title
+ *            title The title of the notification
  * @param {String}
- *            text
- * @param {String}
- *            callbackData
+ *            text The text of the notification
+ * @param {Number}
+ *            duration Minimum duration of the notification (ms)
  * @param {Function}
- *            callback
+ *            callback The function to call
+ * @param {String}
+ *            callbackData The context of the function (this)
  *
  * @return {Boolean} true if success
  */
-zimbra_notifier_Util.showNotificaton = function(title, text, callbackData, callback) {
+zimbra_notifier_Util.showNotification = function(title, text, duration, callback, callbackData) {
     try {
+        var listener = null;
         var textClickable = false;
+
         if (callback) {
+            var dateStartNotify = new Date().getTime();
+            var arrayArgs = [].slice.call(arguments, 0);
+
             textClickable = true;
+            listener = {
+                _endTime : (dateStartNotify + duration),
+                observe : function(subject, topic, data) {
+
+                    if (topic === "alertfinished" && Services.appinfo.OS !== "Darwin") {
+
+                        var dateEndNotify = new Date().getTime();
+                        duration = listener._endTime - dateEndNotify;
+                        listener._endTime = 0;
+
+                        if ((dateEndNotify > (dateStartNotify + 3500)) && (duration > 100)) {
+                            arrayArgs[2] = duration;
+                            zimbra_notifier_Util.showNotification.apply(zimbra_notifier_Util, arrayArgs);
+                        }
+                    }
+                    else if (topic === "alertclickcallback") {
+                        listener._endTime = 0;
+                        callback.apply(callbackData, arrayArgs.slice(5));
+                    }
+                }
+            };
         }
+
         var alertsService = Components.classes['@mozilla.org/alerts-service;1'].
                              getService(Components.interfaces.nsIAlertsService);
 
-        alertsService.showAlertNotification('chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png',
-                                            title, text, textClickable, callbackData, callback, "");
-    } catch (e) {
+        alertsService.showAlertNotification(
+            'chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png',
+            title, text, textClickable, null, listener, "zimbra_mail_notifier");
+    }
+    catch (e) {
         return false;
     }
     return true;

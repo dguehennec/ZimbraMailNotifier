@@ -113,9 +113,9 @@ zimbra_notifier_Notifier.prototype._notify = function() {
         zimbra_notifier_Util.playSound();
     }
     if (this._withSystemNotification) {
-        zimbra_notifier_Util.showNotificaton(this._event.startDate.toLocaleString(),
+        zimbra_notifier_Util.showNotification(this._event.startDate.toLocaleString(),
                         zimbra_notifier_Util.getBundleString("connector.notification.event") +
-                        this._event.name, null, null);
+                        this._event.name, 0, null, null);
     }
     if (this._nbRepeat > 0) {
         this._nbRepeat--;
