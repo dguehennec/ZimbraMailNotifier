@@ -174,12 +174,12 @@ zimbra_notifier_Util.maxStringLength = function(text, length) {
  *            duration Minimum duration of the notification (ms)
  * @param {Function}
  *            callback The function to call
- * @param {String}
- *            callbackData The context of the function (this)
+ * @param {Object}
+ *            callbackThis The context of the function (this)
  *
  * @return {Boolean} true if success
  */
-zimbra_notifier_Util.showNotification = function(title, text, duration, callback, callbackData) {
+zimbra_notifier_Util.showNotification = function(title, text, duration, callback, callbackThis) {
     try {
         var listener = null;
         var textClickable = false;
@@ -192,32 +192,41 @@ zimbra_notifier_Util.showNotification = function(title, text, duration, callback
             listener = {
                 _endTime : (dateStartNotify + duration),
                 observe : function(subject, topic, data) {
-
+                    // On Mac OS X, the notification is handled with Growl and is not using
+                    // the plateform independant notification system of firefox
                     if (topic === "alertfinished" && Services.appinfo.OS !== "Darwin") {
 
                         var dateEndNotify = new Date().getTime();
                         duration = listener._endTime - dateEndNotify;
                         listener._endTime = 0;
+                        // If the user do not cancel it : the duration is around 4 seconds
+                        // And the time left to display the notification is more than 0.1s
+                        // And there is at least one opened window : If the user close the browser,
+                        //     stop to display the notification
+                        if ((dateEndNotify > (dateStartNotify + 3900)) && (duration > 100) &&
+                            (Services.wm.getEnumerator("navigator:browser").hasMoreElements())) {
 
-                        if ((dateEndNotify > (dateStartNotify + 3500)) && (duration > 100)) {
                             arrayArgs[2] = duration;
                             zimbra_notifier_Util.showNotification.apply(zimbra_notifier_Util, arrayArgs);
                         }
                     }
                     else if (topic === "alertclickcallback") {
                         listener._endTime = 0;
-                        callback.apply(callbackData, arrayArgs.slice(5));
+                        // Run the callback with the callbackThis as context and with parameter
+                        // the optional arguments passed to the showNotification function
+                        callback.apply(callbackThis, arrayArgs.slice(5));
                     }
                 }
             };
         }
 
+        // Show the notification
         var alertsService = Components.classes['@mozilla.org/alerts-service;1'].
                              getService(Components.interfaces.nsIAlertsService);
 
         alertsService.showAlertNotification(
             'chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png',
-            title, text, textClickable, null, listener, "zimbra_mail_notifier");
+            title, text, textClickable, null, listener, "Zimbra Mail Notifier");
     }
     catch (e) {
         return false;
