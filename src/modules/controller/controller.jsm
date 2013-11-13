@@ -155,7 +155,7 @@ zimbra_notifier_ControllerData.event = function(event) {
  */
 zimbra_notifier_ControllerData._updateBrowserInfo = function() {
     this._browser.setWebPageInfo(zimbra_notifier_Prefs.getUrlUserInterface(),
-                                 zimbra_notifier_Prefs.getBrowserSetCookies(),
+                                 zimbra_notifier_Prefs.isSyncBrowserCookiesEnabled(),
                                  zimbra_notifier_Prefs.isBrowserCookieHttpOnly());
 };
 

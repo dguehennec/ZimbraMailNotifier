@@ -1071,7 +1071,12 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOf
             }
         }
 
-        if (notify && nbNewMsg > 0) {
+        // Play a sound if there is new unread email
+        if (notify && nbNewMsg > 0 && zimbra_notifier_Prefs.isEmailSoundEnabled()) {
+            zimbra_notifier_Util.playSound();
+        }
+        // Display a notification with the new unread email
+        if (notify && nbNewMsg > 0 && zimbra_notifier_Prefs.isEmailNotificationEnabled()) {
             var title = '';
             var msgTxt = '';
 
@@ -1097,13 +1102,9 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOf
             }
 
             // Notify
-            if (zimbra_notifier_Prefs.isSoundEnabled()) {
-                zimbra_notifier_Util.playSound();
-            }
-            if (zimbra_notifier_Prefs.isSystemNotificationEnabled()) {
-                var browser = this._parent.getBrowser();
-                zimbra_notifier_Util.showNotification(title, msgTxt, 0, browser.openWebPage, browser);
-            }
+            var browser = this._parent.getBrowser();
+            zimbra_notifier_Util.showNotification(title, msgTxt,
+                zimbra_notifier_Prefs.getEmailNotificationDuration(), browser.openWebPage, browser);
         }
     }
     catch (e) {
@@ -1149,8 +1150,8 @@ zimbra_notifier_Service.prototype.callbackCalendar = function(events) {
                     // refresh notifier
                     newEvent.notifier.update(newEvent, zimbra_notifier_Prefs.getCalendarReminderTimeConf(),
                                              zimbra_notifier_Prefs.getCalendarReminderNbRepeat(),
-                                             zimbra_notifier_Prefs.isCalendarSoundNotificationEnabled(),
-                                             zimbra_notifier_Prefs.isCalendarSystemNotificationEnabled());
+                                             zimbra_notifier_Prefs.isCalendarSoundEnabled(),
+                                             zimbra_notifier_Prefs.isCalendarNotificationEnabled());
                     break;
                 }
             }
@@ -1158,8 +1159,8 @@ zimbra_notifier_Service.prototype.callbackCalendar = function(events) {
                 newEvent.notifier = new zimbra_notifier_Notifier(
                         newEvent, zimbra_notifier_Prefs.getCalendarReminderTimeConf(),
                         zimbra_notifier_Prefs.getCalendarReminderNbRepeat(),
-                        zimbra_notifier_Prefs.isCalendarSoundNotificationEnabled(),
-                        zimbra_notifier_Prefs.isCalendarSystemNotificationEnabled());
+                        zimbra_notifier_Prefs.isCalendarSoundEnabled(),
+                        zimbra_notifier_Prefs.isCalendarNotificationEnabled());
             }
             newEvents.push(newEvent);
         }

@@ -2,6 +2,7 @@
 
 <!ENTITY yes "Oui">
 <!ENTITY no "Non">
+<!ENTITY seconds "secondes">
 <!ENTITY week "semaine">
 <!ENTITY weeks "semaines">
 <!ENTITY time "fois">
@@ -28,15 +29,16 @@
 <!ENTITY about.close.label "Fermer">
 
 <!ENTITY option.option.label "Préférences">
-<!ENTITY option.default.label "Général">
-<!ENTITY option.default.connection.caption "Connexion">
-<!ENTITY option.default.autoConnect "Connexion automatique au lancement du module">
-<!ENTITY option.default.browserSetCookies "Connexion automatique à l'interface Web">
-<!ENTITY option.default.notification.caption "Notification">
-<!ENTITY option.default.systemNotification "Notification système">
-<!ENTITY option.default.soundNotification "Émettre un son">
-<!ENTITY option.default.access.caption "Moyen d'accès au module">
-<!ENTITY option.default.statusbar "Barre des modules">
+<!ENTITY option.common.label "Général">
+<!ENTITY option.common.connection.caption "Connexion">
+<!ENTITY option.common.autoConnect "Connexion automatique au lancement du module">
+<!ENTITY option.common.browserSetCookies "Connexion automatique à l'interface Web">
+<!ENTITY option.common.mail.notification.caption "Notification e-mail non lu">
+<!ENTITY option.common.mail.systemNotification "Notification système">
+<!ENTITY option.common.mail.soundNotification "Émettre un son">
+<!ENTITY option.common.mail.notify.duration.caption "Durée de la notification">
+<!ENTITY option.common.access.caption "Moyen d'accès au module">
+<!ENTITY option.common.statusbar "Barre des modules">
 
 <!ENTITY option.calendar.label "Calendrier">
 <!ENTITY option.calendar.activate "Activer la gestion du calendrier">

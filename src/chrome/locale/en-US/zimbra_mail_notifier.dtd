@@ -2,6 +2,7 @@
 
 <!ENTITY yes "yes">
 <!ENTITY no "no">
+<!ENTITY seconds "seconds">
 <!ENTITY week "week">
 <!ENTITY weeks "weeks">
 <!ENTITY time "time">
@@ -28,15 +29,16 @@
 <!ENTITY about.close.label "Close">
 
 <!ENTITY option.option.label "Preferences">
-<!ENTITY option.default.label "General">
-<!ENTITY option.default.connection.caption "Connection">
-<!ENTITY option.default.autoConnect "Auto connection on startup">
-<!ENTITY option.default.browserSetCookies "Auto connection on the web interface">
-<!ENTITY option.default.notification.caption "Notification">
-<!ENTITY option.default.systemNotification "System notification">
-<!ENTITY option.default.soundNotification "Sound notification">
-<!ENTITY option.default.access.caption "Extension access">
-<!ENTITY option.default.statusbar "Statusbar">
+<!ENTITY option.common.label "General">
+<!ENTITY option.common.connection.caption "Connection">
+<!ENTITY option.common.autoConnect "Auto connection on startup">
+<!ENTITY option.common.browserSetCookies "Auto connection on the web interface">
+<!ENTITY option.common.mail.notification.caption "Notification unread mail">
+<!ENTITY option.common.mail.systemNotification "System notification">
+<!ENTITY option.common.mail.soundNotification "Sound notification">
+<!ENTITY option.common.mail.notify.duration.caption "Notification duration">
+<!ENTITY option.common.access.caption "Extension access">
+<!ENTITY option.common.statusbar "Statusbar">
 
 <!ENTITY option.calendar.label "Calendar">
 <!ENTITY option.calendar.activate "Enable calendar management">

@@ -2,6 +2,7 @@
 
 <!ENTITY yes "Ja">
 <!ENTITY no "Keine">
+<!ENTITY seconds "TODO">
 <!ENTITY week "Woche">
 <!ENTITY weeks "Wochen">
 <!ENTITY time "lal">
@@ -28,15 +29,16 @@
 <!ENTITY about.close.label "Schließen">
 
 <!ENTITY option.option.label "Einstellungen">
-<!ENTITY option.default.label "Allgemeine">
-<!ENTITY option.default.connection.caption "Anschluss">
-<!ENTITY option.default.autoConnect "Auto-Verbindung beim Start">
-<!ENTITY option.default.browserSetCookies "Auto-Verbindung auf das Webinterface">
-<!ENTITY option.default.notification.caption "Benachrichtigung">
-<!ENTITY option.default.systemNotification "System Benachrichtigung">
-<!ENTITY option.default.soundNotification "Akustische Benachrichtigung">
-<!ENTITY option.default.access.caption "Erweiterung Zugang">
-<!ENTITY option.default.statusbar "Statusbar">
+<!ENTITY option.common.label "Allgemeine">
+<!ENTITY option.common.connection.caption "Anschluss">
+<!ENTITY option.common.autoConnect "Auto-Verbindung beim Start">
+<!ENTITY option.common.browserSetCookies "Auto-Verbindung auf das Webinterface">
+<!ENTITY option.common.mail.notification.caption "Benachrichtigung">
+<!ENTITY option.common.mail.systemNotification "System Benachrichtigung">
+<!ENTITY option.common.mail.soundNotification "Akustische Benachrichtigung">
+<!ENTITY option.common.mail.notify.duration.caption "TODO">
+<!ENTITY option.common.access.caption "Erweiterung Zugang">
+<!ENTITY option.common.statusbar "Statusbar">
 
 <!ENTITY option.calendar.label "Kalender">
 <!ENTITY option.calendar.activate "Aktivieren Kalender Management">
