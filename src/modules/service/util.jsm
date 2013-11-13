@@ -164,6 +164,25 @@ zimbra_notifier_Util.maxStringLength = function(text, length) {
 };
 
 /**
+ * return byte to string
+ *
+ * @this {Util}
+ * @param {Number}
+ *            bytes.
+ * @return {String} bytes in string format.
+ */
+zimbra_notifier_Util.convertBytesToStringValue = function(bytes) {
+    var Unites = {'To' : 40, 'Go' : 30, 'Mo' : 20, 'Ko' : 10};
+    for(var unite in Unites) {
+        var value = bytes/Math.pow(2, Unites[unite]);
+        if(value>=1) {
+            return (value).toFixed(1) + ' ' + unite;
+        }
+    }
+    return '0 Ko';
+};
+
+/**
  * Show notification
  *
  * @param {String}

@@ -252,6 +252,15 @@ com.zimbra.Main.initializeTooltip = function() {
 
         var msgDesc = com.zimbra_notifier_Util.getBundleString("tooltip.connected.description");
         msgDesc = msgDesc.replace("%EMAIL%", com.zimbra_notifier_Prefs.getUserLogin());
+
+        var mailBoxInfo = com.zimbra_notifier_Controller.getMailBoxInfo();
+        if(mailBoxInfo && mailBoxInfo.quotaSize>0) {
+            var msgQuota = com.zimbra_notifier_Util.getBundleString("tooltip.connected.descriptionQuota");
+            msgQuota = msgQuota.replace("%PERCENTAGE%", mailBoxInfo.getPercentageQuotaUsed());
+            msgQuota = msgQuota.replace("%USED%", com.zimbra_notifier_Util.convertBytesToStringValue(mailBoxInfo.quotaUsed));
+            msgQuota = msgQuota.replace("%SIZE%", com.zimbra_notifier_Util.convertBytesToStringValue(mailBoxInfo.quotaSize));
+            msgDesc += "\n" + msgQuota;
+        }
         util.setTextContent("zimbra_mail_notifier_tooltipMessage", msgDesc);
 
         // show calendar
