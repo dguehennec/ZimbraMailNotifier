@@ -398,7 +398,7 @@ zimbra_notifier_Prefs.isEmailSoundEnabled = function() {
  * @return {Number} The duration of the notification in ms
  */
 zimbra_notifier_Prefs.getEmailNotificationDuration = function() {
-    return this.pref_email_notification_duration;
+    return (this.pref_email_notification_duration * 1000);
 };
 
 /**

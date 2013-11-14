@@ -203,7 +203,7 @@ zimbra_notifier_Util.showNotification = function(title, text, duration, callback
                         // And the time left to display the notification is more than 0.1s
                         // And there is at least one opened window : If the user close the browser,
                         //     stop to display the notification
-                        if ((dateEndNotify > (dateStartNotify + 3800)) && (duration > 100) &&
+                        if ((dateEndNotify > (dateStartNotify + 3800)) && (duration > 500) &&
                             (Services.wm.getEnumerator("navigator:browser").hasMoreElements())) {
 
                             arrayArgs[2] = duration;

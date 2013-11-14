@@ -34,16 +34,8 @@
                 <checkbox preference="zimbra_mail_notifier-optionMailSound" label="&option.common.mail.soundNotification;" checked="true"/>
                 <hbox align="center">
                     <label value="&option.common.mail.notify.duration.caption; :"/>
-                    <menulist preference="zimbra_mail_notifier-optionMailNotifyDuration">
-                        <menupopup>
-                            <menuitem label=" 4 &seconds;" value="3500"/>
-                            <menuitem label=" 8 &seconds;" value="7500"/>
-                            <menuitem label="16 &seconds;" value="15500"/>
-                            <menuitem label="24 &seconds;" value="23500"/>
-                            <menuitem label="32 &seconds;" value="31500"/>
-                            <menuitem label="60 &seconds;" value="59500"/>
-                        </menupopup>
-                    </menulist>
+                    <textbox style="max-width:55px" type="number" min="4" max="980" increment="4" preference="zimbra_mail_notifier-optionMailNotifyDuration"/>
+                    <label value="&seconds;"/>
                     <spacer flex="1"/>
                 </hbox>
             </groupbox>
@@ -82,14 +74,7 @@
                 </hbox>
                 <hbox align="center">
                     <label value="&option.calendar.view.nbMax.label; :"/>
-                    <menulist preference="zimbra_mail_notifier-optionCalendarNbDisplayed">
-                        <menupopup>
-                            <menuitem label="5" value="5"/>
-                            <menuitem label="10" value="10"/>
-                            <menuitem label="15" value="15"/>
-                            <menuitem label="20" value="20"/>
-                            </menupopup>
-                    </menulist>
+                    <textbox style="max-width:48px" type="number" min="1" max="30" preference="zimbra_mail_notifier-optionCalendarNbDisplayed"/>
                     <spacer flex="1"/>
                 </hbox>
             </groupbox>
@@ -141,14 +126,7 @@
                     <caption label="&option.task.view.caption;"/>
                     <hbox align="center">
                         <label value="&option.task.view.nbTasks; :"/>
-                        <menulist preference="zimbra_mail_notifier-optionTaskNbDisplayed">
-                            <menupopup>
-                                <menuitem label="5" value="5"/>
-                                <menuitem label="10" value="10"/>
-                                <menuitem label="15" value="15"/>
-                                <menuitem label="20" value="20"/>
-                            </menupopup>
-                        </menulist>
+                        <textbox style="max-width:48px" type="number" min="1" max="30" preference="zimbra_mail_notifier-optionTaskNbDisplayed"/>
                         <spacer flex="1"/>
                     </hbox>
                     <hbox align="center">

@@ -39,7 +39,7 @@ pref("extensions.zimbra_mail_notifier.accessStatusBar", true);
 pref("extensions.zimbra_mail_notifier.autoConnect", false);
 pref("extensions.zimbra_mail_notifier.systemNotificationEnabled", true);
 pref("extensions.zimbra_mail_notifier.soundEnabled", true);
-pref("extensions.zimbra_mail_notifier.emailNotificationDuration", 15500);
+pref("extensions.zimbra_mail_notifier.emailNotificationDuration", 16);
 pref("extensions.zimbra_mail_notifier.calendarEnabled", false);
 pref("extensions.zimbra_mail_notifier.calendarPeriodDisplayed", 14);
 pref("extensions.zimbra_mail_notifier.calendarNbDisplayed", 5);
