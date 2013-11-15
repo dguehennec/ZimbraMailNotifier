@@ -38,13 +38,13 @@
 "use strict";
 
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/calevent.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/message.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/task.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/session.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 
 var EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_TYPE", "zimbra_notifier_Webservice"];
 
@@ -65,6 +65,7 @@ var zimbra_notifier_REQUEST_TYPE = {
     CALENDAR       : 'CALENDAR',
     TASK           : 'TASK'
 };
+zimbra_notifier_Util.deepFreeze(zimbra_notifier_REQUEST_TYPE);
 
 /**
  * Creates an instance of zimbra_notifier_Webservice.
@@ -886,3 +887,7 @@ zimbra_notifier_Webservice.prototype._runCallbackFailLaunch = function(typeReq, 
     }, 1000);
 };
 
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Webservice);

@@ -37,6 +37,8 @@
 
 "use strict";
 
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Message", "zimbra_notifier_MessageManager"];
 
 /**
@@ -66,6 +68,11 @@ var zimbra_notifier_Message = function(id, timestamp, subject, content, senderMa
     this.senderEmail = senderMail;
     this.convId = convId;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Message);
 
 /**
  * Creates an instance of MessageManager.
@@ -152,3 +159,8 @@ zimbra_notifier_MessageManager.prototype.addMessage = function(msg) {
 
     return nbNewMsg;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_MessageManager);

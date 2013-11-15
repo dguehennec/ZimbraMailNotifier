@@ -172,3 +172,8 @@ zimbra_notifier_Notifier.prototype.update = function(event, timeConf, nbRepeat,
         this.start();
     }
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Notifier);

@@ -37,8 +37,8 @@
 "use strict";
 
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/session.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
@@ -112,7 +112,6 @@ zimbra_notifier_SessionFree.prototype.getAuthCookies = function() {
     cookies.push({ key: 'SID', val: this._sid, httpOnly: false});
     return cookies;
 };
-
 
 /********************** Request **********************/
 
@@ -287,3 +286,8 @@ zimbra_notifier_WebserviceFree.prototype._buildQueryReq = function(typeReq, url,
     return new zimbra_notifier_RequestFree(typeReq, this._timeoutQuery,
                                            this._session.buildUrl(url), this, callback);
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_WebserviceFree);

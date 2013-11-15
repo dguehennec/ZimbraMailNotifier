@@ -326,3 +326,29 @@ zimbra_notifier_Util.dump = function(obj, pref) {
         }
     }
 };
+
+/**
+ * Freeze enum / constant object recursively
+ *
+ * @param {Object}
+ *            obj The object to freeze
+ */
+zimbra_notifier_Util.deepFreeze = function(obj) {
+    // First freeze the object
+    Object.freeze(obj);
+    // Iterate over properties of object
+    for (var propKey in obj) {
+        if (obj.hasOwnProperty(propKey)) {
+            var prop = obj[propKey];
+            if (typeof(prop) === 'object') {
+                zimbra_notifier_Util.deepFreeze(prop);
+            }
+        }
+    }
+    return obj;
+};
+
+/**
+ * Prevent any modifications of the Util object
+ */
+Object.seal(zimbra_notifier_Util);

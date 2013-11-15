@@ -39,6 +39,7 @@
 
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Prefs"];
 
@@ -96,6 +97,7 @@ zimbra_notifier_Prefs.PREF = {
     USER_PASSWORD_HOSTNAME   : "chrome://zimbra_mail_notifier/",
     USER_PASSWORD_ACTIONURL  : "defaultPassword"
 };
+zimbra_notifier_Util.deepFreeze(zimbra_notifier_Prefs.PREF);
 
 /**
  * Load preferences
@@ -827,3 +829,8 @@ zimbra_notifier_Prefs._setPassword = function(url, actionURL, username, password
  * Initialize the preference
  */
 zimbra_notifier_Prefs.init();
+
+/**
+ * Prevent any futher modifications of the Prefs object
+ */
+Object.seal(zimbra_notifier_Prefs);

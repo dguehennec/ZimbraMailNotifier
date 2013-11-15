@@ -37,6 +37,8 @@
 
 "use strict";
 
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+
 var EXPORTED_SYMBOLS = ["zimbra_notifier_CalEvent"];
 
 /**
@@ -104,3 +106,8 @@ zimbra_notifier_CalEvent.prototype.dateBeginW1 = function(year) {
     var dateDay4 = new Date(year, 0, 4, 0, 0, 0, 0);
     return new Date(dateDay4.getTime() - (dateDay4.getDay() * 86400000));
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_CalEvent);

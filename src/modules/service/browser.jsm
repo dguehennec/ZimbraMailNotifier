@@ -37,6 +37,7 @@
 "use strict";
 
 Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Browser", "zimbra_notifier_BrowserUtil"];
@@ -199,6 +200,11 @@ zimbra_notifier_BrowserUtil.removeCookie = function(url, key) {
     }
 };
 
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_BrowserUtil);
+
 /************************** Browser controller ***********************/
 
 /**
@@ -339,3 +345,8 @@ zimbra_notifier_Browser.prototype._getAuthTokenFromList = function(cookies) {
     }
     return null;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Browser);

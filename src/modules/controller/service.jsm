@@ -38,10 +38,10 @@
 "use strict";
 
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/message.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/notifier.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
@@ -83,22 +83,24 @@ var zimbra_notifier_SERVICE_STATE = {
     WAITSET_NEW_EVT      : 'WAITSET_NEW_EVT',
     WAITSET_NO_NEW_EVT   : 'WAITSET_NO_NEW_EVT'
 };
+zimbra_notifier_Util.deepFreeze(zimbra_notifier_SERVICE_STATE);
 
 var zimbra_notifier_SERVICE_EVENT = {
-    STOPPED              : 'STOPPED',
-    CONNECTING           : 'CONNECTING',
-    INVALID_LOGIN        : 'INVALID_LOGIN',
-    CONNECT_ERR          : 'CONNECT_ERR',
-    CONNECTED            : 'CONNECTED',
-    DISCONNECTED         : 'DISCONNECTED',
-    CHECKING_UNREAD_MSG  : 'CHECKING_UNREAD_MSG',
-    UNREAD_MSG_UPDATED   : 'UNREAD_MSG_UPDATED',
-    CHECKING_CALENDAR    : 'CHECKING_CALENDAR',
-    CALENDAR_UPDATED     : 'CALENDAR_UPDATED',
-    CHECKING_TASK        : 'CHECKING_TASK',
-    TASK_UPDATED         : 'TASK_UPDATED',
-    PREF_UPDATED         : 'PREF_UPDATED'
+    STOPPED              : { startingReq: false, n: 'STOPPED'},
+    CONNECTING           : { startingReq: false, n: 'CONNECTING'},
+    INVALID_LOGIN        : { startingReq: false, n: 'INVALID_LOGIN'},
+    CONNECT_ERR          : { startingReq: false, n: 'CONNECT_ERR'},
+    CONNECTED            : { startingReq: false, n: 'CONNECTED'},
+    DISCONNECTED         : { startingReq: false, n: 'DISCONNECTED'},
+    CHECKING_UNREAD_MSG  : { startingReq: true,  n: 'CHECKING_UNREAD_MSG'},
+    UNREAD_MSG_UPDATED   : { startingReq: false, n: 'UNREAD_MSG_UPDATED'},
+    CHECKING_CALENDAR    : { startingReq: true,  n: 'CHECKING_CALENDAR'},
+    CALENDAR_UPDATED     : { startingReq: false, n: 'CALENDAR_UPDATED'},
+    CHECKING_TASK        : { startingReq: true,  n: 'CHECKING_TASK'},
+    TASK_UPDATED         : { startingReq: false, n: 'TASK_UPDATED'},
+    PREF_UPDATED         : { startingReq: false, n: 'PREF_UPDATED'}
 };
+zimbra_notifier_Util.deepFreeze(zimbra_notifier_SERVICE_EVENT);
 
 /* ******************* Init functions *********************** */
 
@@ -1276,3 +1278,8 @@ zimbra_notifier_Service.prototype.getTasks = function() {
 zimbra_notifier_Service.prototype.getLastError = function() {
     return this._reqInfoErrors.getLastError();
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Service);

@@ -36,6 +36,7 @@
 
 "use strict";
 
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 
 var EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_STATUS", "zimbra_notifier_Request"];
@@ -61,6 +62,7 @@ var zimbra_notifier_REQUEST_STATUS = {
     WAITSET_INVALID : 8,
     REQUEST_INVALID : 9
 };
+zimbra_notifier_Util.deepFreeze(zimbra_notifier_REQUEST_STATUS);
 
 /**
  * Creates an instance of zimbra_notifier_Request.
@@ -527,3 +529,8 @@ zimbra_notifier_Request.prototype._findStatusFromZimbraErrorCode = function(zimb
     }
     return zimbra_notifier_REQUEST_STATUS.INTERNAL_ERROR;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Request);

@@ -377,6 +377,11 @@ zimbra_notifier_Controller.openZimbraWebInterface = function() {
     zimbra_notifier_ControllerData.getBrowser().openWebPage();
 };
 
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Controller);
+
 /* ******************* Detect application events *********************** */
 
 var zimbra_notifier_Observer = {

@@ -37,6 +37,8 @@
 
 "use strict";
 
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Task"];
 
 /**
@@ -60,3 +62,8 @@ var zimbra_notifier_Task = function(name, timestamp, percentComplete, priority) 
     this.percentComplete = percentComplete;
     this.priority = priority;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Task);

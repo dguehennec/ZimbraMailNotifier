@@ -36,6 +36,8 @@
 
 "use strict";
 
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+
 var EXPORTED_SYMBOLS = ["zimbra_notifier_InfoErrors"];
 
 /**
@@ -180,3 +182,8 @@ zimbra_notifier_InfoErrors.prototype.getLastError = function() {
     }
     return null;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_InfoErrors);

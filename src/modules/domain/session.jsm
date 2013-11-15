@@ -38,6 +38,7 @@
 "use strict";
 
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Session"];
 
@@ -299,3 +300,8 @@ zimbra_notifier_Session.prototype._valToStr = function(val) {
     }
     return '' + val;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Session);

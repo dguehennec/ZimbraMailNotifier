@@ -105,17 +105,11 @@ com.zimbra.Main.release = function() {
 com.zimbra.Main.refresh = function(event) {
     var util = com.zimbra.UiUtil;
 
-    switch (event) {
-
-    case com.zimbra_notifier_SERVICE_EVENT.CONNECTING:
-    case com.zimbra_notifier_SERVICE_EVENT.CHECKING_UNREAD_MSG:
-    case com.zimbra_notifier_SERVICE_EVENT.CHECKING_CALENDAR:
-    case com.zimbra_notifier_SERVICE_EVENT.CHECKING_TASK:
+    if (event && event.startingReq) {
         util.setAttribute("zimbra_mail_notifier-status-icon", "status", "2");
         util.setAttribute("zimbra_mail_notifier-toolbar-button", "status", "2");
-        break;
-
-    default:
+    }
+    else {
         var nbUnreadMessages = -1;
         if (com.zimbra_notifier_Controller.isConnected()) {
             var hasError = (com.zimbra_notifier_Controller.getLastErrorMessage() !== '');
@@ -160,7 +154,6 @@ com.zimbra.Main.refresh = function(event) {
         else {
             util.setAttribute("zimbra_mail_notifier-toolbar-button-label", "value", "");
         }
-        break;
     }
 };
 

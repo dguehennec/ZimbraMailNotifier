@@ -129,3 +129,6 @@ zimbra_notifier_Constant.WEBSERVICE = {
     COOKIE_KEY_TOKEN : "ZM_AUTH_TOKEN"
 };
 
+// Freeze the constants
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+zimbra_notifier_Util.deepFreeze(zimbra_notifier_Constant);
