@@ -1,81 +1,81 @@
 <!ENTITY title "Zimbra Mail Notifier">
 
 <!ENTITY yes "Ja">
-<!ENTITY no "Keine">
+<!ENTITY no "Nein">
 <!ENTITY seconds "TODO">
-<!ENTITY week "Woche">
-<!ENTITY weeks "Wochen">
-<!ENTITY time "lal">
-<!ENTITY atTime "Jetzt">
-<!ENTITY minuteBefore "minute vor">
-<!ENTITY minutesBefore "minuten vor">
-<!ENTITY hourBefore "stunde vor">
-<!ENTITY hoursBefore "stunden vor">
+<!ENTITY week "woche">
+<!ENTITY weeks "wochen">
+<!ENTITY time "Zeit">
+<!ENTITY atTime "zurzeit">
+<!ENTITY minuteBefore "Minute zuvor">
+<!ENTITY minutesBefore "Minuten zuvor">
+<!ENTITY hourBefore "Stunde zuvor">
+<!ENTITY hoursBefore "Stunden zuvor">
 
-<!ENTITY main.checkNow "Aktualisieren...">
-<!ENTITY main.connect "Schließen">
-<!ENTITY main.disconnect "Unterbrechen">
+<!ENTITY main.checkNow "Aktualisieren">
+<!ENTITY main.connect "Verbinden">
+<!ENTITY main.disconnect "Trennen">
 <!ENTITY main.options.label "Einstellungen">
-<!ENTITY main.about.label "über &title;">
+<!ENTITY main.about.label "About &title;">
 
-<!ENTITY tooltip.calendar.caption "Nächste Veranstaltungen">
-<!ENTITY tooltip.task.caption "Aktuelle Aufgaben">
+<!ENTITY tooltip.calendar.caption "Nächste Events">
+<!ENTITY tooltip.task.caption "Derzeitige Aufgaben">
 
-<!ENTITY about.homepage.label "Web Site :">
+<!ENTITY about.homepage.label "Website:">
 <!ENTITY about.about.label "&main.about.label;">
-<!ENTITY about.createdby.label "Von :">
+<!ENTITY about.createdby.label "Von:">
 <!ENTITY about.version.label "Version">
-<!ENTITY about.legal.label "Diese Erweiterung ist nicht oder indossiert durch VMware.">
+<!ENTITY about.legal.label "Diese Erweiterung ist nicht zugehörig zu VMware.">
 <!ENTITY about.close.label "Schließen">
 
 <!ENTITY option.option.label "Einstellungen">
-<!ENTITY option.common.label "Allgemeine">
-<!ENTITY option.common.connection.caption "Anschluss">
-<!ENTITY option.common.autoConnect "Auto-Verbindung beim Start">
-<!ENTITY option.common.browserSetCookies "Auto-Verbindung auf das Webinterface">
+<!ENTITY option.common.label "Generell">
+<!ENTITY option.common.connection.caption "Verbindung">
+<!ENTITY option.common.autoConnect "Automatisch Einloggen beim Start">
+<!ENTITY option.common.browserSetCookies "Automatisch Einloggen auf das Webinterface">
 <!ENTITY option.common.mail.notification.caption "Benachrichtigung">
 <!ENTITY option.common.mail.systemNotification "System Benachrichtigung">
-<!ENTITY option.common.mail.soundNotification "Akustische Benachrichtigung">
+<!ENTITY option.common.mail.soundNotification "Sound-Benachrichtigung">
 <!ENTITY option.common.mail.notify.duration.caption "TODO">
-<!ENTITY option.common.access.caption "Erweiterung Zugang">
-<!ENTITY option.common.statusbar "Statusbar">
+<!ENTITY option.common.access.caption "Erweiterungszugang">
+<!ENTITY option.common.statusbar "Statusleiste">
 
 <!ENTITY option.calendar.label "Kalender">
-<!ENTITY option.calendar.activate "Aktivieren Kalender Management">
-<!ENTITY option.calendar.view.caption "Angezeigte">
+<!ENTITY option.calendar.activate "Kalendermanagement aktivieren">
+<!ENTITY option.calendar.view.caption "Anzeige">
 <!ENTITY option.calendar.view.period.label "Zeitraum angezeigt">
-<!ENTITY option.calendar.view.nbMax.label "Anzahl der Termine maximal angezeigt">
+<!ENTITY option.calendar.view.nbMax.label "Anzahl an Terminen maximal angezeigt">
 <!ENTITY option.calendar.notification.caption "Benachrichtigung">
-<!ENTITY option.calendar.systemNotification "System Benachrichtigung">
-<!ENTITY option.calendar.soundNotification "Akustische Benachrichtigung">
+<!ENTITY option.calendar.systemNotification "System-Benachrichtigung">
+<!ENTITY option.calendar.soundNotification "Sound-Benachrichtigung">
 <!ENTITY option.calendar.repeat "Wiederholen">
 
 <!ENTITY option.task.label "Aufgaben">
-<!ENTITY option.task.activate "Aktivieren Aufgaben Management">
-<!ENTITY option.task.view.caption "Angezeigte">
-<!ENTITY option.task.view.reminder "Reminder">
+<!ENTITY option.task.activate "Aufgabenmanagement aktivieren">
+<!ENTITY option.task.view.caption "Anzeige">
+<!ENTITY option.task.view.reminder "Erinnerung">
 <!ENTITY option.task.view.confZimbra "Zimbra Konfiguration">
-<!ENTITY option.task.view.nbTasks "Anzahl der Aufgaben maximal angezeigt">
-<!ENTITY option.task.view.nbPriorities "Prioritäten gesetzt">
+<!ENTITY option.task.view.nbTasks "Anzahl an Aufgaben maximal angezeigt">
+<!ENTITY option.task.view.nbPriorities "Prioritäten setzen">
 <!ENTITY option.task.view.all "Alle">
-<!ENTITY option.task.view.highAndNormal "Hoch und normale">
+<!ENTITY option.task.view.highAndNormal "Hoch und Normal">
 <!ENTITY option.task.view.high "Hoch">
-<!ENTITY option.task.view.normal "Normale">
+<!ENTITY option.task.view.normal "Normal">
 <!ENTITY option.task.view.low "Niedrig">
 
-<!ENTITY option.identifiant.label "Identifier">
-<!ENTITY option.identifiant.params.caption "Rechnung">
-<!ENTITY option.identifiant.login.label "Anmelden">
-<!ENTITY option.identifiant.password.label "Kennwort">
-<!ENTITY option.identifiant.savePassword.label "Passwort speichern.">
+<!ENTITY option.identifiant.label "Identifizierer">
+<!ENTITY option.identifiant.params.caption "Account">
+<!ENTITY option.identifiant.login.label "Login">
+<!ENTITY option.identifiant.password.label "Passwort">
+<!ENTITY option.identifiant.savePassword.label "Passwort merken">
 <!ENTITY option.identifiant.server.caption "Server">
 <!ENTITY option.identifiant.authtype.label "Beglaubigung">
-<!ENTITY option.identifiant.authtype.normal "Normale">
-<!ENTITY option.identifiant.urlwebservice.label "Webdienst-URL">
+<!ENTITY option.identifiant.authtype.normal "Normal">
+<!ENTITY option.identifiant.urlwebservice.label "Server URL">
 <!ENTITY option.identifiant.urlwebservice.tooltip "Die URL der Mail-Dienst, die meiste Zeit das gleiche wie das Web-Interface URL">
-<!ENTITY option.identifiant.urlwebinterface.label "Web interface URL">
+<!ENTITY option.identifiant.urlwebinterface.label "Web-Interface URL">
 <!ENTITY option.identifiant.urlwebinterface.tooltip "Die URL im Webbrowser angezeigt, wenn verbunden (Optional)">
-<!ENTITY option.identifiant.connect.button "Schließen">
-<!ENTITY option.identifiant.connectCancel.button "Stornieren...">
-<!ENTITY option.identifiant.disconnect.button "Unterbrechen">
+<!ENTITY option.identifiant.connect.button "Verbinden">
+<!ENTITY option.identifiant.connectCancel.button "Warten...">
+<!ENTITY option.identifiant.disconnect.button "Trennen">
 
