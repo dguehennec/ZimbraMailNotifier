@@ -101,20 +101,15 @@ toolbar[iconsize="small"] #zimbra_mail_notifier-toolbar-button-label{
     color: red;
 }
 
-#zimbra_mail_notifier_tooltipCalendar,#zimbra_mail_notifier_tooltipTask
-{
+#zimbra_mail_notifier_tooltipCalendar,#zimbra_mail_notifier_tooltipTask {
     margin:0px 6px;
     width: 250px;
 }
 
-#zimbra_mail_notifier_tooltipMessage
-{
-    margin:0px 6px;
-    width: 190px;
-}
-
 #zimbra_mail_notifier_tooltipMessage {
+    margin:0px 6px;
     font-size: 11px;
+    max-width: 300px;
 }
 
 .eventLabelDate{

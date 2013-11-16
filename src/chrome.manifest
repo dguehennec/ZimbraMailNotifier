@@ -7,5 +7,6 @@ locale   zimbra_mail_notifier    de-DE            chrome/locale/de-DE/
 locale   zimbra_mail_notifier    es-ES            chrome/locale/es-ES/
 locale   zimbra_mail_notifier    it-IT            chrome/locale/it-IT/
 locale   zimbra_mail_notifier    pt-BR            chrome/locale/pt-BR/
+locale   zimbra_mail_notifier    pt-PT            chrome/locale/pt-PT/
 style    chrome://global/content/customizeToolbar.xul  chrome://zimbra_mail_notifier/skin/global.css
 overlay  chrome://browser/content/browser.xul          chrome://zimbra_mail_notifier/content/overlay.xul

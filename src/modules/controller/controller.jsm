@@ -270,6 +270,17 @@ zimbra_notifier_Controller.isConnecting = function() {
 };
 
 /**
+ * Get MailBox Info
+ *
+ * @this {Controller}
+ * @return {MailBoxInfo} mailBoxInfo
+ */
+zimbra_notifier_Controller.getMailBoxInfo = function() {
+    var srv = zimbra_notifier_ControllerData.getService();
+    return srv ? srv.getMailBoxInfo() : null;
+};
+
+/**
  * Get nb of unread messages
  *
  * @this {Controller}
@@ -326,6 +337,9 @@ zimbra_notifier_Controller.getLastErrorMessage = function() {
             case zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK:
             case zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK:
                 message = util.getBundleString("connector.error.wait");
+                break;
+            case zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO:
+                message = util.getBundleString("connector.error.mailboxinfo");
                 break;
             case zimbra_notifier_REQUEST_TYPE.UNREAD_MSG:
                 message = util.getBundleString("connector.error.unreadmsg");

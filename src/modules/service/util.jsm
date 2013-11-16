@@ -164,6 +164,41 @@ zimbra_notifier_Util.maxStringLength = function(text, length) {
 };
 
 /**
+ * return byte to string
+ *
+ * @this {Util}
+ * @param {Number}
+ *            bytes.
+ * @return {String} bytes in string format.
+ */
+zimbra_notifier_Util.convertBytesToStringValue = function(bytes) {
+    var v = 0;
+    var unit = 'unit.bytes.B';
+
+    if (bytes >= 1099511627776) {
+        v = bytes / 1099511627776;
+        unit = 'unit.bytes.TB';
+    }
+    else if (bytes >= 1073741824) {
+        v = bytes / 1073741824;
+        unit = 'unit.bytes.GB';
+    }
+    else if (bytes >= 1048576) {
+        v = bytes / 1048576;
+        unit = 'unit.bytes.MB';
+    }
+    else if (bytes >= 1024) {
+        v = bytes / 1024;
+        unit = 'unit.bytes.KB';
+    }
+    else if (bytes >= 0) {
+        v = bytes;
+    }
+
+    return v.toFixed(1) + ' ' + zimbra_notifier_Util.getBundleString(unit);
+};
+
+/**
  * Show notification
  *
  * @param {String}

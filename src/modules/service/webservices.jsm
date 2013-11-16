@@ -42,6 +42,7 @@ Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/calevent.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/message.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/task.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/domain/mailboxinfo.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/session.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
@@ -61,6 +62,7 @@ var zimbra_notifier_REQUEST_TYPE = {
     CREATE_WAIT    : 'CREATE_WAIT',
     WAIT_BLOCK     : 'WAIT_BLOCK',
     WAIT_NO_BLOCK  : 'WAIT_NO_BLOCK',
+    MAILBOX_INFO   : 'MAILBOX_INFO',
     UNREAD_MSG     : 'UNREAD_MSG',
     CALENDAR       : 'CALENDAR',
     TASK           : 'TASK'
@@ -727,6 +729,68 @@ zimbra_notifier_Webservice.prototype._callbackTaskRequest = function(request) {
         }
         else {
              this._parent.callbackTask(tasks);
+        }
+    }
+};
+
+/**
+ * MailBox Info request.
+ *
+ * @this {Webservice}
+ */
+zimbra_notifier_Webservice.prototype.getMailBoxInfo = function() {
+    var typeReq = zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO;
+    this._launchQuery(typeReq, true, false, function() {
+
+        this._runningReq = this._buildQueryReq(typeReq, "/service/soap/GetInfoRequest",
+                                               this._callbackGetMailBoxInfoRequest);
+        var dataBody = '';
+        dataBody += '"GetInfoRequest":{';
+        dataBody +=    '"_jsns":"urn:zimbraAccount",';
+        dataBody +=    '"sections":"mbox,attrs",';
+        dataBody +=    '"rights":""';
+        dataBody += '}';
+
+        this._runningReq.setQueryRequest(this._session, dataBody);
+        return true;
+    });
+};
+
+/**
+ * callbackGetMailBoxInfoRequestSuccess.
+ *
+ * @private
+ * @this {Webservice}
+ * @param {Request}
+ *            object request
+ */
+zimbra_notifier_Webservice.prototype._callbackGetMailBoxInfoRequest = function(request) {
+    var mailBoxInfo = null;
+    try {
+        if (request !== this._runningReq) {
+            this._logger.error("The running task request != callback object");
+        }
+        if (request.isSuccess()) {
+            var jsonResponse = request.jsonResponse();
+            if (jsonResponse && jsonResponse.Body) {
+                var content = jsonResponse.Body.GetInfoResponse;
+                if (content) {
+                    mailBoxInfo = new zimbra_notifier_MailBoxInfo(
+                        content.version, content.attrs._attrs.zimbraMailQuota, content.used);
+                }
+            }
+        }
+    }
+    catch (e) {
+        this._logger.error("Callback MailBox Info request error:" + e);
+    }
+    finally {
+        this._runningReq = null;
+        if (mailBoxInfo === null) {
+            this._callbackFailed(request);
+        }
+        else {
+             this._parent.callbackMailBoxInfo(mailBoxInfo);
         }
     }
 };

@@ -75,6 +75,8 @@ var zimbra_notifier_SERVICE_STATE = {
     CALENDAR_ENDED       : 'CALENDAR_ENDED',
     TASK_RUN             : 'TASK_RUN',
     TASK_ENDED           : 'TASK_ENDED',
+    MAILBOX_INFO_RUN     : 'MAILBOX_INFO_RUN',
+    MAILBOX_INFO_ENDED   : 'MAILBOX_INFO_ENDED',
     REFRESH_ENDED        : 'REFRESH_ENDED',
 
     WAITSET_LOOP_START   : 'WAITSET_LOOP_START',
@@ -86,19 +88,21 @@ var zimbra_notifier_SERVICE_STATE = {
 zimbra_notifier_Util.deepFreeze(zimbra_notifier_SERVICE_STATE);
 
 var zimbra_notifier_SERVICE_EVENT = {
-    STOPPED              : { startingReq: false, n: 'STOPPED'},
-    CONNECTING           : { startingReq: false, n: 'CONNECTING'},
-    INVALID_LOGIN        : { startingReq: false, n: 'INVALID_LOGIN'},
-    CONNECT_ERR          : { startingReq: false, n: 'CONNECT_ERR'},
-    CONNECTED            : { startingReq: false, n: 'CONNECTED'},
-    DISCONNECTED         : { startingReq: false, n: 'DISCONNECTED'},
-    CHECKING_UNREAD_MSG  : { startingReq: true,  n: 'CHECKING_UNREAD_MSG'},
-    UNREAD_MSG_UPDATED   : { startingReq: false, n: 'UNREAD_MSG_UPDATED'},
-    CHECKING_CALENDAR    : { startingReq: true,  n: 'CHECKING_CALENDAR'},
-    CALENDAR_UPDATED     : { startingReq: false, n: 'CALENDAR_UPDATED'},
-    CHECKING_TASK        : { startingReq: true,  n: 'CHECKING_TASK'},
-    TASK_UPDATED         : { startingReq: false, n: 'TASK_UPDATED'},
-    PREF_UPDATED         : { startingReq: false, n: 'PREF_UPDATED'}
+    STOPPED                : { startingReq: false, n: 'STOPPED'},
+    CONNECTING             : { startingReq: false, n: 'CONNECTING'},
+    INVALID_LOGIN          : { startingReq: false, n: 'INVALID_LOGIN'},
+    CONNECT_ERR            : { startingReq: false, n: 'CONNECT_ERR'},
+    CONNECTED              : { startingReq: false, n: 'CONNECTED'},
+    DISCONNECTED           : { startingReq: false, n: 'DISCONNECTED'},
+    CHECKING_UNREAD_MSG    : { startingReq: true,  n: 'CHECKING_UNREAD_MSG'},
+    UNREAD_MSG_UPDATED     : { startingReq: false, n: 'UNREAD_MSG_UPDATED'},
+    CHECKING_CALENDAR      : { startingReq: true,  n: 'CHECKING_CALENDAR'},
+    CALENDAR_UPDATED       : { startingReq: false, n: 'CALENDAR_UPDATED'},
+    CHECKING_TASK          : { startingReq: true,  n: 'CHECKING_TASK'},
+    TASK_UPDATED           : { startingReq: false, n: 'TASK_UPDATED'},
+    CHECKING_MAILBOX_INFO  : { startingReq: true,  n: 'CHECKING_MAILBOX_INFO'},
+    MAILBOX_INFO_UPDATED   : { startingReq: false, n: 'MAILBOX_INFO_UPDATED'},
+    PREF_UPDATED           : { startingReq: false, n: 'PREF_UPDATED'}
 };
 zimbra_notifier_Util.deepFreeze(zimbra_notifier_SERVICE_EVENT);
 
@@ -150,6 +154,7 @@ zimbra_notifier_Service.prototype._loadDefault = function() {
     this._currentTasks = [];
     this._unreadMessageOffset = 0;
     this._unreadMessageManager = new zimbra_notifier_MessageManager();
+    this._currentMailBoxInfo = null;
     this._idxLoopQuery = 0;
 
     // Delay before trying again the connect
@@ -357,8 +362,6 @@ zimbra_notifier_Service.prototype._changeAndRunState = function(newState) {
  *            newState  The state to run
  */
 zimbra_notifier_Service.prototype._runState = function(newState) {
-    var sendRefreshEvent = true;
-
     switch (newState) {
         // We cannot login or we are just disconnected
         case zimbra_notifier_SERVICE_STATE.DISCONNECTED:
@@ -440,21 +443,19 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
 
         // Check unread message
         case zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN:
-            sendRefreshEvent = false;
             if (this._needRunReq(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG)) {
                 this._doSearchUnReadMsg();
                 break;
             }
 
         case zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED:
-            if (sendRefreshEvent) {
+            if (newState === zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED) {
                 this._parent.event(zimbra_notifier_SERVICE_EVENT.UNREAD_MSG_UPDATED);
             }
             this._changeState(zimbra_notifier_SERVICE_STATE.CALENDAR_RUN);
 
         // Check calendar
         case zimbra_notifier_SERVICE_STATE.CALENDAR_RUN:
-            sendRefreshEvent = false;
             if (zimbra_notifier_Prefs.isCalendarEnabled() &&
                 this._needRunReq(zimbra_notifier_REQUEST_TYPE.CALENDAR)) {
 
@@ -463,14 +464,13 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
             }
 
         case zimbra_notifier_SERVICE_STATE.CALENDAR_ENDED:
-            if (sendRefreshEvent) {
+            if (newState === zimbra_notifier_SERVICE_STATE.CALENDAR_ENDED) {
                 this._parent.event(zimbra_notifier_SERVICE_EVENT.CALENDAR_UPDATED);
             }
             this._changeState(zimbra_notifier_SERVICE_STATE.TASK_RUN);
 
         // Check tasks
         case zimbra_notifier_SERVICE_STATE.TASK_RUN:
-            sendRefreshEvent = false;
             if (zimbra_notifier_Prefs.isTaskEnabled() &&
                 this._needRunReq(zimbra_notifier_REQUEST_TYPE.TASK)) {
 
@@ -479,8 +479,21 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
             }
 
         case zimbra_notifier_SERVICE_STATE.TASK_ENDED:
-            if (sendRefreshEvent) {
+            if (newState === zimbra_notifier_SERVICE_STATE.TASK_ENDED) {
                 this._parent.event(zimbra_notifier_SERVICE_EVENT.TASK_UPDATED);
+            }
+            this._changeState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN);
+
+        // Check mailBox info
+        case zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN:
+            if (this._needRunReq(zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO)) {
+                this._doGetMailBoxInfo();
+                break;
+            }
+
+        case zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_ENDED:
+            if (newState === zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_ENDED) {
+                this._parent.event(zimbra_notifier_SERVICE_EVENT.MAILBOX_INFO_UPDATED);
             }
             this._changeState(zimbra_notifier_SERVICE_STATE.REFRESH_ENDED);
 
@@ -707,6 +720,21 @@ zimbra_notifier_Service.prototype._doSearchTask = function() {
 };
 
 /**
+ * Run the query to get mailBox informations
+ *
+ * @private
+ * @this {Service}
+ */
+zimbra_notifier_Service.prototype._doGetMailBoxInfo = function() {
+
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN)) {
+
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_MAILBOX_INFO);
+        this._getWebService().getMailBoxInfo();
+    }
+};
+
+/**
  * Abort the running query if any.
  *
  * @private
@@ -893,6 +921,13 @@ zimbra_notifier_Service.prototype.callbackError = function(typeReq, statusReq) {
                 else {
                     this._changeAndRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT);
                 }
+            }
+            break;
+
+        case zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO:
+            this._reqInfoErrors.addError(typeReq, statusReq);
+            if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN)) {
+                this._changeAndRunState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_ENDED);
             }
             break;
 
@@ -1214,6 +1249,23 @@ zimbra_notifier_Service.prototype.callbackTask = function(tasks) {
     }
 };
 
+/**
+ * callback new MailBox Info
+ *
+ * @this {Service}
+ * @param {MailBoxInfo}
+ *            mailBoxInfo
+ */
+zimbra_notifier_Service.prototype.callbackMailBoxInfo = function(mailBoxInfo) {
+    if (mailBoxInfo) {
+        this._currentMailBoxInfo = mailBoxInfo;
+        this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO);
+    }
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN)) {
+        this._changeAndRunState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_ENDED);
+    }
+};
+
 /* ************************** Getter *************************** */
 
 /**
@@ -1267,6 +1319,16 @@ zimbra_notifier_Service.prototype.getEvents = function() {
  */
 zimbra_notifier_Service.prototype.getTasks = function() {
     return this._currentTasks;
+};
+
+/**
+ * Get MailBox Info
+ *
+ * @this {Service}
+ * @return {MailBoxInfo} mailBoxInfo
+ */
+zimbra_notifier_Service.prototype.getMailBoxInfo = function() {
+    return this._currentMailBoxInfo;
 };
 
 /**
