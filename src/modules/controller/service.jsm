@@ -439,6 +439,7 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
             this._reqInfoErrors.resetLoopErrorCounter(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG);
             this._reqInfoErrors.resetLoopErrorCounter(zimbra_notifier_REQUEST_TYPE.CALENDAR);
             this._reqInfoErrors.resetLoopErrorCounter(zimbra_notifier_REQUEST_TYPE.TASK);
+            this._reqInfoErrors.resetLoopErrorCounter(zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO);
             this._changeState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN);
 
         // Check unread message
@@ -508,6 +509,9 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
             }
             if (!runagain && zimbra_notifier_Prefs.isTaskEnabled() &&
                 this._needRunReq(zimbra_notifier_REQUEST_TYPE.TASK)) {
+                runagain = true;
+            }
+            if (!runagain && this._needRunReq(zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO)) {
                 runagain = true;
             }
             // Do we need to retry
