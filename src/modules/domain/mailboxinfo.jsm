@@ -37,6 +37,8 @@
 
 "use strict";
 
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+
 var EXPORTED_SYMBOLS = ["zimbra_notifier_MailBoxInfo"];
 
 /**
@@ -55,17 +57,26 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_MailBoxInfo"];
 var zimbra_notifier_MailBoxInfo = function(version, maxSize, used) {
     this.version = version;
     this.quotaSize = maxSize;
+    this.quotaSizeString = zimbra_notifier_Util.convertBytesToStringValue(maxSize);
     this.quotaUsed = used;
+    this.quotaUsedString = zimbra_notifier_Util.convertBytesToStringValue(used);
 };
 
 /**
  * Indicate the percentage size used on the mailbox
  *
  * @this {MailBoxInfo}
- * @return {Number} percentage quota
+ * @return {String} percentage quota
  */
 zimbra_notifier_MailBoxInfo.prototype.getPercentageQuotaUsed = function() {
-    if(this.quotaSize===0)
-        return 0;
-    return Math.ceil(this.quotaUsed*100/this.quotaSize);
+    if (this.quotaSize > 0) {
+        var perc = (this.quotaUsed * 100) / this.quotaSize;
+        return perc.toFixed(1);
+    }
+    return null;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_MailBoxInfo);

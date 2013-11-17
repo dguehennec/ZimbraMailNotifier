@@ -39,8 +39,9 @@
 
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Prefs"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Prefs"];
 
 /**
  * Creates an instance of Prefs.
@@ -48,7 +49,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Prefs"];
  * @constructor
  * @this {Prefs}
  */
-const zimbra_notifier_Prefs = {
+var zimbra_notifier_Prefs = {
     _prefs: null,
     _is_first_launch: false,
     _previous_version: 0
@@ -60,35 +61,43 @@ const zimbra_notifier_Prefs = {
  * @constant
  */
 zimbra_notifier_Prefs.PREF = {
-    CURRENT_VERSION                       : "currentVersion",
-    AUTOCONNECT                           : "autoConnect",
-    SYSTEM_NOTIFICATION_ENABLED           : "systemNotificationEnabled",
-    SOUND_ENABLED                         : "soundEnabled",
-    ACCESS_STATUSBAR                      : "accessStatusBar",
-    CALENDAR_ENABLED                      : "calendarEnabled",
-    CALENDAR_PERIOD_DISPLAYED             : "calendarPeriodDisplayed",
-    CALENDAR_NB_DISPLAYED                 : "calendarNbDisplayed",
-    CALENDAR_SYSTEM_NOTIFICATION_ENABLED  : "calendarSystemNotificationEnabled",
-    CALENDAR_SOUND_ENABLED                : "calendarSoundEnabled",
-    CALENDAR_REMINDER_TIME_CONF           : "calendarReminderTimeConf",
-    CALENDAR_REMINDER_NB_REPEAT           : "calendarReminderRepeatNb",
-    TASK_ENABLED                          : "taskEnabled",
-    TASK_NB_DISPLAYED                     : "taskNbDisplayed",
-    TASK_PRIORITIES                       : "taskPriorities",
-    USER_LOGIN                            : "userlogin",
-    USER_SAVEPASSWORD                     : "userSavePassword",
-    USER_URL_WEB_SERVICE                  : "userServer",
-    USER_URL_WEB_INTERFACE                : "userUrlWebInteface",
-    WAITSET_INFO                          : "waitSetInfo",
-    REQUEST_QUERY_TIMEOUT                 : "requestQueryTimeout",
-    REQUEST_WAIT_TIMEOUT                  : "requestWaitTimeout",
-    REQUEST_WAIT_LOOP_TIME                : "requestWaitLoopTime",
-    BROWSER_SET_COOKIES                   : "browserSetCookies",
-    BROWSER_COOKIE_HTTP_ONLY              : "browserCookieHttpOnly",
+    // email + general
+    CURRENT_VERSION                 : "currentVersion",
+    AUTOCONNECT                     : "autoConnect",
+    EMAIL_NOTIFICATION_ENABLED      : "systemNotificationEnabled",
+    EMAIL_SOUND_ENABLED             : "soundEnabled",
+    EMAIL_NOTIFICATION_DURATION     : "emailNotificationDuration",
+    ACCESS_STATUSBAR                : "accessStatusBar",
+    // Browser
+    BROWSER_SET_COOKIES             : "browserSetCookies",
+    BROWSER_COOKIE_HTTP_ONLY        : "browserCookieHttpOnly",
+    // calendar
+    CALENDAR_ENABLED                : "calendarEnabled",
+    CALENDAR_PERIOD_DISPLAYED       : "calendarPeriodDisplayed",
+    CALENDAR_NB_DISPLAYED           : "calendarNbDisplayed",
+    CALENDAR_NOTIFICATION_ENABLED   : "calendarSystemNotificationEnabled",
+    CALENDAR_SOUND_ENABLED          : "calendarSoundEnabled",
+    CALENDAR_REMINDER_TIME_CONF     : "calendarReminderTimeConf",
+    CALENDAR_REMINDER_NB_REPEAT     : "calendarReminderRepeatNb",
+    // task
+    TASK_ENABLED                    : "taskEnabled",
+    TASK_NB_DISPLAYED               : "taskNbDisplayed",
+    TASK_PRIORITIES                 : "taskPriorities",
+    // user
+    USER_LOGIN                      : "userlogin",
+    USER_URL_WEB_SERVICE            : "userServer",
+    USER_URL_WEB_INTERFACE          : "userUrlWebInteface",
+    USER_SAVEPASSWORD               : "userSavePassword",
+    // About Wait set
+    WAITSET_INFO                    : "waitSetInfo",
+    REQUEST_QUERY_TIMEOUT           : "requestQueryTimeout",
+    REQUEST_WAIT_TIMEOUT            : "requestWaitTimeout",
+    REQUEST_WAIT_LOOP_TIME          : "requestWaitLoopTime",
 
     USER_PASSWORD_HOSTNAME   : "chrome://zimbra_mail_notifier/",
     USER_PASSWORD_ACTIONURL  : "defaultPassword"
 };
+zimbra_notifier_Util.deepFreeze(zimbra_notifier_Prefs.PREF);
 
 /**
  * Load preferences
@@ -96,36 +105,37 @@ zimbra_notifier_Prefs.PREF = {
  * @this {Prefs}
  */
 zimbra_notifier_Prefs.load = function() {
-    // default
+    // email + general
     this.pref_autoConnect                  = this._getPref(this.PREF.AUTOCONNECT);
-    this.pref_system_notification_enabled  = this._getPref(this.PREF.SYSTEM_NOTIFICATION_ENABLED);
-    this.pref_sound_enabled                = this._getPref(this.PREF.SOUND_ENABLED);
+    this.pref_email_notification_enabled   = this._getPref(this.PREF.EMAIL_NOTIFICATION_ENABLED);
+    this.pref_email_sound_enabled          = this._getPref(this.PREF.EMAIL_SOUND_ENABLED);
+    this.pref_email_notification_duration  = this._getPref(this.PREF.EMAIL_NOTIFICATION_DURATION);
     this.pref_access_statusBar             = this._getPref(this.PREF.ACCESS_STATUSBAR);
     // Browser
-    this.pref_browserSetCookies            = this._getPref(this.PREF.BROWSER_SET_COOKIES);
-    this.pref_browserCookieHttpOnly        = this._getPref(this.PREF.BROWSER_COOKIE_HTTP_ONLY);
+    this.pref_browser_set_cookies          = this._getPref(this.PREF.BROWSER_SET_COOKIES);
+    this.pref_browser_cookie_http_only     = this._getPref(this.PREF.BROWSER_COOKIE_HTTP_ONLY);
     // calendar
-    this.pref_calendar_enabled                     = this._getPref(this.PREF.CALENDAR_ENABLED);
-    this.pref_calendar_period_displayed            = this._getPref(this.PREF.CALENDAR_PERIOD_DISPLAYED);
-    this.pref_calendar_nb_displayed                = this._getPref(this.PREF.CALENDAR_NB_DISPLAYED);
-    this.pref_calendar_system_notification_enabled = this._getPref(this.PREF.CALENDAR_SYSTEM_NOTIFICATION_ENABLED);
-    this.pref_calendar_sound_notification_enabled  = this._getPref(this.PREF.CALENDAR_SOUND_ENABLED);
-    this.pref_calendar_reminder_time_conf          = this._getPref(this.PREF.CALENDAR_REMINDER_TIME_CONF);
-    this.pref_calendar_reminder_nb_repeat          = this._getPref(this.PREF.CALENDAR_REMINDER_NB_REPEAT);
+    this.pref_calendar_enabled               = this._getPref(this.PREF.CALENDAR_ENABLED);
+    this.pref_calendar_period_displayed      = this._getPref(this.PREF.CALENDAR_PERIOD_DISPLAYED);
+    this.pref_calendar_nb_displayed          = this._getPref(this.PREF.CALENDAR_NB_DISPLAYED);
+    this.pref_calendar_notification_enabled  = this._getPref(this.PREF.CALENDAR_NOTIFICATION_ENABLED);
+    this.pref_calendar_sound_enabled         = this._getPref(this.PREF.CALENDAR_SOUND_ENABLED);
+    this.pref_calendar_reminder_time_conf    = this._getPref(this.PREF.CALENDAR_REMINDER_TIME_CONF);
+    this.pref_calendar_reminder_nb_repeat    = this._getPref(this.PREF.CALENDAR_REMINDER_NB_REPEAT);
     // task
-    this.pref_task_enabled         = this._getPref(this.PREF.TASK_ENABLED);
-    this.pref_task_nb_displayed    = this._getPref(this.PREF.TASK_NB_DISPLAYED);
-    this.pref_task_priorities      = this._getPref(this.PREF.TASK_PRIORITIES);
+    this.pref_task_enabled            = this._getPref(this.PREF.TASK_ENABLED);
+    this.pref_task_nb_displayed       = this._getPref(this.PREF.TASK_NB_DISPLAYED);
+    this.pref_task_priorities         = this._getPref(this.PREF.TASK_PRIORITIES);
     // user
-    this.pref_user_login             = this._getPref(this.PREF.USER_LOGIN);
-    this.pref_user_url_web_service   = this._getPref(this.PREF.USER_URL_WEB_SERVICE);
-    this.pref_user_url_web_interface = this._getPref(this.PREF.USER_URL_WEB_INTERFACE);
-    this.pref_user_savePassword      = this._getPref(this.PREF.USER_SAVEPASSWORD);
+    this.pref_user_login              = this._getPref(this.PREF.USER_LOGIN);
+    this.pref_user_url_web_service    = this._getPref(this.PREF.USER_URL_WEB_SERVICE);
+    this.pref_user_url_web_interface  = this._getPref(this.PREF.USER_URL_WEB_INTERFACE);
+    this.pref_user_savePassword       = this._getPref(this.PREF.USER_SAVEPASSWORD);
     // About Wait set
-    this.pref_waitset_info         = this._getComplexPref(this.PREF.WAITSET_INFO);
-    this.pref_request_queryTimeout = this._getPref(this.PREF.REQUEST_QUERY_TIMEOUT);
-    this.pref_request_waitTimeout  = this._getPref(this.PREF.REQUEST_WAIT_TIMEOUT);
-    this.pref_request_waitLoopTime = this._getPref(this.PREF.REQUEST_WAIT_LOOP_TIME);
+    this.pref_waitset_info            = this._getComplexPref(this.PREF.WAITSET_INFO);
+    this.pref_request_query_timeout   = this._getPref(this.PREF.REQUEST_QUERY_TIMEOUT);
+    this.pref_request_wait_timeout    = this._getPref(this.PREF.REQUEST_WAIT_TIMEOUT);
+    this.pref_request_wait_loop_time  = this._getPref(this.PREF.REQUEST_WAIT_LOOP_TIME);
 
     // Get the previous version
     this._previous_version = this._getPref(this.PREF.CURRENT_VERSION);
@@ -176,23 +186,37 @@ zimbra_notifier_Prefs.observe = function(subject, topic, data) {
     }
 
     switch (data) {
-
+        // email + general
         case this.PREF.AUTOCONNECT:
             this.pref_autoConnect = this._getPref(data);
             break;
 
-        case this.PREF.SYSTEM_NOTIFICATION_ENABLED:
-            this.pref_system_notification_enabled = this._getPref(data);
+        case this.PREF.EMAIL_NOTIFICATION_ENABLED:
+            this.pref_email_notification_enabled = this._getPref(data);
             break;
 
-        case this.PREF.SOUND_ENABLED:
-            this.pref_sound_enabled = this._getPref(data);
+        case this.PREF.EMAIL_SOUND_ENABLED:
+            this.pref_email_sound_enabled = this._getPref(data);
+            break;
+
+        case this.PREF.EMAIL_NOTIFICATION_DURATION:
+            this.pref_email_notification_duration = this._getPref(data);
             break;
 
         case this.PREF.ACCESS_STATUSBAR:
             this.pref_access_statusBar = this._getPref(data);
             break;
 
+        // Browser
+        case this.PREF.BROWSER_SET_COOKIES:
+            this.pref_browser_set_cookies = this._getPref(data);
+            break;
+
+        case this.PREF.BROWSER_COOKIE_HTTP_ONLY:
+            this.pref_browser_cookie_http_only = this._getPref(data);
+            break;
+
+        // calendar
         case this.PREF.CALENDAR_ENABLED:
             this.pref_calendar_enabled = this._getPref(data);
             break;
@@ -205,12 +229,12 @@ zimbra_notifier_Prefs.observe = function(subject, topic, data) {
             this.pref_calendar_nb_displayed = this._getPref(data);
             break;
 
-        case this.PREF.CALENDAR_SYSTEM_NOTIFICATION_ENABLED:
-            this.pref_calendar_system_notification_enabled = this._getPref(data);
+        case this.PREF.CALENDAR_NOTIFICATION_ENABLED:
+            this.pref_calendar_notification_enabled = this._getPref(data);
             break;
 
         case this.PREF.CALENDAR_SOUND_ENABLED:
-            this.pref_calendar_sound_notification_enabled = this._getPref(data);
+            this.pref_calendar_sound_enabled = this._getPref(data);
             break;
 
         case this.PREF.CALENDAR_REMINDER_TIME_CONF:
@@ -221,6 +245,7 @@ zimbra_notifier_Prefs.observe = function(subject, topic, data) {
             this.pref_calendar_reminder_nb_repeat = this._getPref(data);
             break;
 
+        // task
         case this.PREF.TASK_ENABLED:
             this.pref_task_enabled = this._getPref(data);
             break;
@@ -233,6 +258,7 @@ zimbra_notifier_Prefs.observe = function(subject, topic, data) {
             this.pref_task_priorities = this._getPref(data);
             break;
 
+        // user
         case this.PREF.USER_LOGIN:
             this.pref_user_login = this._getPref(data);
             break;
@@ -249,30 +275,25 @@ zimbra_notifier_Prefs.observe = function(subject, topic, data) {
             this.pref_user_savePassword = this._getPref(data);
             break;
 
+        // About Wait set
         case this.PREF.REQUEST_QUERY_TIMEOUT:
-            this.pref_request_queryTimeout = this._getPref(data);
+            this.pref_request_query_timeout = this._getPref(data);
             break;
 
         case this.PREF.REQUEST_WAIT_TIMEOUT:
-            this.pref_request_waitTimeout = this._getPref(data);
+            this.pref_request_wait_timeout = this._getPref(data);
             break;
 
         case this.PREF.REQUEST_WAIT_LOOP_TIME:
-            this.pref_request_waitLoopTime = this._getPref(data);
-            break;
-
-        case this.PREF.BROWSER_SET_COOKIES:
-            this.pref_browserSetCookies = this._getPref(data);
-            break;
-
-        case this.PREF.BROWSER_COOKIE_HTTP_ONLY:
-            this.pref_browserCookieHttpOnly = this._getPref(data);
+            this.pref_request_wait_loop_time = this._getPref(data);
             break;
 
         default:
             break;
     }
 };
+
+/* *************************** Public *************************** */
 
 /**
  * Check if this is the first start of the extension
@@ -298,12 +319,12 @@ zimbra_notifier_Prefs.setTemporaryLogin = function(urlServ, user) {
     if (!urlServ) {
         urlServ = '';
     }
-    this.pref_user_url_web_service = urlServ;
+    this.pref_user_url_web_service = urlServ.trim();
 
     if (!user) {
         user = '';
     }
-    this.pref_user_login = user;
+    this.pref_user_login = user.trim();
 };
 
 /**
@@ -317,6 +338,265 @@ zimbra_notifier_Prefs.reloadLogin = function() {
 };
 
 /**
+ * Indicate if it is a free webmail
+ *
+ * @this {Prefs}
+ * @return {Boolean} True if the url of the webservice contain the free domain
+ */
+zimbra_notifier_Prefs.isFreeWebService = function() {
+    if (this.pref_user_url_web_service) {
+        return (this.pref_user_url_web_service.search("zimbra.free.fr") > 0) ||
+               (this.pref_user_url_web_service.search("zimbra.aliceadsl.fr") > 0);
+    }
+    return false;
+};
+
+/* *************************** email + general *************************** */
+
+/**
+ * indicate the current version
+ *
+ * @this {Prefs}
+ * @return {Number} the current version
+ */
+zimbra_notifier_Prefs.getCurrentVersion = function() {
+    return this.pref_current_version;
+};
+
+/**
+ * indicate if AutoConnect is enabled
+ *
+ * @this {Prefs}
+ * @return {Boolean} true if enabled
+ */
+zimbra_notifier_Prefs.isAutoConnectEnabled = function() {
+    return this.pref_autoConnect;
+};
+
+/**
+ * indicate if email notification is enabled
+ *
+ * @this {Prefs}
+ * @return {Boolean} true if enabled
+ */
+zimbra_notifier_Prefs.isEmailNotificationEnabled = function() {
+    return this.pref_email_notification_enabled;
+};
+
+/**
+ * indicate if sound is enabled for email notification
+ *
+ * @this {Prefs}
+ * @return {Boolean} true if enabled
+ */
+zimbra_notifier_Prefs.isEmailSoundEnabled = function() {
+    return this.pref_email_sound_enabled;
+};
+
+/**
+ * indicate the duration of the email notification
+ *
+ * @this {Prefs}
+ * @return {Number} The duration of the notification in ms
+ */
+zimbra_notifier_Prefs.getEmailNotificationDuration = function() {
+    return (this.pref_email_notification_duration * 1000);
+};
+
+/**
+ * indicate if statusBar is enabled
+ *
+ * @this {Prefs}
+ * @return {Boolean} true if enabled
+ */
+zimbra_notifier_Prefs.isStatusBarEnabled = function() {
+    return this.pref_access_statusBar;
+};
+
+/* *************************** Browser *************************** */
+
+/**
+ * Do we need to add cookie to the browser when opening the web interface
+ *
+ * @this {Prefs}
+ * @return {Boolean}
+ */
+zimbra_notifier_Prefs.isSyncBrowserCookiesEnabled = function() {
+    return this.pref_browser_set_cookies;
+};
+
+/**
+ * Check if the created cookie need to be http only
+ *
+ * @this {Prefs}
+ * @return {Boolean}
+ */
+zimbra_notifier_Prefs.isBrowserCookieHttpOnly = function() {
+    return this.pref_browser_cookie_http_only;
+};
+
+/* *************************** calendar *************************** */
+
+/**
+ * indicate if Calendar is enabled
+ *
+ * @this {Prefs}
+ * @return {Boolean} true if enabled
+ */
+zimbra_notifier_Prefs.isCalendarEnabled = function() {
+    return this.pref_calendar_enabled;
+};
+
+/**
+ * get Calendar Period Displayed
+ *
+ * @this {Prefs}
+ * @return {Number}
+ */
+zimbra_notifier_Prefs.getCalendarPeriodDisplayed = function() {
+    return this.pref_calendar_period_displayed;
+};
+
+/**
+ * get Calendar Number Displayed
+ *
+ * @this {Prefs}
+ * @return {Number}
+ */
+zimbra_notifier_Prefs.getCalendarNbDisplayed = function() {
+    return this.pref_calendar_nb_displayed;
+};
+
+/**
+ * indicate if Calendar System Notification is enabled
+ *
+ * @this {Prefs}
+ * @return {Boolean} true if enabled
+ */
+zimbra_notifier_Prefs.isCalendarNotificationEnabled = function() {
+    return this.pref_calendar_notification_enabled;
+};
+
+/**
+ * indicate if Calendar Sound Notification is enabled
+ *
+ * @this {Prefs}
+ * @return {Boolean} true if enabled
+ */
+zimbra_notifier_Prefs.isCalendarSoundEnabled = function() {
+    return this.pref_calendar_sound_enabled;
+};
+
+/**
+ * get Calendar Reminder Time Configuration
+ *
+ * @this {Prefs}
+ * @return {Number}
+ */
+zimbra_notifier_Prefs.getCalendarReminderTimeConf = function() {
+    return this.pref_calendar_reminder_time_conf;
+};
+
+/**
+ * get Calendar Reminder number repeat
+ *
+ * @this {Prefs}
+ * @return {Number}
+ */
+zimbra_notifier_Prefs.getCalendarReminderNbRepeat = function() {
+    return this.pref_calendar_reminder_nb_repeat;
+};
+
+/* *************************** task *************************** */
+
+/**
+ * indicate if Task is enabled
+ *
+ * @this {Prefs}
+ * @return {Boolean} true if enabled
+ */
+zimbra_notifier_Prefs.isTaskEnabled = function() {
+    return this.pref_task_enabled;
+};
+
+/**
+ * get Task number Displayed
+ *
+ * @this {Prefs}
+ * @return {Number}
+ */
+zimbra_notifier_Prefs.getTaskNbDisplayed = function() {
+    return this.pref_task_nb_displayed;
+};
+
+/**
+ * get Task Priorities Displayed
+ *
+ * @this {Prefs}
+ * @return {Number}
+ */
+zimbra_notifier_Prefs.getTaskPrioritiesDisplayed = function() {
+    return this.pref_task_priorities;
+};
+
+/* *************************** user *************************** */
+
+/**
+ * indicate the login
+ *
+ * @this {Prefs}
+ * @return {String} the login
+ */
+zimbra_notifier_Prefs.getUserLogin = function() {
+    return this.pref_user_login;
+};
+
+/**
+ * indicate the URL of the webservice. May contain a trailling slash
+ *
+ * @this {Prefs}
+ * @return {String} the URL
+ */
+zimbra_notifier_Prefs.getUrlWebService = function() {
+    return this.pref_user_url_web_service;
+};
+
+/**
+ * indicate the URL of the Web interface
+ * If not set, return the URl of the webservice
+ *
+ * @this {Prefs}
+ * @return {String} the URL
+ */
+zimbra_notifier_Prefs.getUrlUserInterface = function() {
+    if (this.pref_user_url_web_interface) {
+        return this.pref_user_url_web_interface;
+    }
+    return this.pref_user_url_web_service;
+};
+
+/**
+ * indicate if SavePassword is enabled
+ *
+ * @this {Prefs}
+ * @return {Boolean} true if enabled
+ */
+zimbra_notifier_Prefs.isSavePasswordEnabled = function() {
+    return this.pref_user_savePassword;
+};
+
+/**
+ * indicate the password
+ *
+ * @this {Prefs}
+ * @return {String} the password
+ */
+zimbra_notifier_Prefs.getUserPassword = function() {
+    return this._getPassword(this.PREF.USER_PASSWORD_HOSTNAME,
+                             this.PREF.USER_PASSWORD_ACTIONURL, this.pref_user_login);
+};
+
+/**
  * Save user password
  * @see _setPassword
  *
@@ -326,6 +606,8 @@ zimbra_notifier_Prefs.savePassword = function(password, savePwd) {
     this._setPassword(this.PREF.USER_PASSWORD_HOSTNAME, this.PREF.USER_PASSWORD_ACTIONURL,
                       this.pref_user_login, password, savePwd);
 };
+
+/* *************************** About Wait set *************************** */
 
 /**
  * Get the information about the previous wait set
@@ -380,232 +662,13 @@ zimbra_notifier_Prefs.saveWaitSet = function(id, seq, urlWebService, user) {
 };
 
 /**
- * indicate the current version
- *
- * @this {Prefs}
- * @return {Number} the current version
- */
-zimbra_notifier_Prefs.getCurrentVersion = function() {
-    return this.pref_current_version;
-};
-
-/**
- * Indicate if it is a free webmail
- *
- * @this {Prefs}
- * @return {Boolean} True if the url of the webservice contain the free domain
- */
-zimbra_notifier_Prefs.isFreeWebService = function() {
-    if (this.pref_user_url_web_service) {
-        return (this.pref_user_url_web_service.search("zimbra.free.fr") > 0) ||
-               (this.pref_user_url_web_service.search("zimbra.aliceadsl.fr") > 0);
-    }
-    return false;
-};
-
-/**
- * indicate the URL of the webservice. May contain a trailling slash
- *
- * @this {Prefs}
- * @return {String} the URL
- */
-zimbra_notifier_Prefs.getUrlWebService = function() {
-    return this.pref_user_url_web_service;
-};
-
-/**
- * indicate the URL of the Web interface
- * If not set, return the URl of the webservice
- *
- * @this {Prefs}
- * @return {String} the URL
- */
-zimbra_notifier_Prefs.getUrlUserInterface = function() {
-    if (this.pref_user_url_web_interface) {
-        return this.pref_user_url_web_interface;
-    }
-    return this.pref_user_url_web_service;
-};
-
-/**
- * indicate the login
- *
- * @this {Prefs}
- * @return {String} the login
- */
-zimbra_notifier_Prefs.getUserLogin = function() {
-    return this.pref_user_login;
-};
-
-/**
- * indicate the password
- *
- * @this {Prefs}
- * @return {String} the password
- */
-zimbra_notifier_Prefs.getUserPassword = function() {
-    return this._getPassword(this.PREF.USER_PASSWORD_HOSTNAME,
-                             this.PREF.USER_PASSWORD_ACTIONURL, this.pref_user_login);
-};
-
-/**
- * indicate if statusBar is enabled
- *
- * @this {Prefs}
- * @return {Boolean} true if enabled
- */
-zimbra_notifier_Prefs.isStatusBarEnabled = function() {
-    return this.pref_access_statusBar;
-};
-
-/**
- * indicate if SavePassword is enabled
- *
- * @this {Prefs}
- * @return {Boolean} true if enabled
- */
-zimbra_notifier_Prefs.isSavePasswordEnabled = function() {
-    return this.pref_user_savePassword;
-};
-
-/**
- * indicate if sound is enabled
- *
- * @this {Prefs}
- * @return {Boolean} true if enabled
- */
-zimbra_notifier_Prefs.isSoundEnabled = function() {
-    return this.pref_sound_enabled;
-};
-
-/**
- * indicate if system notification is enabled
- *
- * @this {Prefs}
- * @return {Boolean} true if enabled
- */
-zimbra_notifier_Prefs.isSystemNotificationEnabled = function() {
-    return this.pref_system_notification_enabled;
-};
-
-/**
- * indicate if AutoConnect is enabled
- *
- * @this {Prefs}
- * @return {Boolean} true if enabled
- */
-zimbra_notifier_Prefs.isAutoConnectEnabled = function() {
-    return this.pref_autoConnect;
-};
-
-/**
- * indicate if Calendar is enabled
- *
- * @this {Prefs}
- * @return {Boolean} true if enabled
- */
-zimbra_notifier_Prefs.isCalendarEnabled = function() {
-    return this.pref_calendar_enabled;
-};
-
-/**
- * get Calendar Period Displayed
- *
- * @this {Prefs}
- * @return {Number}
- */
-zimbra_notifier_Prefs.getCalendarPeriodDisplayed = function() {
-    return this.pref_calendar_period_displayed;
-};
-
-/**
- * get Calendar Number Displayed
- *
- * @this {Prefs}
- * @return {Number}
- */
-zimbra_notifier_Prefs.getCalendarNbDisplayed = function() {
-    return this.pref_calendar_nb_displayed;
-};
-
-/**
- * indicate if Calendar System Notification is enabled
- *
- * @this {Prefs}
- * @return {Boolean} true if enabled
- */
-zimbra_notifier_Prefs.isCalendarSystemNotificationEnabled = function() {
-    return this.pref_calendar_system_notification_enabled;
-};
-
-/**
- * indicate if Calendar Sound Notification is enabled
- *
- * @this {Prefs}
- * @return {Boolean} true if enabled
- */
-zimbra_notifier_Prefs.isCalendarSoundNotificationEnabled = function() {
-    return this.pref_calendar_sound_notification_enabled;
-};
-
-/**
- * get Calendar Reminder Time Configuration
- *
- * @this {Prefs}
- * @return {Number}
- */
-zimbra_notifier_Prefs.getCalendarReminderTimeConf = function() {
-    return this.pref_calendar_reminder_time_conf;
-};
-
-/**
- * get Calendar Reminder number repeat
- *
- * @this {Prefs}
- * @return {Number}
- */
-zimbra_notifier_Prefs.getCalendarReminderNbRepeat = function() {
-    return this.pref_calendar_reminder_nb_repeat;
-};
-
-/**
- * indicate if Task is enabled
- *
- * @this {Prefs}
- * @return {Boolean} true if enabled
- */
-zimbra_notifier_Prefs.isTaskEnabled = function() {
-    return this.pref_task_enabled;
-};
-
-/**
- * get Task number Displayed
- *
- * @this {Prefs}
- * @return {Number}
- */
-zimbra_notifier_Prefs.getTaskNbDisplayed = function() {
-    return this.pref_task_nb_displayed;
-};
-
-/**
- * get Task Priorities Displayed
- *
- * @this {Prefs}
- * @return {Number}
- */
-zimbra_notifier_Prefs.getTaskPrioritiesDisplayed = function() {
-    return this.pref_task_priorities;
-};
-
-/**
  * Get the timeout (ms) for query
  *
  * @this {Prefs}
  * @return {Number}
  */
 zimbra_notifier_Prefs.getRequestQueryTimeout = function() {
-    return this.pref_request_queryTimeout;
+    return this.pref_request_query_timeout;
 };
 
 /**
@@ -615,7 +678,7 @@ zimbra_notifier_Prefs.getRequestQueryTimeout = function() {
  * @return {Number}
  */
 zimbra_notifier_Prefs.getRequestWaitTimeout = function() {
-    return this.pref_request_waitTimeout;
+    return this.pref_request_wait_timeout;
 };
 
 /**
@@ -625,29 +688,10 @@ zimbra_notifier_Prefs.getRequestWaitTimeout = function() {
  * @return {Number}
  */
 zimbra_notifier_Prefs.getRequestWaitLoopTime = function() {
-    return this.pref_request_waitLoopTime;
+    return this.pref_request_wait_loop_time;
 };
 
-/**
- * Do we need to add cookie to the browser when opening the web interface
- *
- * @this {Prefs}
- * @return {Boolean}
- */
-zimbra_notifier_Prefs.getBrowserSetCookies = function() {
-    return this.pref_browserSetCookies;
-};
-
-/**
- * Check if the created cookie need to be http only
- *
- * @this {Prefs}
- * @return {Boolean}
- */
-zimbra_notifier_Prefs.isBrowserCookieHttpOnly = function() {
-    return this.pref_browserCookieHttpOnly;
-};
-
+/* *************************** Private *************************** */
 
 /**
  * get preference
@@ -785,3 +829,8 @@ zimbra_notifier_Prefs._setPassword = function(url, actionURL, username, password
  * Initialize the preference
  */
 zimbra_notifier_Prefs.init();
+
+/**
+ * Prevent any futher modifications of the Prefs object
+ */
+Object.seal(zimbra_notifier_Prefs);

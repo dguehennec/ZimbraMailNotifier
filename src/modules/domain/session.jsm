@@ -38,8 +38,9 @@
 "use strict";
 
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Session"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Session"];
 
 /**
  * Creates an instance of Session.
@@ -47,7 +48,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Session"];
  * @constructor
  * @this {Session}
  */
-const zimbra_notifier_Session = function() {
+var zimbra_notifier_Session = function() {
     this.clear();
 };
 
@@ -299,3 +300,8 @@ zimbra_notifier_Session.prototype._valToStr = function(val) {
     }
     return '' + val;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Session);

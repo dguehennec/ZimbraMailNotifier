@@ -12,29 +12,36 @@
     onunload="com.zimbra.Options.release();"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-    <prefpane id="option-tab-default" label="&option.default.label;" image="chrome://zimbra_mail_notifier/skin/images/prefs/general.png">
-        <preferences id="option-prefs-default">
+    <prefpane id="option-tab-common" label="&option.common.label;" image="chrome://zimbra_mail_notifier/skin/images/prefs/general.png">
+        <preferences id="option-prefs-common">
             <preference id="zimbra_mail_notifier-optionAccessStatusBar" name="extensions.zimbra_mail_notifier.accessStatusBar" type="bool"/>
             <preference id="zimbra_mail_notifier-optionAutoConnect" name="extensions.zimbra_mail_notifier.autoConnect" type="bool"/>
-            <preference id="zimbra_mail_notifier-optionSystemNotification" name="extensions.zimbra_mail_notifier.systemNotificationEnabled" type="bool"/>
-            <preference id="zimbra_mail_notifier-optionSoundNotification" name="extensions.zimbra_mail_notifier.soundEnabled" type="bool"/>
+            <preference id="zimbra_mail_notifier-optionMailNotification" name="extensions.zimbra_mail_notifier.systemNotificationEnabled" type="bool"/>
+            <preference id="zimbra_mail_notifier-optionMailSound" name="extensions.zimbra_mail_notifier.soundEnabled" type="bool"/>
+            <preference id="zimbra_mail_notifier-optionMailNotifyDuration" name="extensions.zimbra_mail_notifier.emailNotificationDuration" type="int"/>
             <preference id="zimbra_mail_notifier-optionBrowserSetCookies" name="extensions.zimbra_mail_notifier.browserSetCookies" type="bool"/>
         </preferences>
 
         <vbox flex="1">
             <groupbox width="100%">
-                <caption label="&option.default.connection.caption;"/>
-                <checkbox preference="zimbra_mail_notifier-optionAutoConnect" label="&option.default.autoConnect;" checked="true"/>
-                <checkbox preference="zimbra_mail_notifier-optionBrowserSetCookies" label="&option.default.browserSetCookies;" checked="true"/>
+                <caption label="&option.common.connection.caption;"/>
+                <checkbox preference="zimbra_mail_notifier-optionAutoConnect" label="&option.common.autoConnect;" checked="true"/>
+                <checkbox preference="zimbra_mail_notifier-optionBrowserSetCookies" label="&option.common.browserSetCookies;" checked="true"/>
             </groupbox>
             <groupbox width="100%">
-                <caption label="&option.default.notification.caption;"/>
-                <checkbox preference="zimbra_mail_notifier-optionSystemNotification" label="&option.default.systemNotification;" checked="true"/>
-                <checkbox preference="zimbra_mail_notifier-optionSoundNotification" label="&option.default.soundNotification;" checked="true"/>
+                <caption label="&option.common.mail.notification.caption;"/>
+                <checkbox preference="zimbra_mail_notifier-optionMailNotification" label="&option.common.mail.systemNotification;" checked="true"/>
+                <checkbox preference="zimbra_mail_notifier-optionMailSound" label="&option.common.mail.soundNotification;" checked="true"/>
+                <hbox align="center">
+                    <label value="&option.common.mail.notify.duration.caption; :"/>
+                    <textbox style="max-width:55px" type="number" min="4" max="980" increment="4" preference="zimbra_mail_notifier-optionMailNotifyDuration"/>
+                    <label value="&seconds;"/>
+                    <spacer flex="1"/>
+                </hbox>
             </groupbox>
             <groupbox width="100%">
-                <caption label="&option.default.access.caption;"/>
-                <checkbox preference="zimbra_mail_notifier-optionAccessStatusBar" label="&option.default.statusbar;" checked="true"/>
+                <caption label="&option.common.access.caption;"/>
+                <checkbox preference="zimbra_mail_notifier-optionAccessStatusBar" label="&option.common.statusbar;" checked="true"/>
             </groupbox>
         </vbox>
     </prefpane>
@@ -67,14 +74,7 @@
                 </hbox>
                 <hbox align="center">
                     <label value="&option.calendar.view.nbMax.label; :"/>
-                    <menulist preference="zimbra_mail_notifier-optionCalendarNbDisplayed">
-                        <menupopup>
-                            <menuitem label="5" value="5"/>
-                            <menuitem label="10" value="10"/>
-                            <menuitem label="15" value="15"/>
-                            <menuitem label="20" value="20"/>
-                            </menupopup>
-                    </menulist>
+                    <textbox style="max-width:48px" type="number" min="1" max="30" preference="zimbra_mail_notifier-optionCalendarNbDisplayed"/>
                     <spacer flex="1"/>
                 </hbox>
             </groupbox>
@@ -126,14 +126,7 @@
                     <caption label="&option.task.view.caption;"/>
                     <hbox align="center">
                         <label value="&option.task.view.nbTasks; :"/>
-                        <menulist preference="zimbra_mail_notifier-optionTaskNbDisplayed">
-                            <menupopup>
-                                <menuitem label="5" value="5"/>
-                                <menuitem label="10" value="10"/>
-                                <menuitem label="15" value="15"/>
-                                <menuitem label="20" value="20"/>
-                            </menupopup>
-                        </menulist>
+                        <textbox style="max-width:48px" type="number" min="1" max="30" preference="zimbra_mail_notifier-optionTaskNbDisplayed"/>
                         <spacer flex="1"/>
                     </hbox>
                     <hbox align="center">

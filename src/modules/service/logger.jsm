@@ -38,8 +38,9 @@
 "use strict";
 
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Logger"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Logger"];
 
 /**
  * Creates an instance of logger.
@@ -48,7 +49,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Logger"];
  * @this {Logger}
  *
  */
-const zimbra_notifier_Logger = function(name) {
+var zimbra_notifier_Logger = function(name) {
     this._name = name;
 };
 
@@ -175,7 +176,7 @@ zimbra_notifier_Logger.prototype._printStack = function() {
         try {
             throw Error('');
         } catch(err) {
-            var stack = err.stack.split("\n").slice(2).join("\n")
+            var stack = err.stack.split("\n").slice(2).join("\n");
             dump("--------\n" + stack + "--------\n");
         }
     }
@@ -201,3 +202,8 @@ zimbra_notifier_Logger.prototype._getStrDate = function() {
     }
     return '';
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Logger);

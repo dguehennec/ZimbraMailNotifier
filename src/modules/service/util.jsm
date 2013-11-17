@@ -40,7 +40,7 @@
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Util"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Util"];
 
 /**
  * Creates a global instance of zimbra_notifier_Util
@@ -49,7 +49,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Util"];
  * @this {Util}
  *
  */
-const zimbra_notifier_Util = {
+var zimbra_notifier_Util = {
     /**
      * @private bundle
      */
@@ -172,42 +172,98 @@ zimbra_notifier_Util.maxStringLength = function(text, length) {
  * @return {String} bytes in string format.
  */
 zimbra_notifier_Util.convertBytesToStringValue = function(bytes) {
-    var Unites = {'To' : 40, 'Go' : 30, 'Mo' : 20, 'Ko' : 10};
-    for(var unite in Unites) {
-        var value = bytes/Math.pow(2, Unites[unite]);
-        if(value>=1) {
-            return (value).toFixed(1) + ' ' + unite;
-        }
+    var v = 0;
+    var unit = 'unit.bytes.B';
+
+    if (bytes >= 1099511627776) {
+        v = bytes / 1099511627776;
+        unit = 'unit.bytes.TB';
     }
-    return '0 Ko';
+    else if (bytes >= 1073741824) {
+        v = bytes / 1073741824;
+        unit = 'unit.bytes.GB';
+    }
+    else if (bytes >= 1048576) {
+        v = bytes / 1048576;
+        unit = 'unit.bytes.MB';
+    }
+    else if (bytes >= 1024) {
+        v = bytes / 1024;
+        unit = 'unit.bytes.KB';
+    }
+    else if (bytes >= 0) {
+        v = bytes;
+    }
+
+    return v.toFixed(1) + ' ' + zimbra_notifier_Util.getBundleString(unit);
 };
 
 /**
  * Show notification
  *
  * @param {String}
- *            title
+ *            title The title of the notification
  * @param {String}
- *            text
- * @param {String}
- *            callbackData
+ *            text The text of the notification
+ * @param {Number}
+ *            duration Minimum duration of the notification (ms)
  * @param {Function}
- *            callback
+ *            callback The function to call
+ * @param {Object}
+ *            callbackThis The context of the function (this)
  *
  * @return {Boolean} true if success
  */
-zimbra_notifier_Util.showNotificaton = function(title, text, callbackData, callback) {
+zimbra_notifier_Util.showNotification = function(title, text, duration, callback, callbackThis) {
     try {
+        var listener = null;
         var textClickable = false;
+
         if (callback) {
+            var dateStartNotify = new Date().getTime();
+            var arrayArgs = [].slice.call(arguments, 0);
+
             textClickable = true;
+            listener = {
+                _endTime : (dateStartNotify + duration),
+                observe : function(subject, topic, data) {
+                    // On Mac OS X, the notification is handled with Growl and is not using
+                    // the plateform independant notification system of firefox
+                    if (topic === "alertfinished" && Services.appinfo.OS !== "Darwin") {
+
+                        var dateEndNotify = new Date().getTime();
+                        duration = listener._endTime - dateEndNotify;
+                        listener._endTime = 0;
+                        // If the user do not cancel it : the duration is around 4 seconds
+                        // And the time left to display the notification is more than 0.1s
+                        // And there is at least one opened window : If the user close the browser,
+                        //     stop to display the notification
+                        if ((dateEndNotify > (dateStartNotify + 3800)) && (duration > 500) &&
+                            (Services.wm.getEnumerator("navigator:browser").hasMoreElements())) {
+
+                            arrayArgs[2] = duration;
+                            zimbra_notifier_Util.showNotification.apply(zimbra_notifier_Util, arrayArgs);
+                        }
+                    }
+                    else if (topic === "alertclickcallback") {
+                        listener._endTime = 0;
+                        // Run the callback with the callbackThis as context and with parameter
+                        // the optional arguments passed to the showNotification function
+                        callback.apply(callbackThis, arrayArgs.slice(5));
+                    }
+                }
+            };
         }
+
+        // Show the notification
         var alertsService = Components.classes['@mozilla.org/alerts-service;1'].
                              getService(Components.interfaces.nsIAlertsService);
 
-        alertsService.showAlertNotification('chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png',
-                                            title, text, textClickable, callbackData, callback, "");
-    } catch (e) {
+        alertsService.showAlertNotification(
+            'chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png',
+            title, text, textClickable, null, listener, "Zimbra Mail Notifier");
+    }
+    catch (e) {
         return false;
     }
     return true;
@@ -233,32 +289,6 @@ zimbra_notifier_Util.playSound = function() {
 };
 
 /**
- * addObserver.
- *
- * @this {Util}
- * @param {Observer}
- *            observer the observer
- * @param {String}
- *            topic the topic
- */
-zimbra_notifier_Util.addObserver = function(observer, topic) {
-    Services.obs.addObserver(observer, topic, false);
-};
-
-/**
- * removeObserver.
- *
- * @this {Util}
- * @param {Observer}
- *            observer the observer
- * @param {String}
- *            topic the topic
- */
-zimbra_notifier_Util.removeObserver = function(observer, topic) {
-    Services.obs.removeObserver(observer, topic);
-};
-
-/**
  * notifyObservers.
  *
  * @this {Util}
@@ -278,15 +308,20 @@ zimbra_notifier_Util.notifyObservers = function(topic, data) {
  *            base The base object
  * @param {Object}
  *            sub  The sub object
+ * @param {String}
+ *            superPropName The name of the property to access of parent "class"
  */
-zimbra_notifier_Util.extend = function(base, sub) {
+zimbra_notifier_Util.extend = function(base, sub, superPropName) {
     var tmp = function() {};
     // Copy the prototype from the base to setup inheritance
     tmp.prototype = base.prototype;
     sub.prototype = new tmp();
     // The constructor property was set wrong, let's fix it
     sub.prototype.constructor = sub;
-    sub.prototype._super = base.prototype;
+    if (!superPropName) {
+        superPropName = '_super';
+    }
+    sub.prototype[superPropName] = base.prototype;
 };
 
 /**
@@ -306,11 +341,11 @@ zimbra_notifier_Util.dump = function(obj, pref) {
             dump(pref + p);
             var v = obj[p];
             if (v) {
-                if (typeof(v) == 'object') {
+                if (typeof(v) === 'object') {
                     dump("\n");
                     zimbra_notifier_Util.dump(v, pref + p + '.');
                 }
-                else if (typeof(v) != 'function') {
+                else if (typeof(v) !== 'function') {
                     dump(" : " + v + ";");
                 }
             }
@@ -326,3 +361,29 @@ zimbra_notifier_Util.dump = function(obj, pref) {
         }
     }
 };
+
+/**
+ * Freeze enum / constant object recursively
+ *
+ * @param {Object}
+ *            obj The object to freeze
+ */
+zimbra_notifier_Util.deepFreeze = function(obj) {
+    // First freeze the object
+    Object.freeze(obj);
+    // Iterate over properties of object
+    for (var propKey in obj) {
+        if (obj.hasOwnProperty(propKey)) {
+            var prop = obj[propKey];
+            if (typeof(prop) === 'object') {
+                zimbra_notifier_Util.deepFreeze(prop);
+            }
+        }
+    }
+    return obj;
+};
+
+/**
+ * Prevent any modifications of the Util object
+ */
+Object.seal(zimbra_notifier_Util);

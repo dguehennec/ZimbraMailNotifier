@@ -37,7 +37,9 @@
 
 "use strict";
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Task"];
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Task"];
 
 /**
  * Creates an instance of Task.
@@ -54,9 +56,14 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Task"];
  * @param {Number}
  *            priority the priority
  */
-const zimbra_notifier_Task = function(name, timestamp, percentComplete, priority) {
+var zimbra_notifier_Task = function(name, timestamp, percentComplete, priority) {
     this.name = name;
     this.date = new Date(timestamp);
     this.percentComplete = percentComplete;
     this.priority = priority;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Task);

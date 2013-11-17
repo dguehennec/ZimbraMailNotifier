@@ -13,12 +13,12 @@
         <em:optionsURL>chrome://zimbra_mail_notifier/content/options.xul</em:optionsURL>
         <em:name>Zimbra Mail Notifier</em:name>
         <em:description>This extension notifies you when new messages arrive in your zimbra mailbox.</em:description>
-       
+
         <em:targetApplication>
             <Description>
                 <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-                <em:minVersion>15.0</em:minVersion>
-                <em:maxVersion>26.0</em:maxVersion>
+                <em:minVersion>17.0</em:minVersion>
+                <em:maxVersion>27.0</em:maxVersion>
             </Description>
         </em:targetApplication>
 

@@ -2,6 +2,7 @@
 
 <!ENTITY yes "Sim">
 <!ENTITY no "Não">
+<!ENTITY seconds "TODO">
 <!ENTITY week "semana">
 <!ENTITY weeks "semanas">
 <!ENTITY time "tempo">
@@ -28,15 +29,16 @@
 <!ENTITY about.close.label "Fechar">
 
 <!ENTITY option.option.label "Preferências">
-<!ENTITY option.default.label "Geral">
-<!ENTITY option.default.connection.caption "Conexão">
-<!ENTITY option.default.autoConnect "Conexão automática">
-<!ENTITY option.default.browserSetCookies "Conexão automática ao interface web">
-<!ENTITY option.default.notification.caption "Notificação">
-<!ENTITY option.default.systemNotification "Notificação do sistema">
-<!ENTITY option.default.soundNotification "Notificação sonora">
-<!ENTITY option.default.access.caption "Extensão de acesso">
-<!ENTITY option.default.statusbar "Barra de status">
+<!ENTITY option.common.label "Geral">
+<!ENTITY option.common.connection.caption "Conexão">
+<!ENTITY option.common.autoConnect "Conexão automática">
+<!ENTITY option.common.browserSetCookies "Conexão automática ao interface web">
+<!ENTITY option.common.mail.notification.caption "Notificação">
+<!ENTITY option.common.mail.systemNotification "Notificação do sistema">
+<!ENTITY option.common.mail.soundNotification "Notificação sonora">
+<!ENTITY option.common.mail.notify.duration.caption "TODO">
+<!ENTITY option.common.access.caption "Extensão de acesso">
+<!ENTITY option.common.statusbar "Barra de status">
 
 <!ENTITY option.calendar.label "Calendário">
 <!ENTITY option.calendar.activate "Activar gestão do calendário">

@@ -37,7 +37,9 @@
 
 "use strict";
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Message"];
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Message", "zimbra_notifier_MessageManager"];
 
 /**
  * Creates an instance of Message.
@@ -55,53 +57,110 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_Message"];
  *            content the message content
  * @param {String}
  *            senderMail the message sender
- * @param {Number}
- *            nbMail the number of messages
+ * @param {String}
+ *            convId the conversation id
  */
-const zimbra_notifier_Message = function(id, timestamp, subject, content, senderMail, mailIdList) {
+var zimbra_notifier_Message = function(id, timestamp, subject, content, senderMail, convId) {
     this.id = id;
-    this.date = new Date(timestamp);
+    this.date = timestamp ? (new Date(timestamp)) : null;
     this.subject = subject;
     this.content = content;
     this.senderEmail = senderMail;
-    this.mailIdList = mailIdList;
+    this.convId = convId;
 };
 
 /**
- * Indicate the number of mail in this message list
- *
- * @this {Message}
- * @return {Number} Number of mail in message
+ * Freeze the interface
  */
-zimbra_notifier_Message.prototype.nbMail = function(messageList) {
-    return this.mailIdList.length;
+Object.freeze(zimbra_notifier_Message);
+
+/**
+ * Creates an instance of MessageManager.
+ * Used to detect new unread message
+ *
+ * @constructor
+ * @this {MessageManager}
+ */
+var zimbra_notifier_MessageManager = function() {
+    this._oldNbMessages = 0;
+    this._nbMessages = 0;
+    this._tmpNbMessages = 0;
+
+    this._listMessages = [];
+    this._tmpListMessages = [];
+
+    this._mapMsgId2IdxList = {};
+    this._tmpMapMsgId2IdxList = {};
 };
 
 /**
- * Indicate the number of new mail in message
+ * Get the current number of messages
  *
- * @this {Message}
- * @param {Array}
- *            message list to compare
- * @return {Number} Number of new mail in message
+ * @this {MessageManager}
+ *
+ * @return {Number} Number of messages
  */
-zimbra_notifier_Message.prototype.getNbNewMail = function(messageList) {
-    var nbNewMail = this.mailIdList.length;
-    // Find this message list inside the old message list
-    for ( var index = 0; index < messageList.length; index++) {
-        var oldMsg = messageList[index];
-        if (oldMsg.id === this.id) {
-            // Old message list found, check if new mail were added to mail list
-            for (var i = 0; i < this.mailIdList.length; i++) {
-                for (var j = 0; j < oldMsg.mailIdList.length; j++) {
-                    if (this.mailIdList[i].id === oldMsg.mailIdList[j].id) {
-                        nbNewMail--;
-                        break;
-                    }
-                }
-            }
-            break;
+zimbra_notifier_MessageManager.prototype.nbMessages = function() {
+    return this._nbMessages;
+};
+
+/**
+ * End of adding messages
+ *
+ * @this {MessageManager}
+ *
+ * @return {Number} Number of new message since the last call
+ */
+zimbra_notifier_MessageManager.prototype.endAddingMessages = function() {
+    // Get the number of new messages since the last call
+    var diff = this._nbMessages - this._oldNbMessages;
+    this._oldNbMessages = this._nbMessages;
+    this._nbMessages = this._tmpNbMessages;
+    this._tmpNbMessages = 0;
+
+    // Update the list of message from the temporary list...
+    this._listMessages = this._tmpListMessages;
+    this._tmpListMessages = [];
+    this._mapMsgId2IdxList = this._tmpMapMsgId2IdxList;
+    this._tmpMapMsgId2IdxList = {};
+
+    return diff;
+};
+
+/**
+ * Add the message and indicate the number of new messages
+ *
+ * @this {MessageManager}
+ *
+ * @param {Message}
+ *            msg  The message to add
+ * @return {Number} Number of new mail (0 or 1)
+ */
+zimbra_notifier_MessageManager.prototype.addMessage = function(msg) {
+    var nbNewMsg = 0;
+
+    // First check if the message doesn't already exist in temporary list
+    var idxList = this._tmpMapMsgId2IdxList[msg.id];
+    if (idxList === undefined) {
+        // Check if the message is in the old list
+        if (this._mapMsgId2IdxList[msg.id] === undefined) {
+            nbNewMsg++;
+            this._nbMessages++;
         }
+        // Add the message to the temporary list
+        this._tmpMapMsgId2IdxList[msg.id] = this._tmpListMessages.length;
+        this._tmpListMessages.push(msg);
+        this._tmpNbMessages++;
     }
-    return nbNewMail;
+    else {
+        // Update the message
+        this._tmpListMessages[idxList] = msg;
+    }
+
+    return nbNewMsg;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_MessageManager);

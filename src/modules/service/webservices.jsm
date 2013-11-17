@@ -38,6 +38,7 @@
 "use strict";
 
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/calevent.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/message.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/domain/task.jsm");
@@ -45,9 +46,8 @@ Components.utils.import("resource://zimbra_mail_notifier/domain/mailboxinfo.jsm"
 Components.utils.import("resource://zimbra_mail_notifier/domain/session.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_TYPE", "zimbra_notifier_Webservice"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_TYPE", "zimbra_notifier_Webservice"];
 
 /**
  *
@@ -56,7 +56,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_TYPE", "zimbra_notifier_Webse
  * @constant
  *
  */
-const zimbra_notifier_REQUEST_TYPE = {
+var zimbra_notifier_REQUEST_TYPE = {
     NONE           : 'NONE',
     CONNECT        : 'CONNECT',
     CREATE_WAIT    : 'CREATE_WAIT',
@@ -67,6 +67,7 @@ const zimbra_notifier_REQUEST_TYPE = {
     CALENDAR       : 'CALENDAR',
     TASK           : 'TASK'
 };
+zimbra_notifier_Util.deepFreeze(zimbra_notifier_REQUEST_TYPE);
 
 /**
  * Creates an instance of zimbra_notifier_Webservice.
@@ -79,7 +80,7 @@ const zimbra_notifier_REQUEST_TYPE = {
  * @param {Service}
  *            parent the parent object which must implement callbacks...
  */
-const zimbra_notifier_Webservice = function(timeoutQuery, timeoutWait, parent) {
+var zimbra_notifier_Webservice = function(timeoutQuery, timeoutWait, parent) {
     this._logger = new zimbra_notifier_Logger("Webservice");
     this._session = this.createSession();
     this._timeoutQuery = timeoutQuery;
@@ -464,8 +465,14 @@ zimbra_notifier_Webservice.prototype._callbackWaitRequest = function(request) {
  * Search unread message request.
  *
  * @this {Webservice}
+ * @param {Number}
+ *            offset The start index of the returned query
+ * @param {Number}
+ *            limit  The maximum number of result
+ * @param {Boolean}
+ *            onlyId Only message id should be retrieved
  */
-zimbra_notifier_Webservice.prototype.searchUnReadMsg = function() {
+zimbra_notifier_Webservice.prototype.searchUnReadMsg = function(offset, limit, onlyId) {
     var typeReq = zimbra_notifier_REQUEST_TYPE.UNREAD_MSG;
     this._launchQuery(typeReq, true, false, function() {
 
@@ -474,7 +481,19 @@ zimbra_notifier_Webservice.prototype.searchUnReadMsg = function() {
         var dataBody = '';
         dataBody += '"SearchRequest":{';
         dataBody +=    '"_jsns":"urn:zimbraMail",';
-        dataBody +=    '"limit":999,';
+        dataBody +=    '"types":"message",';
+        if (offset > 0) {
+            dataBody += '"offset":' + offset + ',';
+        }
+        if (limit > 0) {
+            dataBody += '"limit":' + limit + ',';
+        }
+        else {
+            dataBody += '"limit":999,';
+        }
+        if (onlyId) {
+            dataBody += '"resultMode":"IDS",';
+        }
         dataBody +=    '"query":{';
         dataBody +=       '"_content":"is:unread"';
         dataBody +=    '}';
@@ -494,6 +513,8 @@ zimbra_notifier_Webservice.prototype.searchUnReadMsg = function() {
  */
 zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(request) {
     var isOk = false;
+    var currentOffset = -1;
+    var nextOffset = -1;
     var messages = [];
     try {
         if (request !== this._runningReq) {
@@ -502,14 +523,31 @@ zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(reques
         if (request.isSuccess()) {
             var jsonResponse = request.jsonResponse();
             if (jsonResponse && jsonResponse.Body) {
-                var content = jsonResponse.Body.SearchResponse.c;
+                // Read message with only id
+                var content = jsonResponse.Body.SearchResponse.hit;
                 if (content) {
-                    for (var index = content.length - 1; index >= 0; index--) {
-                        var currMsg = content[index];
-                        var msg = new zimbra_notifier_Message(currMsg.id, currMsg.d, currMsg.su, currMsg.fr,
-                                                              currMsg.e[currMsg.e.length-1].a, currMsg.m);
-                        messages.push(msg);
+                    for (var iMsgId = 0; iMsgId < content.length; ++iMsgId) {
+                        messages.push(new zimbra_notifier_Message(
+                            content[iMsgId].id, 0, '', '', 0, null));
                     }
+                }
+                // Read message with content
+                content = jsonResponse.Body.SearchResponse.m;
+                if (content) {
+                    for (var iMsgC = 0; iMsgC < content.length; ++iMsgC) {
+                        var currMsg = content[iMsgC];
+                        var eMsg = null;
+                        if (currMsg.e && currMsg.e.length > 0) {
+                            eMsg = currMsg.e[0].a;
+                        }
+                        messages.push(new zimbra_notifier_Message(
+                            currMsg.id, currMsg.d, currMsg.su, currMsg.fr, eMsg, currMsg.cid));
+                    }
+                }
+                // Get offset and next offset if there is more data to read
+                currentOffset = jsonResponse.Body.SearchResponse.offset;
+                if (jsonResponse.Body.SearchResponse.more) {
+                    nextOffset = currentOffset + messages.length;
                 }
                 isOk = true;
             }
@@ -524,7 +562,7 @@ zimbra_notifier_Webservice.prototype._callbackUnreadMsgRequest = function(reques
             this._callbackFailed(request);
         }
         else {
-            this._parent.callbackNewMessages(messages);
+            this._parent.callbackNewMessages(messages, currentOffset, nextOffset);
         }
     }
 };
@@ -552,8 +590,9 @@ zimbra_notifier_Webservice.prototype.searchCalendar = function(startDate, endDat
         dataBody +=    '"calExpandInstEnd":"' + endDate.getTime() + '",';
         dataBody +=    '"types":"appointment",';
         dataBody +=    '"sortBy":"dateAsc",';
+        dataBody +=     '"limit":400,';
         dataBody +=    '"query":{';
-        dataBody +=       '"_content":"underid:1 AND NOT inid:3"';
+        dataBody +=       '"_content":"underid:1 AND NOT underid:3"';
         dataBody +=    '}';
         dataBody += '}';
         this._runningReq.setQueryRequest(this._session, dataBody);
@@ -726,7 +765,7 @@ zimbra_notifier_Webservice.prototype.getMailBoxInfo = function() {
  *            object request
  */
 zimbra_notifier_Webservice.prototype._callbackGetMailBoxInfoRequest = function(request) {
-    var isOk = false, mailBoxInfo;
+    var mailBoxInfo = null;
     try {
         if (request !== this._runningReq) {
             this._logger.error("The running task request != callback object");
@@ -735,8 +774,10 @@ zimbra_notifier_Webservice.prototype._callbackGetMailBoxInfoRequest = function(r
             var jsonResponse = request.jsonResponse();
             if (jsonResponse && jsonResponse.Body) {
                 var content = jsonResponse.Body.GetInfoResponse;
-                mailBoxInfo = new zimbra_notifier_MailBoxInfo(content.version, content.attrs._attrs.zimbraMailQuota, content.used);
-                isOk = true;
+                if (content) {
+                    mailBoxInfo = new zimbra_notifier_MailBoxInfo(
+                        content.version, content.attrs._attrs.zimbraMailQuota, content.used);
+                }
             }
         }
     }
@@ -745,7 +786,7 @@ zimbra_notifier_Webservice.prototype._callbackGetMailBoxInfoRequest = function(r
     }
     finally {
         this._runningReq = null;
-        if (!isOk) {
+        if (mailBoxInfo === null) {
             this._callbackFailed(request);
         }
         else {
@@ -910,3 +951,7 @@ zimbra_notifier_Webservice.prototype._runCallbackFailLaunch = function(typeReq, 
     }, 1000);
 };
 
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Webservice);

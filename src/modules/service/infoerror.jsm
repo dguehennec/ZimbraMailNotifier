@@ -36,7 +36,9 @@
 
 "use strict";
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_InfoErrors"];
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+
+var EXPORTED_SYMBOLS = ["zimbra_notifier_InfoErrors"];
 
 /**
  * Creates an instance of ReqInfoError.
@@ -48,7 +50,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_InfoErrors"];
  * @param {Number}
  *            reqStatus the error code of the request
  */
-const zimbra_notifier_ReqInfoError = function(reqType, reqStatus) {
+var zimbra_notifier_ReqInfoError = function(reqType, reqStatus) {
     this.requestType = reqType;
     this.lastReqStatus = reqStatus;
     this.nbTotalFail = 1;
@@ -62,7 +64,7 @@ const zimbra_notifier_ReqInfoError = function(reqType, reqStatus) {
  * @constructor
  * @this {InfoErrors}
  */
-const zimbra_notifier_InfoErrors = function() {
+var zimbra_notifier_InfoErrors = function() {
     this._lstReqInfoErr = [];
 };
 
@@ -180,3 +182,8 @@ zimbra_notifier_InfoErrors.prototype.getLastError = function() {
     }
     return null;
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_InfoErrors);

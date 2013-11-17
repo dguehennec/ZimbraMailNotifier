@@ -60,7 +60,7 @@ com.zimbra.UiUtil = { };
  *
  */
 com.zimbra.UiUtil.OPTION_SELECT_TAB = {
-    GENERAL         : "option-tab-default",
+    GENERAL         : "option-tab-common",
     CALENDAR        : "option-tab-calendar",
     TASK            : "option-tab-task",
     IDENTIFICATION  : "option-tab-identifiant"

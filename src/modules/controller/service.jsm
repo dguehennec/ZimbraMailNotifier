@@ -38,20 +38,20 @@
 "use strict";
 
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/domain/message.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/notifier.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/infoerror.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/browser.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Service", "zimbra_notifier_SERVICE_EVENT",
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Service", "zimbra_notifier_SERVICE_EVENT",
                           "zimbra_notifier_SERVICE_STATE"];
 
 
-const zimbra_notifier_SERVICE_STATE = {
+var zimbra_notifier_SERVICE_STATE = {
     DISCONNECTED         : 'DISCONNECTED',
     NOTHING_TO_DO        : 'NOTHING_TO_DO',
 
@@ -69,39 +69,42 @@ const zimbra_notifier_SERVICE_STATE = {
     WAITSET_CREATE_ENDED : 'WAITSET_CREATE_ENDED',
 
     REFRESH_START        : 'REFRESH_START',
-    MAILBOX_INFO_RUN     : 'MAILBOX_INFO_RUN',
-    MAILBOX_INFO_ENDED   : 'MAILBOX_INFO_ENDED',
     UNREAD_MSG_RUN       : 'UNREAD_MSG_RUN',
     UNREAD_MSG_ENDED     : 'UNREAD_MSG_ENDED',
     CALENDAR_RUN         : 'CALENDAR_RUN',
     CALENDAR_ENDED       : 'CALENDAR_ENDED',
     TASK_RUN             : 'TASK_RUN',
     TASK_ENDED           : 'TASK_ENDED',
+    MAILBOX_INFO_RUN     : 'MAILBOX_INFO_RUN',
+    MAILBOX_INFO_ENDED   : 'MAILBOX_INFO_ENDED',
     REFRESH_ENDED        : 'REFRESH_ENDED',
 
+    WAITSET_LOOP_START   : 'WAITSET_LOOP_START',
     WAITSET_BLOCK_RUN    : 'WAITSET_BLOCK_RUN',
     WAITSET_NO_BLOCK_RUN : 'WAITSET_NO_BLOCK_RUN',
     WAITSET_NEW_EVT      : 'WAITSET_NEW_EVT',
     WAITSET_NO_NEW_EVT   : 'WAITSET_NO_NEW_EVT'
 };
+zimbra_notifier_Util.deepFreeze(zimbra_notifier_SERVICE_STATE);
 
-const zimbra_notifier_SERVICE_EVENT = {
-    STOPPED              : 'STOPPED',
-    CONNECTING           : 'CONNECTING',
-    INVALID_LOGIN        : 'INVALID_LOGIN',
-    CONNECT_ERR          : 'CONNECT_ERR',
-    CONNECTED            : 'CONNECTED',
-    DISCONNECTED         : 'DISCONNECTED',
-    CHECKING_MAILBOX_INFO: 'CHECKING_MAILBOX_INFO',
-    MAILBOX_INFO_UPDATED : 'MAILBOX_INFO_UPDATED',
-    CHECKING_UNREAD_MSG  : 'CHECKING_UNREAD_MSG',
-    UNREAD_MSG_UPDATED   : 'UNREAD_MSG_UPDATED',
-    CHECKING_CALENDAR    : 'CHECKING_CALENDAR',
-    CALENDAR_UPDATED     : 'CALENDAR_UPDATED',
-    CHECKING_TASK        : 'CHECKING_TASK',
-    TASK_UPDATED         : 'TASK_UPDATED',
-    PREF_UPDATED         : 'PREF_UPDATED'
+var zimbra_notifier_SERVICE_EVENT = {
+    STOPPED                : { startingReq: false, n: 'STOPPED'},
+    CONNECTING             : { startingReq: false, n: 'CONNECTING'},
+    INVALID_LOGIN          : { startingReq: false, n: 'INVALID_LOGIN'},
+    CONNECT_ERR            : { startingReq: false, n: 'CONNECT_ERR'},
+    CONNECTED              : { startingReq: false, n: 'CONNECTED'},
+    DISCONNECTED           : { startingReq: false, n: 'DISCONNECTED'},
+    CHECKING_UNREAD_MSG    : { startingReq: true,  n: 'CHECKING_UNREAD_MSG'},
+    UNREAD_MSG_UPDATED     : { startingReq: false, n: 'UNREAD_MSG_UPDATED'},
+    CHECKING_CALENDAR      : { startingReq: true,  n: 'CHECKING_CALENDAR'},
+    CALENDAR_UPDATED       : { startingReq: false, n: 'CALENDAR_UPDATED'},
+    CHECKING_TASK          : { startingReq: true,  n: 'CHECKING_TASK'},
+    TASK_UPDATED           : { startingReq: false, n: 'TASK_UPDATED'},
+    CHECKING_MAILBOX_INFO  : { startingReq: true,  n: 'CHECKING_MAILBOX_INFO'},
+    MAILBOX_INFO_UPDATED   : { startingReq: false, n: 'MAILBOX_INFO_UPDATED'},
+    PREF_UPDATED           : { startingReq: false, n: 'PREF_UPDATED'}
 };
+zimbra_notifier_Util.deepFreeze(zimbra_notifier_SERVICE_EVENT);
 
 /* ******************* Init functions *********************** */
 
@@ -113,14 +116,13 @@ const zimbra_notifier_SERVICE_EVENT = {
  * @param {Controller}
  *             The parent listening for events
  */
-const zimbra_notifier_Service = function(parent) {
+var zimbra_notifier_Service = function(parent) {
     this._parent = parent;
     this._logger = new zimbra_notifier_Logger("Service");
     this._reqInfoErrors = new zimbra_notifier_InfoErrors();
 
     this._currentState = zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO;
     this._loadDefault();
-    zimbra_notifier_Util.addObserver(this, zimbra_notifier_Constant.OBSERVER.PREF_SAVED);
 };
 
 /**
@@ -138,7 +140,7 @@ zimbra_notifier_Service.prototype._loadDefault = function() {
     }
 
     // Remove auth cookies
-    zimbra_notifier_Browser.updateCookies('', []);
+    this._parent.getBrowser().updateCookies('', []);
 
     // Timer for state machine
     this._stopStateTimer();
@@ -150,8 +152,9 @@ zimbra_notifier_Service.prototype._loadDefault = function() {
     // Calendar events / tasks / unread messages
     this._stopRemoveEvents();
     this._currentTasks = [];
+    this._unreadMessageOffset = 0;
+    this._unreadMessageManager = new zimbra_notifier_MessageManager();
     this._currentMailBoxInfo = null;
-    this._currentMessageUnRead = [];
     this._idxLoopQuery = 0;
 
     // Delay before trying again the connect
@@ -190,7 +193,6 @@ zimbra_notifier_Service.prototype._stopRemoveEvents = function() {
  */
 zimbra_notifier_Service.prototype.shutdown = function() {
     this._logger.info("Shutdown...");
-    zimbra_notifier_Util.removeObserver(this, zimbra_notifier_Constant.OBSERVER.PREF_SAVED);
     this._loadDefault();
     this._reqInfoErrors.clearAllErrors();
 };
@@ -222,7 +224,7 @@ zimbra_notifier_Service.prototype._getWebService = function() {
         this._needCheckWaitSet = this._webservice.isWaitSetValid();
     }
     return this._webservice;
-}
+};
 
 
 /* ******************* Manage state machine *********************** */
@@ -303,7 +305,7 @@ zimbra_notifier_Service.prototype._changeRunningState = function(newState, delay
  */
 zimbra_notifier_Service.prototype._checkExpectedStates = function(expStates) {
     var ok = false;
-    for ( var idx = 0; idx < expStates.length; idx++) {
+    for (var idx = 0; idx < expStates.length; idx++) {
         if (this._currentState === expStates[idx]) {
             ok = true;
             break;
@@ -349,7 +351,8 @@ zimbra_notifier_Service.prototype._changeAndRunState = function(newState) {
         this._logger.error("Fail run state (" + newState + "): " + e);
         this._changeRunningState(zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO, 500);
     }
-}
+};
+
 /**
  * Execute the code of specified state
  *
@@ -432,64 +435,67 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
         // Start the refresh query
         case zimbra_notifier_SERVICE_STATE.REFRESH_START:
             this._idxLoopQuery = 0;
-            this._changeState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN);
-
-         // get MailBox Information
-        case zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_MAILBOX_INFO);
-
-            if (this._needRunReq(zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO)) {
-                this._getWebService().getMailBoxInfo();
-                break;
-            }
-
-        case zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_ENDED:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.MAILBOX_INFO_UPDATED);
+            this._unreadMessageOffset = 0;
+            this._reqInfoErrors.resetLoopErrorCounter(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG);
+            this._reqInfoErrors.resetLoopErrorCounter(zimbra_notifier_REQUEST_TYPE.CALENDAR);
+            this._reqInfoErrors.resetLoopErrorCounter(zimbra_notifier_REQUEST_TYPE.TASK);
+            this._reqInfoErrors.resetLoopErrorCounter(zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO);
             this._changeState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN);
 
         // Check unread message
         case zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_UNREAD_MSG);
-
             if (this._needRunReq(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG)) {
-                this._getWebService().searchUnReadMsg();
+                this._doSearchUnReadMsg();
                 break;
             }
 
         case zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.UNREAD_MSG_UPDATED);
+            if (newState === zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED) {
+                this._parent.event(zimbra_notifier_SERVICE_EVENT.UNREAD_MSG_UPDATED);
+            }
             this._changeState(zimbra_notifier_SERVICE_STATE.CALENDAR_RUN);
 
         // Check calendar
         case zimbra_notifier_SERVICE_STATE.CALENDAR_RUN:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_CALENDAR);
-
             if (zimbra_notifier_Prefs.isCalendarEnabled() &&
                 this._needRunReq(zimbra_notifier_REQUEST_TYPE.CALENDAR)) {
 
-                var date = new Date();
-                var startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
-                var endDate = new Date(date.getTime() +
-                                        (86400000 * zimbra_notifier_Prefs.getCalendarPeriodDisplayed()));
-                this._getWebService().searchCalendar(startDate, endDate);
+                this._doSearchCalendar();
                 break;
             }
 
         case zimbra_notifier_SERVICE_STATE.CALENDAR_ENDED:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.CALENDAR_UPDATED);
+            if (newState === zimbra_notifier_SERVICE_STATE.CALENDAR_ENDED) {
+                this._parent.event(zimbra_notifier_SERVICE_EVENT.CALENDAR_UPDATED);
+            }
             this._changeState(zimbra_notifier_SERVICE_STATE.TASK_RUN);
 
         // Check tasks
         case zimbra_notifier_SERVICE_STATE.TASK_RUN:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_TASK);
+            if (zimbra_notifier_Prefs.isTaskEnabled() &&
+                this._needRunReq(zimbra_notifier_REQUEST_TYPE.TASK)) {
 
-            if (zimbra_notifier_Prefs.isTaskEnabled() && this._needRunReq(zimbra_notifier_REQUEST_TYPE.TASK)) {
-                this._getWebService().searchTask();
+                this._doSearchTask();
                 break;
             }
 
         case zimbra_notifier_SERVICE_STATE.TASK_ENDED:
-            this._parent.event(zimbra_notifier_SERVICE_EVENT.TASK_UPDATED);
+            if (newState === zimbra_notifier_SERVICE_STATE.TASK_ENDED) {
+                this._parent.event(zimbra_notifier_SERVICE_EVENT.TASK_UPDATED);
+            }
+            this._changeState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN);
+
+        // Check mailBox info
+        case zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN:
+            if (this._needRunReq(zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO)) {
+                this._doGetMailBoxInfo();
+                break;
+            }
+
+        case zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_ENDED:
+            if (newState === zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_ENDED) {
+                this._parent.event(zimbra_notifier_SERVICE_EVENT.MAILBOX_INFO_UPDATED);
+            }
             this._changeState(zimbra_notifier_SERVICE_STATE.REFRESH_ENDED);
 
         // Check if we need to try again the queries
@@ -505,14 +511,24 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
                 this._needRunReq(zimbra_notifier_REQUEST_TYPE.TASK)) {
                 runagain = true;
             }
+            if (!runagain && this._needRunReq(zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO)) {
+                runagain = true;
+            }
             // Do we need to retry
             if (runagain === true) {
                 this._planRunState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN,
                                    zimbra_notifier_Constant.SERVICE.REFRESH_WAIT_AFTER_FAILURE);
                 break;
             }
-            else if (this._needCheckAgainWaitSet === true) {
-                // Check again the wait set, fix the bug when a blocking WaitSet query is canceled
+            else {
+                this._changeState(zimbra_notifier_SERVICE_STATE.WAITSET_LOOP_START);
+            }
+
+        // Start the wait set loop
+        case zimbra_notifier_SERVICE_STATE.WAITSET_LOOP_START:
+            this._timeStartLoopWaitReq = new Date().getTime();
+            // Check again the wait set, fix the bug when a blocking WaitSet query is canceled
+            if (this._needCheckAgainWaitSet === true) {
                 this._needCheckAgainWaitSet = false;
                 this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_BLOCK_RUN, 10);
                 break;
@@ -524,16 +540,12 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
         // Launch the blocking query waiting for events
         case zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN:
             this._timeStartWaitReq = new Date().getTime();
-            if (this._timeStartLoopWaitReq === 0) {
-                this._timeStartLoopWaitReq = this._timeStartWaitReq;
-            }
             this._getWebService().waitRequest(true);
             break;
 
         // Launch the non blocking query waitset
         case zimbra_notifier_SERVICE_STATE.WAITSET_NO_BLOCK_RUN:
             this._timeStartWaitReq = 0;
-            this._timeStartLoopWaitReq = new Date().getTime();
             this._getWebService().waitRequest(false);
             break;
 
@@ -550,13 +562,11 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
         // We received a change event
         case zimbra_notifier_SERVICE_STATE.WAITSET_NEW_EVT:
             this._needCheckAgainWaitSet = false;
-            this._timeStartLoopWaitReq = 0;
             this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_CHECK, 1);
             break;
 
         // The wait request failed, or the request did timeout (no new event)
         case zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT:
-            this._needCheckAgainWaitSet = false;
             if (this._timeStartWaitReq === 0) {
                 this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN, 500);
             }
@@ -564,16 +574,24 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
                 var timeEndW = new Date().getTime();
                 // Get the delay to sleep before calling the next state
                 var delayAfterWaitReq = 10;
-                var timeExpW = this._timeStartWaitReq + this._getWebService().getWaitSetTimeout() - 1000;
-                if (timeExpW > timeEndW) {
-                    delayAfterWaitReq = timeExpW - timeEndW;
+                var timeMinW = this._timeStartWaitReq + zimbra_notifier_Constant.SERVICE.WAITSET_MIN_DURATION;
+                if (timeMinW > timeEndW) {
+                    delayAfterWaitReq = timeMinW - timeEndW;
                 }
                 // Check if we need to run again a blocking wait set
                 var timeEndLoop = this._timeStartLoopWaitReq + zimbra_notifier_Prefs.getRequestWaitLoopTime();
                 if (timeEndLoop > timeEndW) {
-                    this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN, delayAfterWaitReq);
+                    // Loop again, check the wait set if necessary
+                    if (this._needCheckAgainWaitSet === true) {
+                        this._needCheckAgainWaitSet = false;
+                        this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_BLOCK_RUN, delayAfterWaitReq);
+                    }
+                    else {
+                        this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN, delayAfterWaitReq);
+                    }
                 }
                 else {
+                    // End of loop
                     this._planRunState(zimbra_notifier_SERVICE_STATE.CONNECT_CHECK, delayAfterWaitReq);
                 }
             }
@@ -601,7 +619,6 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
 
 /**
  * Check if we need to run again the query
- * If this is the first loop, reset error loop counter of this request
  *
  * @private
  * @this {Service}
@@ -610,18 +627,17 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
  */
 zimbra_notifier_Service.prototype._needRunReq = function(reqType) {
     if (this._idxLoopQuery === 0) {
-        this._reqInfoErrors.resetLoopErrorCounter(reqType);
+        // First try
+        return true;
+    }
+    else if (this._idxLoopQuery >= zimbra_notifier_Constant.SERVICE.NB_RETRY_QUERY) {
+        // Give up
+        return false;
     }
     else {
-        var valCounter = this._reqInfoErrors.getLoopErrorCounter(reqType);
-        if (valCounter === 0) {
-            return false;
-        }
-        else if (valCounter >= zimbra_notifier_Constant.SERVICE.NB_RETRY_QUERY) {
-            return false;
-        }
+        // Run again only if previously, the query set an error
+        return (this._reqInfoErrors.getLoopErrorCounter(reqType) > 0);
     }
-    return true;
 };
 
 /**
@@ -650,6 +666,76 @@ zimbra_notifier_Service.prototype._doConnect = function(password) {
         return true;
     }
     return false;
+};
+
+/**
+ * Run the search query for unread message
+ *
+ * @private
+ * @this {Service}
+ */
+zimbra_notifier_Service.prototype._doSearchUnReadMsg = function() {
+
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN)) {
+
+        var onlyId = false;
+        var limit = zimbra_notifier_Constant.SERVICE.NB_MAX_MSG_WITH_CONTENT;
+        if ((this._unreadMessageOffset + 2) >= limit) {
+            onlyId = true;
+            limit = 0;
+        }
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_UNREAD_MSG);
+        this._getWebService().searchUnReadMsg(this._unreadMessageOffset, limit, onlyId);
+    }
+};
+
+/**
+ * Run the search query for calendar events
+ *
+ * @private
+ * @this {Service}
+ */
+zimbra_notifier_Service.prototype._doSearchCalendar = function() {
+
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CALENDAR_RUN)) {
+
+        var dateN = (new Date()).getTime();
+        var endDate = new Date(dateN + (86400000 * zimbra_notifier_Prefs.getCalendarPeriodDisplayed()));
+        var startDate = new Date(dateN - zimbra_notifier_Constant.SERVICE.EVENTS_DELTA_START_FROM_NOW);
+
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_CALENDAR);
+        this._getWebService().searchCalendar(startDate, endDate);
+    }
+};
+
+/**
+ * Run the search query for tasks
+ *
+ * @private
+ * @this {Service}
+ */
+zimbra_notifier_Service.prototype._doSearchTask = function() {
+
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.TASK_RUN)) {
+
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_TASK);
+        this._getWebService().searchTask();
+    }
+};
+
+/**
+ * Run the query to get mailBox informations
+ *
+ * @private
+ * @this {Service}
+ */
+zimbra_notifier_Service.prototype._doGetMailBoxInfo = function() {
+
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN)) {
+
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_MAILBOX_INFO);
+        this._getWebService().getMailBoxInfo();
+    }
 };
 
 /**
@@ -717,47 +803,44 @@ zimbra_notifier_Service.prototype.checkNow = function() {
 };
 
 /**
- * observe
+ * Inform that the preferences changed
  *
  * @this {Service}
- * @param {ISupports}
- *            subject the subject
- * @param {String}
- *            topic the topic
- * @param {String}
- *            data the data
+ * @param {Boolean}
+ *            connecting True if the user requested to connect from pref pane
  */
-zimbra_notifier_Service.prototype.observe = function(subject, topic, data) {
-    if (topic === zimbra_notifier_Constant.OBSERVER.PREF_SAVED) {
-        var needRefresh = false;
+zimbra_notifier_Service.prototype.prefUpdated = function(connecting) {
 
-        if (!zimbra_notifier_Prefs.isCalendarEnabled()) {
-            // Clear previous error related to calendar request, and remove any calendar events
-            this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.CALENDAR);
-            this._stopRemoveEvents();
-        }
-        else {
-            needRefresh = true;
-        }
+    var needRefresh = false;
 
-        if (!zimbra_notifier_Prefs.isTaskEnabled()) {
-            // Clear previous error related to task request, and remove any task
-            this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.TASK);
-            this._currentTasks = [];
-        }
-        else {
-            needRefresh = true;
-        }
+    if (!zimbra_notifier_Prefs.isCalendarEnabled()) {
+        // Clear previous error related to calendar request, and remove any calendar events
+        this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.CALENDAR);
+        this._stopRemoveEvents();
+    }
+    else {
+        needRefresh = true;
+    }
 
-        // Inform that the prefs changed
-        this._parent.event(zimbra_notifier_SERVICE_EVENT.PREF_UPDATED);
+    if (!zimbra_notifier_Prefs.isTaskEnabled()) {
+        // Clear previous error related to task request, and remove any task
+        this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.TASK);
+        this._currentTasks = [];
+    }
+    else {
+        needRefresh = true;
+    }
 
-        if (zimbra_notifier_Prefs.isAutoConnectEnabled() && zimbra_notifier_Prefs.isSavePasswordEnabled() &&
-            !this.isConnected() && this._currentState !== zimbra_notifier_SERVICE_STATE.CONNECT_RUN) {
+    // Inform that the prefs changed
+    this._parent.event(zimbra_notifier_SERVICE_EVENT.PREF_UPDATED);
+
+    if (!connecting) {
+        if (zimbra_notifier_Prefs.isAutoConnectEnabled() && zimbra_notifier_Prefs.isSavePasswordEnabled()
+            && !this.isConnected() && this._currentState !== zimbra_notifier_SERVICE_STATE.CONNECT_RUN) {
 
             this.initializeConnection();
         }
-        else if (this.isConnected() && needRefresh && !data) {
+        else if (this.isConnected() && needRefresh) {
             this.checkNow();
         }
     }
@@ -804,18 +887,22 @@ zimbra_notifier_Service.prototype.callbackError = function(typeReq, statusReq) {
             break;
 
         case zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK:
-            if (statusReq === zimbra_notifier_REQUEST_STATUS.TIMEOUT) {
-                // If the request timeout or the waitset id is invalid, do not add error
-                this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK);
-            }
-            else if (statusReq !== zimbra_notifier_REQUEST_STATUS.WAITSET_INVALID) {
+            // Only add an error if the query return quickly
+            if (this._timeStartWaitReq < 1000 || (new Date().getTime()) <
+                (zimbra_notifier_Constant.SERVICE.WAITSET_MIN_DURATION + this._timeStartWaitReq - 500)) {
+
                 this._reqInfoErrors.addError(typeReq, statusReq);
+            }
+            else {
+                this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK);
             }
             if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN)) {
                 if (statusReq === zimbra_notifier_REQUEST_STATUS.WAITSET_INVALID) {
                     this._planRunState(zimbra_notifier_SERVICE_STATE.WAITSET_CHECK, 500);
                 }
                 else {
+                    // If the wait query failed, we need to check the wait set
+                    this._needCheckAgainWaitSet = true;
                     this._changeAndRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NO_NEW_EVT);
                 }
             }
@@ -823,6 +910,7 @@ zimbra_notifier_Service.prototype.callbackError = function(typeReq, statusReq) {
 
         case zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK:
             if (statusReq !== zimbra_notifier_REQUEST_STATUS.WAITSET_INVALID) {
+                // Do not add error for invalid waitset id
                 this._reqInfoErrors.addError(typeReq, statusReq);
             }
             if (this._checkExpectedStates([zimbra_notifier_SERVICE_STATE.WAITSET_CHECK_RUN,
@@ -908,7 +996,7 @@ zimbra_notifier_Service.prototype.callbackSessionInfoChanged = function(session)
     zimbra_notifier_Prefs.saveWaitSet(session.waitId(), session.waitSeq(),
                                       session.buildUrl(''), session.user());
 
-    zimbra_notifier_Browser.updateCookies(session.buildUrl(''), session.getAuthCookies());
+    this._parent.getBrowser().updateCookies(session.buildUrl(''), session.getAuthCookies());
 };
 
 /**
@@ -971,16 +1059,51 @@ zimbra_notifier_Service.prototype.callbackWaitNoBlock = function(newEvent) {
  *
  * @this {Service}
  * @param {Message[]}
- *            messages messages unread
+ *            listMsg messages unread
+ * @param {Number}
+ *            currOffset The current offset in the results
+ * @param {Number}
+ *            nextOffset The next offset to use to get more data
  */
-zimbra_notifier_Service.prototype.callbackNewMessages = function(messages) {
+zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOffset, nextOffset) {
+    var mapConvId = {};
+    var listNewSubject = [];
+    var nbNewMsg = 0;
+    var lastSender = null;
+
+    try {
+        // Add message received to the message manager
+        for (var idxMsg = 0; idxMsg < listMsg.length; idxMsg++) {
+            var msg = listMsg[idxMsg];
+            var nb = this._unreadMessageManager.addMessage(msg);
+            if (nb > 0) {
+                nbNewMsg += nb;
+                lastSender = msg.senderEmail;
+                if (msg.subject && msg.convId && !mapConvId[msg.convId]) {
+                    listNewSubject.push(msg.subject);
+                    mapConvId[msg.convId] = true;
+                }
+            }
+        }
+        // If there is no more data to get
+        if (nextOffset <= 0) {
+            this._unreadMessageManager.endAddingMessages();
+        }
+    }
+    catch (e) {
+        this._logger.error("Failed to read new messages: " + e);
+    }
+
     try {
         var notify = true;
 
+        // Check if we need to notify the user of new messages
+        // Notify the user for the first refresh if the delay between the connect is 'long'
         if (this._firstCallbackNewMsg) {
-            this._firstCallbackNewMsg = false;
-
-            var dConnect = zimbra_notifier_Constant.SERVICE.DELAY_NOTIFY_FIRST_UNREAD;
+            if (nextOffset <= 0) {
+                this._firstCallbackNewMsg = false;
+            }
+            var dConnect = zimbra_notifier_Constant.SERVICE.NOTIFY_DELAY_FIRST_UNREAD;
             if (this._dateConnection) {
                 dConnect += this._dateConnection.getTime();
             }
@@ -989,57 +1112,59 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(messages) {
             }
         }
 
-        if (notify) {
-            var util = zimbra_notifier_Util;
+        // Play a sound if there is new unread email
+        if (notify && nbNewMsg > 0 && zimbra_notifier_Prefs.isEmailSoundEnabled()) {
+            zimbra_notifier_Util.playSound();
+        }
+        // Display a notification with the new unread email
+        if (notify && nbNewMsg > 0 && zimbra_notifier_Prefs.isEmailNotificationEnabled()) {
             var title = '';
-            var msg = '';
-            var nbMail = 0;
+            var msgTxt = '';
 
-            // Find new unread messages
-            for ( var index = 0; index < messages.length; index++) {
-                var newMessage = messages[index];
-                var nbNewUnReadMail = newMessage.getNbNewMail(this._currentMessageUnRead);
-                if (nbNewUnReadMail > 0) {
-                    nbMail += nbNewUnReadMail;
-                    if (nbMail > 1) {
-                        title = util.getBundleString("connector.notification.nbUnreadMessages");
-                        title = title.replace("%NB%", nbMail);
-                        msg += newMessage.subject + "\n";
-                    }
-                    else if (nbMail === 1) {
-                        title = util.getBundleString("connector.notification.NewMessage");
-                        title = title.replace("%EMAIL%", newMessage.senderEmail);
-                        msg += newMessage.subject + "\n";
-                    }
-                }
+            // Build title
+            if (nbNewMsg > 1 || !lastSender) {
+                title = zimbra_notifier_Util.getBundleString("connector.notification.nbUnreadMessages");
+                title = title.replace("%NB%", nbNewMsg);
+            }
+            else {
+                title = zimbra_notifier_Util.getBundleString("connector.notification.NewMessage");
+                title = title.replace("%EMAIL%", lastSender);
+            }
+
+            // Build message
+            for (var idx = 0; idx < listNewSubject.length &&
+                              idx < zimbra_notifier_Constant.SERVICE.NOTIFY_MAX_NB_MSG; ++idx) {
+
+                msgTxt += "\n" + zimbra_notifier_Util.maxStringLength(
+                    listNewSubject[idx], zimbra_notifier_Constant.SERVICE.NOTIFY_MAX_LEN_TITLE) + "\n";
+            }
+            if (listNewSubject.length > zimbra_notifier_Constant.SERVICE.NOTIFY_MAX_NB_MSG) {
+                msgTxt += "\n...\n";
             }
 
             // Notify
-            if (nbMail > 0) {
-                var listener = {
-                    observe : function(subject, topic, data) {
-                        if (topic === "alertclickcallback") {
-                            zimbra_notifier_Browser.openZimbraWebInterface();
-                        }
-                    }
-                };
-                if (zimbra_notifier_Prefs.isSoundEnabled()) {
-                    util.playSound();
-                }
-                if (zimbra_notifier_Prefs.isSystemNotificationEnabled()) {
-                    util.showNotificaton(title, msg, null, listener);
-                }
-            }
+            var browser = this._parent.getBrowser();
+            zimbra_notifier_Util.showNotification(title, msgTxt,
+                zimbra_notifier_Prefs.getEmailNotificationDuration(), browser.openWebPage, browser);
         }
     }
     catch (e) {
         this._logger.error("Failed to notify new messages: " + e);
     }
-    this._currentMessageUnRead = messages;
 
-    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG);
     if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN)) {
-        this._changeAndRunState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED);
+        if (nextOffset > 0) {
+            if (currOffset !== this._unreadMessageOffset) {
+                this._logger.warning("Unexpected unread msg query offset, got: " + currOffset +
+                                     " expecting: " + this._unreadMessageOffset);
+            }
+            this._unreadMessageOffset = nextOffset - 1;
+            this._changeAndRunState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_RUN);
+        }
+        else {
+            this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.UNREAD_MSG);
+            this._changeAndRunState(zimbra_notifier_SERVICE_STATE.UNREAD_MSG_ENDED);
+        }
     }
 };
 
@@ -1066,8 +1191,8 @@ zimbra_notifier_Service.prototype.callbackCalendar = function(events) {
                     // refresh notifier
                     newEvent.notifier.update(newEvent, zimbra_notifier_Prefs.getCalendarReminderTimeConf(),
                                              zimbra_notifier_Prefs.getCalendarReminderNbRepeat(),
-                                             zimbra_notifier_Prefs.isCalendarSoundNotificationEnabled(),
-                                             zimbra_notifier_Prefs.isCalendarSystemNotificationEnabled());
+                                             zimbra_notifier_Prefs.isCalendarSoundEnabled(),
+                                             zimbra_notifier_Prefs.isCalendarNotificationEnabled());
                     break;
                 }
             }
@@ -1075,8 +1200,8 @@ zimbra_notifier_Service.prototype.callbackCalendar = function(events) {
                 newEvent.notifier = new zimbra_notifier_Notifier(
                         newEvent, zimbra_notifier_Prefs.getCalendarReminderTimeConf(),
                         zimbra_notifier_Prefs.getCalendarReminderNbRepeat(),
-                        zimbra_notifier_Prefs.isCalendarSoundNotificationEnabled(),
-                        zimbra_notifier_Prefs.isCalendarSystemNotificationEnabled());
+                        zimbra_notifier_Prefs.isCalendarSoundEnabled(),
+                        zimbra_notifier_Prefs.isCalendarNotificationEnabled());
             }
             newEvents.push(newEvent);
         }
@@ -1136,10 +1261,10 @@ zimbra_notifier_Service.prototype.callbackTask = function(tasks) {
  *            mailBoxInfo
  */
 zimbra_notifier_Service.prototype.callbackMailBoxInfo = function(mailBoxInfo) {
-
-    this._currentMailBoxInfo = mailBoxInfo;
-
-    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO);
+    if (mailBoxInfo) {
+        this._currentMailBoxInfo = mailBoxInfo;
+        this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO);
+    }
     if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN)) {
         this._changeAndRunState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_ENDED);
     }
@@ -1171,17 +1296,13 @@ zimbra_notifier_Service.prototype.getCurrentState = function() {
 };
 
 /**
- * Get nb of unread messages
+ * Get unread messages manager
  *
  * @this {Service}
- * @return {Number} nb of unread messages
+ * @return {MessageManager} The manager
  */
-zimbra_notifier_Service.prototype.getNbMessageUnread = function() {
-    var nbMessage = 0;
-    for ( var index = 0; index < this._currentMessageUnRead.length; index++) {
-        nbMessage += this._currentMessageUnRead[index].nbMail();
-    }
-    return nbMessage;
+zimbra_notifier_Service.prototype.getMessageManager = function() {
+    return this._unreadMessageManager;
 };
 
 /**
@@ -1223,3 +1344,8 @@ zimbra_notifier_Service.prototype.getMailBoxInfo = function() {
 zimbra_notifier_Service.prototype.getLastError = function() {
     return this._reqInfoErrors.getLastError();
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Service);

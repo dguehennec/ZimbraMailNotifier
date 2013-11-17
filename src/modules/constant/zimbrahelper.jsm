@@ -37,8 +37,8 @@
 
 "use strict";
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Constant"];
-const zimbra_notifier_Constant = {};
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Constant"];
+var zimbra_notifier_Constant = {};
 
 /**
  * The version of the extension
@@ -53,7 +53,7 @@ zimbra_notifier_Constant.VERSION = 0x020100;
  * @constant
  */
 zimbra_notifier_Constant.LOGGER = {
-    LEVEL : 0,
+    LEVEL : 4,
     PRINT_STACK : false,
     PRINT_DATE : true,
     PRINT_DATA_REQUEST : false
@@ -109,8 +109,13 @@ zimbra_notifier_Constant.SERVICE = {
     CONNECT_BASE_WAIT_AFTER_FAILURE : 20000,
     CONNECT_MAX_WAIT_AFTER_FAILURE : 300000,
     REFRESH_WAIT_AFTER_FAILURE : 10000,
-    DELAY_NOTIFY_FIRST_UNREAD : 8000,
-    NB_RETRY_QUERY : 3
+    WAITSET_MIN_DURATION : 50000,
+    NB_RETRY_QUERY : 3,
+    NOTIFY_DELAY_FIRST_UNREAD : 12000,
+    NOTIFY_MAX_NB_MSG : 15,
+    NOTIFY_MAX_LEN_TITLE : 75,
+    NB_MAX_MSG_WITH_CONTENT : 200,
+    EVENTS_DELTA_START_FROM_NOW : 10800000
 };
 
 /**
@@ -124,3 +129,6 @@ zimbra_notifier_Constant.WEBSERVICE = {
     COOKIE_KEY_TOKEN : "ZM_AUTH_TOKEN"
 };
 
+// Freeze the constants
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+zimbra_notifier_Util.deepFreeze(zimbra_notifier_Constant);

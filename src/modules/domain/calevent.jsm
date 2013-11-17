@@ -37,7 +37,9 @@
 
 "use strict";
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_CalEvent"];
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
+
+var EXPORTED_SYMBOLS = ["zimbra_notifier_CalEvent"];
 
 /**
  * Creates an instance of CalEvent.
@@ -56,7 +58,7 @@ const EXPORTED_SYMBOLS = ["zimbra_notifier_CalEvent"];
  * @param {Number}
  *            timeConf the time configuration
  */
-const zimbra_notifier_CalEvent = function(id, name, timestamp, duration, timeConf) {
+var zimbra_notifier_CalEvent = function(id, name, timestamp, duration, timeConf) {
     this.id = id;
     this.name = name;
     this.startDate = new Date(timestamp);
@@ -104,3 +106,8 @@ zimbra_notifier_CalEvent.prototype.dateBeginW1 = function(year) {
     var dateDay4 = new Date(year, 0, 4, 0, 0, 0, 0);
     return new Date(dateDay4.getTime() - (dateDay4.getDay() * 86400000));
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_CalEvent);

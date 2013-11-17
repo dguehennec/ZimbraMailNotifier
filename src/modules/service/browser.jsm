@@ -37,55 +37,38 @@
 "use strict";
 
 Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
 
-const EXPORTED_SYMBOLS = ["zimbra_notifier_Browser"];
+var EXPORTED_SYMBOLS = ["zimbra_notifier_Browser", "zimbra_notifier_BrowserUtil"];
+
+/************************** Util functions ***********************/
 
 /**
- * Creates a global instance of zimbra_notifier_Browser
+ * Creates a global instance of zimbra_notifier_BrowserUtil
  *
  * @constructor
  * @this {Browser}
  *
  */
-const zimbra_notifier_Browser = {
-    _logger: new zimbra_notifier_Logger("Browser"),
-    _urlWebService: null,
-    _cookies: []
-};
-
-/**
- * Update required cookies
- *
- * @this {Browser}
- * @param {String}
- *            urlWebService  The url of the webservice associated with the cookies
- * @param {Object}
- *            cookies  Array of cookies (object: key, val) needed for authentication
- */
-zimbra_notifier_Browser.updateCookies = function(urlWebService, cookies) {
-    this._urlWebService = urlWebService;
-    this._cookies = cookies;
+var zimbra_notifier_BrowserUtil = {
+    _logger: new zimbra_notifier_Logger("BrowserUtil")
 };
 
 /**
  * Find an already opened tab and get the focus on it
  *
- * @this {Browser}
+ * @this {BrowserUtil}
  * @param {String}
  *            url url to find.
- * @return {browser} null if not found
+ * @return {XULbrowser} null if not found
  */
-zimbra_notifier_Browser.selectOpenedTab = function(url) {
+zimbra_notifier_BrowserUtil.selectOpenedTab = function(url) {
     try {
         var browserEnumerator = Services.wm.getEnumerator("navigator:browser");
-        // Clean url
-        var exp = /(\b(https|http):\/\/)/gi;
-        url = url.replace(exp, "");
-        if (url.lastIndexOf('/') === url.length - 1) {
-            url = url.slice(0, -1);
-        }
+        var uriToMatch = Services.io.newURI(url, null, null);
+        var hostToMatch = uriToMatch.asciiHost;
+        var pathToMatch = uriToMatch.path.match(/^[^?&#]*/)[0];
 
         while (browserEnumerator.hasMoreElements()) {
             var browserInstance = browserEnumerator.getNext().getBrowser();
@@ -94,7 +77,9 @@ zimbra_notifier_Browser.selectOpenedTab = function(url) {
                 // browserInstance <=> https://developer.mozilla.org/en/docs/XUL/tabbrowser
                 // currentTab      <=> https://developer.mozilla.org/en/docs/XUL/browser
                 var currentTab = browserInstance.getBrowserAtIndex(index);
-                if (currentTab.currentURI.spec.indexOf(url) >= 0) {
+                if ((currentTab.currentURI.asciiHost === hostToMatch) &&
+                    (currentTab.currentURI.path.indexOf(pathToMatch) === 0)) {
+
                     browserInstance.selectedTab = browserInstance.tabContainer.childNodes[index];
                     try {
                         browserInstance.contentWindow.focus();
@@ -117,12 +102,12 @@ zimbra_notifier_Browser.selectOpenedTab = function(url) {
 /**
  * open a new url
  *
- * @this {Browser}
+ * @this {BrowserUtil}
  * @param {String}
  *            url url to open.
  * @return {Boolean} true if success
  */
-zimbra_notifier_Browser.openNewTab = function(url) {
+zimbra_notifier_BrowserUtil.openNewTab = function(url) {
     try {
         var win = Services.wm.getMostRecentWindow("navigator:browser");
         if (win) {
@@ -154,104 +139,15 @@ zimbra_notifier_Browser.openNewTab = function(url) {
 };
 
 /**
- * Open the zimbra web interface
- *
- * @this {Browser}
- */
-zimbra_notifier_Browser.openZimbraWebInterface = function() {
-    try {
-        var needReload = false;
-        var urlWebInterface = zimbra_notifier_Prefs.getUrlUserInterface();
-        if (urlWebInterface) {
-
-            // Inject cookie if needed
-            if (zimbra_notifier_Prefs.getBrowserSetCookies() && this._urlWebService) {
-
-                var tokenWebServ = this._getTokenWebService();
-                if (tokenWebServ !== null) {
-                    // Check if browser token cookie is the same that the token use in this app
-                    var tokenBrowser = this.getCookieValue(this._urlWebService, 'ZM_AUTH_TOKEN');
-                    if (tokenBrowser !== tokenWebServ) {
-                        needReload = true;
-                    }
-                    // Sync cookies used in this module and the browser cookies
-                    this._setAuthCookies();
-                }
-            }
-            // Open the URL
-            var tab = this.selectOpenedTab(urlWebInterface);
-            if (tab !== null) {
-                if (tab.currentURI.path.indexOf("loginOp=") >= 0) {
-                    tab.loadURI(urlWebInterface);
-                }
-                else if (needReload) {
-                    tab.reload();
-                }
-            }
-            else {
-                this.openNewTab(urlWebInterface);
-            }
-        }
-    }
-    catch (e) {
-        this._logger.error("Fail to open zimbra web interface: " + e);
-    }
-};
-
-/**
- * Add to the cookie manager the authentication cookies of zimbra
- *
- * @this {Browser}
- * @private
- */
-zimbra_notifier_Browser._setAuthCookies = function() {
-    try {
-        for (var idx = 0; idx < this._cookies.length; idx++) {
-            var c = this._cookies[idx];
-            var httpOnly = c.httpOnly;
-            if (httpOnly === undefined) {
-                httpOnly = zimbra_notifier_Prefs.isBrowserCookieHttpOnly();
-            }
-            this.addSessionCookie(this._urlWebService, c.key, c.val, httpOnly);
-        }
-    }
-    catch (e) {
-        this._logger.error("Fail to set authentication cookies: " + e);
-    }
-};
-
-/**
- * Find from the cookie array the token cookie value
- *
- * @this {Browser}
- * @private
- */
-zimbra_notifier_Browser._getTokenWebService = function() {
-    try {
-        for (var idx = 0; idx < this._cookies.length; idx++) {
-            var c = this._cookies[idx];
-            if (c.key === 'ZM_AUTH_TOKEN') {
-                return c.val;
-            }
-        }
-    }
-    catch (e) {
-        this._logger.error("Fail to get token cookie value: " + e);
-    }
-    return null;
-};
-
-
-/**
  * Get the cookie value
  *
- * @this {Util}
+ * @this {BrowserUtil}
  * @param {String}
  *            url  The URL associated with the cookie
  * @param {String}
  *            key  The key of the cookie
  */
-zimbra_notifier_Browser.getCookieValue = function(url, key) {
+zimbra_notifier_BrowserUtil.getCookieValue = function(url, key) {
     if (url && key) {
         var cookieUri = Services.io.newURI(url, null, null);
         var enumCookies = Services.cookies.getCookiesFromHost(cookieUri.host);
@@ -269,7 +165,7 @@ zimbra_notifier_Browser.getCookieValue = function(url, key) {
 /**
  * Set a new session cookie
  *
- * @this {Util}
+ * @this {BrowserUtil}
  * @param {String}
  *            url  The URL associated with the cookie
  * @param {String}
@@ -279,7 +175,7 @@ zimbra_notifier_Browser.getCookieValue = function(url, key) {
  * @param {Boolean}
  *            httpOnly  True if the cookie is httpOnly
  */
-zimbra_notifier_Browser.addSessionCookie = function(url, key, value, httpOnly) {
+zimbra_notifier_BrowserUtil.addSessionCookie = function(url, key, value, httpOnly) {
     if (url && key) {
         var cookieUri = Services.io.newURI(url, null, null);
         var expir = ((new Date().getTime()) / 1000) + (48 * 3600);
@@ -291,15 +187,166 @@ zimbra_notifier_Browser.addSessionCookie = function(url, key, value, httpOnly) {
 /**
  * Remove a cookie
  *
- * @this {Util}
+ * @this {BrowserUtil}
  * @param {String}
  *            url  The URL associated with the cookie
  * @param {String}
  *            key  The key of the cookie
  */
-zimbra_notifier_Browser.removeCookie = function(url, key) {
+zimbra_notifier_BrowserUtil.removeCookie = function(url, key) {
     if (url && key) {
         var cookieUri = Services.io.newURI(url, null, null);
         Services.cookies.remove(cookieUri.host, key, cookieUri.path, false);
     }
 };
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_BrowserUtil);
+
+/************************** Browser controller ***********************/
+
+/**
+ * Creates a instance of zimbra_notifier_Browser
+ *
+ * @constructor
+ * @this {Browser}
+ *
+ */
+var zimbra_notifier_Browser = function() {
+    this._logger = new zimbra_notifier_Logger("Browser");
+    this._urlWebService = null;
+    this._cookies = [];
+    this._urlWebPage = null;
+    this._addCookiesOnOpenUrl = false;
+    this._cookiesUseHttpOnly = false;
+};
+
+/**
+ * Update information to open the web interface
+ *
+ * @this {Browser}
+ * @param {String}
+ *            url  The url of the web interface
+ * @param {Boolean[]}
+ *            addCookies True if cookies should be added to the web browser before opening the web page
+ * @param {Boolean}
+ *            httpOnly True to create httpOnly cookies
+ */
+zimbra_notifier_Browser.prototype.setWebPageInfo = function(url, addCookies, httpOnly) {
+    this._urlWebPage = url;
+    this._addCookiesOnOpenUrl = addCookies;
+    this._cookiesUseHttpOnly = httpOnly;
+};
+
+/**
+ * Update required cookies
+ *
+ * @this {Browser}
+ * @param {String}
+ *            urlWebService  The url of the webservice associated with the cookies
+ * @param {Object[]}
+ *            cookies  Array of cookies (object: key, val) needed for authentication
+ */
+zimbra_notifier_Browser.prototype.updateCookies = function(urlWebService, cookies) {
+
+    // If we are just disconnected, remove the browser cookie
+    if (this._addCookiesOnOpenUrl && this._urlWebService &&
+        !this._getAuthTokenFromList(cookies) && this._getAuthTokenFromList(this._cookies)) {
+
+        zimbra_notifier_BrowserUtil.removeCookie(this._urlWebService, 'ZM_AUTH_TOKEN');
+    }
+    this._urlWebService = urlWebService;
+    this._cookies = cookies;
+};
+
+/**
+ * Open the zimbra web interface
+ *
+ * @this {Browser}
+ */
+zimbra_notifier_Browser.prototype.openWebPage = function() {
+    try {
+        var needReload = false;
+        if (this._urlWebPage) {
+
+            // Inject cookie if needed
+            if (this._addCookiesOnOpenUrl && this._urlWebService) {
+
+                var tokenWebServ = this._getAuthTokenFromList(this._cookies);
+                if (tokenWebServ !== null) {
+                    // Check if browser token cookie is the same that the token use in this app
+                    var tokenBrowser = zimbra_notifier_BrowserUtil.getCookieValue(
+                                            this._urlWebService, 'ZM_AUTH_TOKEN');
+                    if (tokenBrowser !== tokenWebServ) {
+                        needReload = true;
+                    }
+                    // Sync cookies used in this module and the browser cookies
+                    this._setAuthCookies();
+                }
+            }
+            // Open the URL
+            var tab = zimbra_notifier_BrowserUtil.selectOpenedTab(this._urlWebPage);
+            if (tab !== null) {
+                if (tab.currentURI.path.indexOf("loginOp=") >= 0) {
+                    tab.loadURI(this._urlWebPage);
+                }
+                else if (needReload) {
+                    tab.reload();
+                }
+            }
+            else {
+                zimbra_notifier_BrowserUtil.openNewTab(this._urlWebPage);
+            }
+        }
+    }
+    catch (e) {
+        this._logger.error("Fail to open zimbra web interface: " + e);
+    }
+};
+
+/**
+ * Add to the cookie manager the authentication cookies of zimbra
+ *
+ * @this {Browser}
+ * @private
+ */
+zimbra_notifier_Browser.prototype._setAuthCookies = function() {
+    try {
+        for (var idx = 0; idx < this._cookies.length; idx++) {
+            var c = this._cookies[idx];
+            var httpOnly = c.httpOnly;
+            if (httpOnly === undefined) {
+                httpOnly = this._cookiesUseHttpOnly;
+            }
+            zimbra_notifier_BrowserUtil.addSessionCookie(
+                this._urlWebService, c.key, c.val, httpOnly);
+        }
+    }
+    catch (e) {
+        this._logger.error("Fail to set authentication cookies: " + e);
+    }
+};
+
+/**
+ * Find from the cookie array, the auth token value
+ *
+ * @this {Browser}
+ * @private
+ */
+zimbra_notifier_Browser.prototype._getAuthTokenFromList = function(cookies) {
+    if (cookies) {
+        for (var idx = 0; idx < cookies.length; idx++) {
+            if (cookies[idx].key === 'ZM_AUTH_TOKEN') {
+                return cookies[idx].val;
+            }
+        }
+    }
+    return null;
+};
+
+/**
+ * Freeze the interface
+ */
+Object.freeze(zimbra_notifier_Browser);
