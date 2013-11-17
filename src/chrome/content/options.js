@@ -44,6 +44,7 @@ if (!com.zimbra) {
     com.zimbra = {};
 }
 
+Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm", com);
 Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm", com);
@@ -86,6 +87,11 @@ com.zimbra.Options.init = function() {
     // Do we have a OK/Cancel button, or modification is applied immediately
     if (Application.prefs.getValue("browser.preferences.instantApply", null) === true) {
         this._prefInstantApply = true;
+    }
+
+    // Hide platform dependant options
+    if (Services.appinfo.OS === "Darwin") {
+        util.setVisibility("zimbra_mail_notifier-hboxMailNotifyDuration", "collapse");
     }
 
     // refresh screen access
