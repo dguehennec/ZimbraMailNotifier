@@ -732,9 +732,12 @@ zimbra_notifier_Service.prototype._doSearchTask = function() {
 zimbra_notifier_Service.prototype._doGetMailBoxInfo = function() {
 
     if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.MAILBOX_INFO_RUN)) {
-
+        var retrieveMailQuota = true;
+        if (this._currentMailBoxInfo && this._currentMailBoxInfo.quotaSize > 0) {
+            retrieveMailQuota = false;
+        }
         this._parent.event(zimbra_notifier_SERVICE_EVENT.CHECKING_MAILBOX_INFO);
-        this._getWebService().getMailBoxInfo();
+        this._getWebService().getMailBoxInfo(retrieveMailQuota);
     }
 };
 
@@ -1262,6 +1265,9 @@ zimbra_notifier_Service.prototype.callbackTask = function(tasks) {
  */
 zimbra_notifier_Service.prototype.callbackMailBoxInfo = function(mailBoxInfo) {
     if (mailBoxInfo) {
+        if (this._currentMailBoxInfo && !(mailBoxInfo.quotaSize > 0)) {
+            mailBoxInfo.setQuotaSize(this._currentMailBoxInfo.quotaSize);
+        }
         this._currentMailBoxInfo = mailBoxInfo;
         this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO);
     }

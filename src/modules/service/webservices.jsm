@@ -737,8 +737,10 @@ zimbra_notifier_Webservice.prototype._callbackTaskRequest = function(request) {
  * MailBox Info request.
  *
  * @this {Webservice}
+ * @param {Boolean}
+ *           retrieveMailQuota True to get the allowed mail quota, the quota used is still retrieved
  */
-zimbra_notifier_Webservice.prototype.getMailBoxInfo = function() {
+zimbra_notifier_Webservice.prototype.getMailBoxInfo = function(retrieveMailQuota) {
     var typeReq = zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO;
     this._launchQuery(typeReq, true, false, function() {
 
@@ -747,7 +749,7 @@ zimbra_notifier_Webservice.prototype.getMailBoxInfo = function() {
         var dataBody = '';
         dataBody += '"GetInfoRequest":{';
         dataBody +=    '"_jsns":"urn:zimbraAccount",';
-        dataBody +=    '"sections":"mbox,attrs",';
+        dataBody +=    '"sections":"mbox' + (retrieveMailQuota ? ',attrs' : '') + '",';
         dataBody +=    '"rights":""';
         dataBody += '}';
 
@@ -775,8 +777,11 @@ zimbra_notifier_Webservice.prototype._callbackGetMailBoxInfoRequest = function(r
             if (jsonResponse && jsonResponse.Body) {
                 var content = jsonResponse.Body.GetInfoResponse;
                 if (content) {
-                    mailBoxInfo = new zimbra_notifier_MailBoxInfo(
-                        content.version, content.attrs._attrs.zimbraMailQuota, content.used);
+                    var quotaSize = null;
+                    if (content.attrs && content.attrs._attrs) {
+                        quotaSize = content.attrs._attrs.zimbraMailQuota;
+                    }
+                    mailBoxInfo = new zimbra_notifier_MailBoxInfo(content.version, quotaSize, content.used);
                 }
             }
         }

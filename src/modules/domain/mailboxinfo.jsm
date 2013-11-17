@@ -56,10 +56,42 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_MailBoxInfo"];
  */
 var zimbra_notifier_MailBoxInfo = function(version, maxSize, used) {
     this.version = version;
-    this.quotaSize = maxSize;
-    this.quotaSizeString = zimbra_notifier_Util.convertBytesToStringValue(maxSize);
+    this.setQuotaSize(maxSize);
+    this.setQuotaUsed(used);
+};
+
+/**
+ * Set the current used quota
+ *
+ * @this {MailBoxInfo}
+ * @param {Number}
+ *            used  The quota used in bytes
+ */
+zimbra_notifier_MailBoxInfo.prototype.setQuotaUsed = function(used) {
     this.quotaUsed = used;
-    this.quotaUsedString = zimbra_notifier_Util.convertBytesToStringValue(used);
+    if (used > 0) {
+        this.quotaUsedString = zimbra_notifier_Util.convertBytesToStringValue(used);
+    }
+    else {
+        this.quotaUsedString = null;
+    }
+};
+
+/**
+ * Set the quota of the mailbox
+ *
+ * @this {MailBoxInfo}
+ * @param {Number}
+ *            maxSize  The quota in bytes
+ */
+zimbra_notifier_MailBoxInfo.prototype.setQuotaSize = function(maxSize) {
+    this.quotaSize = maxSize;
+    if (maxSize > 0) {
+        this.quotaSizeString = zimbra_notifier_Util.convertBytesToStringValue(maxSize);
+    }
+    else {
+        this.quotaSizeString = null;
+    }
 };
 
 /**
