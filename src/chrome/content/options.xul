@@ -34,7 +34,7 @@
                 <checkbox preference="zimbra_mail_notifier-optionMailSound" label="&option.common.mail.soundNotification;" checked="true"/>
                 <hbox align="center" id="zimbra_mail_notifier-hboxMailNotifyDuration">
                     <label value="&option.common.mail.notify.duration.caption; :"/>
-                    <textbox style="max-width:55px" type="number" min="4" max="980" increment="4" preference="zimbra_mail_notifier-optionMailNotifyDuration"/>
+                    <textbox style="max-width:55px" type="number" min="1" max="980" increment="4" preference="zimbra_mail_notifier-optionMailNotifyDuration"/>
                     <label value="&seconds;"/>
                     <spacer flex="1"/>
                 </hbox>

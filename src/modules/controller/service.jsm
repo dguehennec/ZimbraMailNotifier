@@ -89,7 +89,7 @@ zimbra_notifier_Util.deepFreeze(zimbra_notifier_SERVICE_STATE);
 
 var zimbra_notifier_SERVICE_EVENT = {
     STOPPED                : { startingReq: false, n: 'STOPPED'},
-    CONNECTING             : { startingReq: false, n: 'CONNECTING'},
+    CONNECTING             : { startingReq: true,  n: 'CONNECTING'},
     INVALID_LOGIN          : { startingReq: false, n: 'INVALID_LOGIN'},
     CONNECT_ERR            : { startingReq: false, n: 'CONNECT_ERR'},
     CONNECTED              : { startingReq: false, n: 'CONNECTED'},
