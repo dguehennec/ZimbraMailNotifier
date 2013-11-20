@@ -59,6 +59,20 @@ var zimbra_notifier_ReqInfoError = function(reqType, reqStatus) {
 };
 
 /**
+ * Dump the contents of the error
+ *
+ * @this {ReqInfoError}
+ * @return The human representation of the error
+ */
+zimbra_notifier_ReqInfoError.prototype.toString = function() {
+
+    return "{" + this.requestType + ", status:" +  this.lastReqStatus +
+           ", loop:" + this.nbLoopFail + ", total:" + this.nbTotalFail +
+           ", date:" + this.dateLastFail.toTimeString() + "}";
+};
+
+
+/**
  * Creates an instance of InfoErrors.
  *
  * @constructor
@@ -83,8 +97,8 @@ zimbra_notifier_InfoErrors.prototype.addError = function(reqType, reqStatus) {
     // Get a reference of the request info error and remove it from the array
     for ( var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
 
-        reqInfo = this._lstReqInfoErr[idx];
-        if (reqInfo.requestType === reqType) {
+        if (this._lstReqInfoErr[idx].requestType === reqType) {
+            reqInfo = this._lstReqInfoErr[idx];
             this._lstReqInfoErr.splice(idx, 1);
             break;
         }
@@ -181,6 +195,36 @@ zimbra_notifier_InfoErrors.prototype.getLastError = function() {
         return this._lstReqInfoErr[0];
     }
     return null;
+};
+
+/**
+ * Get the number of errors
+ *
+ * @this {InfoErrors}
+ * @return {Number}
+ */
+zimbra_notifier_InfoErrors.prototype.getNbErrors = function() {
+    return this._lstReqInfoErr.length;
+};
+
+/**
+ * Dump the errors
+ *
+ * @this {InfoErrors}
+ * @return The human representation of the error
+ */
+zimbra_notifier_InfoErrors.prototype.toString = function() {
+
+    if (this._lstReqInfoErr.length > 0) {
+
+        var txt = "errors:[ " + this._lstReqInfoErr[0].toString();
+
+        for (var idx = 1; idx < this._lstReqInfoErr.length; idx++) {
+            txt += ",\n    " + this._lstReqInfoErr[idx].toString();
+        }
+        return txt + " ]";
+    }
+    return "errors:null";
 };
 
 /**

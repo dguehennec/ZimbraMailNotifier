@@ -138,12 +138,14 @@ zimbra_notifier_ControllerData._removeCallBackRefresh = function(callback) {
  * @this {ControllerData}
  * @param {SERVICE_EVENT}
  *            event  The type of event
+ * @param {Object}
+ *            data  The data associated with the event, can be undefined
  */
-zimbra_notifier_ControllerData.event = function(event) {
+zimbra_notifier_ControllerData.event = function(event, data) {
     for (var index = 0; index < this._callbackList.length; index++) {
         var callback = this._callbackList[index];
         if (callback !== null) {
-            callback.refresh(event);
+            callback.refresh(event, data);
         }
     }
 };
