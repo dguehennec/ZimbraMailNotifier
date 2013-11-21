@@ -1025,6 +1025,7 @@ zimbra_notifier_Service.prototype.callbackCreateWaitSet = function() {
  */
 zimbra_notifier_Service.prototype.callbackWaitBlock = function(newEvent) {
     this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK);
+    this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK);
     if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.WAITSET_BLOCK_RUN)) {
         if (newEvent) {
             this._changeAndRunState(zimbra_notifier_SERVICE_STATE.WAITSET_NEW_EVT);
