@@ -2,7 +2,7 @@
 
 <!ENTITY yes "Sim">
 <!ENTITY no "Não">
-<!ENTITY seconds "TODO">
+<!ENTITY seconds "segundos">
 <!ENTITY week "semana">
 <!ENTITY weeks "semanas">
 <!ENTITY time "tempo">
@@ -36,7 +36,7 @@
 <!ENTITY option.common.mail.notification.caption "Notificação">
 <!ENTITY option.common.mail.systemNotification "Notificação do sistema">
 <!ENTITY option.common.mail.soundNotification "Notificação sonora">
-<!ENTITY option.common.mail.notify.duration.caption "TODO">
+<!ENTITY option.common.mail.notify.duration.caption "Duração da notificação">
 <!ENTITY option.common.access.caption "Extensão de acesso">
 <!ENTITY option.common.statusbar "Barra de status">
 
