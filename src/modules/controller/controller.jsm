@@ -138,12 +138,14 @@ zimbra_notifier_ControllerData._removeCallBackRefresh = function(callback) {
  * @this {ControllerData}
  * @param {SERVICE_EVENT}
  *            event  The type of event
+ * @param {Object}
+ *            data  The data associated with the event, can be undefined
  */
-zimbra_notifier_ControllerData.event = function(event) {
+zimbra_notifier_ControllerData.event = function(event, data) {
     for (var index = 0; index < this._callbackList.length; index++) {
         var callback = this._callbackList[index];
         if (callback !== null) {
-            callback.refresh(event);
+            callback.refresh(event, data);
         }
     }
 };
@@ -199,12 +201,7 @@ zimbra_notifier_Controller.removeCallBackRefresh = function(callback) {
  */
 zimbra_notifier_Controller.autoConnect = function() {
     if (!this.isConnected() && zimbra_notifier_Prefs.isAutoConnectEnabled()) {
-        if (zimbra_notifier_Prefs.isSavePasswordEnabled()) {
-            return this.initializeConnection();
-        }
-        else {
-            return false;
-        }
+        return this.initializeConnection();
     }
     return true;
 };
@@ -219,7 +216,10 @@ zimbra_notifier_Controller.autoConnect = function() {
  * @return {Boolean} True if we did launch the connect query
  */
 zimbra_notifier_Controller.initializeConnection = function(password) {
-    return zimbra_notifier_ControllerData.getService(true).initializeConnection(password);
+    if (!this.isConnected()) {
+        return zimbra_notifier_ControllerData.getService(true).initializeConnection(password);
+    }
+    return false;
 };
 
 /**

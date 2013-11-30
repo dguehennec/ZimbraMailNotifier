@@ -184,9 +184,7 @@ com.zimbra.Main.onCheckNowClick = function() {
  * call on connect event
  */
 com.zimbra.Main.onConnectClick = function() {
-    if (!com.zimbra_notifier_Prefs.isSavePasswordEnabled() ||
-        !com.zimbra_notifier_Controller.initializeConnection()) {
-
+    if (!com.zimbra_notifier_Controller.initializeConnection()) {
         this._openPrefsDialog(com.zimbra.UiUtil.OPTION_SELECT_TAB.IDENTIFICATION);
     }
 };
