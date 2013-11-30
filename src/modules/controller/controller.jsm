@@ -201,12 +201,7 @@ zimbra_notifier_Controller.removeCallBackRefresh = function(callback) {
  */
 zimbra_notifier_Controller.autoConnect = function() {
     if (!this.isConnected() && zimbra_notifier_Prefs.isAutoConnectEnabled()) {
-        if (zimbra_notifier_Prefs.isSavePasswordEnabled()) {
-            return this.initializeConnection();
-        }
-        else {
-            return false;
-        }
+        return this.initializeConnection();
     }
     return true;
 };
@@ -221,7 +216,10 @@ zimbra_notifier_Controller.autoConnect = function() {
  * @return {Boolean} True if we did launch the connect query
  */
 zimbra_notifier_Controller.initializeConnection = function(password) {
-    return zimbra_notifier_ControllerData.getService(true).initializeConnection(password);
+    if (!this.isConnected()) {
+        return zimbra_notifier_ControllerData.getService(true).initializeConnection(password);
+    }
+    return false;
 };
 
 /**

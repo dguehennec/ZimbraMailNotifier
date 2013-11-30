@@ -638,20 +638,20 @@ zimbra_notifier_Service.prototype._needRunReq = function(reqType) {
  */
 zimbra_notifier_Service.prototype._doConnect = function(password) {
 
-    if (!password || password === '') {
+    var urlWebService = zimbra_notifier_Prefs.getUrlWebService();
+    var userLogin = zimbra_notifier_Prefs.getUserLogin();
+    if (!password) {
         password = zimbra_notifier_Prefs.getUserPassword();
-        if (!password || password === '') {
-            // No password, cannot login
-            this._planRunState(zimbra_notifier_SERVICE_STATE.DISCONNECTED, 100);
-            return false;
-        }
     }
 
-    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN)) {
-
+    if (!password || !urlWebService || !userLogin) {
+        // No password, or invalid url/login
+        this._planRunState(zimbra_notifier_SERVICE_STATE.DISCONNECTED, 100);
+    }
+    else if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN)) {
+        // Launch the connect query
         this._parent.event(zimbra_notifier_SERVICE_EVENT.CONNECTING);
-        this._getWebService().authRequest(zimbra_notifier_Prefs.getUrlWebService(),
-                                          zimbra_notifier_Prefs.getUserLogin(), password);
+        this._getWebService().authRequest(urlWebService, userLogin, password);
         return true;
     }
     return false;
