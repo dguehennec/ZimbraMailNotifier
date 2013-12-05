@@ -36,10 +36,6 @@
 
 "use strict";
 
-Components.utils.import("resource://gre/modules/Services.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
-
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Browser", "zimbra_notifier_BrowserUtil"];
 
 /************************** Util functions ***********************/
@@ -65,33 +61,15 @@ var zimbra_notifier_BrowserUtil = {
  */
 zimbra_notifier_BrowserUtil.selectOpenedTab = function(url) {
     try {
-        var browserEnumerator = Services.wm.getEnumerator("navigator:browser");
-        var uriToMatch = Services.io.newURI(url, null, null);
-        var hostToMatch = uriToMatch.asciiHost;
-        var pathToMatch = uriToMatch.path.match(/^[^?&#]*/)[0];
-
-        while (browserEnumerator.hasMoreElements()) {
-            var browserInstance = browserEnumerator.getNext().getBrowser();
-            var numTabs = browserInstance.mPanelContainer.childNodes.length;
-            for ( var index = 0; index < numTabs; index++) {
-                // browserInstance <=> https://developer.mozilla.org/en/docs/XUL/tabbrowser
-                // currentTab      <=> https://developer.mozilla.org/en/docs/XUL/browser
-                var currentTab = browserInstance.getBrowserAtIndex(index);
-                if ((currentTab.currentURI.asciiHost === hostToMatch) &&
-                    (currentTab.currentURI.path.indexOf(pathToMatch) === 0)) {
-
-                    browserInstance.selectedTab = browserInstance.tabContainer.childNodes[index];
-                    try {
-                        browserInstance.contentWindow.focus();
-                        browserInstance.focus();
-                    }
-                    catch (e) {
-                        this._logger.warning("Fail to get focus on selected tab: " + e);
-                    }
-                    return currentTab;
-                }
+        chrome.tabs.query({url : url+"*"}, function(tabs) {
+            if(tabs.length===0) {
+                zimbra_notifier_BrowserUtil.openNewTab(url);
             }
-        }
+            else {
+                var that = this;
+                chrome.tabs.highlight({windowId : tabs[0].windowId, tabs: tabs[0].id}, function() { that._logger.warning("Fail to get focus on selected tab: " + e)});
+            }
+        })
     }
     catch (e) {
         this._logger.error("Fail to selected tab from url (" + url + "): " + e);
@@ -108,7 +86,9 @@ zimbra_notifier_BrowserUtil.selectOpenedTab = function(url) {
  * @return {Boolean} true if success
  */
 zimbra_notifier_BrowserUtil.openNewTab = function(url) {
-    try {
+    chrome.tabs.create({ url: url });
+    //TODO
+    /*try {
         var win = Services.wm.getMostRecentWindow("navigator:browser");
         if (win) {
             win.delayedOpenTab(url, null, null, null, null);
@@ -134,7 +114,7 @@ zimbra_notifier_BrowserUtil.openNewTab = function(url) {
     catch (e) {
         this._logger.error("Fail to open new tab, url (" + url + "): " + e);
         return false;
-    }
+    }*/
     return true;
 };
 
@@ -148,7 +128,8 @@ zimbra_notifier_BrowserUtil.openNewTab = function(url) {
  *            key  The key of the cookie
  */
 zimbra_notifier_BrowserUtil.getCookieValue = function(url, key) {
-    if (url && key) {
+    //TODO
+    /*if (url && key) {
         var cookieUri = Services.io.newURI(url, null, null);
         var enumCookies = Services.cookies.getCookiesFromHost(cookieUri.host);
 
@@ -158,7 +139,7 @@ zimbra_notifier_BrowserUtil.getCookieValue = function(url, key) {
                 return cookie.value;
             }
         }
-    }
+    }*/
     return null;
 };
 
@@ -176,12 +157,13 @@ zimbra_notifier_BrowserUtil.getCookieValue = function(url, key) {
  *            httpOnly  True if the cookie is httpOnly
  */
 zimbra_notifier_BrowserUtil.addSessionCookie = function(url, key, value, httpOnly) {
-    if (url && key) {
+    //TODO
+    /*if (url && key) {
         var cookieUri = Services.io.newURI(url, null, null);
         var expir = ((new Date().getTime()) / 1000) + (48 * 3600);
         Services.cookies.add(cookieUri.host, cookieUri.path, key, value,
                              cookieUri.schemeIs("https"), httpOnly, true, expir);
-    }
+    }*/
 };
 
 /**
@@ -194,10 +176,12 @@ zimbra_notifier_BrowserUtil.addSessionCookie = function(url, key, value, httpOnl
  *            key  The key of the cookie
  */
 zimbra_notifier_BrowserUtil.removeCookie = function(url, key) {
-    if (url && key) {
+  //TODO
+    /*if (url && key) {
         var cookieUri = Services.io.newURI(url, null, null);
         Services.cookies.remove(cookieUri.host, key, cookieUri.path, false);
     }
+    */
 };
 
 /**
@@ -287,6 +271,7 @@ zimbra_notifier_Browser.prototype.openWebPage = function() {
                 }
             }
             // Open the URL
+            //TODO
             var tab = zimbra_notifier_BrowserUtil.selectOpenedTab(this._urlWebPage);
             if (tab !== null) {
                 if (tab.currentURI.path.indexOf("loginOp=") >= 0) {

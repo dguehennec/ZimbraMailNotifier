@@ -37,8 +37,6 @@
 
 "use strict";
 
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
-
 var EXPORTED_SYMBOLS = ["zimbra_notifier_CalEvent"];
 
 /**

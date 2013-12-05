@@ -36,30 +36,6 @@
 
 "use strict";
 
-Components.utils.import("resource://gre/modules/Services.jsm");
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/browser.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/controller/service.jsm");
-
-XPCOMUtils.defineLazyServiceGetter(
-  Services,
-  "res",
-  "@mozilla.org/network/protocol;1?name=resource",
-  "nsIResProtocolHandler"
-);
-XPCOMUtils.defineLazyServiceGetter(
-  Services,
-  "appstartup",
-  "@mozilla.org/toolkit/app-startup;1",
-  "nsIAppStartup"
-);
-
-
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Controller"];
 
 /* ***************** Private object used by Controller ********************* */
@@ -170,6 +146,18 @@ zimbra_notifier_ControllerData._updateBrowserInfo = function() {
  * @this {Controller}
  */
 var zimbra_notifier_Controller = { };
+
+/**
+ * initialize controller
+ *
+ * @this {Controller}
+ */
+zimbra_notifier_Controller.init = function() {
+    zimbra_notifier_ControllerData._updateBrowserInfo();
+    zimbra_notifier_Prefs.init( function() {
+       zimbra_notifier_Controller.autoConnect();
+    });
+}
 
 /**
  * Add CallBack to Refresh
@@ -396,42 +384,4 @@ zimbra_notifier_Controller.openZimbraWebInterface = function() {
  */
 Object.freeze(zimbra_notifier_Controller);
 
-/* ******************* Detect application events *********************** */
-
-var zimbra_notifier_Observer = {
-    register: function() {
-        Services.obs.addObserver(zimbra_notifier_Observer, "quit-application", false);
-        Services.obs.addObserver(zimbra_notifier_Observer, "quit-application-granted", false);
-        Services.obs.addObserver(zimbra_notifier_Observer,
-                                 zimbra_notifier_Constant.OBSERVER.PREF_SAVED, false);
-    },
-    unregister: function() {
-        Services.obs.removeObserver(zimbra_notifier_Observer, zimbra_notifier_Constant.OBSERVER.PREF_SAVED);
-        Services.obs.removeObserver(zimbra_notifier_Observer, "quit-application-granted");
-        Services.obs.removeObserver(zimbra_notifier_Observer, "quit-application");
-    },
-    observe: function(s, topic, data) {
-        if (topic === "quit-application-granted" || topic === "quit-application") {
-
-            this.unregister();
-            Services.appstartup.enterLastWindowClosingSurvivalArea();
-            try {
-                zimbra_notifier_ControllerData._shutdown();
-            }
-            finally {
-                Services.appstartup.exitLastWindowClosingSurvivalArea();
-            }
-        }
-        else if (topic === zimbra_notifier_Constant.OBSERVER.PREF_SAVED) {
-
-            zimbra_notifier_ControllerData._updateBrowserInfo();
-            var srv = zimbra_notifier_ControllerData.getService();
-            if (srv) {
-                srv.prefUpdated(data);
-            }
-        }
-    }
-};
-
-zimbra_notifier_Observer.register();
-zimbra_notifier_ControllerData._updateBrowserInfo();
+zimbra_notifier_Controller.init();

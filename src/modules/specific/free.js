@@ -36,13 +36,6 @@
 
 "use strict";
 
-Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/domain/session.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
-
 var EXPORTED_SYMBOLS = ["zimbra_notifier_WebserviceFree"];
 
 /********************** Session **********************/

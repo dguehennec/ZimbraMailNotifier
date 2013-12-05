@@ -45,7 +45,7 @@ var zimbra_notifier_Constant = {};
  *
  * @constant
  */
-zimbra_notifier_Constant.VERSION = 0x020100;
+zimbra_notifier_Constant.VERSION = 0x010000;
 
 /**
  * Logger level
@@ -130,5 +130,4 @@ zimbra_notifier_Constant.WEBSERVICE = {
 };
 
 // Freeze the constants
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
 zimbra_notifier_Util.deepFreeze(zimbra_notifier_Constant);

@@ -37,9 +37,6 @@
 
 "use strict";
 
-Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
-
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Notifier"];
 
 /**
@@ -96,7 +93,7 @@ zimbra_notifier_Notifier.prototype.start = function() {
  */
 zimbra_notifier_Notifier.prototype.stop = function() {
     if (this._currentTimer) {
-        this._currentTimer.cancel();
+        clearTimeout(this._currentTimer);
         this._currentTimer = null;
     }
 };

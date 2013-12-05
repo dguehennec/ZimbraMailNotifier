@@ -37,9 +37,6 @@
 
 "use strict";
 
-Components.utils.import("resource://gre/modules/Services.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
-
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Util"];
 
 /**
@@ -68,11 +65,9 @@ var zimbra_notifier_Util = {
 zimbra_notifier_Util.getBundleString = function(param) {
     try {
         if (this._bundle === null) {
-            var appLocale = Services.locale.getApplicationLocale();
-            this._bundle = Services.strings.createBundle(
-                zimbra_notifier_Constant.STRING_BUNDLE.DEFAULT_URL, appLocale);
+            this._bundle = chrome.i18n;
         }
-        return this._bundle.GetStringFromName(param);
+        return this._bundle.getMessage(param.replace(/./g,'_'));
     }
     catch (e) {
         return '';
@@ -95,10 +90,8 @@ zimbra_notifier_Util.getBundleString = function(param) {
  * @return {nsITimer} The created timer
  */
 zimbra_notifier_Util.setTimer = function(timer, func, delay) {
-    if (!timer) {
-        timer = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
-    }
-    timer.initWithCallback(func, delay, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+    clearTimeout(timer);
+    timer =  setTimeout(func, delay)
     return timer;
 };
 
@@ -218,50 +211,41 @@ zimbra_notifier_Util.showNotification = function(title, text, duration, callback
     try {
         var listener = null;
         var textClickable = false;
+        var notificationId = "ZimbraMailNotifier";
 
         if (callback) {
-            var dateStartNotify = new Date().getTime();
             var arrayArgs = [].slice.call(arguments, 0);
 
             textClickable = true;
-            listener = {
-                _endTime : (dateStartNotify + duration),
-                observe : function(subject, topic, data) {
-                    // On Mac OS X, the notification is handled with Growl and is not using
-                    // the plateform independant notification system of firefox
-                    if (topic === "alertfinished" && Services.appinfo.OS !== "Darwin") {
-
-                        var dateEndNotify = new Date().getTime();
-                        duration = listener._endTime - dateEndNotify;
-                        listener._endTime = 0;
-                        // If the user do not cancel it : the duration is around 4 seconds
-                        // And the time left to display the notification is more than 0.1s
-                        // And there is at least one opened window : If the user close the browser,
-                        //     stop to display the notification
-                        if ((dateEndNotify > (dateStartNotify + 3800)) && (duration > 500) &&
-                            (Services.wm.getEnumerator("navigator:browser").hasMoreElements())) {
-
-                            arrayArgs[2] = duration;
-                            zimbra_notifier_Util.showNotification.apply(zimbra_notifier_Util, arrayArgs);
-                        }
-                    }
-                    else if (topic === "alertclickcallback") {
-                        listener._endTime = 0;
-                        // Run the callback with the callbackThis as context and with parameter
-                        // the optional arguments passed to the showNotification function
-                        callback.apply(callbackThis, arrayArgs.slice(5));
-                    }
+            listener = function(id) {
+                if(id===notificationId) {
+                    callback.apply(callbackThis, arrayArgs.slice(5));
                 }
             };
         }
 
         // Show the notification
-        var alertsService = Components.classes['@mozilla.org/alerts-service;1'].
-                             getService(Components.interfaces.nsIAlertsService);
+	if (window.webkitNotifications.checkPermission() == 0) {
+		webkitNotifications.createNotification("skin/images/zimbra_mail_notifier.png", title, text).show();
+	} else {
+		webkitNotifications.requestPermission();
+	}
 
-        alertsService.showAlertNotification(
-            'chrome://zimbra_mail_notifier/skin/images/zimbra_mail_notifier.png',
-            title, text, textClickable, null, listener, "Zimbra Mail Notifier");
+	//TODO
+	/*var options = {
+            type: "basic",
+            title: " -"+title,
+            message: text,
+            iconUrl: "skin/images/zimbra_mail_notifier.png",
+            eventTime: Date.now()+duration,
+            isClickable: textClickable
+        }
+	chrome.notifications.clear(notificationId, function() {});
+        chrome.notifications.create(notificationId, options, function() {});
+        if(isClickable) {
+            chrome.notifications.onClicked.addListener(listener);
+        }
+	*/
     }
     catch (e) {
         return false;
@@ -276,29 +260,11 @@ zimbra_notifier_Util.showNotification = function(title, text, duration, callback
  */
 zimbra_notifier_Util.playSound = function() {
     try {
-        var sound = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
-        if (Services.appinfo.OS === "Darwin") {
-            sound.beep();
-        } else {
-            sound.playEventSound(Components.interfaces.nsISound.EVENT_NEW_MAIL_RECEIVED);
-        }
+        //TODO
     } catch (e) {
         return false;
     }
     return true;
-};
-
-/**
- * notifyObservers.
- *
- * @this {Util}
- * @param {String}
- *            topic the topic
- * @param {String}
- *            data the data
- */
-zimbra_notifier_Util.notifyObservers = function(topic, data) {
-    Services.obs.notifyObservers(null, topic, data);
 };
 
 /**
@@ -338,26 +304,26 @@ zimbra_notifier_Util.dump = function(obj, pref) {
     }
     for (var p in obj) {
         try {
-            dump(pref + p);
+            console.log(pref + p);
             var v = obj[p];
             if (v) {
                 if (typeof(v) === 'object') {
-                    dump("\n");
+                    console.log("\n");
                     zimbra_notifier_Util.dump(v, pref + p + '.');
                 }
                 else if (typeof(v) !== 'function') {
-                    dump(" : " + v + ";");
+                    console.log(" : " + v + ";");
                 }
             }
             else {
-                dump(" : " + v + ";");
+                console.log(" : " + v + ";");
             }
         }
         catch (e) {
-            dump(" ... ");
+            console.log(" ... ");
         }
         finally {
-            dump("\n");
+            console.log("\n");
         }
     }
 };

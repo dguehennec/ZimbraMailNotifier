@@ -37,9 +37,6 @@
 
 "use strict";
 
-Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
-
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Logger"];
 
 /**
@@ -63,7 +60,7 @@ var zimbra_notifier_Logger = function(name) {
 zimbra_notifier_Logger.prototype.error = function(message) {
     if (zimbra_notifier_Constant.LOGGER.LEVEL > 0) {
         this._printStack();
-        dump(this._getStrDate() + "ERROR in " + this._name + " : " + message + "\n");
+        console.error(this._getStrDate() + "ERROR in " + this._name + " : " + message + "\n");
     }
 };
 
@@ -77,7 +74,7 @@ zimbra_notifier_Logger.prototype.error = function(message) {
 zimbra_notifier_Logger.prototype.warning = function(message) {
     if (zimbra_notifier_Constant.LOGGER.LEVEL > 1) {
         this._printStack();
-        dump(this._getStrDate() + "WARNING in " + this._name + " : " + message + "\n");
+        console.warn(this._getStrDate() + "WARNING in " + this._name + " : " + message + "\n");
     }
 };
 
@@ -91,7 +88,7 @@ zimbra_notifier_Logger.prototype.warning = function(message) {
 zimbra_notifier_Logger.prototype.info = function(message) {
     if (zimbra_notifier_Constant.LOGGER.LEVEL > 2) {
         this._printStack();
-        dump(this._getStrDate() + "INFO in " + this._name + " : " + message + "\n");
+        console.info(this._getStrDate() + "INFO in " + this._name + " : " + message + "\n");
     }
 };
 
@@ -105,7 +102,7 @@ zimbra_notifier_Logger.prototype.info = function(message) {
 zimbra_notifier_Logger.prototype.trace = function(message) {
     if (zimbra_notifier_Constant.LOGGER.LEVEL > 3) {
         this._printStack();
-        dump(this._getStrDate() + "TRACE in " + this._name + " : " + message + "\n");
+        console.log(this._getStrDate() + "TRACE in " + this._name + " : " + message + "\n");
     }
 };
 
@@ -177,7 +174,7 @@ zimbra_notifier_Logger.prototype._printStack = function() {
             throw Error('');
         } catch(err) {
             var stack = err.stack.split("\n").slice(2).join("\n");
-            dump("--------\n" + stack + "--------\n");
+            console.log("--------\n" + stack + "--------\n");
         }
     }
 };

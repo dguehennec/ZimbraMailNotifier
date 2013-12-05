@@ -37,15 +37,6 @@
 
 "use strict";
 
-Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/domain/message.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/notifier.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/prefs.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/webservices.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/infoerror.jsm");
 
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Service", "zimbra_notifier_SERVICE_EVENT",
                           "zimbra_notifier_SERVICE_STATE"];
@@ -208,7 +199,6 @@ zimbra_notifier_Service.prototype._getWebService = function() {
     if (!this._webservice) {
 
         if (zimbra_notifier_Prefs.isFreeWebService()) {
-            Components.utils.import("resource://zimbra_mail_notifier/specific/free.jsm");
             this._webservice = new zimbra_notifier_WebserviceFree(
                 zimbra_notifier_Prefs.getRequestQueryTimeout(), 52000, this);
         }
@@ -272,10 +262,8 @@ zimbra_notifier_Service.prototype._planRunState = function(newState, delayMs) {
  */
 zimbra_notifier_Service.prototype._stopStateTimer = function() {
     if (this._stateTimer) {
-        this._stateTimer.cancel();
-    }
-    else {
-        this._stateTimer = null;
+        clearTimeout(this._stateTimer);
+		this._stateTimer = null;
     }
 };
 

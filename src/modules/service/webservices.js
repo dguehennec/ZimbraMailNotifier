@@ -37,16 +37,6 @@
 
 "use strict";
 
-Components.utils.import("resource://zimbra_mail_notifier/constant/zimbrahelper.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/domain/calevent.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/domain/message.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/domain/task.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/domain/mailboxinfo.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/domain/session.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/request.jsm");
-
 var EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_TYPE", "zimbra_notifier_Webservice"];
 
 /**
@@ -144,7 +134,7 @@ zimbra_notifier_Webservice.prototype.abortRunningReq = function() {
         req.abort();
     }
     if (this._timerLaunchCallback !== null) {
-        this._timerLaunchCallback.cancel();
+        clearTimeout(this._timerLaunchCallback);
         this._timerLaunchCallback = null;
     }
 };

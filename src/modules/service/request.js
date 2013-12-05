@@ -36,9 +36,6 @@
 
 "use strict";
 
-Components.utils.import("resource://zimbra_mail_notifier/service/util.jsm");
-Components.utils.import("resource://zimbra_mail_notifier/service/logger.jsm");
-
 var EXPORTED_SYMBOLS = ["zimbra_notifier_REQUEST_STATUS", "zimbra_notifier_Request"];
 
 /**
@@ -331,21 +328,16 @@ zimbra_notifier_Request.prototype.send = function() {
         return false;
     }
     try {
-        var request = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance();
-        request.QueryInterface(Components.interfaces.nsIDOMEventTarget);
-        request.QueryInterface(Components.interfaces.nsIXMLHttpRequest);
-
-        request.open("POST", this._url, true);
-        request.timeout = this._timeout;
+        var request = new XMLHttpRequest();
+        request.withCredentials = true;
 
         if (this._anonymous) {
-            request.channel.loadFlags |= Components.interfaces.nsIRequest.LOAD_ANONYMOUS;
+            request = new XMLHttpRequest({anon:true});
             request.withCredentials = false;
         }
-        else {
-            request.withCredentials = true;
-        }
-
+                
+        request.open("POST", this._url, true);
+        request.timeout = this._timeout;
         request.addEventListener("loadend", function() {
 
             if (object._request !== null) {
@@ -382,7 +374,6 @@ zimbra_notifier_Request.prototype.send = function() {
             }
         }, false);
 
-        request.channel.QueryInterface(Components.interfaces.nsIHttpChannel);
         this._request = request;
         this._setInfoRequest();
 
