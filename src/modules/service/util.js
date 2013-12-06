@@ -259,12 +259,12 @@ zimbra_notifier_Util.showNotification = function(title, text, duration, callback
  * @return {Boolean} true if success
  */
 zimbra_notifier_Util.playSound = function() {
-    try {
-        //TODO
-    } catch (e) {
-        return false;
+    var sound = document.getElementById('sound');
+    if(sound) {
+        sound.play();
+        return true;
     }
-    return true;
+    return false;
 };
 
 /**
