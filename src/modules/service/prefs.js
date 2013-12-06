@@ -681,7 +681,7 @@ zimbra_notifier_Prefs.getUrlWebService = function() {
  * @return {String} the URL
  */
 zimbra_notifier_Prefs.getUrlUserInterface = function() {
-    if (this.pref_user_url_web_interface) {
+    if (this.pref_user_url_web_interface && (this.pref_user_url_web_interface!=="")) {
         return this.pref_user_url_web_interface;
     }
     return this.pref_user_url_web_service;

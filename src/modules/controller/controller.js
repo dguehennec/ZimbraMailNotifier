@@ -153,9 +153,9 @@ var zimbra_notifier_Controller = { };
  * @this {Controller}
  */
 zimbra_notifier_Controller.init = function() {
-    zimbra_notifier_ControllerData._updateBrowserInfo();
     zimbra_notifier_Prefs.init( function() {
-       zimbra_notifier_Controller.autoConnect();
+    	zimbra_notifier_ControllerData._updateBrowserInfo();
+        zimbra_notifier_Controller.autoConnect();
     });
 }
 
