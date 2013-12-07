@@ -89,6 +89,8 @@ zimbra_notifier_Prefs.PREF = {
     REQUEST_QUERY_TIMEOUT           : "requestQueryTimeout",
     REQUEST_WAIT_TIMEOUT            : "requestWaitTimeout",
     REQUEST_WAIT_LOOP_TIME          : "requestWaitLoopTime",
+
+    USER_PASSWORD_KEY               : "ZimDguBro"
 };
 zimbra_notifier_Util.deepFreeze(zimbra_notifier_Prefs.PREF);
 
@@ -815,7 +817,12 @@ zimbra_notifier_Prefs._getComplexPref = function(pref) {
     return value;
 };
 
-
+/**
+ * Creates an instance of PrefsService.
+ *
+ * @constructor
+ * @this {PrefsService}
+ */
 var PrefsService = {
     _defaultsPref : {
         prefs : {
@@ -850,6 +857,12 @@ var PrefsService = {
     _currentPref : undefined
 };
 
+/**
+ * initialize the PrefsService.
+ *
+ * @this {PrefsService}
+ * @param {Function} the callback when initialized
+ */
 PrefsService.init = function(callback) {
     chrome.storage.sync.get(this._defaultsPref, function(storage) {
         PrefsService._currentPref = storage;
@@ -859,16 +872,42 @@ PrefsService.init = function(callback) {
     });
 };
 
+/**
+ * get the value of the key.
+ *
+ * @this {PrefsService}
+ * @param {String} the key
+ * @return {Object} the value
+ */
 PrefsService.getPref = function(key) {
+    var value = null;
     if(this._currentPref) {
-        return this._currentPref.prefs[key];
+        if(key== zimbra_notifier_Prefs.PREF.USER_PASSWORD) {
+            value = AesCtr.decrypt(this._currentPref.prefs[key], zimbra_notifier_Prefs.PREF.USER_PASSWORD_KEY , 128);
+        }
+        else {
+            value = this._currentPref.prefs[key];
+        }
     }
+    return value;
 };
 
+/**
+ * set the value of the key.
+ *
+ * @this {PrefsService}
+ * @param {String} the key
+ * @param {Object} the value
+ */
 PrefsService.setPref = function(key, value) {
     chrome.storage.sync.get(this._currentPref,
         function (storage) {
-            storage.prefs[key] = value;
+            if(key== zimbra_notifier_Prefs.PREF.USER_PASSWORD) {
+                storage.prefs[key] = AesCtr.encrypt(value, zimbra_notifier_Prefs.PREF.USER_PASSWORD_KEY , 128);
+            }
+            else {
+                storage.prefs[key] = value;
+            }
             chrome.storage.sync.set(storage);
         }
     );
