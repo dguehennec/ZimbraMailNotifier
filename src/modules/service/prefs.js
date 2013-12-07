@@ -432,31 +432,12 @@ zimbra_notifier_Prefs.isFirstStart = function(reset) {
 };
 
 /**
- * Set temporary login information.
- * Do not save the information to the preference system
+ * Clear password
  *
  * @this {Prefs}
  */
-zimbra_notifier_Prefs.setTemporaryLogin = function(urlServ, user) {
-    if (!urlServ) {
-        urlServ = '';
-    }
-    this.pref_user_url_web_service = urlServ.trim();
-
-    if (!user) {
-        user = '';
-    }
-    this.pref_user_login = user.trim();
-};
-
-/**
- * Load from preferences the login information (url of webservice + user)
- *
- * @this {Prefs}
- */
-zimbra_notifier_Prefs.reloadLogin = function() {
-    this.pref_user_login  = this._getPref(this.PREF.USER_LOGIN);
-    this.pref_user_url_web_service = this._getPref(this.PREF.USER_URL_WEB_SERVICE);
+zimbra_notifier_Prefs.clearPassword = function() {
+    this.updatePref(this.PREF.USER_PASSWORD, "");
 };
 
 /**
@@ -836,48 +817,46 @@ zimbra_notifier_Prefs._getComplexPref = function(pref) {
 
 
 var PrefsService = {
-    _defaultsPref : { 
-	prefs: {
-		'currentVersion': 0,
-		'autoConnect': true,
-                'systemNotificationEnabled': true,
-		'soundEnabled': true,
-		'emailNotificationDuration': 16,
-		'calendarEnabled': true,
-		'calendarPeriodDisplayed': 14,
-		'calendarNbDisplayed': 5,
-		'calendarSystemNotificationEnabled': true,
-		'calendarSoundEnabled': true,
-		'calendarReminderTimeConf': -1,
-		'calendarReminderRepeatNb': 0,
-		'taskEnabled': true,
-		'taskNbDisplayed': 5,
-		'taskPriorities': 0,
-		'userLogin': '',
-		'userPassword': '',
-		'userServer': '',
-		'userUrlWebInteface': '',
-		'userSavePassword': true,
-		'waitSetInfo': '',
-		'requestQueryTimeout': 15000,
-		'requestWaitTimeout': 300000,
-		'requestWaitLoopTime': 500000,
-		'browserSetCookies': true,
-		'browserCookieHttpOnly': false
+    _defaultsPref : {
+        prefs : {
+            'currentVersion' : 0,
+            'autoConnect' : true,
+            'systemNotificationEnabled' : true,
+            'soundEnabled' : true,
+            'emailNotificationDuration' : 16,
+            'calendarEnabled' : true,
+            'calendarPeriodDisplayed' : 14,
+            'calendarNbDisplayed' : 5,
+            'calendarSystemNotificationEnabled' : true,
+            'calendarSoundEnabled' : true,
+            'calendarReminderTimeConf' : -1,
+            'calendarReminderRepeatNb' : 0,
+            'taskEnabled' : true,
+            'taskNbDisplayed' : 5,
+            'taskPriorities' : 0,
+            'userLogin' : '',
+            'userPassword' : '',
+            'userServer' : '',
+            'userUrlWebInteface' : '',
+            'userSavePassword' : true,
+            'waitSetInfo' : '',
+            'requestQueryTimeout' : 15000,
+            'requestWaitTimeout' : 300000,
+            'requestWaitLoopTime' : 500000,
+            'browserSetCookies' : true,
+            'browserCookieHttpOnly' : false
         }
     },
     _currentPref : undefined
 };
 
 PrefsService.init = function(callback) {
-    chrome.storage.sync.get(this._defaultsPref,
-        function (storage) {
-            PrefsService._currentPref = storage;
-	    if(callback) {
-	    	callback();
-	    }
+    chrome.storage.sync.get(this._defaultsPref, function(storage) {
+        PrefsService._currentPref = storage;
+        if (callback) {
+            callback();
         }
-    );
+    });
 };
 
 PrefsService.getPref = function(key) {

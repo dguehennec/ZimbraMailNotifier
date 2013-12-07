@@ -152,11 +152,9 @@ zimbra_notifier_options.init = function(background) {
 zimbra_notifier_options.release = function() {
     this._zimbra_notifier_Controller.removeCallBackRefresh(this);
 
-    // Save password
-    if ($("#zimbra_mail_notifier-checkboxSavePassword").is("checked")) {
-        this._zimbra_notifier_Prefs.savePassword($("#zimbra_mail_notifier-optionPassword").val(), true);
-    } else {
-        this._zimbra_notifier_Prefs.savePassword("", false);
+    // clear password if needed
+    if (!$("#zimbra_mail_notifier-checkboxSavePassword").is(":checked")) {
+        this._zimbra_notifier_Prefs.clearPassword();
     }
 };
 
@@ -166,6 +164,9 @@ zimbra_notifier_options.release = function() {
  * @this {Options}
  */
 zimbra_notifier_options.showContent = function(contentId, animationTime) {
+    if(!$.isNumeric(contentId) || (Math.floor(contentId) != contentId) || (contentId<0) || (contentId>3) ) {
+        contentId = 0;
+    }
     $.when($(".tabContent").fadeOut("fast")).done(function() {
         $(".tabContent").eq(contentId).animate({
             opacity : 'show',
@@ -257,36 +258,11 @@ zimbra_notifier_options.authTypeChanged = function() {
 };
 
 /**
- * Call when the window is validated
- * 
- * @this {Option}
- */
-zimbra_notifier_options.validated = function() {
-    var wasConnecting = this._closeWhenConnected;
-
-    // Do not call this function again
-    this._closeWhenConnected = false;
-
-    // Save password
-    if ($("#zimbra_mail_notifier-checkboxSavePassword").is("checked")) {
-        this._zimbra_notifier_Prefs.savePassword($("#zimbra_mail_notifier-optionPassword").val(), true);
-    } else {
-        this._zimbra_notifier_Prefs.savePassword("", false);
-    }
-
-    // Inform that the preferences may have changed
-    this._zimbra_notifier_Prefs.notifyUpdate(wasConnecting);
-    return true;
-};
-
-/**
  * start connection.
  * 
  * @this {Option}
  */
 zimbra_notifier_options.connect = function() {
-    // update and save login info
-    this._zimbra_notifier_Prefs.setTemporaryLogin($("#zimbra_mail_notifier-textboxUrlWebService").val(), $("#zimbra_mail_notifier-textboxLogin").val());
     // update screen view
     $("#zimbra_mail_notifier-connectButton").hide();
     $("#zimbra_mail_notifier-disconnectButton").hide();
@@ -321,6 +297,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-$(window).on('beforeunload', function() {
+$(window).on('unload', function() {
     zimbra_notifier_options.release();
 });

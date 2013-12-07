@@ -1,36 +1,40 @@
 {
-	"manifest_version": 2,
-	"name": "__MSG_extName__",
-	"version": "1.0.0",
-	"default_locale": "en",
-	"description": "__MSG_extDescription__",
-	"browser_action": {
-		"default_icon": "skin/images/zimbra_mail_notifier.png",
-		"default_popup": "popup.html"
-	},
-	"icons": {
-		"128": "skin/images/zimbra_mail_notifier.png"
-	},
-	"permissions": [ 
-		"tabs", 
-		"notifications", 
-		"cookies", 
-		"chrome://favicon/", 
-		"http://*/", 
-		"https://*/",  
-		"contextMenus", 
-		"webNavigation",
-		"storage"
-	],
-	"optional_permissions": [ 
-		"background" 
-	],
-	"background": {
-		"persistent": false,
-		"page": "background.html"
-  	},
-	"options_page": "options.html",
-	"web_accessible_resources": [
-	    "skin/images/zimbra_mail_notifier.png"
-	  ]
+    "manifest_version": 2,
+    "name": "__MSG_extName__",
+    "version": "1.0.0",
+    "default_locale": "en",
+    "description": "__MSG_extDescription__",
+    "browser_action": {
+        "default_icon": "skin/images/icon_disabled.png",
+        "default_popup": "popup.html",
+        "default_title": "__MSG_extName__"
+    },
+    "icons": {
+        "16": "skin/images/zimbra_mail_notifier_32.png",
+        "32": "skin/images/zimbra_mail_notifier_32.png",
+        "48": "skin/images/zimbra_mail_notifier_48.png",
+        "64": "skin/images/zimbra_mail_notifier_64.png",
+        "128": "skin/images/zimbra_mail_notifier_128.png"
+    },
+    "permissions": [
+        "tabs",
+        "notifications",
+        "cookies",
+        "chrome://favicon/",
+        "http://*/",
+        "https://*/",
+        "contextMenus",
+        "webNavigation",
+        "storage"
+    ],
+    "optional_permissions": [
+        "background"
+    ],
+    "background": {
+        "page": "background.html"
+    },
+    "options_page": "options.html",
+    "web_accessible_resources": [
+        "skin/images/zimbra_mail_notifier.png"
+    ]
 }

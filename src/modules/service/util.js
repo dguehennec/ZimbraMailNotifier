@@ -209,43 +209,26 @@ zimbra_notifier_Util.convertBytesToStringValue = function(bytes) {
  */
 zimbra_notifier_Util.showNotification = function(title, text, duration, callback, callbackThis) {
     try {
-        var listener = null;
-        var textClickable = false;
-        var notificationId = "ZimbraMailNotifier";
-
-        if (callback) {
-            var arrayArgs = [].slice.call(arguments, 0);
-
-            textClickable = true;
-            listener = function(id) {
-                if(id===notificationId) {
-                    callback.apply(callbackThis, arrayArgs.slice(5));
-                }
-            };
-        }
-
         // Show the notification
-	if (window.webkitNotifications.checkPermission() == 0) {
-		webkitNotifications.createNotification("skin/images/zimbra_mail_notifier.png", title, text).show();
-	} else {
-		webkitNotifications.requestPermission();
-	}
-
-	//TODO
-	/*var options = {
-            type: "basic",
-            title: " -"+title,
-            message: text,
-            iconUrl: "skin/images/zimbra_mail_notifier.png",
-            eventTime: Date.now()+duration,
-            isClickable: textClickable
+        if (window.webkitNotifications.checkPermission() == 0) {
+            var notification = webkitNotifications.createNotification("skin/images/zimbra_mail_notifier.png", title, text);
+            // add callback if needed
+            if (callback) {
+                var arrayArgs = [].slice.call(arguments, 0);
+                notification.onclick = function() {
+                    callback.apply(callbackThis, arrayArgs.slice(5));
+                    this.cancel();
+                };
+            }
+            // hide notification after the duration timeout
+            zimbra_notifier_Util.setTimer(null, function() {
+                notification.cancel();
+            }, duration);
+            // show notification
+            notification.show();
+        } else {
+            webkitNotifications.requestPermission();
         }
-	chrome.notifications.clear(notificationId, function() {});
-        chrome.notifications.create(notificationId, options, function() {});
-        if(isClickable) {
-            chrome.notifications.onClicked.addListener(listener);
-        }
-	*/
     }
     catch (e) {
         return false;
