@@ -67,7 +67,7 @@ zimbra_notifier_Util.getBundleString = function(param) {
         if (this._bundle === null) {
             this._bundle = chrome.i18n;
         }
-        return this._bundle.getMessage(param.replace(/./g,'_'));
+        return this._bundle.getMessage(param.replace(/\./g,'_'));
     }
     catch (e) {
         return '';

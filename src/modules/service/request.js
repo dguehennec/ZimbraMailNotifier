@@ -401,7 +401,6 @@ zimbra_notifier_Request.prototype.send = function() {
 zimbra_notifier_Request.prototype._setInfoRequest = function() {
 
     this._request.setRequestHeader("Content-type", "application/soap+xml; charset=utf-8");
-    this._request.setRequestHeader("Content-length", this._dataToSend.length);
 };
 
 /**

@@ -87,10 +87,6 @@
         "message": "Site Web :",
         "description": ""
     },
-    "about_about_label": {
-        "message": "&main_about_label;",
-        "description": ""
-    },
     "about_createdby_label": {
         "message": "Créé par David GUEHENNEC et Benjamin ROBIN",
         "description": ""
@@ -142,14 +138,6 @@
     },
     "option_common_mail_notify_duration_caption": {
         "message": "Durée de la notification",
-        "description": ""
-    },
-    "option_common_access_caption": {
-        "message": "Moyen d'accès au module",
-        "description": ""
-    },
-    "option_common_statusbar": {
-        "message": "Barre des modules",
         "description": ""
     },
 

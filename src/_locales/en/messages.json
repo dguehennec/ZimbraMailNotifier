@@ -87,12 +87,8 @@
         "message": "Web Site :",
         "description": ""
     },
-    "about_about_label": {
-        "message": "&main_about_label;",
-        "description": ""
-    },
     "about_createdby_label": {
-        "message": "By :",
+        "message": "By David GUEHENNEC and Benjamin ROBIN",
         "description": ""
     },
     "about_version_label": {
@@ -142,14 +138,6 @@
     },
     "option_common_mail_notify_duration_caption": {
         "message": "Notification duration",
-        "description": ""
-    },
-    "option_common_access_caption": {
-        "message": "Extension access",
-        "description": ""
-    },
-    "option_common_statusbar": {
-        "message": "Statusbar",
         "description": ""
     },
 
@@ -292,7 +280,7 @@
         "description": ""
     },
     "option_identifiant_connectCancel_button": {
-        "message": "Cancel___",
+        "message": "Cancel...",
         "description": ""
     },
     "option_identifiant_disconnect_button": {

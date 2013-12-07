@@ -209,7 +209,8 @@ zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, l
 
         this._runningReq._expectedStatus = 0;
         this._runningReq._setInfoRequest = function() {
-            this._request.channel.redirectionLimit = 1;
+            //TODO
+            //this._request.channel.redirectionLimit = 1;
             this._request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         };
 
