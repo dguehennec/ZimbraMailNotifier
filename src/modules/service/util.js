@@ -220,6 +220,10 @@ zimbra_notifier_Util.showNotification = function(title, text, duration, callback
                     this.cancel();
                 };
             }
+            // add default notification time if event
+            if(duration===0) {
+                duration = 10000;
+            }
             // hide notification after the duration timeout
             zimbra_notifier_Util.setTimer(null, function() {
                 notification.cancel();
