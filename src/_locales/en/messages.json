@@ -1,0 +1,451 @@
+﻿{
+    "extName": {
+        "message": "Zimbra Mail Notifier",
+        "description": ""
+    },
+	"extDescription": {
+        "message": "This extension notifies you when new messages arrive in your zimbra mailbox.",
+        "description": ""
+    },
+	
+    "yes": {
+        "message": "yes",
+        "description": ""
+    },
+    "no": {
+        "message": "no",
+        "description": ""
+    },
+    "seconds": {
+        "message": "seconds",
+        "description": ""
+    },
+    "week": {
+        "message": "week",
+        "description": ""
+    },
+    "weeks": {
+        "message": "weeks",
+        "description": ""
+    },
+    "time": {
+        "message": "time",
+        "description": ""
+    },
+    "atTime": {
+        "message": "at time",
+        "description": ""
+    },
+    "minuteBefore": {
+        "message": "minute before",
+        "description": ""
+    },
+    "minutesBefore": {
+        "message": "minutes before",
+        "description": ""
+    },
+    "hourBefore": {
+        "message": "hour before",
+        "description": ""
+    },
+    "hoursBefore": {
+        "message": "hours before",
+        "description": ""
+    },
+
+    "main_checkNow": {
+        "message": "Refresh...",
+        "description": ""
+    },
+    "main_connect": {
+        "message": "Connect",
+        "description": ""
+    },
+    "main_disconnect": {
+        "message": "Disconnect",
+        "description": ""
+    },
+    "main_options_label": {
+        "message": "Preferences",
+        "description": ""
+    },
+    "main_about_label": {
+        "message": "About Zimbra Mail Notifier",
+        "description": ""
+    },
+
+    "tooltip_calendar_caption": {
+        "message": "Next events",
+        "description": ""
+    },
+    "tooltip_task_caption": {
+        "message": "Current tasks",
+        "description": ""
+    },
+
+    "about_homepage_label": {
+        "message": "Web Site :",
+        "description": ""
+    },
+    "about_about_label": {
+        "message": "&main_about_label;",
+        "description": ""
+    },
+    "about_createdby_label": {
+        "message": "By :",
+        "description": ""
+    },
+    "about_version_label": {
+        "message": "Version",
+        "description": ""
+    },
+    "about_legal_label": {
+        "message": "This extension is not affiliated or endorsed by VMware.",
+        "description": ""
+    },
+    "about_close_label": {
+        "message": "Close",
+        "description": ""
+    },
+
+    "option_option_label": {
+        "message": "Preferences",
+        "description": ""
+    },
+    "option_common_label": {
+        "message": "General",
+        "description": ""
+    },
+    "option_common_connection_caption": {
+        "message": "Connection",
+        "description": ""
+    },
+    "option_common_autoConnect": {
+        "message": "Auto connection on startup",
+        "description": ""
+    },
+    "option_common_browserSetCookies": {
+        "message": "Auto connection on the web interface",
+        "description": ""
+    },
+    "option_common_mail_notification_caption": {
+        "message": "Notification unread mail",
+        "description": ""
+    },
+    "option_common_mail_systemNotification": {
+        "message": "System notification",
+        "description": ""
+    },
+    "option_common_mail_soundNotification": {
+        "message": "Sound notification",
+        "description": ""
+    },
+    "option_common_mail_notify_duration_caption": {
+        "message": "Notification duration",
+        "description": ""
+    },
+    "option_common_access_caption": {
+        "message": "Extension access",
+        "description": ""
+    },
+    "option_common_statusbar": {
+        "message": "Statusbar",
+        "description": ""
+    },
+
+    "option_calendar_label": {
+        "message": "Calendar",
+        "description": ""
+    },
+    "option_calendar_activate": {
+        "message": "Enable calendar management",
+        "description": ""
+    },
+    "option_calendar_view_caption": {
+        "message": "Displaying",
+        "description": ""
+    },
+    "option_calendar_view_period_label": {
+        "message": "Period displayed",
+        "description": ""
+    },
+    "option_calendar_view_nbMax_label": {
+        "message": "Number of appointments maximum displayed",
+        "description": ""
+    },
+    "option_calendar_notification_caption": {
+        "message": "Notification",
+        "description": ""
+    },
+    "option_calendar_systemNotification": {
+        "message": "System notification",
+        "description": ""
+    },
+    "option_calendar_soundNotification": {
+        "message": "Sound notification",
+        "description": ""
+    },
+    "option_calendar_repeat": {
+        "message": "Repeat",
+        "description": ""
+    },
+
+    "option_task_label": {
+        "message": "Tasks",
+        "description": ""
+    },
+    "option_task_activate": {
+        "message": "Enable Tasks management",
+        "description": ""
+    },
+    "option_task_view_caption": {
+        "message": "Displaying",
+        "description": ""
+    },
+    "option_task_view_reminder": {
+        "message": "Reminder",
+        "description": ""
+    },
+    "option_task_view_confZimbra": {
+        "message": "Zimbra configuration",
+        "description": ""
+    },
+    "option_task_view_nbTasks": {
+        "message": "Number of tasks maximum displayed",
+        "description": ""
+    },
+    "option_task_view_nbPriorities": {
+        "message": "Priorities set",
+        "description": ""
+    },
+    "option_task_view_all": {
+        "message": "All",
+        "description": ""
+    },
+    "option_task_view_highAndNormal": {
+        "message": "High and normal",
+        "description": ""
+    },
+    "option_task_view_high": {
+        "message": "High",
+        "description": ""
+    },
+    "option_task_view_normal": {
+        "message": "Normal",
+        "description": ""
+    },
+    "option_task_view_low": {
+        "message": "Low",
+        "description": ""
+    },
+
+    "option_identifiant_label": {
+        "message": "Identifier",
+        "description": ""
+    },
+    "option_identifiant_params_caption": {
+        "message": "Account",
+        "description": ""
+    },
+    "option_identifiant_login_label": {
+        "message": "Login",
+        "description": ""
+    },
+    "option_identifiant_password_label": {
+        "message": "Password",
+        "description": ""
+    },
+    "option_identifiant_savePassword_label": {
+        "message": "Remember password_",
+        "description": ""
+    },
+    "option_identifiant_server_caption": {
+        "message": "Server",
+        "description": ""
+    },
+    "option_identifiant_authtype_label": {
+        "message": "Authentication",
+        "description": ""
+    },
+    "option_identifiant_authtype_normal": {
+        "message": "Normal",
+        "description": ""
+    },
+    "option_identifiant_urlwebservice_label": {
+        "message": "Web service URL",
+        "description": ""
+    },
+    "option_identifiant_urlwebservice_tooltip": {
+        "message": "The URL of the mail service, most of the time the same as the web interface URL",
+        "description": ""
+    },
+    "option_identifiant_urlwebinterface_label": {
+        "message": "Web interface URL",
+        "description": ""
+    },
+    "option_identifiant_urlwebinterface_tooltip": {
+        "message": "The URL displayed in the Web browser when connected (Optional)",
+        "description": ""
+    },
+    "option_identifiant_connect_button": {
+        "message": "Connect",
+        "description": ""
+    },
+    "option_identifiant_connectCancel_button": {
+        "message": "Cancel___",
+        "description": ""
+    },
+    "option_identifiant_disconnect_button": {
+        "message": "Disconnect",
+        "description": ""
+    },	
+	
+    "tooltip_notConnected_title": {
+        "message": "Disconnected",
+        "description": ""
+    },
+    "tooltip_notConnected_description": {
+        "message": "For notifications, please log in_",
+        "description": ""
+    },
+    "tooltip_errorConnected_title": {
+        "message": "Update failed",
+        "description": ""
+    },
+    "tooltip_errorNotConnected_title": {
+        "message": "Connection failed",
+        "description": ""
+    },
+    "tooltip_unreadMessages_title": {
+        "message": "%NB% unread message(s)",
+        "description": ""
+    },
+	"tooltip_connected_descriptionStatus": {
+        "message": "Status: Connected",
+        "description": ""
+    },
+	"tooltip_connected_descriptionAccount": {
+        "message": "Account: %EMAIL%",
+        "description": ""
+    },
+    "tooltip_connected_descriptionQuota": {
+        "message": "Quota: %PERCENTAGE%% (%USED% of %SIZE%)",
+        "description": ""
+    },
+    "tooltip_noEvent": {
+        "message": "No event in progress",
+        "description": ""
+    },
+    "tooltip_priority_high": {
+        "message": "High priority",
+        "description": ""
+    },
+    "tooltip_priority_low": {
+        "message": "Low priority",
+        "description": ""
+    },
+    "tooltip_priority_normal": {
+        "message": "Normal priority",
+        "description": ""
+    },
+    "tooltip_noTask": {
+        "message": "No task in progress",
+        "description": ""
+    },
+    "tooltip_week": {
+        "message": "W%WEEK%",
+        "description": ""
+    },
+	
+    "connector_error_req_internal": {
+        "message": "Internal error",
+        "description": ""
+    },
+    "connector_error_req_invalid": {
+        "message": "Invalid request",
+        "description": ""
+    },
+    "connector_error_req_timeout": {
+        "message": "No response",
+        "description": ""
+    },
+    "connector_error_req_server": {
+        "message": "Server error",
+        "description": ""
+    },
+    "connector_error_req_network": {
+        "message": "Network error",
+        "description": ""
+    },
+    "connector_error_req_authreq": {
+        "message": "Authentication expired",
+        "description": ""
+    },
+    "connector_error_req_logininvalid": {
+        "message": "Invalid login",
+        "description": ""
+    },
+
+    "connector_error_authentification": {
+        "message": "Authentication error: %REASON%!",
+        "description": ""
+    },
+    "connector_error_createwait": {
+        "message": "Error during create wait request: %REASON%!",
+        "description": ""
+    },
+    "connector_error_wait": {
+        "message": "Error waiting for a new message: %REASON%!",
+        "description": ""
+    },
+    "connector_error_mailboxinfo": {
+        "message": "Error when retrieving information from the mailbox: %REASON%!",
+        "description": ""
+    },
+    "connector_error_unreadmsg": {
+        "message": "Error when retrieving for new mail: %REASON%!",
+        "description": ""
+    },
+    "connector_error_calendar": {
+        "message": "Error when retrieving the calendar events: %REASON%!",
+        "description": ""
+    },
+    "connector_error_task": {
+        "message": "Error when retrieving the tasks: %REASON%!",
+        "description": ""
+    },
+
+    "connector_notification_NewMessage": {
+        "message": "Message of %EMAIL%",
+        "description": ""
+    },
+    "connector_notification_nbUnreadMessages": {
+        "message": "%NB% new unread messages!",
+        "description": ""
+    },
+    "connector_notification_event": {
+        "message": "Event :",
+        "description": ""
+    },
+
+    "unit_bytes_B": {
+        "message": "B",
+        "description": ""
+    },
+    "unit_bytes_KB": {
+        "message": "KB",
+        "description": ""
+    },
+    "unit_bytes_MB": {
+        "message": "MB",
+        "description": ""
+    },
+    "unit_bytes_GB": {
+        "message": "GB",
+        "description": ""
+    },
+    "unit_bytes_TB": {
+        "message": "TB",
+        "description": ""
+    }
+}

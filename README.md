@@ -1,4 +1,4 @@
-#Zimbra Mail Notifier (Firefox Addon)
+#Zimbra Mail Notifier (Chrome Addon)
 
 ## Description
 
@@ -19,7 +19,7 @@ Don't forget to install Growl (http://growl.info/) to be notify by system notifi
 
 ## Usage
 
-	# Maven is used to generate Firefox extension (xpi) of Zimbra Mail Notifier sources.
+	# Maven is used to generate Chrome extension (xpi) of Zimbra Mail Notifier sources.
 	# There are 2 profiles (Dev en Prod)
 	
 	# In Dev mode, just des sources is packaging, use the next command line

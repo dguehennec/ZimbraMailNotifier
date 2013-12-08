@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.zimbra</groupId>
-	<artifactId>ZimbraMailNotifier</artifactId>
+	<artifactId>ZimbraMailNotifierChrome</artifactId>
 	<packaging>pom</packaging>
-	<version>2.1.0</version>
+	<version>1.0.0</version>
 
 	<name>Zimbra Notifier</name>
 
@@ -14,7 +14,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<withCompletion>false</withCompletion>
 		<sonar.language>js</sonar.language>
-		<sonar.javascript.file.suffixes>jsm,js</sonar.javascript.file.suffixes>
+		<sonar.javascript.file.suffixes>js</sonar.javascript.file.suffixes>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.host.url>http://127.0.0.1:9000</sonar.host.url>
 	</properties>
@@ -79,7 +79,7 @@
 								</copy>
 								<echo message="Generate XPI archive" />
 								<zip update="true" compress="true"
-									destfile="${project.build.directory}/${project.name}-${project.version}.xpi"
+									destfile="${project.build.directory}/${project.name}-${project.version}.crx"
 									basedir="${project.build.directory}/sources" />
 							</target>
 						</configuration>
