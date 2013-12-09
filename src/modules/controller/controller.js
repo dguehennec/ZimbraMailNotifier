@@ -154,7 +154,6 @@ var zimbra_notifier_Controller = { };
  */
 zimbra_notifier_Controller.init = function() {
     zimbra_notifier_Prefs.init( function() {
-    	zimbra_notifier_ControllerData._updateBrowserInfo();
         zimbra_notifier_Controller.autoConnect();
     });
 }
@@ -376,6 +375,7 @@ zimbra_notifier_Controller.getLastErrorMessage = function() {
  * @this {Controller}
  */
 zimbra_notifier_Controller.openZimbraWebInterface = function() {
+    zimbra_notifier_ControllerData._updateBrowserInfo();
     zimbra_notifier_ControllerData.getBrowser().openWebPage();
 };
 
