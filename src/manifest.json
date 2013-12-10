@@ -23,7 +23,7 @@
         "chrome://favicon/",
         "http://*/",
         "https://*/",
-        "contextMenus",
+        "webRequest",
         "webNavigation",
         "storage"
     ],

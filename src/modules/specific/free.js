@@ -209,16 +209,45 @@ zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, l
 
         this._runningReq._expectedStatus = 0;
         this._runningReq._setInfoRequest = function() {
-            //TODO
-            //this._request.channel.redirectionLimit = 1;
             this._request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         };
 
         var dataReq = "actionID=105&url=&mailbox=INBOX";
         dataReq += "&login=" + encodeURIComponent(login);
         dataReq += "&password=" + encodeURIComponent(password);
-        dataReq += "&Envoyer=S%27identifier";
+        dataReq += "&Envoyer=Connexion";
 
+        var that = this;
+        // remove cookies if existe because with cookies setted, the redirection is not call
+        chrome.cookies.remove({"url" : urlWebService, "name" : "ZM_AUTH_TOKEN"});
+        chrome.cookies.remove({"url" : urlWebService, "name" : "SID"});
+        chrome.webRequest.onBeforeRedirect.addListener(
+            function(details) {
+                var cookies = {};
+                for (var index = 0; index < details.responseHeaders.length; index++) {
+                    if (details.responseHeaders[index].name === "Set-Cookie") {
+                        var rawCookie = details.responseHeaders[index].value;
+                        var posSt = rawCookie.indexOf('=');
+                        var posEnd = rawCookie.indexOf(';', posSt);
+                        if (posEnd > posSt) {
+                            cookies[rawCookie.substring(0, posSt)] = decodeURIComponent(rawCookie.substring( posSt + 1, posEnd));
+                        } else {
+                            cookies[rawCookie.substring(0, posSt)] = decodeURIComponent(rawCookie.substring(posSt + 1));
+                        }
+                    }
+                }
+                if (cookies['ZM_AUTH_TOKEN'] && cookies['SID']) {
+                    that._session.updateToken(cookies['ZM_AUTH_TOKEN'], 43200000, cookies['SID']);
+                    that._parent.callbackSessionInfoChanged(that._session);
+                }
+                return {};
+            },
+            {
+                urls : [ urlWebService + "/*" ],
+                types : [ "xmlhttprequest" ]
+            },
+            [ "responseHeaders" ]
+        );
         this._runningReq.setDataRequest(dataReq);
         return true;
     });
@@ -236,12 +265,7 @@ zimbra_notifier_WebserviceFree.prototype._callbackAuthRequest = function(request
         if (request !== this._runningReq) {
             this._logger.error("The running auth request != callback object");
         }
-        if (request.isSuccess()) {
-            var cookies = request.getCookieFromResponseHeader();
-            this._session.updateToken(cookies['ZM_AUTH_TOKEN'], 43200000, cookies['SID']);
-            this._parent.callbackSessionInfoChanged(this._session);
-            isOk = this._session.isTokenValid();
-        }
+        isOk = this._session.isTokenValid();
     }
     catch (e) {
         this._logger.error("Callback Auth request error: " + e);
