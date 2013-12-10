@@ -52,9 +52,8 @@ var zimbra_notifier_main = {};
  */
 zimbra_notifier_main.init = function() {
     try {
-        chrome.browserAction.setIcon({
-            path : "skin/images/icon_disabled.png"
-        });
+        chrome.browserAction.setIcon({path : "skin/images/icon_disabled.png"});
+        chrome.browserAction.setBadgeText({text:String("")});
 
         zimbra_notifier_Controller.addCallBackRefresh(this);
     } catch (e) {

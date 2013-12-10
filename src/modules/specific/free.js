@@ -183,6 +183,29 @@ zimbra_notifier_RequestFree.prototype._setInfoRequest = function() {
 var zimbra_notifier_WebserviceFree = function(timeoutQuery, timeoutWait, parent) {
     this._super.constructor.call(this, timeoutQuery, timeoutWait, parent);
     this._logger._name += 'Free';
+
+    //callback when redirection is called in request
+    var that = this;
+    this._callbackBeforeRedirect = function(details) {
+        var cookies = {};
+        for (var index = 0; index < details.responseHeaders.length; index++) {
+            if (details.responseHeaders[index].name === "Set-Cookie") {
+                var rawCookie = details.responseHeaders[index].value;
+                var posSt = rawCookie.indexOf('=');
+                var posEnd = rawCookie.indexOf(';', posSt);
+                if (posEnd > posSt) {
+                    cookies[rawCookie.substring(0, posSt)] = decodeURIComponent(rawCookie.substring( posSt + 1, posEnd));
+                } else {
+                    cookies[rawCookie.substring(0, posSt)] = decodeURIComponent(rawCookie.substring(posSt + 1));
+                }
+            }
+        }
+        if (cookies['ZM_AUTH_TOKEN'] && cookies['SID']) {
+            that._session.updateToken(cookies['ZM_AUTH_TOKEN'], 43200000, cookies['SID']);
+            that._parent.callbackSessionInfoChanged(that._session);
+        }
+        return {};
+    };
 };
 zimbra_notifier_Util.extend(zimbra_notifier_Webservice, zimbra_notifier_WebserviceFree);
 
@@ -217,37 +240,13 @@ zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, l
         dataReq += "&password=" + encodeURIComponent(password);
         dataReq += "&Envoyer=Connexion";
 
-        var that = this;
-        // remove cookies if existe because with cookies setted, the redirection is not call
+        // remove cookies if existe because with setted cookies, the redirection is not call
         chrome.cookies.remove({"url" : urlWebService, "name" : "ZM_AUTH_TOKEN"});
         chrome.cookies.remove({"url" : urlWebService, "name" : "SID"});
-        chrome.webRequest.onBeforeRedirect.addListener(
-            function(details) {
-                var cookies = {};
-                for (var index = 0; index < details.responseHeaders.length; index++) {
-                    if (details.responseHeaders[index].name === "Set-Cookie") {
-                        var rawCookie = details.responseHeaders[index].value;
-                        var posSt = rawCookie.indexOf('=');
-                        var posEnd = rawCookie.indexOf(';', posSt);
-                        if (posEnd > posSt) {
-                            cookies[rawCookie.substring(0, posSt)] = decodeURIComponent(rawCookie.substring( posSt + 1, posEnd));
-                        } else {
-                            cookies[rawCookie.substring(0, posSt)] = decodeURIComponent(rawCookie.substring(posSt + 1));
-                        }
-                    }
-                }
-                if (cookies['ZM_AUTH_TOKEN'] && cookies['SID']) {
-                    that._session.updateToken(cookies['ZM_AUTH_TOKEN'], 43200000, cookies['SID']);
-                    that._parent.callbackSessionInfoChanged(that._session);
-                }
-                return {};
-            },
-            {
-                urls : [ urlWebService + "/*" ],
-                types : [ "xmlhttprequest" ]
-            },
-            [ "responseHeaders" ]
-        );
+
+        // add listener to be notify before redirect of request
+        chrome.webRequest.onBeforeRedirect.addListener( this._callbackBeforeRedirect, { urls : [ urlWebService + "/*" ], types : [ "xmlhttprequest" ]}, [ "responseHeaders" ]);
+
         this._runningReq.setDataRequest(dataReq);
         return true;
     });
@@ -266,6 +265,9 @@ zimbra_notifier_WebserviceFree.prototype._callbackAuthRequest = function(request
             this._logger.error("The running auth request != callback object");
         }
         isOk = this._session.isTokenValid();
+
+        // remove listener to be notify before redirect of request
+        chrome.webRequest.onBeforeRedirect.removeListener(this._callbackBeforeRedirect);
     }
     catch (e) {
         this._logger.error("Callback Auth request error: " + e);

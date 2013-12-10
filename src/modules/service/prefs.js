@@ -900,17 +900,14 @@ PrefsService.getPref = function(key) {
  * @param {Object} the value
  */
 PrefsService.setPref = function(key, value) {
-    chrome.storage.sync.get(this._currentPref,
-        function (storage) {
-            if(key== zimbra_notifier_Prefs.PREF.USER_PASSWORD) {
-                storage.prefs[key] = AesCtr.encrypt(value, zimbra_notifier_Prefs.PREF.USER_PASSWORD_KEY , 128);
-            }
-            else {
-                storage.prefs[key] = value;
-            }
-            chrome.storage.sync.set(storage);
-        }
-    );
+    if(key== zimbra_notifier_Prefs.PREF.USER_PASSWORD) {
+        this._currentPref.prefs[key] = AesCtr.encrypt(value, zimbra_notifier_Prefs.PREF.USER_PASSWORD_KEY , 128);
+    }
+    else {
+        this._currentPref.prefs[key] = value;
+    }
+    //synchronise preference
+    chrome.storage.sync.set(this._currentPref);
 };
 
 
