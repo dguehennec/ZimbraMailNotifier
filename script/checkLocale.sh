@@ -3,26 +3,11 @@
 cd "$1"
 
 referenceFile=$(mktemp)
-grep -Eo "ENTITY [a-zA-Z\.]+ " en-US/zimbra_mail_notifier.dtd | sed -r "s/(ENTITY| )//g" > "$referenceFile"
+grep -Eo "\"[a-zA-Z\._]+\": {" en/messages.json | sed -r "s/(\"|:|\{| )//g" > "$referenceFile"
 
-ls -1 */zimbra_mail_notifier.dtd | while read file ; do 
+ls -1 */messages.json | while read file ; do 
     tmpFile=$(mktemp)
-    grep -Eo "ENTITY [a-zA-Z\.]+ " "$file" | sed -r "s/(ENTITY| )//g" > "$tmpFile"
-    echo "**** $file ****"
-    diff "$referenceFile" "$tmpFile"
-    rm "$tmpFile"
-done
-
-rm "$referenceFile"
-
-echo " === "
-
-referenceFile=$(mktemp)
-grep -Eo "^[a-zA-Z\.]+=" en-US/zimbra_mail_notifier.properties > "$referenceFile"
-
-ls -1 */zimbra_mail_notifier.properties | while read file ; do 
-    tmpFile=$(mktemp)
-    grep -Eo "^[a-zA-Z\.]+=" "$file" > "$tmpFile"
+    grep -Eo "\"[a-zA-Z\._]+\": {" "$file" | sed -r "s/(\"|:|\{| )//g" > "$tmpFile"
     echo "**** $file ****"
     diff "$referenceFile" "$tmpFile"
     rm "$tmpFile"
