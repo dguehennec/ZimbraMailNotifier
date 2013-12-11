@@ -73,6 +73,10 @@
         "message": "About Zimbra Mail Notifier",
         "description": ""
     },
+    "main_homepage_label": {
+        "message": "Web Site",
+        "description": ""
+    },
 
     "tooltip_calendar_caption": {
         "message": "Next events",
@@ -244,7 +248,7 @@
         "description": ""
     },
     "option_identifiant_savePassword_label": {
-        "message": "Remember password_",
+        "message": "Remember password",
         "description": ""
     },
     "option_identifiant_server_caption": {
@@ -302,6 +306,10 @@
     },
     "tooltip_errorNotConnected_title": {
         "message": "Connection failed",
+        "description": ""
+    },
+    "tooltip_errorInitPage_title": {
+        "message": "Sorry, an error has occurred, please reload this page.",
         "description": ""
     },
     "tooltip_unreadMessages_title": {

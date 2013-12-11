@@ -73,6 +73,10 @@
         "message": "à propos de Zimbra Mail Notifier",
         "description": ""
     },
+    "main_homepage_label": {
+        "message": "Site Web",
+        "description": ""
+    },
 
     "tooltip_calendar_caption": {
         "message": "Evenements à venir",
@@ -302,6 +306,10 @@
     },
     "tooltip_errorNotConnected_title": {
         "message": "Echec de la connexion",
+        "description": ""
+    },
+    "tooltip_errorInitPage_title": {
+        "message": "Désolé une erreur s'est produite, s'il vous plaît recharger cette page.",
         "description": ""
     },
     "tooltip_unreadMessages_title": {

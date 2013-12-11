@@ -55,23 +55,9 @@ zimbra_notifier_popup.init = function(background) {
     $('#zimbra_mail_notifier_tooltipCheckNow').on('click', $.proxy(function() {
         this.checkNowClick();
     }, this));
-
-    // initialize background objects
-    // var background = chrome.runtime.getBackgroundPage();
-    if (!background || !background['zimbra_notifier_Controller'] || !background['zimbra_notifier_Prefs'] || !background['zimbra_notifier_Util']) {
-        $('#zimbra_mail_notifier_tooltipTitle').text(chrome.i18n.getMessage("tooltip_errorNotConnected_title"));
-        $('#zimbra_mail_notifier_tooltipMessage').text("Fatal error...");
-        $('#zimbra_mail_notifier_tooltipCalendarGroup').hide();
-        $('#zimbra_mail_notifier_tooltipTaskGroup').hide();
-        return;
-    }
-    this._zimbra_notifier_Controller = background['zimbra_notifier_Controller'];
-    this._zimbra_notifier_Prefs = background['zimbra_notifier_Prefs'];
-    this._zimbra_notifier_Util = background['zimbra_notifier_Util'];
-
     $('#zimbra_mail_notifier_tooltipHome').on('click', $.proxy(function() {
-    	this._zimbra_notifier_Controller.openZimbraWebInterface();
-	}, this));
+        this._zimbra_notifier_Controller.openZimbraWebInterface();
+    }, this));
     $('#zimbra_mail_notifier_tooltipConnect').on('click', $.proxy(function() {
         this.connectClick();
     }, this));
@@ -81,6 +67,17 @@ zimbra_notifier_popup.init = function(background) {
     $('#zimbra_mail_notifier_tooltipOption').on('click', $.proxy(function() {
         this.optionClick();
     }, this));
+
+    // initialize background objects
+    if (!background || !background['zimbra_notifier_Controller'] || !background['zimbra_notifier_Prefs'] || !background['zimbra_notifier_Util']) {
+        $('#zimbra_mail_notifier_tooltipTitle').text(chrome.i18n.getMessage("tooltip_errorInitPage_title"));
+        $('#zimbra_mail_notifier_tooltipCalendarGroup').hide();
+        $('#zimbra_mail_notifier_tooltipTaskGroup').hide();
+        return;
+    }
+    this._zimbra_notifier_Controller = background['zimbra_notifier_Controller'];
+    this._zimbra_notifier_Prefs = background['zimbra_notifier_Prefs'];
+    this._zimbra_notifier_Util = background['zimbra_notifier_Util'];
 
     // Register
     this._zimbra_notifier_Controller.addCallBackRefresh(this);
@@ -100,6 +97,7 @@ zimbra_notifier_popup.release = function() {
 /**
  * Initiliaze tooltip
  * 
+ * @this {Popup}
  */
 zimbra_notifier_popup.refresh = function() {
     var errorMsg = this._zimbra_notifier_Controller.getLastErrorMessage();
@@ -128,6 +126,7 @@ zimbra_notifier_popup.refresh = function() {
             $('<div/>', {
                 text : msgDesc
             }).appendTo("#zimbra_mail_notifier_tooltipMessage");
+
             // show mailbox informations
             var mailBoxInfo = this._zimbra_notifier_Controller.getMailBoxInfo();
             if (mailBoxInfo && mailBoxInfo.quotaSize > 0) {
@@ -250,7 +249,6 @@ zimbra_notifier_popup.initializeTooltipTask = function() {
 
             currentDisplayed++;
             if (currentPriority !== priority) {
-
                 priority = currentPriority;
                 var priorityTxt = "";
                 if (currentPriority < 5) {

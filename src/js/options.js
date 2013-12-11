@@ -52,6 +52,7 @@ var zimbra_notifier_options = {};
  */
 zimbra_notifier_options.init = function(background) {
     if (!background || !background['zimbra_notifier_Controller'] || !background['zimbra_notifier_Prefs']) {
+        $('.content').text(chrome.i18n.getMessage("tooltip_errorInitPage_title"));
         return;
     }
     this._zimbra_notifier_Controller = background['zimbra_notifier_Controller'];
@@ -274,7 +275,6 @@ zimbra_notifier_options.connect = function() {
     $("#zimbra_mail_notifier-serverError").val("");
 
     // initialize connection
-    this._closeWhenConnected = true;
     this._zimbra_notifier_Controller.initializeConnection($("#zimbra_mail_notifier-optionPassword").val());
 };
 
@@ -284,7 +284,6 @@ zimbra_notifier_options.connect = function() {
  * @this {Option}
  */
 zimbra_notifier_options.disconnect = function() {
-    this._closeWhenConnected = false;
     this._zimbra_notifier_Controller.closeConnection();
 };
 

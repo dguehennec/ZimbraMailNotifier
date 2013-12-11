@@ -72,6 +72,10 @@
         "message": "Hakkında Zimbra Mail Notifier",
         "description": ""
     },
+    "main_homepage_label": {
+        "message": "Web Sayfası",
+        "description": ""
+    },
 
     "tooltip_calendar_caption": {
         "message": "Gelecek etkinlikler",
@@ -301,6 +305,10 @@
     },
     "tooltip_errorNotConnected_title": {
         "message": "Bildirimler için, lütfen giriş yapın",
+        "description": ""
+    },
+    "tooltip_errorInitPage_title": {
+        "message": "Üzgünüz, bir hata oluştu, bu sayfayı yeniden yükleyin.",
         "description": ""
     },
     "tooltip_unreadMessages_title": {

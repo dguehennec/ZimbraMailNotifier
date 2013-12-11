@@ -66,7 +66,6 @@ zimbra_notifier_main.init = function() {
  *
  * @this {Main}
  */
-
 zimbra_notifier_main.release = function() {
     zimbra_notifier_Controller.removeCallBackRefresh(this);
 };

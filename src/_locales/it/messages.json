@@ -72,6 +72,10 @@
         "message": "A proposito di Zimbra Mail Notifier",
         "description": ""
     },
+    "main_homepage_label": {
+        "message": "Sito web",
+        "description": ""
+    },
 
     "tooltip_calendar_caption": {
         "message": "Prossimi eventi",
@@ -301,6 +305,10 @@
     },
     "tooltip_errorNotConnected_title": {
         "message": "Connessione non riuscita",
+        "description": ""
+    },
+    "tooltip_errorInitPage_title": {
+        "message": "Siamo spiacenti, si è verificato un errore, si prega di ricaricare questa pagina.",
         "description": ""
     },
     "tooltip_unreadMessages_title": {
