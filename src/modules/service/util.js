@@ -209,29 +209,44 @@ zimbra_notifier_Util.convertBytesToStringValue = function(bytes) {
  */
 zimbra_notifier_Util.showNotification = function(title, text, duration, callback, callbackThis) {
     try {
-        // Show the notification
-        if (window.webkitNotifications.checkPermission() == 0) {
-            var notification = webkitNotifications.createNotification("skin/images/zimbra_mail_notifier.png", title, text);
-            // add callback if needed
-            if (callback) {
-                var arrayArgs = [].slice.call(arguments, 0);
-                notification.onclick = function() {
-                    callback.apply(callbackThis, arrayArgs.slice(5));
-                    this.cancel();
-                };
-            }
-            // add default notification time if event
-            if(duration===0) {
-                duration = 10000;
-            }
-            // hide notification after the duration timeout
-            zimbra_notifier_Util.setTimer(null, function() {
-                notification.cancel();
-            }, duration);
-            // show notification
-            notification.show();
+        if(chrome.notifications) {
+            // Show the notification
+            chrome.notifications.create("", { type: "basic", iconUrl : "skin/images/zimbra_mail_notifier.png", title : title, message : text, isClickable : true}, function (notificationId) {
+                chrome.notifications.onClicked.addListener(function(notificationIdClicked) {
+                    if(notificationIdClicked == notificationId) {
+                        callback.apply(callbackThis);
+                        chrome.notifications.clear(notificationId);
+                    }
+                });
+                // hide notification after the duration timeout
+                zimbra_notifier_Util.setTimer(null, function() {
+                    chrome.notifications.clear(notificationId);
+                }, duration);
+            });
         } else {
-            webkitNotifications.requestPermission();
+            if (window.webkitNotifications.checkPermission() == 0) {
+                var notification = webkitNotifications.createNotification("skin/images/zimbra_mail_notifier.png", title, text);
+                // add callback if needed
+                if (callback) {
+                    var arrayArgs = [].slice.call(arguments, 0);
+                    notification.onclick = function() {
+                        callback.apply(callbackThis, arrayArgs.slice(5));
+                        this.cancel();
+                    };
+                }
+                // add default notification time if event
+                if(duration===0) {
+                    duration = 10000;
+                }
+                // hide notification after the duration timeout
+                zimbra_notifier_Util.setTimer(null, function() {
+                    notification.cancel();
+                }, duration);
+                // show notification
+                notification.show();
+            } else {
+                window.webkitNotifications.requestPermission();
+            }
         }
     }
     catch (e) {

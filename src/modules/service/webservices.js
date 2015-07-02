@@ -223,6 +223,10 @@ zimbra_notifier_Webservice.prototype.authRequest = function(urlWebService, login
     this._launchQuery(typeReq, false, false, function() {
 
         this.infoAuthUpdated(urlWebService, login);
+
+        // remove cookies if existe because with setted cookies, the redirection is not call
+        chrome.cookies.remove({"url" : urlWebService, "name" : "ZM_AUTH_TOKEN"});
+
         this._runningReq = this._buildQueryReq(typeReq, "/service/soap/AuthRequest",
                                                this._callbackAuthRequest);
         this._runningReq.setAuthRequest(login, password);
