@@ -297,7 +297,7 @@
         "description": ""
     },
     "tooltip_notConnected_description": {
-        "message": "For notifications, please log in_",
+        "message": "For notifications, please log in.",
         "description": ""
     },
     "tooltip_errorConnected_title": {
