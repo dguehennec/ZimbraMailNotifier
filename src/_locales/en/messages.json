@@ -1,13 +1,13 @@
-﻿{
+{
     "extName": {
         "message": "Zimbra Mail Notifier",
         "description": ""
     },
-	"extDescription": {
+    "extDescription": {
         "message": "This extension notifies you when new messages arrive in your zimbra mailbox.",
         "description": ""
     },
-	
+    
     "yes": {
         "message": "yes",
         "description": ""
@@ -78,6 +78,10 @@
         "description": ""
     },
 
+    "tooltip_message_caption": {
+        "message": "Unread Emails",
+        "description": ""
+    },
     "tooltip_calendar_caption": {
         "message": "Next events",
         "description": ""
@@ -144,7 +148,26 @@
         "message": "Notification duration",
         "description": ""
     },
-
+    "option_message_label": {
+        "message": "Email",
+        "description": ""
+    },
+    "option_message_activate": {
+        "message": "Enable unread Emails management",
+        "description": ""
+    },
+    "option_message_view_caption": {
+        "message": "Displaying",
+        "description": ""
+    },
+    "option_message_view_nbMax_label": {
+        "message": "Maximum number of Emails displayed",
+        "description": ""
+    },
+    "option_message_view_nbMax_characters_label": {
+        "message": "Maximum number of characters displayed in Email abstract",
+        "description": ""
+    },
     "option_calendar_label": {
         "message": "Calendar",
         "description": ""
@@ -162,7 +185,7 @@
         "description": ""
     },
     "option_calendar_view_nbMax_label": {
-        "message": "Number of appointments maximum displayed",
+        "message": "Maximum number of appointments displayed",
         "description": ""
     },
     "option_calendar_notification_caption": {
@@ -203,7 +226,7 @@
         "description": ""
     },
     "option_task_view_nbTasks": {
-        "message": "Number of tasks maximum displayed",
+        "message": "Maximum number of tasks displayed",
         "description": ""
     },
     "option_task_view_nbPriorities": {
@@ -232,11 +255,19 @@
     },
 
     "option_identifiant_label": {
-        "message": "Identifier",
+        "message": "Accounts",
+        "description": ""
+    },
+    "option_identifiant_caption": {
+        "message": "Account",
         "description": ""
     },
     "option_identifiant_params_caption": {
-        "message": "Account",
+        "message": "Authentication",
+        "description": ""
+    },
+    "option_identifiant_alias_label": {
+        "message": "Alias",
         "description": ""
     },
     "option_identifiant_login_label": {
@@ -279,6 +310,14 @@
         "message": "The URL displayed in the Web browser when connected (Optional)",
         "description": ""
     },
+    "option_identifiant_add_button": {
+        "message": "Add new account",
+        "description": ""
+    },
+    "option_identifiant_remove_button": {
+        "message": "Remove",
+        "description": ""
+    },
     "option_identifiant_connect_button": {
         "message": "Connect",
         "description": ""
@@ -290,10 +329,14 @@
     "option_identifiant_disconnect_button": {
         "message": "Disconnect",
         "description": ""
-    },	
-	
+    },  
+    
     "tooltip_notConnected_title": {
         "message": "Disconnected",
+        "description": ""
+    },
+    "tooltip_configuration_description": {
+        "message": "For notifications, please configure your account(s).",
         "description": ""
     },
     "tooltip_notConnected_description": {
@@ -304,8 +347,8 @@
         "message": "Update failed",
         "description": ""
     },
-    "tooltip_errorNotConnected_title": {
-        "message": "Connection failed",
+    "tooltip_disconnected_descriptionStatus": {
+        "message": "Status: Disconnected",
         "description": ""
     },
     "tooltip_errorInitPage_title": {
@@ -313,19 +356,23 @@
         "description": ""
     },
     "tooltip_unreadMessages_title": {
-        "message": "%NB% unread message(s)",
+        "message": "Unread Emails: %NB% ",
         "description": ""
     },
-	"tooltip_connected_descriptionStatus": {
+    "tooltip_connected_descriptionStatus": {
         "message": "Status: Connected",
         "description": ""
     },
-	"tooltip_connected_descriptionAccount": {
+    "tooltip_connected_descriptionAccount": {
         "message": "Account: %EMAIL%",
         "description": ""
     },
     "tooltip_connected_descriptionQuota": {
         "message": "Quota: %PERCENTAGE%% (%USED% of %SIZE%)",
+        "description": ""
+    },
+    "tooltip_noUnreadMessage": {
+        "message": "No unread Email",
         "description": ""
     },
     "tooltip_noEvent": {
@@ -352,7 +399,7 @@
         "message": "W%WEEK%",
         "description": ""
     },
-	
+    
     "connector_error_req_internal": {
         "message": "Internal error",
         "description": ""
@@ -399,7 +446,7 @@
         "description": ""
     },
     "connector_error_unreadmsg": {
-        "message": "Error when retrieving for new mail: %REASON%!",
+        "message": "Error when retrieving for new Emails: %REASON%!",
         "description": ""
     },
     "connector_error_calendar": {
@@ -412,15 +459,15 @@
     },
 
     "connector_notification_NewMessage": {
-        "message": "Message of %EMAIL%",
+        "message": "%ACCOUNT% Message of %EMAIL%",
         "description": ""
     },
     "connector_notification_nbUnreadMessages": {
-        "message": "%NB% new unread messages!",
+        "message": "%ACCOUNT% %NB% new unread Emails!",
         "description": ""
     },
     "connector_notification_event": {
-        "message": "Event :",
+        "message": "%ACCOUNT% Event:",
         "description": ""
     },
 

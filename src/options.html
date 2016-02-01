@@ -19,9 +19,10 @@
 		<div class="content">
 			<ul class="menu">
 				<li><a contentID="0" href="#"><img src="skin/images/prefs/general.png" height="22" alt="Icon" /><span msg="option_common_label"></span></a></li>
-				<li><a contentID="1" href="#"><img src="skin/images/prefs/calendar.png" height="22" alt="Icon" /><span msg="option_calendar_label"></span></a></li>
-				<li><a contentID="2" href="#"><img src="skin/images/prefs/task.png" height="22" alt="Icon" /><span msg="option_task_label"></span></a></li>
-				<li><a contentID="3" href="#"><img src="skin/images/prefs/auth.png" height="22" alt="Icon" /><span msg="option_identifiant_label"></span></a></li>
+				<li><a contentID="1" href="#"><img src="skin/images/prefs/message.png" height="22" alt="Icon" /><span msg="option_message_label"></span></a></li>
+				<li><a contentID="2" href="#"><img src="skin/images/prefs/calendar.png" height="22" alt="Icon" /><span msg="option_calendar_label"></span></a></li>
+				<li><a contentID="3" href="#"><img src="skin/images/prefs/task.png" height="22" alt="Icon" /><span msg="option_task_label"></span></a></li>
+				<li><a contentID="4" href="#"><img src="skin/images/prefs/auth.png" height="22" alt="Icon" /><span msg="option_identifiant_label"></span></a></li>
 			</ul>	       
 			<div class="tabContentWrapper">
 				<div id="content_0" class="tabContent hide">
@@ -38,6 +39,23 @@
 							</div>
 						</div>
 					</fieldset>
+				</div>
+				<div id="content_1" class="tabContent hide">
+					<input type="checkbox" id="zimbra_mail_notifier-optionMessageEnabled" pref="messageEnabled" />
+					<label for="zimbra_mail_notifier-optionMessageEnabled" msg="option_message_activate"></label>
+					<fieldset class="options">
+						<legend><label class="section" msg="option_message_view_caption"></label></legend>
+						<div class="subOptions">
+							<div>
+								<label msg="option_message_view_nbMax_label" msgTemplate="%MSG% : "></label>
+								<input id="zimbra_mail_notifier-optionMailNbDisplayed" type="number" min="1" max="30" step="1" maxlength="2" pref="messageNbDisplayed"/>
+							</div>
+							<div>
+								<label msg="option_message_view_nbMax_characters_label" msgTemplate="%MSG% : "></label>
+								<input id="zimbra_mail_notifier-optionMailNbCharactersDisplayed" type="number" min="50" max="240" step="10" maxlength="3" pref="messageNbCharactersDisplayed"/>
+							</div>
+						</div>
+					</fieldset>
 					<fieldset class="options">
 						<legend><label class="section" msg="option_common_mail_notification_caption"></label></legend>
 						<div class="subOptions">
@@ -51,13 +69,13 @@
 							</div>
 							<div>
 								<label msg="option_common_mail_notify_duration_caption" msgTemplate="%MSG% : "></label>
-								<input id="intNumber" type="number" min="2" max="999" step="4" maxlength="3" pref="emailNotificationDuration"/>
+								<input id="zimbra_mail_notifier-optionMailNotificationDuration" type="number" min="2" max="999" step="4" maxlength="3" pref="emailNotificationDuration"/>
 								<label msg="seconds"></label>
 							</div>
 						</div>
 					</fieldset>
 				</div>
-				<div id="content_1" class="tabContent hide">
+				<div id="content_2" class="tabContent hide">
 					<input type="checkbox" id="zimbra_mail_notifier-optionCalendarEnabled" pref="calendarEnabled" />
 					<label for="zimbra_mail_notifier-optionCalendarEnabled" msg="option_calendar_activate"></label>
 					<fieldset class="options">
@@ -74,7 +92,7 @@
 							</div>
 							<div>
 								<label msg="option_calendar_view_nbMax_label" msgTemplate="%MSG% : "></label>
-								<input id="intNumber" type="number" min="1" max="30" step="1" maxlength="2" pref="calendarNbDisplayed"/>
+								<input id="zimbra_mail_notifier-optionCalendarNbDisplayed" type="number" min="1" max="30" step="1" maxlength="2" pref="calendarNbDisplayed"/>
 							</div>
 						</div>
 					</fieldset>
@@ -114,7 +132,7 @@
 						</div>
 					</fieldset>
 				</div>
-				<div id="content_2" class="tabContent hide">
+				<div id="content_3" class="tabContent hide">
 					<input type="checkbox" id="zimbra_mail_notifier-optionTaskEnabled" pref="taskEnabled" />
 					<label for="zimbra_mail_notifier-optionTaskEnabled" msg="option_task_activate"></label>
 					<fieldset class="options">
@@ -122,7 +140,7 @@
 						<div class="subOptions">
 							<div>
 								<label msg="option_task_view_nbTasks" msgTemplate="%MSG% : "></label>
-								<input id="intNumber" type="number" min="1" max="30" step="1" maxlength="2" pref="taskNbDisplayed"/>
+								<input id="zimbra_mail_notifier-optionTaskNbDisplayed" type="number" min="1" max="30" step="1" maxlength="2" pref="taskNbDisplayed"/>
 							</div>
 							<div>
 								<label msg="option_task_view_nbPriorities" msgTemplate="%MSG% : "></label>
@@ -137,56 +155,23 @@
 						</div>
 					</fieldset>
 				</div>
-				<div id="content_3" class="tabContent hide">
-					<fieldset class="options">
-						<legend><label class="section" msg="option_identifiant_params_caption"></label></legend>
-						<div class="subOptions">
-							<div>
-								<div msg="option_identifiant_login_label" msgTemplate="%MSG% : " style="width:160px;float:left;"></div>
-								<input id="zimbra_mail_notifier-textboxLogin" type="text" pref="userLogin" style="width:160px;"></input>
-							</div>
-							<div>
-								<div msg="option_identifiant_password_label" msgTemplate="%MSG% : " style="width:160px;float:left;"></div>
-								<input id="zimbra_mail_notifier-optionPassword" type="password" pref="userPassword" style="width:160px;"></input>
-							</div>
-							<div>
-								<input type="checkbox" id="zimbra_mail_notifier-checkboxSavePassword" pref="userSavePassword" style="margin-left:160px;"/>
-								<label for="zimbra_mail_notifier-checkboxSavePassword" msg="option_identifiant_savePassword_label"></label>
-							</div>
-						</div>
-					</fieldset>
-					<fieldset class="options">
-						<legend><label class="section" msg="option_identifiant_server_caption"></label></legend>
-						<div class="subOptions">
-							<div>
-								<div msg="option_identifiant_authtype_label" msgTemplate="%MSG% : " style="width:160px;float:left;"></div>
-								<select id="zimbra_mail_notifier-listAuthType" pref="userServer|userUrlWebInteface">
-								   <option value="" msg="option_identifiant_authtype_normal"></option>
-								   <option value="https://zimbra.free.fr|https://zimbra.free.fr/zimbra/mail">Free</option>
-								   <option value="http://zimbra.aliceadsl.fr|http://zimbra.aliceadsl.fr/zimbra/mail">Alice Adsl</option>
-							   </select>
-							</div>
-							<div>
-								<div msg="option_identifiant_urlwebservice_label" msgTemplate="%MSG% : " style="width:160px;float:left;"></div>
-								<input id="zimbra_mail_notifier-textboxUrlWebService" type="text" pref="userServer" msgTitle="option_identifiant_urlwebservice_tooltip" style="width:300px"></input>
-							</div>
-							<div>
-								<div msg="option_identifiant_urlwebinterface_label" msgTemplate="%MSG% : " style="width:160px;float:left;"></div>
-								<input id="zimbra_mail_notifier-textboxUrlWebInterface" type="text" pref="userUrlWebInteface" msgTitle="option_identifiant_urlwebinterface_tooltip" style="width:300px"></input>
-							</div>
-							<div class="actionButtons">
-								<div id="zimbra_mail_notifier-serverError"></div>
-								<button id="zimbra_mail_notifier-connectButton" msg="option_identifiant_connect_button" style="float:right"></button>
-								<button id="zimbra_mail_notifier-connectCancelButton" msg="option_identifiant_connectCancel_button" style="float:right"></button>
-								<button id="zimbra_mail_notifier-disconnectButton" msg="option_identifiant_disconnect_button" style="float:right"></button>
-							</div>
-						</div>
-					</fieldset>
+				<div id="content_4" class="tabContent hide">
+					<div id="zimbra_mail_notifier-addNewIdentifier" class="actionButtons">
+					    <button msg="option_identifiant_add_button"></button>
+					</div>
 				</div>
 			</div>
 			<div class="footer">
 				<span class="legal" msg="about_legal_label"></span>
 				<span class="createby" msg="about_createdby_label"></span>
+			</div>
+			<div style="text-align:center;margin-top:10px">
+				<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+					<input type="hidden" name="cmd" value="_s-xclick">
+					<input type="hidden" name="hosted_button_id" value="FJHNDW4664QY4">
+					<input type="image" src="https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - la solution de paiement en ligne la plus simple et la plus sécurisée !">
+					<img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
+				</form>
 			</div>
 		</div>
 	</body>

@@ -92,6 +92,17 @@ var zimbra_notifier_MessageManager = function() {
 };
 
 /**
+ * Get the messages
+ *
+ * @this {MessageManager}
+ *
+ * @return messages
+ */
+zimbra_notifier_MessageManager.prototype.getMessages = function() {
+    return this._listMessages;
+};
+
+/**
  * Get the current number of messages
  *
  * @this {MessageManager}

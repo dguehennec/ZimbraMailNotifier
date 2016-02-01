@@ -307,7 +307,9 @@ zimbra_notifier_Request.prototype.getCookieFromResponseHeader = function() {
 zimbra_notifier_Request.prototype.addCookieToRequestHeader = function(key, val) {
     try {
         var cookieStr = key + "=" + encodeURIComponent(val);
-        this._request.channel.setRequestHeader("Cookie", cookieStr, true);
+        if(this._request.channel) {
+            this._request.channel.setRequestHeader("Cookie", cookieStr, true);
+        }
     }
     catch (e) {
         this._logger.error("Fail to add cookie: " + e);

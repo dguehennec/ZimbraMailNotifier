@@ -7,7 +7,7 @@
         "message": "Questa estenzione notifica l'arrivo di nuovi messaggi sulla sua mailbox zimbra.",
         "description": ""
     },
-	
+    
     "yes": {
         "message": "si",
         "description": ""
@@ -77,6 +77,10 @@
         "description": ""
     },
 
+    "tooltip_message_caption": {
+        "message": "Email non letti",
+        "description": ""
+    },
     "tooltip_calendar_caption": {
         "message": "Prossimi eventi",
         "description": ""
@@ -141,6 +145,27 @@
     },
     "option_common_mail_notify_duration_caption": {
         "message": "Notifica durata",
+        "description": ""
+    },
+
+    "option_message_label": {
+        "message": "Email",
+        "description": ""
+    },
+    "option_message_activate": {
+        "message": "Attivare gestione email",
+        "description": ""
+    },
+    "option_message_view_caption": {
+        "message": "Visualizazione",
+        "description": ""
+    },
+    "option_message_view_nbMax_label": {
+        "message": "Numero massimo di email visualizzati",
+        "description": ""
+    },
+    "option_message_view_nbMax_characters_label": {
+        "message": "Numero massimo di caratteri visualizzati in Email astratto",
         "description": ""
     },
 
@@ -231,11 +256,19 @@
     },
 
     "option_identifiant_label": {
-        "message": "Identificatore",
+        "message": "Conti",
+        "description": ""
+    },
+    "option_identifiant_caption": {
+        "message": "Conto",
         "description": ""
     },
     "option_identifiant_params_caption": {
-        "message": "Account",
+        "message": "Autenticazione",
+        "description": ""
+    },
+    "option_identifiant_alias_label": {
+        "message": "Alias",
         "description": ""
     },
     "option_identifiant_login_label": {
@@ -278,6 +311,14 @@
         "message": "URL visualizzato nel Web browser quando connessi (opzionale)",
         "description": ""
     },
+    "option_identifiant_add_button": {
+        "message": "Aggiungi nuovo account",
+        "description": ""
+    },
+    "option_identifiant_remove_button": {
+        "message": "Rimuovere",
+        "description": ""
+    },
     "option_identifiant_connect_button": {
         "message": "Connettere",
         "description": ""
@@ -295,6 +336,10 @@
         "message": "Disconnesso",
         "description": ""
     },
+    "tooltip_configuration_description": {
+        "message": "Per le notifiche, si prega di configurare il proprio account.",
+        "description": ""
+    },
     "tooltip_notConnected_description": {
         "message": "Per le notifiche, fare il login",
         "description": ""
@@ -303,8 +348,8 @@
         "message": "Update fallito",
         "description": ""
     },
-    "tooltip_errorNotConnected_title": {
-        "message": "Connessione non riuscita",
+    "tooltip_disconnected_descriptionStatus": {
+        "message": "Stato: Disconnesso",
         "description": ""
     },
     "tooltip_errorInitPage_title": {
@@ -312,19 +357,23 @@
         "description": ""
     },
     "tooltip_unreadMessages_title": {
-        "message": "%NB% messaggio(i) non letti",
+        "message": "messaggioi non letti: %NB%",
         "description": ""
     },
     "tooltip_connected_descriptionStatus": {
         "message": "Status: Connesso",
         "description": ""
     },
-	"tooltip_connected_descriptionAccount": {
+    "tooltip_connected_descriptionAccount": {
         "message": "Account: %EMAIL%",
         "description": ""
     },
     "tooltip_connected_descriptionQuota": {
         "message": "Spazio: %PERCENTAGE%% (%USED% di %SIZE%)",
+        "description": ""
+    },
+    "tooltip_noUnreadMessage": {
+        "message": "Nessuna email non letti",
         "description": ""
     },
     "tooltip_noEvent": {
@@ -410,15 +459,15 @@
         "description": ""
     },
     "connector_notification_NewMessage": {
-        "message": "Messaggio di %EMAIL%",
+        "message": "%ACCOUNT% Messaggio di %EMAIL%",
         "description": ""
     },
     "connector_notification_nbUnreadMessages": {
-        "message": "%NB% nuovi messaggi non letti !",
+        "message": "%ACCOUNT% %NB% nuovi messaggi non letti !",
         "description": ""
     },
     "connector_notification_event": {
-        "message": "Evento:",
+        "message": "%ACCOUNT% Evento:",
         "description": ""
     },
 

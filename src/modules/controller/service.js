@@ -42,6 +42,12 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Service", "zimbra_notifier_SERVICE_EVEN
                           "zimbra_notifier_SERVICE_STATE"];
 
 
+/**
+ * service states
+ *
+ * @constant
+ *
+ */
 var zimbra_notifier_SERVICE_STATE = {
     DISCONNECTED         : 'DISCONNECTED',
     NOTHING_TO_DO        : 'NOTHING_TO_DO',
@@ -78,6 +84,12 @@ var zimbra_notifier_SERVICE_STATE = {
 };
 zimbra_notifier_Util.deepFreeze(zimbra_notifier_SERVICE_STATE);
 
+/**
+ * service events
+ *
+ * @constant
+ *
+ */
 var zimbra_notifier_SERVICE_EVENT = {
     STOPPED                : { startingReq: false, n: 'STOPPED'},
     CONNECTING             : { startingReq: true,  n: 'CONNECTING'},
@@ -198,19 +210,19 @@ zimbra_notifier_Service.prototype.shutdown = function() {
 zimbra_notifier_Service.prototype._getWebService = function() {
     if (!this._webservice) {
 
-        if (zimbra_notifier_Prefs.isFreeWebService()) {
+        if (zimbra_notifier_Prefs.isFreeWebService(this._parent._accountId)) {
             this._webservice = new zimbra_notifier_WebserviceFree(
-                zimbra_notifier_Prefs.getRequestQueryTimeout(), 52000, this);
+                zimbra_notifier_Prefs.getRequestQueryTimeout(this._parent._accountId), 52000, this);
         }
         else {
             this._webservice = new zimbra_notifier_Webservice(
-                zimbra_notifier_Prefs.getRequestQueryTimeout(),
-                zimbra_notifier_Prefs.getRequestWaitTimeout(), this);
+                zimbra_notifier_Prefs.getRequestQueryTimeout(this._parent._accountId),
+                zimbra_notifier_Prefs.getRequestWaitTimeout(this._parent._accountId), this);
         }
         // Restore previous wait set
-        var wSet = zimbra_notifier_Prefs.getPreviousWaitSet();
+        var wSet = zimbra_notifier_Prefs.getPreviousWaitSet(this._parent._accountId);
         if (wSet !== null) {
-            this._webservice.restoreWaitSet(wSet.id, wSet.seq, wSet.urlWebService, wSet.user);
+            this._webservice.restoreWaitSet(this._parent._accountId, wSet.id, wSet.seq, wSet.urlWebService, wSet.user);
         }
         this._needCheckWaitSet = this._webservice.isWaitSetValid();
     }
@@ -263,7 +275,7 @@ zimbra_notifier_Service.prototype._planRunState = function(newState, delayMs) {
 zimbra_notifier_Service.prototype._stopStateTimer = function() {
     if (this._stateTimer) {
         clearTimeout(this._stateTimer);
-		this._stateTimer = null;
+        this._stateTimer = null;
     }
 };
 
@@ -556,7 +568,7 @@ zimbra_notifier_Service.prototype._runState = function(newState) {
                     delayAfterWaitReq = timeMinW - timeEndW;
                 }
                 // Check if we need to run again a blocking wait set
-                var timeEndLoop = this._timeStartLoopWaitReq + zimbra_notifier_Prefs.getRequestWaitLoopTime();
+                var timeEndLoop = this._timeStartLoopWaitReq + zimbra_notifier_Prefs.getRequestWaitLoopTime(this._parent._accountId);
                 if (timeEndLoop > timeEndW) {
                     // Loop again, check the wait set if necessary
                     if (this._needCheckAgainWaitSet === true) {
@@ -626,10 +638,10 @@ zimbra_notifier_Service.prototype._needRunReq = function(reqType) {
  */
 zimbra_notifier_Service.prototype._doConnect = function(password) {
 
-    var urlWebService = zimbra_notifier_Prefs.getUrlWebService();
-    var userLogin = zimbra_notifier_Prefs.getUserLogin();
+    var urlWebService = zimbra_notifier_Prefs.getUrlWebService(this._parent._accountId);
+    var userLogin = zimbra_notifier_Prefs.getUserLogin(this._parent._accountId);
     if (!password) {
-        password = zimbra_notifier_Prefs.getUserPassword();
+        password = zimbra_notifier_Prefs.getUserPassword(this._parent._accountId);
     }
 
     if (!password || !urlWebService || !userLogin) {
@@ -815,7 +827,7 @@ zimbra_notifier_Service.prototype.prefUpdated = function(connecting) {
     this._parent.event(zimbra_notifier_SERVICE_EVENT.PREF_UPDATED);
 
     if (!connecting) {
-        if (zimbra_notifier_Prefs.isAutoConnectEnabled() && zimbra_notifier_Prefs.isSavePasswordEnabled()
+        if (zimbra_notifier_Prefs.isAutoConnectEnabled() && zimbra_notifier_Prefs.isSavePasswordEnabled(this._parent.accountId)
             && !this.isConnected() && this._currentState !== zimbra_notifier_SERVICE_STATE.CONNECT_RUN) {
 
             this.initializeConnection();
@@ -986,7 +998,7 @@ zimbra_notifier_Service.prototype.callbackDisconnect = function() {
  *             session  The session object
  */
 zimbra_notifier_Service.prototype.callbackSessionInfoChanged = function(session) {
-    zimbra_notifier_Prefs.saveWaitSet(session.waitId(), session.waitSeq(),
+    zimbra_notifier_Prefs.saveWaitSet(this._parent._accountId, session.waitId(), session.waitSeq(),
                                       session.buildUrl(''), session.user());
 
     this._parent.getBrowser().updateCookies(session.buildUrl(''), session.getAuthCookies());
@@ -1064,6 +1076,12 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOf
     var listNewSubject = [];
     var nbNewMsg = 0;
     var lastSender = null;
+    var alias = "";
+
+    // display account alias if more than one accounts
+    if(zimbra_notifier_Prefs.getAccounts().length>1) {
+        alias = "(" + zimbra_notifier_Prefs.getUserAlias(this._parent._accountId) + ")";
+    }
 
     try {
         // Add message received to the message manager
@@ -1118,11 +1136,11 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOf
             // Build title
             if (nbNewMsg > 1 || !lastSender) {
                 title = zimbra_notifier_Util.getBundleString("connector.notification.nbUnreadMessages");
-                title = title.replace("%NB%", nbNewMsg);
+                title = title.replace("%NB%", nbNewMsg).replace("%ACCOUNT%", alias);
             }
             else {
                 title = zimbra_notifier_Util.getBundleString("connector.notification.NewMessage");
-                title = title.replace("%EMAIL%", lastSender);
+                title = title.replace("%EMAIL%", lastSender).replace("%ACCOUNT%", alias);
             }
 
             // Build message
@@ -1198,7 +1216,7 @@ zimbra_notifier_Service.prototype.callbackCalendar = function(events) {
                         newEvent, zimbra_notifier_Prefs.getCalendarReminderTimeConf(),
                         zimbra_notifier_Prefs.getCalendarReminderNbRepeat(),
                         zimbra_notifier_Prefs.isCalendarSoundEnabled(),
-                        zimbra_notifier_Prefs.isCalendarNotificationEnabled());
+                        zimbra_notifier_Prefs.isCalendarNotificationEnabled(), this._parent._accountId);
             }
             newEvents.push(newEvent);
         }

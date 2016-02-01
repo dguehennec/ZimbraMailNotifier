@@ -7,7 +7,7 @@
         "message": "Cette extension vous notifie d'un nouveau mail sur votre messagerie Zimbra.",
         "description": ""
     },
-	
+    
     "yes": {
         "message": "Oui",
         "description": ""
@@ -78,8 +78,12 @@
         "description": ""
     },
 
+    "tooltip_message_caption": {
+        "message": "Mail non lu",
+        "description": ""
+    },
     "tooltip_calendar_caption": {
-        "message": "Evenements à venir",
+        "message": "Evènements à venir",
         "description": ""
     },
     "tooltip_task_caption": {
@@ -142,6 +146,27 @@
     },
     "option_common_mail_notify_duration_caption": {
         "message": "Durée de la notification",
+        "description": ""
+    },
+
+    "option_message_label": {
+        "message": "Mails",
+        "description": ""
+    },
+    "option_message_activate": {
+        "message": "Activer la gestion des mails",
+        "description": ""
+    },
+    "option_message_view_caption": {
+        "message": "Visualisation",
+        "description": ""
+    },
+    "option_message_view_nbMax_label": {
+        "message": "Nombre de mails maximum affichés",
+        "description": ""
+    },
+    "option_message_view_nbMax_characters_label": {
+        "message": "Nombre de caractères maximum affichés pour le résumé d'un mail",
         "description": ""
     },
 
@@ -232,11 +257,19 @@
     },
 
     "option_identifiant_label": {
-        "message": "Identifiant",
+        "message": "Comptes",
+        "description": ""
+    },
+    "option_identifiant_caption": {
+        "message": "Compte",
         "description": ""
     },
     "option_identifiant_params_caption": {
-        "message": "Compte",
+        "message": "Identifiant",
+        "description": ""
+    },
+    "option_identifiant_alias_label": {
+        "message": "Alias",
         "description": ""
     },
     "option_identifiant_login_label": {
@@ -279,6 +312,14 @@
         "message": "L'Url affichée dans le navigateur Web lorsque vous êtes connecté (Optionnel)",
         "description": ""
     },
+    "option_identifiant_add_button": {
+        "message": "Ajouter un nouveau compte",
+        "description": ""
+    },
+    "option_identifiant_remove_button": {
+        "message": "Supprimer",
+        "description": ""
+    },
     "option_identifiant_connect_button": {
         "message": "Connexion",
         "description": ""
@@ -296,6 +337,10 @@
         "message": "Non connecté",
         "description": ""
     },
+    "tooltip_configuration_description": {
+        "message": "Pour avoir des notifications, veuillez configurer vos comptes Zimbra",
+        "description": ""
+    },
     "tooltip_notConnected_description": {
         "message": "Pour avoir des notifications, veuillez-vous connecter.",
         "description": ""
@@ -304,8 +349,8 @@
         "message": "Echec de la mise à jour",
         "description": ""
     },
-    "tooltip_errorNotConnected_title": {
-        "message": "Echec de la connexion",
+    "tooltip_disconnected_descriptionStatus": {
+        "message": "Status: Déconnecté",
         "description": ""
     },
     "tooltip_errorInitPage_title": {
@@ -313,14 +358,14 @@
         "description": ""
     },
     "tooltip_unreadMessages_title": {
-        "message": "%NB% mail(s) non lu(s)",
+        "message": "Mails non lus: %NB%",
         "description": ""
     },
     "tooltip_connected_descriptionStatus": {
         "message": "Etat : Connecté",
         "description": ""
     },
-	"tooltip_connected_descriptionAccount": {
+    "tooltip_connected_descriptionAccount": {
         "message": "Compte : %EMAIL%",
         "description": ""
     },
@@ -328,8 +373,12 @@
         "message": "Quota : %PERCENTAGE%% (%USED% sur %SIZE%)",
         "description": ""
     },
+    "tooltip_noUnreadMessage": {
+        "message": "Pas de mail non lu",
+        "description": ""
+    },
     "tooltip_noEvent": {
-        "message": "Pas d'évenement en cours",
+        "message": "Pas d'évènement en cours",
         "description": ""
     },
     "tooltip_priority_high": {
@@ -352,7 +401,7 @@
         "message": "S%WEEK%",
         "description": ""
     },
-	
+    
     "connector_error_req_internal": {
         "message": "Erreur interne",
         "description": ""
@@ -412,15 +461,15 @@
     },
 
     "connector_notification_NewMessage": {
-        "message": "Mail de %EMAIL%",
+        "message": "%ACCOUNT% Mail de %EMAIL%",
         "description": ""
     },
     "connector_notification_nbUnreadMessages": {
-        "message": "%NB% nouveaux mails non lus !",
+        "message": "%ACCOUNT% %NB% nouveaux mails non lus !",
         "description": ""
     },
     "connector_notification_event": {
-        "message": "Rendez-vous :",
+        "message": "%ACCOUNT% Rendez-vous :",
         "description": ""
     },
 

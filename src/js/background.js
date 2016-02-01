@@ -54,8 +54,8 @@ zimbra_notifier_main.init = function() {
     try {
         chrome.browserAction.setIcon({path : "skin/images/icon_disabled.png"});
         chrome.browserAction.setBadgeText({text:String("")});
-
-        zimbra_notifier_Controller.addCallBackRefresh(this);
+        // Register
+        zimbra_notifier_SuperController.addCallBackRefresh(this);
     } catch (e) {
         console.error("FATAL in zimbra_notifier_main.init: " + e + "\n");
     }
@@ -67,7 +67,7 @@ zimbra_notifier_main.init = function() {
  * @this {Main}
  */
 zimbra_notifier_main.release = function() {
-    zimbra_notifier_Controller.removeCallBackRefresh(this);
+    zimbra_notifier_SuperController.removeCallBackRefresh(this);
 };
 
 /**
@@ -81,9 +81,9 @@ zimbra_notifier_main.refresh = function(event) {
     }
     else {
         var nbUnreadMessages = -1;
-        if (zimbra_notifier_Controller.isConnected()) {
-            var hasError = (zimbra_notifier_Controller.getLastErrorMessage() !== '');
-            nbUnreadMessages = zimbra_notifier_Controller.getNbMessageUnread();
+        if (zimbra_notifier_SuperController.hasConnectionActivated()) {
+            var hasError = (zimbra_notifier_SuperController.getLastErrorMessage() !== '');
+            nbUnreadMessages = zimbra_notifier_SuperController.getNbMessageUnread();
             if(hasError) {
                 chrome.browserAction.setIcon({path:"skin/images/icon_warning.png"});
             }
@@ -105,12 +105,15 @@ zimbra_notifier_main.refresh = function(event) {
 };
 
 /**
- * add event listener to notify when content is loaded or unloaded
+ * add event listener to notify when content is loaded
  */
 document.addEventListener('DOMContentLoaded', function() {
     zimbra_notifier_main.init();
 });
 
+/**
+ * add event listener to notify when content is unloaded
+ */
 document.addEventListener('onbeforeunload', function() {
     zimbra_notifier_main.release();
 });

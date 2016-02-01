@@ -215,12 +215,16 @@ zimbra_notifier_Util.showNotification = function(title, text, duration, callback
                 chrome.notifications.onClicked.addListener(function(notificationIdClicked) {
                     if(notificationIdClicked == notificationId) {
                         callback.apply(callbackThis);
-                        chrome.notifications.clear(notificationId);
+                        chrome.notifications.clear(notificationId, function(wasCleared) {
+                            //Nothing to do
+                        });
                     }
                 });
                 // hide notification after the duration timeout
                 zimbra_notifier_Util.setTimer(null, function() {
-                    chrome.notifications.clear(notificationId);
+                    chrome.notifications.clear(notificationId, function(wasCleared) {
+                        //Nothing to do
+                    });
                 }, duration);
             });
         } else {

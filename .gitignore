@@ -4,4 +4,5 @@
 .metadata
 target/*
 */.DS_Store
+*~
 

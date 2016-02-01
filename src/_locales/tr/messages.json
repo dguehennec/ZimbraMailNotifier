@@ -7,7 +7,7 @@
         "message": "Bu eklenti, Zimbra posta kutunuza yeni ileti geldiğinde sizi bilgilendirir.",
         "description": ""
     },
-	
+    
     "yes": {
         "message": "Evet",
         "description": ""
@@ -77,6 +77,10 @@
         "description": ""
     },
 
+    "tooltip_message_caption": {
+        "message": "Okunmamış e-posta",
+        "description": ""
+    },
     "tooltip_calendar_caption": {
         "message": "Gelecek etkinlikler",
         "description": ""
@@ -144,6 +148,27 @@
         "description": ""
     },
 
+    "option_message_label": {
+        "message": "E-posta",
+        "description": ""
+    },
+    "option_message_activate": {
+        "message": "E-posta yönetimini etkinleştir",
+        "description": ""
+    },
+    "option_message_view_caption": {
+        "message": "Görünüm",
+        "description": ""
+    },
+    "option_message_view_nbMax_label": {
+        "message": "Görüntülenecek azami E-postala sayısı",
+        "description": ""
+    },
+    "option_message_view_nbMax_characters_label": {
+        "message": "Görüntülenecek azami karakter E-postala soyut sayısı",
+        "description": ""
+    },
+
     "option_calendar_label": {
         "message": "Takvim",
         "description": ""
@@ -180,7 +205,7 @@
         "message": "Tekrarla",
         "description": ""
     },
-	
+    
     "option_task_label": {
         "message": "Görevler",
         "description": ""
@@ -229,13 +254,21 @@
         "message": "Düşük",
         "description": ""
     },
-	
+    
     "option_identifiant_label": {
-        "message": "Tanıtıcı",
+        "message": "Hesapları",
+        "description": ""
+    },
+    "option_identifiant_caption": {
+        "message": "Hesap",
         "description": ""
     },
     "option_identifiant_params_caption": {
-        "message": "Hesap",
+        "message": "doğruluğunu kanıtlama",
+        "description": ""
+    },
+    "option_identifiant_alias_label": {
+        "message": "Başka ad",
         "description": ""
     },
     "option_identifiant_login_label": {
@@ -278,6 +311,14 @@
         "message": "Bağlanıldığında Web tarayıcısında görüntülenen URL (İsteğe bağlı)",
         "description": ""
     },
+    "option_identifiant_add_button": {
+        "message": "Yeni hesap ekle",
+        "description": ""
+    },
+    "option_identifiant_remove_button": {
+        "message": "Kaldırmak",
+        "description": ""
+    },
     "option_identifiant_connect_button": {
         "message": "Bağlan",
         "description": ""
@@ -295,6 +336,10 @@
         "message": "Bağlantı kesildi",
         "description": ""
     },
+    "tooltip_configuration_description": {
+        "message": "Bildirimler için, hesabınızı yapılandırmak lütfen",
+        "description": ""
+    },
     "tooltip_notConnected_description": {
         "message": "Güncelleme başarısız oldu",
         "description": ""
@@ -303,8 +348,8 @@
         "message": "Bağlantı başarısız oldu",
         "description": ""
     },
-    "tooltip_errorNotConnected_title": {
-        "message": "Bildirimler için, lütfen giriş yapın",
+    "tooltip_disconnected_descriptionStatus": {
+        "message": "Durum: kesildi",
         "description": ""
     },
     "tooltip_errorInitPage_title": {
@@ -312,19 +357,23 @@
         "description": ""
     },
     "tooltip_unreadMessages_title": {
-        "message": "%NB% okunmayan ileti",
+        "message": "Okunmayan ileti: %NB%",
         "description": ""
     },
     "tooltip_connected_descriptionStatus": {
         "message": "Durum: Bağlandı",
         "description": ""
     },
-	"tooltip_connected_descriptionAccount": {
+    "tooltip_connected_descriptionAccount": {
         "message": "Hesap: %EMAIL%",
         "description": ""
     },
     "tooltip_connected_descriptionQuota": {
         "message": "Kota: %PERCENTAGE%% (%SIZE%'ın %USED%)",
+        "description": ""
+    },
+    "tooltip_noUnreadMessage": {
+        "message": "Hiçbir okunmamış e-posta",
         "description": ""
     },
     "tooltip_noEvent": {
@@ -410,15 +459,15 @@
         "description": ""
     },
     "connector_notification_NewMessage": {
-        "message": "%EMAIL%'dan ileti",
+        "message": "%ACCOUNT% %EMAIL%'dan ileti",
         "description": ""
     },
     "connector_notification_nbUnreadMessages": {
-        "message": "%NB% okunmayan ileti!",
+        "message": "%ACCOUNT% %NB% okunmayan ileti!",
         "description": ""
     },
     "connector_notification_event": {
-        "message": "Etkinlik:",
+        "message": "%ACCOUNT% Etkinlik:",
         "description": ""
     },
 

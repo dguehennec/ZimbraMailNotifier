@@ -35,6 +35,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+ "use strict";
+ 
 /**
  * Creates a global instance of zimbra_notifier_UiUtil
  * 
@@ -42,10 +44,13 @@
  * @this {UiUtil}
  * 
  */
-zimbra_notifier_UiUtil = {};
+var zimbra_notifier_UiUtil = {};
 
 /**
- * init locale in html page
+ * Initialize locale in html page
+ *
+ * @public
+ * @this {UiUtil}
  */
 zimbra_notifier_UiUtil.initLocale = function() {
     $("*").each(function() {
@@ -85,11 +90,15 @@ zimbra_notifier_UiUtil.initLocale = function() {
  */
 zimbra_notifier_UiUtil.OPTION_SELECT_TAB = {
     GENERAL         : 0,
-    CALENDAR        : 1,
-    TASK            : 2,
-    IDENTIFICATION  : 3
+    MESSAGE         : 1,
+    CALENDAR        : 2,
+    TASK            : 3,
+    IDENTIFICATION  : 4
 };
 
+/**
+ * Add event listener to notify when content is loaded
+ */
 document.addEventListener('DOMContentLoaded', function() {
     zimbra_notifier_UiUtil.initLocale();
 });

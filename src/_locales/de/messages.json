@@ -7,7 +7,7 @@
         "message": "Diese Erweiterung benachrichtigt dich wenn du neue Nachrichten in deiner zimbra Mailbox bekommst.",
         "description": ""
     },
-	
+    
     "yes": {
         "message": "Ja",
         "description": ""
@@ -77,6 +77,10 @@
         "description": ""
     },
 
+    "tooltip_message_caption": {
+        "message": "Ungelesene Mails",
+        "description": ""
+    },
     "tooltip_calendar_caption": {
         "message": "Nächste Events",
         "description": ""
@@ -141,6 +145,27 @@
     },
     "option_common_mail_notify_duration_caption": {
         "message": "Zeit der Benachrichtigung",
+        "description": ""
+    },
+
+    "option_message_label": {
+        "message": "Mail",
+        "description": ""
+    },
+    "option_message_activate": {
+        "message": "Aktivieren ungelesenen Mail Management",
+        "description": ""
+    },
+    "option_message_view_caption": {
+        "message": "Anzeige",
+        "description": ""
+    },
+    "option_message_view_nbMax_label": {
+        "message": "Anzahl der Mails maximal angezeigt",
+        "description": ""
+    },
+    "option_message_view_nbMax_characters_label": {
+        "message": "Anzahl der Zeichen in E-Mail-abstrakten maximal angezeigt",
         "description": ""
     },
 
@@ -231,11 +256,19 @@
     },
 
     "option_identifiant_label": {
-        "message": "Identifizierer",
+        "message": "Konto",
+        "description": ""
+    },
+    "option_identifiant_caption": {
+        "message": "Konto",
         "description": ""
     },
     "option_identifiant_params_caption": {
-        "message": "Account",
+        "message": "Authentifizierung",
+        "description": ""
+    },
+    "option_identifiant_alias_label": {
+        "message": "Alias",
         "description": ""
     },
     "option_identifiant_login_label": {
@@ -278,6 +311,14 @@
         "message": "Die URL im Webbrowser angezeigt, wenn verbunden (Optional)",
         "description": ""
     },
+    "option_identifiant_add_button": {
+        "message": "Neues Konto hinzufügen",
+        "description": ""
+    },
+    "option_identifiant_remove_button": {
+        "message": "Anwendung",
+        "description": ""
+    },
     "option_identifiant_connect_button": {
         "message": "Verbinden",
         "description": ""
@@ -295,6 +336,10 @@
         "message": "Getrennt",
         "description": ""
     },
+    "tooltip_configuration_description": {
+        "message": "Für Benachrichtigungen, konfigurieren Sie bitte Ihr Konto.",
+        "description": ""
+    },
     "tooltip_notConnected_description": {
         "message": "Für Benachrichtigungen bitte einloggen",
         "description": ""
@@ -303,8 +348,8 @@
         "message": "Update fehlgeschlagen",
         "description": ""
     },
-    "tooltip_errorNotConnected_title": {
-        "message": "Verbindung fehlgeschlagen",
+    "tooltip_disconnected_descriptionStatus": {
+        "message": "Status: Getrennt",
         "description": ""
     },
     "tooltip_errorInitPage_title": {
@@ -312,19 +357,23 @@
         "description": ""
     },
     "tooltip_unreadMessages_title": {
-        "message": "%NB% ungelesene Nachrichten",
+        "message": "Ungelesene Nachrichten: %NB%",
         "description": ""
     },
     "tooltip_connected_descriptionStatus": {
         "message": "Status: Verbunden",
         "description": ""
     },
-	"tooltip_connected_descriptionAccount": {
+    "tooltip_connected_descriptionAccount": {
         "message": "Account: %EMAIL%",
         "description": ""
     },
     "tooltip_connected_descriptionQuota": {
         "message": "Kontingent: %PERCENTAGE%% (%USED% von %SIZE%)",
+        "description": ""
+    },
+    "tooltip_noUnreadMessage": {
+        "message": "Keine ungelesenen Mail",
         "description": ""
     },
     "tooltip_noEvent": {
@@ -410,15 +459,15 @@
         "description": ""
     },
     "connector_notification_NewMessage": {
-        "message": "Nachricht von %EMAIL%",
+        "message": "%ACCOUNT% Nachricht von %EMAIL%",
         "description": ""
     },
     "connector_notification_nbUnreadMessages": {
-        "message": "%NB% neue ungelesene Nachrichten",
+        "message": "%ACCOUNT% %NB% neue ungelesene Nachrichten",
         "description": ""
     },
     "connector_notification_event": {
-        "message": "Event:",
+        "message": "%ACCOUNT% Event:",
         "description": ""
     },
 

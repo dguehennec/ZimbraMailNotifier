@@ -8,27 +8,25 @@
 <script type="text/javascript" src="js/popup.js"></script>
 </head>
 <body class="popup">
+	<img src="skin/images/zimbra_mail_notifier_48.png" style="position:absolute;top:5px;left:12px"/>
 	<div class="action">
-		<img id="zimbra_mail_notifier_tooltipHome" style="display: none"
-			src="skin/images/button_home.png" msgTitle="main_homepage_label"/>
-		<img id="zimbra_mail_notifier_tooltipCheckNow" style="display: none"
-			src="skin/images/button_refresh.png" msgTitle="main_checkNow" />
-		<img id="zimbra_mail_notifier_tooltipConnect" style="display: none"
-			src="skin/images/button_connect.png" msgTitle="main_connect" />
-		<img id="zimbra_mail_notifier_tooltipDisconnect" style="display: none"
-			src="skin/images/button_disconnect.png" msgTitle="main_disconnect" />
-		<img id="zimbra_mail_notifier_tooltipOption"
-			src="skin/images/button_option.png" msgTitle="main_options_label" />
+		<img id="zimbra_mail_notifier_tooltipCheckNow" src="skin/images/button_refresh.png" msgTitle="main_checkNow" />
+		<img id="zimbra_mail_notifier_tooltipOption" src="skin/images/button_option.png" msgTitle="main_options_label" />
 	</div>
-	<div>
-		<div id="zimbra_mail_notifier_tooltipLogo">
-			<image src="/skin/images/zimbra_mail_notifier.png">
-		</div>
+	<fieldset id="zimbra_mail_notifier_tooltipIdentifierGroup">
+		<legend>
+			<label class="section">&nbsp;</label>
+		</legend>
 		<div id="zimbra_mail_notifier_tooltipContent">
-			<div id="zimbra_mail_notifier_tooltipTitle"></div>
-			<div id="zimbra_mail_notifier_tooltipMessage"></div>
 		</div>
-	</div>
+	</fieldset>
+
+	<fieldset id="zimbra_mail_notifier_tooltipMessageGroup">
+		<legend>
+			<label class="section" msg="tooltip_message_caption"></label>
+		</legend>
+		<div id="zimbra_mail_notifier_tooltipMessage"></div>
+	</fieldset>
 
 	<fieldset id="zimbra_mail_notifier_tooltipCalendarGroup">
 		<legend>

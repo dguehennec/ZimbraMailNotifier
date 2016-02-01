@@ -56,15 +56,18 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Notifier"];
  *            withSoundNotification indicate if sound is enable
  * @param {Boolean}
  *            withSystemNotification indicate if system notification is enable
+* @param {String}
+ *            accountId indicate the account id 
  */
 var zimbra_notifier_Notifier = function(event, timeConf, nbRepeat,
-                                          withSoundNotification, withSystemNotification) {
+                                          withSoundNotification, withSystemNotification, accountId) {
     this._event = event;
     this._timeConf = timeConf;
     this._nbRepeat = nbRepeat;
     this._currentTimer = null;
     this._withSoundNotification = withSoundNotification;
     this._withSystemNotification = withSystemNotification;
+    this._accountId = accountId
     this.start();
 };
 
@@ -106,12 +109,19 @@ zimbra_notifier_Notifier.prototype.stop = function() {
  */
 zimbra_notifier_Notifier.prototype._notify = function() {
     this.stop();
+
+    var alias = "";
+    // display account alias if more than one accounts
+    if(zimbra_notifier_Prefs.getAccounts().length>1) {
+        alias = zimbra_notifier_Prefs.getUserAlias(this._accountId);
+    }
+
     if (this._withSoundNotification) {
         zimbra_notifier_Util.playSound();
     }
     if (this._withSystemNotification) {
         zimbra_notifier_Util.showNotification(this._event.startDate.toLocaleString(),
-                        zimbra_notifier_Util.getBundleString("connector.notification.event") +
+                        zimbra_notifier_Util.getBundleString("connector.notification.event").replace("%ACCOUNT%", "(" + alias + ")") +
                         this._event.name, 0, null, null);
     }
     if (this._nbRepeat > 0) {
