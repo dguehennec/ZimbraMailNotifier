@@ -278,6 +278,10 @@ zimbra_notifier_SuperController.getTasks = function() {
     this._controllers.forEach(function(controller) {
         tasks = tasks.concat(controller.getTasks());
     });
+    // sort tasks by prioity
+    tasks.sort(function(a, b) {
+        return a.priority > b.priority
+    });
     return tasks;
 };
 
