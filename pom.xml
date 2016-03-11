@@ -1,147 +1,188 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.zimbra</groupId>
-	<artifactId>ZimbraMailNotifierChrome</artifactId>
-	<packaging>pom</packaging>
-	<version>2.0.0</version>
+    <groupId>com.zimbra</groupId>
+    <artifactId>ZimbraMailNotifier</artifactId>
+    <packaging>pom</packaging>
+    <version>2.5.0</version>
 
-	<name>Zimbra Notifier</name>
+    <name>Zimbra Notifier</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<withCompletion>false</withCompletion>
-		<sonar.language>js</sonar.language>
-		<sonar.javascript.file.suffixes>js</sonar.javascript.file.suffixes>
-		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-		<sonar.host.url>http://127.0.0.1:9000</sonar.host.url>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <withCompletion>false</withCompletion>
+        <sonar.language>js</sonar.language>
+        <sonar.javascript.file.suffixes>js</sonar.javascript.file.suffixes>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.host.url>http://127.0.0.1:9000</sonar.host.url>
+    </properties>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>jsdoctk2</id>
-			<url>http://jsdoctk-plugin.googlecode.com/svn/repo</url>
-		</pluginRepository>
-	</pluginRepositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jsdoctk2</id>
+            <url>http://jsdoctk-plugin.googlecode.com/svn/repo</url>
+        </pluginRepository>
+    </pluginRepositories>
 
-	<profiles>
-		<profile>
-			<id>Prod</id>
-			<activation>
+    <profiles>
+        <profile>
+            <id>Prod</id>
+            <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>nl.windgazer</groupId>
-						<artifactId>jsdoctk-plugin</artifactId>
-						<version>2.3.2</version>
-						<executions>
-							<execution>
-								<phase>verify</phase>
-								<configuration>
-									<template>jsdoc</template>
-									<directory>${project.build.directory}/jsdoc</directory>
-									<recurse>10</recurse>
-									<extension>js,jsm</extension>
-									<allfunctions>true</allfunctions>
-									<Allfunctions>true</Allfunctions>
-									<privateOption>true</privateOption>
-									<srcDir>${basedir}/src/</srcDir>
-								</configuration>
-								<goals>
-									<goal>jsdoc-report</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-	<build>
-		<sourceDirectory>src/</sourceDirectory>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<configuration>
-							<target>
-								<echo message="Copy sources" />
-								<copy todir="${project.build.directory}/sources">
-								    <fileset dir="${basedir}/src/"/>
-								</copy>
-								<echo message="Generate Zip archive" />
-								<zip update="true" compress="true"
-									destfile="${project.build.directory}/${project.name}-${project.version}.zip"
-									basedir="${project.build.directory}/sources" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<id>attach-artifacts</id>
-						<phase>package</phase>
-						<goals>
-							<goal>attach-artifact</goal>
-						</goals>
-						<configuration>
-							<artifacts>
-								<artifact>
-									<file>${project.build.directory}/${project.name}-${project.version}.zip</file>
-									<type>xpi</type>
-								</artifact>
-							</artifacts>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.google.javascript</groupId>
-				<artifactId>closure-compiler</artifactId>
-				<version>r2079</version>
-			</dependency>
-			<dependency>
-				<groupId>args4j</groupId>
-				<artifactId>args4j</artifactId>
-				<version>2.0.12</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>r07</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	<developers>
-		<developer>
-			<id>dguehennec</id>
-			<name>David GUEHENNEC</name>
-			<email>david.guehennec@gmail.com</email>
-		</developer>
-		<developer>
-			<id>brobin</id>
-			<name>Benjamin Robin</name>
-		</developer>
-	</developers>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>nl.windgazer</groupId>
+                        <artifactId>jsdoctk-plugin</artifactId>
+                        <version>2.3.2</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <configuration>
+                                    <template>jsdoc</template>
+                                    <directory>${project.build.directory}/jsdoc</directory>
+                                    <recurse>10</recurse>
+                                    <extension>js,jsm</extension>
+                                    <allfunctions>true</allfunctions>
+                                    <Allfunctions>true</Allfunctions>
+                                    <privateOption>true</privateOption>
+                                    <srcDir>${basedir}/src/</srcDir>
+                                </configuration>
+                                <goals>
+                                    <goal>jsdoc-report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <build>
+        <sourceDirectory>src/</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target>
+                                <echo message="Generate chrome zip archive" />
+                                <copy todir="${project.build.directory}/sourcesChrome">
+                                    <fileset dir="${basedir}/src/"/>
+                                </copy>
+                                <zip update="true" compress="true"
+                                    destfile="${project.build.directory}/${project.name}-chrome-${project.version}.zip"
+                                    basedir="${project.build.directory}/sourcesChrome" />
+                                <echo message="Generate opera zip archive" />
+                                <copy todir="${project.build.directory}/sourcesOpera">
+                                    <fileset dir="${basedir}/src/"/>
+                                </copy>
+                                <zip update="true" compress="true"
+                                    destfile="${project.build.directory}/${project.name}-opera-${project.version}.zip"
+                                    basedir="${project.build.directory}/sourcesOpera" />
+                                <echo message="Generate firefox Xpi archive" />
+                                <copy todir="${project.build.directory}/sourcesFirefox">
+                                    <fileset dir="${basedir}/src/">
+                                        <exclude name="manifest.json"/>
+                                    </fileset>
+                                </copy>
+                                <copy file="${basedir}/src/manifest.json" tofile="${project.build.directory}/sourcesFirefox/manifest.json" >
+                                    <filterchain>
+                                        <linecontains negate="true">
+                                            <contains value="for Firefox extension"/>
+                                        </linecontains>
+                                    </filterchain>
+                                </copy>
+                                <zip update="true" compress="true"
+                                    destfile="${project.build.directory}/${project.name}-firefox-${project.version}.xpi"
+                                    basedir="${project.build.directory}/sourcesFirefox" />
+                                <copy file="${basedir}/src/license.txt" tofile="${project.build.directory}/license.txt" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>attach-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/${project.artifactId}-${project.version}.tar.gz</file>
+                                    <type>tar.gz</type>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.javascript</groupId>
+                <artifactId>closure-compiler</artifactId>
+                <version>r2079</version>
+            </dependency>
+            <dependency>
+                <groupId>args4j</groupId>
+                <artifactId>args4j</artifactId>
+                <version>2.0.12</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>r07</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <developers>
+        <developer>
+            <id>dguehennec</id>
+            <name>David GUEHENNEC</name>
+            <email>david.guehennec@gmail.com</email>
+        </developer>
+        <developer>
+            <id>brobin</id>
+            <name>Benjamin Robin</name>
+        </developer>
+    </developers>
 
 </project>

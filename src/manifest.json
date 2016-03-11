@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "__MSG_extName__",
-    "version": "2.0.0",
+    "version": "2.5.0",
     "default_locale": "en",
     "description": "__MSG_extDescription__",
     "browser_action": {
@@ -9,6 +9,15 @@
         "default_popup": "popup.html",
         "default_title": "__MSG_extName__"
     },
+    /* for Firefox extension
+    "applications": {
+        "gecko": {
+            "id": "zimbra_mail_notifier@davidguehennec.com",
+            "strict_min_version": "45.0.0",
+            "strict_max_version": "*"
+        }
+    },
+    for Firefox extension */
     "icons": {
         "16": "skin/images/zimbra_mail_notifier_32.png",
         "32": "skin/images/zimbra_mail_notifier_32.png",
@@ -20,15 +29,10 @@
         "tabs",
         "notifications",
         "cookies",
-        "chrome://favicon/",
         "http://*/",
         "https://*/",
         "webRequest",
-        "webNavigation",
         "storage"
-    ],
-    "optional_permissions": [
-        "background"
     ],
     "background": {
         "page": "background.html"

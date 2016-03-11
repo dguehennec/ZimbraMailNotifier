@@ -132,6 +132,10 @@ zimbra_notifier_options.displayIdentifier = function(controller) {
  * @this {Option}
  */
 zimbra_notifier_options.release = function() {
+    if(!this._zimbra_notifier_SuperController) {
+        return;
+    }
+
     this._zimbra_notifier_SuperController.removeCallBackRefresh(this);
 
     // clear password if needed
@@ -378,9 +382,8 @@ zimbra_notifier_options.disconnect = function(controller) {
  * add event listener to notify when content is loaded
  */
 document.addEventListener('DOMContentLoaded', function() {
-    chrome.runtime.getBackgroundPage(function(bg) {
-        zimbra_notifier_options.init(bg);
-    });
+    var backgroundPage = chrome.extension.getBackgroundPage();
+    zimbra_notifier_options.init(backgroundPage);
 });
 
 /**

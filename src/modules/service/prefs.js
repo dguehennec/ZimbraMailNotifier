@@ -998,7 +998,7 @@ var PrefsService = {
             'autoConnect' : true,
             'systemNotificationEnabled' : true,
             'soundEnabled' : true,
-            'emailNotificationDuration' : 16,
+            'emailNotificationDuration' : 14,
             'messageEnabled' : true,
             'messageNbDisplayed' : 5,
             'messageNbCharactersDisplayed' : 80,
@@ -1027,12 +1027,17 @@ var PrefsService = {
  * @param {Function} the callback when initialized
  */
 PrefsService.init = function(callback) {
-    chrome.storage.sync.get(this._defaultsPref, function(storage) {
+    var loadFunction = function(storage) {
         PrefsService._currentPref = storage;
         if (callback) {
             callback();
         }
-    });
+    };
+    if(chrome.storage.sync) {
+        chrome.storage.sync.get(this._defaultsPref, loadFunction);
+    } else {
+        chrome.storage.local.get(this._defaultsPref, loadFunction);
+    }
 };
 
 /**
@@ -1113,16 +1118,19 @@ PrefsService.removePref = function(key) {
 PrefsService.synchronize = function(forced) {
     //synchronise preference after 1 seconds no change delay if not forced
     clearTimeout(this._saveTimerDelay);
+    var that = this;
+    var saveFunction = function() {
+        if(chrome.storage.sync) {
+            chrome.storage.sync.set(that._currentPref);
+        } else {
+            chrome.storage.local.set(that._currentPref);
+        }
+    };
     if(forced) {
-        chrome.storage.sync.set(that._currentPref);
+        saveFunction();
     } else {
-        var that = this;
         this._saveTimerDelay = setTimeout(function() {
-            try {
-                chrome.storage.sync.set(that._currentPref);
-            } catch(e) {
-
-            }
+            saveFunction();
         }, 1000);
     }
 };

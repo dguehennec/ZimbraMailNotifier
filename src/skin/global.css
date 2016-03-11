@@ -5,6 +5,7 @@ fieldset {
 
 .option {
   background-color: #999;
+  font-size: 15px;
 }
 
 .option .header {
@@ -104,10 +105,14 @@ fieldset {
 
 .popup {
   width: 330px;
+  font-size: 12px;
 }
 
 .popup #zimbra_mail_notifier_tooltipIdentifierGroup{
   margin-top: 0px;
+}
+.popup .tooltipDescription{
+  text-align:center;
 }
 .popup .tooltipIdentifier{
   padding: 3px;
@@ -121,15 +126,9 @@ fieldset {
   font-weight:bold
 }
 
-.popup  #zimbra_mail_notifier_tooltipCalendar,.popup #zimbra_mail_notifier_tooltipTask {
+.popup  #zimbra_mail_notifier_tooltipMessage,.popup #zimbra_mail_notifier_tooltipCalendar,.popup #zimbra_mail_notifier_tooltipTask {
   margin:0px 6px;
   width: 280px;
-}
-
-.popup  .tooltipMessage {
-  margin: 4px 0px;
-  font-size: 12px;
-  max-width: 300px;
 }
 
 .popup .actionidentifier{
@@ -138,7 +137,8 @@ fieldset {
 }
 
 .popup #zimbra_mail_notifier_tooltipMessage div {
-  font-size: 12px;
+  margin: 4px 0px;
+  width: 100%;
 }
 
 .popup #zimbra_mail_notifier_tooltipMessage .tooltipMessageAbstract {
@@ -147,7 +147,6 @@ fieldset {
 
 .popup #zimbra_mail_notifier_tooltipTask div {
   width: 100%;
-  font-size: 12px;
 }
 .popup .action {
   width: 100%;
@@ -155,9 +154,9 @@ fieldset {
 }
 
 .popup .action img {
-    width: 18px;
-    height: 18px;
-    margin-left: 6px;
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
 }
 
 .popup .section {
@@ -165,8 +164,8 @@ fieldset {
 }
 
 .popup legend{
-    font-size: 13px;
-    font-weight:bold;
+  font-size: 13px;
+  font-weight:bold;
 }
 
 .popup  .eventLabelDate {
@@ -175,7 +174,6 @@ fieldset {
 }
 
 .popup  .eventLabelDesc {
-  font-size: 12px;
   padding-left:15px;
 }
 

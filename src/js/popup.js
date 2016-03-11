@@ -86,6 +86,10 @@ zimbra_notifier_popup.init = function(background) {
  * @this {zimbra_notifier_popup}
  */
 zimbra_notifier_popup.release = function() {
+    if(!this._zimbra_notifier_SuperController) {
+        return;
+    }
+
     this._zimbra_notifier_SuperController.removeCallBackRefresh(this);
 };
 
@@ -96,6 +100,10 @@ zimbra_notifier_popup.release = function() {
  * @this {zimbra_notifier_popup}
  */
 zimbra_notifier_popup.refresh = function() {
+    if(!this._zimbra_notifier_SuperController) {
+        return;
+    }
+
     if(this._zimbra_notifier_SuperController.hasConnectionActivated()) {
         $('#zimbra_mail_notifier_tooltipCheckNow').show();
     } else {
@@ -138,7 +146,10 @@ zimbra_notifier_popup.refresh = function() {
     }
 
     if(this._zimbra_notifier_SuperController.getControllers().length==0){
-        $('#zimbra_mail_notifier_tooltipContent').append(chrome.i18n.getMessage("tooltip_configuration_description"));
+        $('<div/>', {
+            class : 'tooltipDescription',
+            text : chrome.i18n.getMessage("tooltip_configuration_description")
+        }).appendTo('#zimbra_mail_notifier_tooltipContent');
     }
 };
 
@@ -152,7 +163,10 @@ zimbra_notifier_popup.refresh = function() {
 zimbra_notifier_popup.initializeTooltipIdentifier = function(controller) {
     var accountId = controller.getAccountId();
     var errorMsg = controller.getLastErrorMessage();
-    $('#zimbra_mail_notifier_tooltipContent').append('<div id="zimbra_mail_notifier_tooltipIdentifier_'+ accountId + '" class="tooltipIdentifier"></div>');
+    $('<div/>', {
+        id : 'zimbra_mail_notifier_tooltipIdentifier_'+ accountId,
+        class : 'tooltipIdentifier'
+    }).appendTo('#zimbra_mail_notifier_tooltipContent');
     if (controller.isConnected()) {
         $('#zimbra_mail_notifier_tooltipIdentifier_'+ accountId).append('<div id="zimbra_mail_notifier_tooltipTitle_' + accountId + '" class="tooltipTitle"></div><div id="zimbra_mail_notifier_tooltipMessage_' + accountId + '"  class="tooltipMessage"></div><div class="action actionidentifier" ><img id="zimbra_mail_notifier_tooltipHome_' + accountId + '" src="skin/images/button_home.png" msgTitle="main_homepage_label"/><img id="zimbra_mail_notifier_tooltipDisconnect_' + accountId + '" src="skin/images/button_disconnect.png" msgTitle="main_disconnect" /></div>');
         $('#zimbra_mail_notifier_tooltipHome_' + accountId).on('click', function() {
@@ -273,7 +287,7 @@ zimbra_notifier_popup.initializeTooltipMessage = function() {
             currentDisplayed++;
             $('<div/>', {
                 class : 'eventLabelDate',
-                text : unreadMessages[index].date.toLocaleDateString() + unreadMessages[index].alias
+                text : unreadMessages[index].date.toLocaleString() + unreadMessages[index].alias
             }).appendTo("#zimbra_mail_notifier_tooltipMessage");
             $('<div/>', {
                 id : 'zimbra_mail_notifier_tooltipMessage' + index,
@@ -456,6 +470,10 @@ zimbra_notifier_popup.optionClick = function() {
  * @this {zimbra_notifier_popup}
  */
 zimbra_notifier_popup.checkNowClick = function() {
+    if(!this._zimbra_notifier_SuperController) {
+        return;
+    }
+
     this._zimbra_notifier_SuperController.getControllers().forEach(function(controller) {
         if(controller.isConnected()) {
             controller.checkNow();
@@ -467,9 +485,8 @@ zimbra_notifier_popup.checkNowClick = function() {
  * add event listener to notify when content is loaded
  */
 document.addEventListener("DOMContentLoaded", function() {
-    chrome.runtime.getBackgroundPage(function(bg) {
-        zimbra_notifier_popup.init(bg);
-    });
+    var backgroundPage = chrome.extension.getBackgroundPage();
+    zimbra_notifier_popup.init(backgroundPage);
 });
 
 /**
