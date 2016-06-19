@@ -437,7 +437,7 @@ zimbra_notifier_popup.openOptionPage = function(tab) {
     chrome.tabs.query({}, function(extensionTabs) {
         var found = false;
         for ( var i = 0; i < extensionTabs.length; i++) {
-            if (optionsUrl == extensionTabs[i].url.split("#")[0]) {
+            if (extensionTabs[i].url && (optionsUrl == extensionTabs[i].url.split("#")[0])) {
                 found = true;
                 chrome.tabs.update(extensionTabs[i].id, {
                     "selected" : true,

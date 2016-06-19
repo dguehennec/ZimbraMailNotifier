@@ -65,7 +65,7 @@ zimbra_notifier_BrowserUtil.selectOpenedTab = function(url, callback) {
             var zimbraTab = null;
             for (var i = 0; i < extensionTabs.length; i++) {
                 var currentTab = extensionTabs[i];
-                if (currentTab.url.indexOf(url)===0) {
+                if (currentTab.url && (currentTab.url.indexOf(url)===0)) {
                     var that = this;
                     chrome.tabs.update(currentTab.id, {
                         "selected" : true

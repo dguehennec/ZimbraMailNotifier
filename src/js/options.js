@@ -72,7 +72,8 @@ zimbra_notifier_options.init = function(background) {
     this._zimbra_notifier_SuperController.addCallBackRefresh(this);
 
     // Add button event
-    $(".menu a").click(function() {
+    $(".menu a").click(function(evt) {
+        evt.preventDefault();
         var contentID = $(this).attr("contentID");
         zimbra_notifier_options.showContent(contentID, 200);
     });
@@ -169,7 +170,6 @@ zimbra_notifier_options.showContent = function(contentId, animationTime) {
         $(this).removeClass('active');
         if (index == contentId) {
             $(this).addClass('active');
-            location.href = location.href.split("#")[0] + "#" + contentId;
         }
     });
 }

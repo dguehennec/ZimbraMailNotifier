@@ -11,9 +11,10 @@ xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assemb
             <directory>${project.build.directory}/</directory>
             <outputDirectory>.</outputDirectory>
             <includes>
-                <include>${project.name}-firefox-${project.version}.xpi</include>
-                <include>${project.name}-chrome-${project.version}.zip</include>
-                <include>${project.name}-opera-${project.version}.zip</include>
+                <include>${project.artifactId}-firefox-${project.version}.xpi</include>
+                <include>${project.artifactId}-chrome-${project.version}.zip</include>
+                <include>${project.artifactId}-opera-${project.version}.zip</include>
+                <include>${project.artifactId}-safari-${project.version}.zip</include>
                 <include>license.txt</include>
       	    </includes>
         </fileSet>

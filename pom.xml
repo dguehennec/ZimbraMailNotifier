@@ -6,7 +6,7 @@
     <groupId>com.zimbra</groupId>
     <artifactId>ZimbraMailNotifier</artifactId>
     <packaging>pom</packaging>
-    <version>2.5.0</version>
+    <version>2.6.0</version>
 
     <name>Zimbra Notifier</name>
 
@@ -65,29 +65,50 @@
         <sourceDirectory>src/</sourceDirectory>
         <plugins>
             <plugin>
+                <!-- replace version in files -->
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>${project.build.directory}/sourcesChrome/manifest.json</include>
+                                <include>${project.build.directory}/sourcesOpera/manifest.json</include>
+                                <include>${project.build.directory}/sourcesFirefox/manifest.json</include>
+                                <include>${project.build.directory}/sourcesSafari/src.safariextension/Info.plist</include>
+                            </includes>
+                            <replacements>
+                                <replacement>
+                                    <token>PROJECT_VERSION</token>
+                                    <value>${project.version}</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.7</version>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
+                        <id>sources</id>
+                        <phase>generate-sources</phase>
                         <configuration>
                             <target>
-                                <echo message="Generate chrome zip archive" />
+                                <echo message="Generate sources" />
                                 <copy todir="${project.build.directory}/sourcesChrome">
                                     <fileset dir="${basedir}/src/"/>
                                 </copy>
-                                <zip update="true" compress="true"
-                                    destfile="${project.build.directory}/${project.name}-chrome-${project.version}.zip"
-                                    basedir="${project.build.directory}/sourcesChrome" />
-                                <echo message="Generate opera zip archive" />
                                 <copy todir="${project.build.directory}/sourcesOpera">
                                     <fileset dir="${basedir}/src/"/>
                                 </copy>
-                                <zip update="true" compress="true"
-                                    destfile="${project.build.directory}/${project.name}-opera-${project.version}.zip"
-                                    basedir="${project.build.directory}/sourcesOpera" />
-                                <echo message="Generate firefox Xpi archive" />
                                 <copy todir="${project.build.directory}/sourcesFirefox">
                                     <fileset dir="${basedir}/src/">
                                         <exclude name="manifest.json"/>
@@ -100,10 +121,39 @@
                                         </linecontains>
                                     </filterchain>
                                 </copy>
-                                <zip update="true" compress="true"
-                                    destfile="${project.build.directory}/${project.name}-firefox-${project.version}.xpi"
-                                    basedir="${project.build.directory}/sourcesFirefox" />
+                                <copy todir="${project.build.directory}/sourcesSafari/src.safariextension">
+                                    <fileset dir="${basedir}/src/">
+                                        <exclude name="manifest.json"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="${project.build.directory}/sourcesSafari/src.safariextension" overwrite="true">
+                                    <fileset dir="${basedir}/src.safariextension/" />
+                                </copy>
                                 <copy file="${basedir}/src/license.txt" tofile="${project.build.directory}/license.txt" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>zip</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target>
+                                <echo message="Generate zip archive" />
+                                <zip update="true" compress="true"
+                                    destfile="${project.build.directory}/${project.artifactId}-chrome-${project.version}.zip"
+                                    basedir="${project.build.directory}/sourcesChrome" />
+                                <zip update="true" compress="true"
+                                    destfile="${project.build.directory}/${project.artifactId}-opera-${project.version}.zip"
+                                    basedir="${project.build.directory}/sourcesOpera" />
+                                <zip update="true" compress="true"
+                                    destfile="${project.build.directory}/${project.artifactId}-firefox-${project.version}.xpi"
+                                    basedir="${project.build.directory}/sourcesFirefox" />
+                                <zip update="true" compress="true"
+                                    destfile="${project.build.directory}/${project.artifactId}-safari-${project.version}.zip"
+                                    basedir="${project.build.directory}/sourcesSafari/src.safariextension" />
                             </target>
                         </configuration>
                         <goals>

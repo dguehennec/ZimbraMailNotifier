@@ -106,6 +106,9 @@ fieldset {
 .popup {
   width: 330px;
   font-size: 12px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  cursor: default;
 }
 
 .popup #zimbra_mail_notifier_tooltipIdentifierGroup{
@@ -141,7 +144,7 @@ fieldset {
   width: 100%;
 }
 
-.popup #zimbra_mail_notifier_tooltipMessage .tooltipMessageAbstract {
+.popup .action > img, .popup #zimbra_mail_notifier_tooltipMessage .tooltipMessageAbstract {
   cursor: pointer;
 }
 

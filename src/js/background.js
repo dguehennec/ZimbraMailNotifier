@@ -52,12 +52,12 @@ var zimbra_notifier_main = {};
  */
 zimbra_notifier_main.init = function() {
     try {
-        chrome.browserAction.setIcon({path : "skin/images/icon_disabled.png"});
-        chrome.browserAction.setBadgeText({text:String("")});
+        chrome.browserAction.setIcon({path: 'skin/images/icon_disabled.png'});
+        chrome.browserAction.setBadgeText({text: ''});
         // Register
         zimbra_notifier_SuperController.addCallBackRefresh(this);
     } catch (e) {
-        console.error("FATAL in zimbra_notifier_main.init: " + e + "\n");
+        console.error('FATAL in zimbra_notifier_main.init: ' + e);
     }
 };
 
@@ -77,7 +77,7 @@ zimbra_notifier_main.release = function() {
  */
 zimbra_notifier_main.refresh = function(event) {
     if (event && event.startingReq) {
-        chrome.browserAction.setIcon({path:"skin/images/icon_refresh.png"});
+        chrome.browserAction.setIcon({path: 'skin/images/icon_refresh.png'});
     }
     else {
         var nbUnreadMessages = -1;
@@ -85,21 +85,21 @@ zimbra_notifier_main.refresh = function(event) {
             var hasError = (zimbra_notifier_SuperController.getLastErrorMessage() !== '');
             nbUnreadMessages = zimbra_notifier_SuperController.getNbMessageUnread();
             if(hasError) {
-                chrome.browserAction.setIcon({path:"skin/images/icon_warning.png"});
+                chrome.browserAction.setIcon({path: 'skin/images/icon_warning.png'});
             }
             else {
-                chrome.browserAction.setIcon({path:"skin/images/icon_default.png"});
+                chrome.browserAction.setIcon({path: 'skin/images/icon_default.png'});
             } 
         }
         else {
-            chrome.browserAction.setIcon({path:"skin/images/icon_disabled.png"});
+            chrome.browserAction.setIcon({path: 'skin/images/icon_disabled.png'});
         }
         // ToolBar
         if (nbUnreadMessages > 0) {
             chrome.browserAction.setBadgeText({text:String(nbUnreadMessages)});
         }
         else {
-            chrome.browserAction.setBadgeText({text:String("")});
+            chrome.browserAction.setBadgeText({text:''});
         }
     }
 };
