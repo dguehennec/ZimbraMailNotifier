@@ -53,7 +53,7 @@ safari.application.addEventListener("command", function(event) {
                         return;
                     }
                 }
-                var popup = safari.extension.createPopover("ZimbraMailNotifierPopup", safari.extension.baseURI + "popup.html", 350, 420);
+                var popup = safari.extension.createPopover("ZimbraMailNotifierPopup", safari.extension.baseURI + "popup.html", 350, 100);
                 item.popover=popup;
                 item.showPopover();
             }

@@ -104,24 +104,21 @@ fieldset {
 }
 
 .popup {
-  width: 330px;
   font-size: 12px;
   -webkit-user-select: none;
   -moz-user-select: none;
   cursor: default;
+  background-color: #FFFFFF;
 }
 
-.popup #zimbra_mail_notifier_tooltipIdentifierGroup{
-  margin-top: 0px;
-}
-.popup .tooltipDescription{
+.popup .tooltipDescription {
   text-align:center;
 }
-.popup .tooltipIdentifier{
+.popup .tooltipIdentifier {
   padding: 3px;
   position: relative;
 }
-.popup .tooltipIdentifier:not(:first-child){
+.popup .tooltipIdentifier:not(:first-child) {
   border-top: solid 1px #CCC;
 }
 
@@ -129,19 +126,19 @@ fieldset {
   font-weight:bold
 }
 
-.popup  #zimbra_mail_notifier_tooltipMessage,.popup #zimbra_mail_notifier_tooltipCalendar,.popup #zimbra_mail_notifier_tooltipTask {
+.popup  fieldset {
   margin:0px 6px;
   width: 280px;
+  background-color: #F6F6F6;
 }
 
-.popup .actionidentifier{
+.popup .actionidentifier {
   position:absolute;
   top:3px;
 }
 
 .popup #zimbra_mail_notifier_tooltipMessage div {
-  margin: 4px 0px;
-  width: 100%;
+  margin: 2px 0px;
 }
 
 .popup .action > img, .popup #zimbra_mail_notifier_tooltipMessage .tooltipMessageAbstract {
