@@ -38,6 +38,15 @@
 "use strict";
 
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Constant"];
+
+/* ************************* Constant ****************************** */
+
+/**
+ * Creates a global instance of zimbra_notifier_Constant.
+ *
+ * @constructor
+ * @this {Constant}
+ */
 var zimbra_notifier_Constant = {};
 
 /**

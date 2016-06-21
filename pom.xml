@@ -46,6 +46,10 @@
                                     <directory>${project.build.directory}/jsdoc</directory>
                                     <recurse>10</recurse>
                                     <extension>js,jsm</extension>
+                                    <exclude>
+                                        <exc>js/jquery.min.js</exc>
+                                        <exc>modules/service/aes.js</exc>
+                                    </exclude>
                                     <allfunctions>true</allfunctions>
                                     <Allfunctions>true</Allfunctions>
                                     <privateOption>true</privateOption>
