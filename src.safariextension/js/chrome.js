@@ -38,6 +38,8 @@
  if(typeof chrome === "undefined") {
     chrome = {
         _callbacksCookie: [],
+        _notifications: [],
+        _callbacksNotification: [],
         browserAction: {
             setIcon: function(details, callback) {
                 if (!details || !details.path) {
@@ -322,6 +324,44 @@
                 } catch (e) {
                 }
                 return value;
+            }
+        },
+        notifications: {
+            create: function(notificationId, options, callback) {
+                if (window.Notification.permission === "granted") {
+                    if(!notificationId) {
+                        notificationId = (new Date).getTime();
+                    }
+                    var notification = new window.Notification(options.title, {icon: chrome.extension.getURL(options.iconUrl), body: options.message, tag: notificationId});
+                    chrome._notifications[notificationId] = notification;
+                    notification.onclick = function(event) {
+                        event.preventDefault();
+                        chrome._callbacksNotification.forEach(function(callback) {
+                            callback(event.target.tag);
+                        });
+                    };
+                    if(callback) {
+                        callback(notificationId);
+                    }
+                } else {
+                    window.Notification.requestPermission(callbackFunction);
+                }
+            },
+            onClicked: {
+                addListener: function(listener) {
+                    chrome._callbacksNotification.push(listener);
+                }
+            },
+            clear: function(notificationId, callback) {
+                if(chrome._notifications[notificationId]) {
+                    chrome._notifications[notificationId].cancel();
+                    chrome._notifications[notificationId] = undefined;
+                    if(callback) {
+                        callback(true);
+                    }
+                } else if(callback) {
+                    callback(false);
+                }
             }
         }
     };
