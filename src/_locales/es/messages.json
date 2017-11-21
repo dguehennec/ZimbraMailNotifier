@@ -7,7 +7,7 @@
         "message": "Zimbra Mail Notifier comprueba su cuenta de correo Zimbra y le comunica el número de mensajes no leídos.",
         "description": ""
     },
-    
+
     "yes": {
         "message": "Si",
         "description": ""
@@ -398,6 +398,10 @@
     },
     "tooltip_week": {
         "message": "S%WEEK%",
+        "description": ""
+    },
+    "tooltip_noEmailContent": {
+        "message": "Sin ningún contenido",
         "description": ""
     },
 

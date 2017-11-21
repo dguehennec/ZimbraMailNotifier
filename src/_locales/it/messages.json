@@ -7,7 +7,7 @@
         "message": "Questa estenzione notifica l'arrivo di nuovi messaggi sulla sua mailbox zimbra.",
         "description": ""
     },
-    
+
     "yes": {
         "message": "si",
         "description": ""
@@ -398,6 +398,10 @@
     },
     "tooltip_week": {
         "message": "S%WEEK%",
+        "description": ""
+    },
+    "tooltip_noEmailContent": {
+        "message": "Senza alcun contenuto",
         "description": ""
     },
 

@@ -337,7 +337,7 @@ zimbra_notifier_Request.prototype.send = function() {
             request = new XMLHttpRequest({anon:true});
             request.withCredentials = false;
         }
-                
+
         request.open("POST", this._url, true);
         request.timeout = this._timeout;
         request.addEventListener("loadend", function() {
@@ -347,7 +347,7 @@ zimbra_notifier_Request.prototype.send = function() {
                 object._dataRcv = request.responseText;
                 object._logger.traceReqData("Response (" + request.status + ")", object._dataRcv);
 
-                if (request.status === object._expectedStatus) {
+                if ((request.status === object._expectedStatus) || (Array.isArray(object._expectedStatus) && (object._expectedStatus.indexOf(request.status) >= 0))) {
                     object.status = zimbra_notifier_REQUEST_STATUS.NO_ERROR;
                 }
                 else if (request.status === 0) {

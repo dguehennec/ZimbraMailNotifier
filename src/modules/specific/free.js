@@ -190,21 +190,23 @@ var zimbra_notifier_WebserviceFree = function(timeoutQuery, timeoutWait, parent)
         var cookies = {};
         for (var index = 0; index < details.responseHeaders.length; index++) {
             if (details.responseHeaders[index].name === "Set-Cookie") {
-                var rawCookie = details.responseHeaders[index].value;
-                var posSt = rawCookie.indexOf('=');
-                var posEnd = rawCookie.indexOf(';', posSt);
-                if (posEnd > posSt) {
-                    cookies[rawCookie.substring(0, posSt)] = decodeURIComponent(rawCookie.substring( posSt + 1, posEnd));
-                } else {
-                    cookies[rawCookie.substring(0, posSt)] = decodeURIComponent(rawCookie.substring(posSt + 1));
-                }
+                var raws = details.responseHeaders[index].value.split("\n")
+                raws.forEach( function (rawCookie) {
+                    var posSt = rawCookie.indexOf('=');
+                    var posEnd = rawCookie.indexOf(';', posSt);
+                    if (posEnd > posSt) {
+                        cookies[rawCookie.substring(0, posSt)] = decodeURIComponent(rawCookie.substring( posSt + 1, posEnd));
+                    } else {
+                        cookies[rawCookie.substring(0, posSt)] = decodeURIComponent(rawCookie.substring(posSt + 1));
+                    }
+                })
             }
         }
         if (cookies['ZM_AUTH_TOKEN'] && cookies['SID']) {
             that._session.updateToken(cookies['ZM_AUTH_TOKEN'], 43200000, cookies['SID']);
             that._parent.callbackSessionInfoChanged(that._session);
         }
-        return {};
+        return {responseHeaders: details.responseHeaders};
     };
 };
 zimbra_notifier_Util.extend(zimbra_notifier_Webservice, zimbra_notifier_WebserviceFree);
@@ -230,7 +232,7 @@ zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, l
         this.infoAuthUpdated(urlWebService, login);
         this._runningReq = this._buildQueryReq(typeReq, "/zimbra.pl", this._callbackAuthRequest);
 
-        this._runningReq._expectedStatus = 0;
+        this._runningReq._expectedStatus = [0, 200];
         this._runningReq._setInfoRequest = function() {
             this._request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         };

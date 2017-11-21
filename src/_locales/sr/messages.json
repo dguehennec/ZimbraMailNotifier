@@ -7,7 +7,7 @@
         "message": "Ово проширење вас обавештава када пристигну нове поруке у вашем zimbra поштанском сандучету.",
         "description": ""
     },
-    
+
     "yes": {
         "message": "да",
         "description": ""
@@ -329,8 +329,8 @@
     "option_identifiant_disconnect_button": {
         "message": "Прекини везу",
         "description": ""
-    },  
-    
+    },
+
     "tooltip_notConnected_title": {
         "message": "Није повезано",
         "description": ""
@@ -399,7 +399,11 @@
         "message": "Н%WEEK%",
         "description": ""
     },
-    
+    "tooltip_noEmailContent": {
+        "message": "Без какого-либо контента",
+        "description": ""
+    },
+
     "connector_error_req_internal": {
         "message": "Интерна грешка",
         "description": ""

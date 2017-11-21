@@ -7,7 +7,7 @@
         "message": "Esta extensão notifica-te quando novas mensagens chegarem à tua caixa de correio Zimbra.",
         "description": ""
     },
-    
+
     "yes": {
         "message": "Sim",
         "description": ""
@@ -398,6 +398,10 @@
     },
     "tooltip_week": {
         "message": "S%WEEK%",
+        "description": ""
+    },
+    "tooltip_noEmailContent": {
+        "message": "Sem qualquer conteúdo",
         "description": ""
     },
 

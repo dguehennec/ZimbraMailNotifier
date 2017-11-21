@@ -7,7 +7,7 @@
         "message": "Diese Erweiterung benachrichtigt dich wenn du neue Nachrichten in deiner zimbra Mailbox bekommst.",
         "description": ""
     },
-    
+
     "yes": {
         "message": "Ja",
         "description": ""
@@ -398,6 +398,10 @@
     },
     "tooltip_week": {
         "message": "W%WEEK%",
+        "description": ""
+    },
+    "tooltip_noEmailContent": {
+        "message": "Ohne Inhalt",
         "description": ""
     },
 

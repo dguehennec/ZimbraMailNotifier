@@ -7,7 +7,7 @@
         "message": "This extension notifies you when new messages arrive in your zimbra mailbox.",
         "description": ""
     },
-    
+
     "yes": {
         "message": "yes",
         "description": ""
@@ -329,8 +329,8 @@
     "option_identifiant_disconnect_button": {
         "message": "Disconnect",
         "description": ""
-    },  
-    
+    },
+
     "tooltip_notConnected_title": {
         "message": "Disconnected",
         "description": ""
@@ -399,7 +399,11 @@
         "message": "W%WEEK%",
         "description": ""
     },
-    
+    "tooltip_noEmailContent": {
+        "message": "Without any content",
+        "description": ""
+    },
+
     "connector_error_req_internal": {
         "message": "Internal error",
         "description": ""

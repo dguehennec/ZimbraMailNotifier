@@ -39,7 +39,7 @@
 
 /**
  * Creates an instance of zimbra_notifier_popup.
- * 
+ *
  * @constructor
  * @this {zimbra_notifier_popup}
  */
@@ -47,7 +47,7 @@ var zimbra_notifier_popup = {};
 
 /**
  * Initialize zimbra_notifier_popup
- * 
+ *
  * @public
  * @this {zimbra_notifier_popup}
  */
@@ -81,7 +81,7 @@ zimbra_notifier_popup.init = function(background) {
 
 /**
  * Call when the window is closed
- * 
+ *
  * @public
  * @this {zimbra_notifier_popup}
  */
@@ -95,7 +95,7 @@ zimbra_notifier_popup.release = function() {
 
 /**
  * Initialize tooltip
- * 
+ *
  * @public
  * @this {zimbra_notifier_popup}
  */
@@ -139,7 +139,7 @@ zimbra_notifier_popup.refresh = function() {
             $('#zimbra_mail_notifier_tooltipTaskGroup').hide();
         }
     }
-    else { 
+    else {
         $('#zimbra_mail_notifier_tooltipMessageGroup').hide();
         $('#zimbra_mail_notifier_tooltipCalendarGroup').hide();
         $('#zimbra_mail_notifier_tooltipTaskGroup').hide();
@@ -155,7 +155,7 @@ zimbra_notifier_popup.refresh = function() {
 
 /**
  * Initialize tooltip identifier
- * 
+ *
  * @private
  * @this {zimbra_notifier_popup}
  * @param {zimbra_notifier_Controller} controller
@@ -171,6 +171,7 @@ zimbra_notifier_popup.initializeTooltipIdentifier = function(controller) {
         $('#zimbra_mail_notifier_tooltipIdentifier_'+ accountId).append('<div id="zimbra_mail_notifier_tooltipTitle_' + accountId + '" class="tooltipTitle"></div><div id="zimbra_mail_notifier_tooltipMessage_' + accountId + '"  class="tooltipMessage"></div><div class="action actionidentifier" ><img id="zimbra_mail_notifier_tooltipHome_' + accountId + '" src="skin/images/button_home.png" msgTitle="main_homepage_label"/><img id="zimbra_mail_notifier_tooltipDisconnect_' + accountId + '" src="skin/images/button_disconnect.png" msgTitle="main_disconnect" /></div>');
         $('#zimbra_mail_notifier_tooltipHome_' + accountId).on('click', function() {
             controller.openZimbraWebInterface();
+            window.close();
         });
         $('#zimbra_mail_notifier_tooltipDisconnect_' + accountId).on('click', function() {
             controller.closeConnection();
@@ -240,7 +241,7 @@ zimbra_notifier_popup.initializeTooltipIdentifier = function(controller) {
 }
 /**
  * Initialize tooltip messages
- * 
+ *
  * @private
  * @this {zimbra_notifier_popup}
  */
@@ -256,15 +257,18 @@ zimbra_notifier_popup.initializeTooltipMessage = function() {
         var alias = "";
         if (nbControllers > 1) {
             alias = " (" + zimbra_notifier_popup._zimbra_notifier_Prefs.getUserAlias(controller.getAccountId()) + ")";
-        } 
+        }
         controller.getUnreadMessages().forEach(function(message) {
             var content = message.subject;
-            if(message.content != "") {
+            if(message.content !== "") {
                 if(content !== "") {
                     content += " - " + message.content;
                 } else {
                     content = message.content;
                 }
+            }
+            if(content === "") {
+                content = chrome.i18n.getMessage("tooltip_noEmailContent")
             }
             unreadMessages.push({date: message.date, content: content, alias: alias, controller: controller});
         });
@@ -300,16 +304,17 @@ zimbra_notifier_popup.initializeTooltipMessage = function() {
                 zimbra_notifier_popup._zimbra_notifier_SuperController.getControllers().forEach(function(controller) {
                     if(controller.getAccountId() === accountId) {
                         controller.openZimbraWebInterface();
+                        window.close();
                     }
                 });
-                
+
             });
         }
     }
 };
 /**
  * Initialize tooltip calendar
- * 
+ *
  * @private
  * @this {zimbra_notifier_popup}
  */
@@ -362,7 +367,7 @@ zimbra_notifier_popup.initializeTooltipCalendar = function() {
 
 /**
  * Initialize tooltip task
- * 
+ *
  * @private
  * @this {zimbra_notifier_popup}
  */
@@ -423,7 +428,7 @@ zimbra_notifier_popup.initializeTooltipTask = function() {
 
 /**
  * open option page
- * 
+ *
  * @private
  * @this {zimbra_notifier_popup}
  * @param {Number} the tab to display
