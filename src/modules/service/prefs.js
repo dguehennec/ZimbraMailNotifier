@@ -62,10 +62,16 @@ zimbra_notifier_Prefs.PREF = {
     AUTOCONNECT                     : "autoConnect",
     EMAIL_NOTIFICATION_ENABLED      : "systemNotificationEnabled",
     EMAIL_SOUND_ENABLED             : "soundEnabled",
+    EMAIL_SOUND_SELECTED            : "emailSoundSelected",
+    EMAIL_SOUND_FILE                : "emailSoundFile",
+    EMAIL_SOUND_VOLUME              : "emailSoundVolume",
     EMAIL_NOTIFICATION_DURATION     : "emailNotificationDuration",
     // Browser
     BROWSER_SET_COOKIES             : "browserSetCookies",
     BROWSER_COOKIE_HTTP_ONLY        : "browserCookieHttpOnly",
+    // popup
+    POPUP_COLOR                     : "popupColor",
+    POPUP_WIDTH                     : "popupWidth",
     // Message
     MESSAGE_ENABLED                 : "messageEnabled",
     MESSAGE_NB_DISPLAYED            : "messageNbDisplayed",
@@ -76,6 +82,9 @@ zimbra_notifier_Prefs.PREF = {
     CALENDAR_NB_DISPLAYED           : "calendarNbDisplayed",
     CALENDAR_NOTIFICATION_ENABLED   : "calendarSystemNotificationEnabled",
     CALENDAR_SOUND_ENABLED          : "calendarSoundEnabled",
+    CALENDAR_SOUND_SELECTED         : "calendarSoundSelected",
+    CALENDAR_SOUND_FILE             : "calendarSoundFile",
+    CALENDAR_SOUND_VOLUME           : "calendarSoundVolume",
     CALENDAR_REMINDER_TIME_CONF     : "calendarReminderTimeConf",
     CALENDAR_REMINDER_NB_REPEAT     : "calendarReminderRepeatNb",
     // task
@@ -107,7 +116,7 @@ zimbra_notifier_Util.deepFreeze(zimbra_notifier_Prefs.PREF);
  * @this {Prefs}
  */
 zimbra_notifier_Prefs.load = function() {
-    
+
     // Get the previous version
     var previous_version = this._getPref(this.PREF.CURRENT_VERSION);
 
@@ -128,19 +137,25 @@ zimbra_notifier_Prefs.load = function() {
         this.updatePref(this.PREF.REQUEST_WAIT_TIMEOUT + accountId, this._getPref(this.PREF.REQUEST_WAIT_TIMEOUT));
         this.updatePref(this.PREF.REQUEST_WAIT_LOOP_TIME + accountId, this._getPref(this.PREF.REQUEST_WAIT_LOOP_TIME));
     }
-    
+
     // Set the current version
     this.pref_current_version = zimbra_notifier_Constant.VERSION;
     this._prefs.setPref(this.PREF.CURRENT_VERSION, this.pref_current_version);
-    
+
     // email + general
     this.pref_autoConnect                  = this._getPref(this.PREF.AUTOCONNECT);
     this.pref_email_notification_enabled   = this._getPref(this.PREF.EMAIL_NOTIFICATION_ENABLED);
     this.pref_email_sound_enabled          = this._getPref(this.PREF.EMAIL_SOUND_ENABLED);
+    this.pref_email_sound_selected         = this._getPref(this.PREF.EMAIL_SOUND_SELECTED);
+    this.pref_email_sound_file             = this._getPref(this.PREF.EMAIL_SOUND_FILE);
+    this.pref_email_sound_volume           = this._getPref(this.PREF.EMAIL_SOUND_VOLUME);
     this.pref_email_notification_duration  = this._getPref(this.PREF.EMAIL_NOTIFICATION_DURATION);
     // Browser
     this.pref_browser_set_cookies          = this._getPref(this.PREF.BROWSER_SET_COOKIES);
     this.pref_browser_cookie_http_only     = this._getPref(this.PREF.BROWSER_COOKIE_HTTP_ONLY);
+    // Popup
+    this.pref_popup_color                  = this._getPref(this.PREF.POPUP_COLOR);
+    this.pref_popup_width                  = this._getPref(this.PREF.POPUP_WIDTH);
     // message
     this.pref_message_enabled                 = this._getPref(this.PREF.MESSAGE_ENABLED);
     this.pref_message_nb_displayed            = this._getPref(this.PREF.MESSAGE_NB_DISPLAYED);
@@ -151,6 +166,9 @@ zimbra_notifier_Prefs.load = function() {
     this.pref_calendar_nb_displayed          = this._getPref(this.PREF.CALENDAR_NB_DISPLAYED);
     this.pref_calendar_notification_enabled  = this._getPref(this.PREF.CALENDAR_NOTIFICATION_ENABLED);
     this.pref_calendar_sound_enabled         = this._getPref(this.PREF.CALENDAR_SOUND_ENABLED);
+    this.pref_calendar_sound_selected        = this._getPref(this.PREF.CALENDAR_SOUND_SELECTED);
+    this.pref_calendar_sound_file            = this._getPref(this.PREF.CALENDAR_SOUND_FILE);
+    this.pref_calendar_sound_volume           = this._getPref(this.PREF.CALENDAR_SOUND_VOLUME);
     this.pref_calendar_reminder_time_conf    = this._getPref(this.PREF.CALENDAR_REMINDER_TIME_CONF);
     this.pref_calendar_reminder_nb_repeat    = this._getPref(this.PREF.CALENDAR_REMINDER_NB_REPEAT);
     // task
@@ -264,9 +282,17 @@ zimbra_notifier_Prefs.getPref = function(key) {
         case this.PREF.EMAIL_NOTIFICATION_ENABLED:
             value = this.pref_email_notification_enabled;
             break;
-
         case this.PREF.EMAIL_SOUND_ENABLED:
             value = this.pref_email_sound_enabled;
+            break;
+        case this.PREF.EMAIL_SOUND_SELECTED:
+            value = this.pref_email_sound_selected;
+            break;
+        case this.PREF.EMAIL_SOUND_FILE:
+            value = this.pref_email_sound_file;
+            break;
+        case this.PREF.EMAIL_SOUND_VOLUME:
+            value = this.pref_email_sound_volume;
             break;
 
         case this.PREF.EMAIL_NOTIFICATION_DURATION:
@@ -280,6 +306,14 @@ zimbra_notifier_Prefs.getPref = function(key) {
 
         case this.PREF.BROWSER_COOKIE_HTTP_ONLY:
             value = this.pref_browser_cookie_http_only;
+            break;
+
+        // Popup
+        case this.PREF.POPUP_COLOR:
+            value = this.pref_popup_color;
+            break;
+        case this.PREF.POPUP_WIDTH:
+            value = this.pref_popup_width;
             break;
 
         // message
@@ -314,6 +348,18 @@ zimbra_notifier_Prefs.getPref = function(key) {
 
         case this.PREF.CALENDAR_SOUND_ENABLED:
             value = this.pref_calendar_sound_enabled;
+            break;
+
+        case this.PREF.CALENDAR_SOUND_SELECTED:
+            value = this.pref_calendar_sound_selected;
+            break;
+
+        case this.PREF.CALENDAR_SOUND_FILE:
+            value = this.pref_calendar_sound_file;
+            break;
+
+        case this.PREF.CALENDAR_SOUND_VOLUME:
+            value = this.pref_calendar_sound_volume;
             break;
 
         case this.PREF.CALENDAR_REMINDER_TIME_CONF:
@@ -450,6 +496,18 @@ zimbra_notifier_Prefs.updatePref = function(key, value) {
             this.pref_email_sound_enabled = value;
             break;
 
+        case this.PREF.EMAIL_SOUND_SELECTED:
+            this.pref_email_sound_selected = value;
+            break;
+
+        case this.PREF.EMAIL_SOUND_FILE:
+            this.pref_email_sound_file = value;
+            break;
+
+        case this.PREF.EMAIL_SOUND_VOLUME:
+            this.pref_email_sound_volume = value;
+            break;
+
         case this.PREF.EMAIL_NOTIFICATION_DURATION:
             this.pref_email_notification_duration = value;
             break;
@@ -461,6 +519,14 @@ zimbra_notifier_Prefs.updatePref = function(key, value) {
 
         case this.PREF.BROWSER_COOKIE_HTTP_ONLY:
             this.pref_browser_cookie_http_only = value;
+            break;
+
+        // Popup
+        case this.PREF.POPUP_COLOR:
+            this.pref_popup_color = value;
+            break;
+        case this.PREF.POPUP_WIDTH:
+            this.pref_popup_width = value;
             break;
 
         // message
@@ -495,6 +561,18 @@ zimbra_notifier_Prefs.updatePref = function(key, value) {
 
         case this.PREF.CALENDAR_SOUND_ENABLED:
             this.pref_calendar_sound_enabled = value;
+            break;
+
+        case this.PREF.CALENDAR_SOUND_SELECTED:
+            this.pref_calendar_sound_selected = value;
+            break;
+
+        case this.PREF.CALENDAR_SOUND_FILE:
+            this.pref_calendar_sound_file = value;
+            break;
+
+        case this.PREF.CALENDAR_SOUND_VOLUME:
+            this.pref_calendar_sound_volume = value;
             break;
 
         case this.PREF.CALENDAR_REMINDER_TIME_CONF:
@@ -588,6 +666,26 @@ zimbra_notifier_Prefs.isAutoConnectEnabled = function() {
 };
 
 /**
+ * indicate color of popup
+ *
+ * @this {Prefs}
+ * @return {String} the color
+ */
+zimbra_notifier_Prefs.getPopupColor = function() {
+    return this.pref_popup_color;
+};
+
+/**
+ * indicate width of popup
+ *
+ * @this {Prefs}
+ * @return {Number} the width
+ */
+zimbra_notifier_Prefs.getPopupWidth = function() {
+    return this.pref_popup_width;
+};
+
+/**
  * indicate if email notification is enabled
  *
  * @this {Prefs}
@@ -605,6 +703,36 @@ zimbra_notifier_Prefs.isEmailNotificationEnabled = function() {
  */
 zimbra_notifier_Prefs.isEmailSoundEnabled = function() {
     return this.pref_email_sound_enabled;
+};
+
+/**
+ * get the selected sound for email notification
+ *
+ * @this {Prefs}
+ * @return {Number} the selected sound
+ */
+zimbra_notifier_Prefs.getEmailSoundSelected = function() {
+    return parseInt(this.pref_email_sound_selected);
+};
+
+/**
+ * get the base64 file for email notification
+ *
+ * @this {Prefs}
+ * @return {String} the file in base64
+ */
+zimbra_notifier_Prefs.getEmailSoundCustom = function() {
+    return this.pref_email_sound_file;
+};
+
+/**
+ * get the volume for email notification
+ *
+ * @this {Prefs}
+ * @return {Number} the volume
+ */
+zimbra_notifier_Prefs.getEmailSoundVolume = function() {
+    return parseInt(this.pref_email_sound_volume);
 };
 
 /**
@@ -721,6 +849,36 @@ zimbra_notifier_Prefs.isCalendarNotificationEnabled = function() {
  */
 zimbra_notifier_Prefs.isCalendarSoundEnabled = function() {
     return this.pref_calendar_sound_enabled;
+};
+
+/**
+ * get the selected sound for calendar notification
+ *
+ * @this {Prefs}
+ * @return {Number} the selected sound
+ */
+zimbra_notifier_Prefs.getCalendarSoundSelected = function() {
+    return parseInt(this.pref_calendar_sound_selected);
+};
+
+/**
+ * get the base64 file for calendar notification
+ *
+ * @this {Prefs}
+ * @return {String} the file in base64
+ */
+zimbra_notifier_Prefs.getCalendarSoundCustom = function() {
+    return this.pref_calendar_sound_file;
+};
+
+/**
+ * get the volume for calendar notification
+ *
+ * @this {Prefs}
+ * @return {Number} the volume
+ */
+zimbra_notifier_Prefs.getCalendarSoundVolume = function() {
+    return parseInt(this.pref_calendar_sound_volume);
 };
 
 /**
@@ -997,7 +1155,11 @@ var PrefsService = {
             'currentVersion' : 0,
             'autoConnect' : true,
             'systemNotificationEnabled' : true,
+            'popupColor' : '#ffffff',
+            'popupWidth' : 300,
             'soundEnabled' : true,
+            'emailSoundSelected' : 1,
+            'emailSoundVolume' : 100,
             'emailNotificationDuration' : 14,
             'messageEnabled' : true,
             'messageNbDisplayed' : 5,
@@ -1007,6 +1169,8 @@ var PrefsService = {
             'calendarNbDisplayed' : 5,
             'calendarSystemNotificationEnabled' : true,
             'calendarSoundEnabled' : true,
+            'calendarSoundSelected' : 1,
+            'calendarSoundVolume' : 100,
             'calendarReminderTimeConf' : -1,
             'calendarReminderRepeatNb' : 0,
             'taskEnabled' : true,
@@ -1027,17 +1191,22 @@ var PrefsService = {
  * @param {Function} the callback when initialized
  */
 PrefsService.init = function(callback) {
-    var loadFunction = function(storage) {
-        PrefsService._currentPref = storage;
+    var loadFunction = function(syncStorage) {
+        Object.assign(PrefsService._currentPref.prefs, syncStorage && syncStorage.prefs ? syncStorage.prefs : {});
         if (callback) {
             callback();
         }
     };
-    if(chrome.storage.sync) {
-        chrome.storage.sync.get(this._defaultsPref, loadFunction);
-    } else {
-        chrome.storage.local.get(this._defaultsPref, loadFunction);
-    }
+    // get local storage and overwrite by the synchronize storage
+    chrome.storage.local.get(this._defaultsPref, function(localStorage) {
+        PrefsService._currentPref = Object.assign({}, PrefsService._defaultsPref);
+        Object.assign(PrefsService._currentPref.prefs, localStorage && localStorage.prefs ? localStorage.prefs : {});
+        if(chrome.storage.sync) {
+            chrome.storage.sync.get(localStorage, loadFunction);
+        } else {
+            loadFunction(localStorage);
+        }
+    });
 };
 
 /**
@@ -1120,10 +1289,13 @@ PrefsService.synchronize = function(forced) {
     clearTimeout(this._saveTimerDelay);
     var that = this;
     var saveFunction = function() {
+        chrome.storage.local.set(that._currentPref);
         if(chrome.storage.sync) {
-            chrome.storage.sync.set(that._currentPref);
-        } else {
-            chrome.storage.local.set(that._currentPref);
+            // not save file in synchro storage because the size is limited
+            var synchroPrefs = JSON.parse(JSON.stringify(that._currentPref));
+            delete synchroPrefs.prefs.emailSoundFile;
+            delete synchroPrefs.prefs.calendarSoundFile;
+            chrome.storage.sync.set(synchroPrefs);
         }
     };
     if(forced) {
@@ -1134,5 +1306,3 @@ PrefsService.synchronize = function(forced) {
         }, 1000);
     }
 };
-
-

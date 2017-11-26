@@ -16,6 +16,14 @@
         "message": "Non",
         "description": ""
     },
+    "custom": {
+        "message": "Personnalisé",
+        "description": ""
+    },
+    "pixels": {
+        "message": "pixels",
+        "description": ""
+    },
     "seconds": {
         "message": "secondes",
         "description": ""
@@ -95,6 +103,10 @@
         "message": "Site Web :",
         "description": ""
     },
+    "about_donate": {
+        "message": "Faire un don",
+        "descripton": ""
+    },
     "about_createdby_label": {
         "message": "Créé par David GUEHENNEC et Benjamin ROBIN",
         "description": ""
@@ -132,6 +144,18 @@
         "message": "Connexion automatique à l'interface Web",
         "description": ""
     },
+    "option_common_popup_caption": {
+        "message": "Barre d'outil",
+        "description": ""
+    },
+    "option_common_popupColor": {
+        "message": "Couleur du panneau",
+        "description": ""
+    },
+    "option_common_popupWidth": {
+        "message": "Largeur du panneau",
+        "description": ""
+    },
     "option_common_mail_notification_caption": {
         "message": "Notification e-mail non lu",
         "description": ""
@@ -141,7 +165,15 @@
         "description": ""
     },
     "option_common_mail_soundNotification": {
-        "message": "Émettre un son",
+        "message": "Notification sonore",
+        "description": ""
+    },
+    "option_common_mail_soundNotificationSelected": {
+        "message": "Son de la notification",
+        "description": ""
+    },
+    "option_common_mail_notify_volume_caption": {
+        "message": "Volume de la notification",
         "description": ""
     },
     "option_common_mail_notify_duration_caption": {
@@ -200,6 +232,14 @@
     },
     "option_calendar_soundNotification": {
         "message": "Notification sonore",
+        "description": ""
+    },
+    "option_calendar_soundNotificationSelected": {
+        "message": "Son de la notification",
+        "description": ""
+    },
+    "option_calendar_notify_volume_caption": {
+        "message": "Volume de la notification",
         "description": ""
     },
     "option_calendar_repeat": {
@@ -495,6 +535,15 @@
     },
     "unit_bytes_TB": {
         "message": "To",
+        "description": ""
+    },
+
+    "file_sound_error_size": {
+        "message": "Ce fichier n'est pas compatible, La taille maximum du fichier est 300 Ko, actuellement : ",
+        "description": ""
+    },
+    "file_sound_error_type": {
+        "message": "Ce fichier n'est pas compatible, mime-type audio seulement, actuellement : ",
         "description": ""
     }
 }

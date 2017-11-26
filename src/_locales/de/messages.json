@@ -16,6 +16,14 @@
         "message": "Nein",
         "description": ""
     },
+    "custom": {
+        "message": "Personalisierte",
+        "description": ""
+    },
+    "pixels": {
+        "message": "pixels",
+        "description": ""
+    },
     "seconds": {
         "message": "sekunden",
         "description": ""
@@ -94,6 +102,10 @@
         "message": "Website:",
         "description": ""
     },
+    "about_donate": {
+        "message": "Spenden",
+        "descripton": ""
+    },
     "about_createdby_label": {
         "message": "Von: David GUEHENNEC, Benjamin ROBIN",
         "description": ""
@@ -131,6 +143,18 @@
         "message": "Automatisch Einloggen auf das Webinterface",
         "description": ""
     },
+    "option_common_popup_caption": {
+        "message": "Symbolleiste",
+        "description": ""
+    },
+    "option_common_popupColor": {
+        "message": "Panelfarbe",
+        "description": ""
+    },
+    "option_common_popupWidth": {
+        "message": "Panelbreite",
+        "description": ""
+    },
     "option_common_mail_notification_caption": {
         "message": "Benachrichtigung",
         "description": ""
@@ -141,6 +165,14 @@
     },
     "option_common_mail_soundNotification": {
         "message": "Sound-Benachrichtigung",
+        "description": ""
+    },
+    "option_common_mail_soundNotificationSelected": {
+        "message": "Benachrichtigungston",
+        "description": ""
+    },
+    "option_common_mail_notify_volume_caption": {
+        "message": "Benachrichtigungsvolumen",
         "description": ""
     },
     "option_common_mail_notify_duration_caption": {
@@ -199,6 +231,14 @@
     },
     "option_calendar_soundNotification": {
         "message": "Sound-Benachrichtigung",
+        "description": ""
+    },
+    "option_calendar_soundNotificationSelected": {
+        "message": "Benachrichtigungston",
+        "description": ""
+    },
+    "option_calendar_notify_volume_caption": {
+        "message": "Benachrichtigungsvolumen",
         "description": ""
     },
     "option_calendar_repeat": {
@@ -493,6 +533,15 @@
     },
     "unit_bytes_TB": {
         "message": "To",
+        "description": ""
+    },
+
+    "file_sound_error_size": {
+        "message": "Diese Datei wird nicht unterstützt. Max. Dateigröße ist 300 Ko, aktuell: ",
+        "description": ""
+    },
+    "file_sound_error_type": {
+        "message": "Diese Datei wird nicht unterstützt. Benötige Audio-MIME-Typ, aktueller MIME-Typ: ",
         "description": ""
     }
 }

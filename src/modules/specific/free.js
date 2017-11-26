@@ -226,31 +226,34 @@ zimbra_notifier_WebserviceFree.prototype.createSession = function() {
  * @this {WebserviceFree}
  */
 zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, login, password) {
-    var typeReq = zimbra_notifier_REQUEST_TYPE.CONNECT;
-    this._launchQuery(typeReq, false, false, function() {
+    // remove cookies if existe because with setted cookies, the redirection is not call
+    var that = this;
+    chrome.cookies.remove({"url" : urlWebService, "name" : "ZM_AUTH_TOKEN"}, function (details) {
+        chrome.cookies.remove({"url" : urlWebService, "name" : "SID"}, function (details) {
+            var typeReq = zimbra_notifier_REQUEST_TYPE.CONNECT;
+            that._launchQuery(typeReq, false, false, function() {
 
-        this.infoAuthUpdated(urlWebService, login);
-        this._runningReq = this._buildQueryReq(typeReq, "/zimbra.pl", this._callbackAuthRequest);
+                this.infoAuthUpdated(urlWebService, login);
+                this._runningReq = this._buildQueryReq(typeReq, "/zimbra.pl", this._callbackAuthRequest);
 
-        this._runningReq._expectedStatus = [0, 200];
-        this._runningReq._setInfoRequest = function() {
-            this._request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        };
+                this._runningReq._expectedStatus = [0, 200];
+                this._runningReq._setInfoRequest = function() {
+                    this._request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                };
 
-        var dataReq = "actionID=105&url=&mailbox=INBOX";
-        dataReq += "&login=" + encodeURIComponent(login);
-        dataReq += "&password=" + encodeURIComponent(password);
-        dataReq += "&Envoyer=Connexion";
+                var dataReq = "actionID=105&url=&mailbox=INBOX";
+                dataReq += "&login=" + encodeURIComponent(login);
+                dataReq += "&password=" + encodeURIComponent(password);
+                dataReq += "&Envoyer=Connexion";
 
-        // remove cookies if existe because with setted cookies, the redirection is not call
-        chrome.cookies.remove({"url" : urlWebService, "name" : "ZM_AUTH_TOKEN"});
-        chrome.cookies.remove({"url" : urlWebService, "name" : "SID"});
 
-        // add listener to be notify before redirect of request
-        chrome.webRequest.onBeforeRedirect.addListener( this._callbackBeforeRedirect, { urls : [ urlWebService + "/*" ], types : [ "xmlhttprequest" ]}, [ "responseHeaders" ]);
+                // add listener to be notify before redirect of request
+                chrome.webRequest.onBeforeRedirect.addListener( this._callbackBeforeRedirect, { urls : [ urlWebService + "/*" ], types : [ "xmlhttprequest" ]}, [ "responseHeaders" ]);
+                this._runningReq.setDataRequest(dataReq);
 
-        this._runningReq.setDataRequest(dataReq);
-        return true;
+                return true;
+            });
+        });
     });
 };
 

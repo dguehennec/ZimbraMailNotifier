@@ -73,6 +73,11 @@ zimbra_notifier_popup.init = function(background) {
     this._zimbra_notifier_Prefs = background['zimbra_notifier_Prefs'];
     this._zimbra_notifier_Util = background['zimbra_notifier_Util'];
 
+    Object.assign(document.body.style, {
+      'background-color': this._zimbra_notifier_Prefs.getPopupColor(),
+      'width': this._zimbra_notifier_Prefs.getPopupWidth() + 'px',
+    });
+
     // Register
     this._zimbra_notifier_SuperController.addCallBackRefresh(this);
 

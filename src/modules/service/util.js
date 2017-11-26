@@ -234,18 +234,70 @@ zimbra_notifier_Util.showNotification = function(title, text, duration, callback
 };
 
 /**
- * play new mail sound
+ * load sound file
+ *
+ * @param {file}
+ *            file The file to upload
+ * @param {cb}
+ *            cb The callback
+ * @return {Boolean} true if success
+ */
+zimbra_notifier_Util.loadFile = function(file, cb, cbError) {
+    if(file.size > 300 * 1024) {
+        if(cbError) {
+            cbError(zimbra_notifier_Util.getBundleString("file.sound.error.size") + zimbra_notifier_Util.convertBytesToStringValue(file.size));
+        }
+        return false;
+    }
+    if (!file.type.startsWith('audio/')) {
+        if(cbError) {
+            cbError(zimbra_notifier_Util.getBundleString("file.sound.error.type") + file.type);
+        }
+        return false;
+    }
+    const reader = new FileReader();
+    reader.onload = function() {
+        if(cb) {
+            cb(reader.result);
+        }
+    };
+    reader.onerror = window.alert;
+    reader.readAsDataURL(file);
+    return true;
+}
+
+/**
+ * play sound
  *
  * @return {Boolean} true if success
  */
-zimbra_notifier_Util.playSound = function() {
-    var sound = document.getElementById('sound');
-    if(sound) {
-        sound.play();
-        return true;
+zimbra_notifier_Util.playSound = function(selected, customSound, volume) {
+    var sound = './skin/ding.ogg';
+    switch(selected) {
+        case 1:
+            break;
+        case 2:
+            sound = './skin/ping.ogg';
+            break;
+        case 3:
+            sound = './skin/heal.ogg';
+            break;
+        case 4:
+            sound = './skin/drain.ogg';
+            break;
+        case 5:
+            if(customSound) {
+                sound = customSound;
+            }
+            break;
+        defaut:
+            return false;
     }
-    return false;
-};
+    var audio = new Audio(sound);
+    audio.volume = parseInt(volume)/100;
+    audio.play();
+    return true;
+}
 
 /**
  * Extend the Object properties

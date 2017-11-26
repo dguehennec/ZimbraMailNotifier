@@ -16,6 +16,14 @@
         "message": "не",
         "description": ""
     },
+    "custom": {
+        "message": "Персонализированные",
+        "description": ""
+    },
+    "pixels": {
+        "message": "пикселей",
+        "description": ""
+    },
     "seconds": {
         "message": "сек.",
         "description": ""
@@ -95,6 +103,10 @@
         "message": "Веб сајт :",
         "description": ""
     },
+    "about_donate": {
+        "message": "жертвовать",
+        "descripton": ""
+    },
     "about_createdby_label": {
         "message": "Аутори: David GUEHENNEC и Benjamin ROBIN",
         "description": ""
@@ -132,6 +144,18 @@
         "message": "Аутоматско повезивање на веб окружењу",
         "description": ""
     },
+    "option_common_popup_caption": {
+        "message": "Панель инструментов",
+        "description": ""
+    },
+    "option_common_popupColor": {
+        "message": "Цвет панели",
+        "description": ""
+    },
+    "option_common_popupWidth": {
+        "message": "Ширина панели",
+        "description": ""
+    },
     "option_common_mail_notification_caption": {
         "message": "Обавештење за непрочитане поруке",
         "description": ""
@@ -142,6 +166,14 @@
     },
     "option_common_mail_soundNotification": {
         "message": "Звучно обавештење",
+        "description": ""
+    },
+    "option_common_mail_soundNotificationSelected": {
+        "message": "Звуковой сигнал уведомления",
+        "description": ""
+    },
+    "option_common_mail_notify_volume_caption": {
+        "message": "Объем уведомлений",
         "description": ""
     },
     "option_common_mail_notify_duration_caption": {
@@ -198,6 +230,14 @@
     },
     "option_calendar_soundNotification": {
         "message": "Звучно обавештење",
+        "description": ""
+    },
+    "option_calendar_soundNotificationSelected": {
+        "message": "Звуковой сигнал уведомления",
+        "description": ""
+    },
+    "option_calendar_notify_volume_caption": {
+        "message": "Объем уведомлений",
         "description": ""
     },
     "option_calendar_repeat": {
@@ -493,6 +533,15 @@
     },
     "unit_bytes_TB": {
         "message": "TB",
+        "description": ""
+    },
+
+    "file_sound_error_size": {
+        "message": "Этот файл несовместим Максимальный размер файла 300 Ko, текущий: ",
+        "description": ""
+    },
+    "file_sound_error_type": {
+        "message": "Этот файл несовместим. Вам нужен mime-type audio, текущий тип mime: ",
         "description": ""
     }
 }

@@ -16,6 +16,14 @@
         "message": "Hayır",
         "description": ""
     },
+    "custom": {
+        "message": "Kişiselleştirilmiş",
+        "description": ""
+    },
+    "pixels": {
+        "message": "piksel",
+        "description": ""
+    },
     "seconds": {
         "message": "saniye",
         "description": ""
@@ -94,6 +102,10 @@
         "message": "Web Sayfası:",
         "description": ""
     },
+    "about_donate": {
+        "message": "Bağışlamak",
+        "descripton": ""
+    },
     "about_createdby_label": {
         "message": "Vasıtasıyla: David GUEHENNEC, Benjamin ROBIN",
         "description": ""
@@ -131,6 +143,18 @@
         "message": "Web arayüzünde otomatik bağlantı",
         "description": ""
     },
+    "option_common_popup_caption": {
+        "message": "Araç Çubuğu",
+        "description": ""
+    },
+    "option_common_popupColor": {
+        "message": "Panel rengi",
+        "description": ""
+    },
+    "option_common_popupWidth": {
+        "message": "Panel genişliği",
+        "description": ""
+    },
     "option_common_mail_notification_caption": {
         "message": "Bildirim",
         "description": ""
@@ -141,6 +165,14 @@
     },
     "option_common_mail_soundNotification": {
         "message": "Ses bildirimi",
+        "description": ""
+    },
+    "option_common_mail_soundNotificationSelected": {
+        "message": "Bilgilendirme sesi",
+        "description": ""
+    },
+    "option_common_mail_notify_volume_caption": {
+        "message": "Bildirim hacmi",
         "description": ""
     },
     "option_common_mail_notify_duration_caption": {
@@ -199,6 +231,14 @@
     },
     "option_calendar_soundNotification": {
         "message": "Ses bildirimi",
+        "description": ""
+    },
+    "option_calendar_soundNotificationSelected": {
+        "message": "Bilgilendirme sesi",
+        "description": ""
+    },
+    "option_calendar_notify_volume_caption": {
+        "message": "Bildirim hacmi",
         "description": ""
     },
     "option_calendar_repeat": {
@@ -493,6 +533,15 @@
     },
     "unit_bytes_TB": {
         "message": "To",
+        "description": ""
+    },
+
+    "file_sound_error_size": {
+        "message": "Bu dosya uyumlu değil Maksimum dosya boyutu 300 Ko, güncel: ",
+        "description": ""
+    },
+    "file_sound_error_type": {
+        "message": "Bu dosya uyumlu değil Mime tipi ses, güncel mime türü gerekir: ",
         "description": ""
     }
 }

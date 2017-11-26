@@ -16,6 +16,14 @@
         "message": "Não",
         "description": ""
     },
+    "custom": {
+        "message": "Personalizado",
+        "description": ""
+    },
+    "pixels": {
+        "message": "píxeis",
+        "description": ""
+    },
     "seconds": {
         "message": "segundos",
         "description": ""
@@ -94,6 +102,10 @@
         "message": "Website:",
         "description": ""
     },
+    "about_donate": {
+        "message": "Doar",
+        "descripton": ""
+    },
     "about_createdby_label": {
         "message": "Por: David GUEHENNEC, Benjamin ROBIN",
         "description": ""
@@ -131,6 +143,18 @@
         "message": "Conexão automática ao interface web",
         "description": ""
     },
+    "option_common_popup_caption": {
+        "message": "Barra de ferramentas",
+        "description": ""
+    },
+    "option_common_popupColor": {
+        "message": "Cor do painel",
+        "description": ""
+    },
+    "option_common_popupWidth": {
+        "message": "Largura do painel",
+        "description": ""
+    },
     "option_common_mail_notification_caption": {
         "message": "Notificação",
         "description": ""
@@ -141,6 +165,14 @@
     },
     "option_common_mail_soundNotification": {
         "message": "Notificação sonora",
+        "description": ""
+    },
+    "option_common_mail_soundNotificationSelected": {
+        "message": "Som de notificação",
+        "description": ""
+    },
+    "option_common_mail_notify_volume_caption": {
+        "message": "Volume de notificação",
         "description": ""
     },
     "option_common_mail_notify_duration_caption": {
@@ -199,6 +231,14 @@
     },
     "option_calendar_soundNotification": {
         "message": "Notificação sonora",
+        "description": ""
+    },
+    "option_calendar_soundNotificationSelected": {
+        "message": "Som de notificaçãon",
+        "description": ""
+    },
+    "option_calendar_notify_volume_caption": {
+        "message": "Volume de notificação",
         "description": ""
     },
     "option_calendar_repeat": {
@@ -493,6 +533,15 @@
     },
     "unit_bytes_TB": {
         "message": "To",
+        "description": ""
+    },
+
+    "file_sound_error_size": {
+        "message": "Este arquivo não é compatível O tamanho máximo do arquivo é 300 Ko, atual: ",
+        "description": ""
+    },
+    "file_sound_error_type": {
+        "message": "Este arquivo não é compatível Você precisa de um tipo de áudio tipo mime, tipo mime atual: ",
         "description": ""
     }
 }

@@ -39,7 +39,7 @@
 
 /**
  * Creates an instance of options.
- * 
+ *
  * @constructor
  * @this {Options}
  */
@@ -47,7 +47,7 @@ var zimbra_notifier_options = {};
 
 /**
  * init
- * 
+ *
  * @public
  * @this {Options}
  * @param {background} the background extension context
@@ -59,6 +59,7 @@ zimbra_notifier_options.init = function(background) {
     }
     this._zimbra_notifier_SuperController = background['zimbra_notifier_SuperController'];
     this._zimbra_notifier_Prefs = background['zimbra_notifier_Prefs'];
+    this._zimbra_notifier_Util = background['zimbra_notifier_Util'];
 
     // select tab
     if(location.href.split("#").length>1) {
@@ -67,7 +68,7 @@ zimbra_notifier_options.init = function(background) {
     else {
         this.showContent(0, 0);
     }
-    
+
     // Register
     this._zimbra_notifier_SuperController.addCallBackRefresh(this);
 
@@ -78,6 +79,49 @@ zimbra_notifier_options.init = function(background) {
         zimbra_notifier_options.showContent(contentID, 200);
     });
 
+    var updateSoundFileButton = function(type, value) {
+        $('#zimbra_mail_notifier-' + type + 'NotificationFile').hide();
+        if(value === 5) {
+            $('#zimbra_mail_notifier-' + type + 'NotificationFile').show();
+        }
+    }
+    // manage email sound notification
+    $('#zimbra_mail_notifier-optionMailSoundSelected').on('change', function(evt) {
+        var value = parseInt($(evt.target).val());
+        updateSoundFileButton('email', value);
+    });
+    $('#zimbra_mail_notifier-emailNotificationFile').on('change', function(evt) {
+        zimbra_notifier_options._zimbra_notifier_Util.loadFile(evt.target.files[0], function(base64file) {
+            zimbra_notifier_options._zimbra_notifier_Prefs.updatePref(zimbra_notifier_options._zimbra_notifier_Prefs.PREF.EMAIL_SOUND_FILE, base64file)
+        }, window.alert);
+    });
+    $('#zimbra_mail_notifier-emailNotificationTestPlay').on('click', function() {
+        var selected = zimbra_notifier_options._zimbra_notifier_Prefs.getEmailSoundSelected();
+        var customSound = zimbra_notifier_options._zimbra_notifier_Prefs.getEmailSoundCustom();
+        var volumeSound = zimbra_notifier_options._zimbra_notifier_Prefs.getEmailSoundVolume();
+        zimbra_notifier_options._zimbra_notifier_Util.playSound(selected, customSound, volumeSound);
+    });
+    updateSoundFileButton('email', zimbra_notifier_options._zimbra_notifier_Prefs.getEmailSoundSelected());
+
+    // manage calendar sound notification
+    $('#zimbra_mail_notifier-optionCalendarSoundSelected').on('change', function(evt) {
+        var value = parseInt($(evt.target).val());
+        updateSoundFileButton('calendar', value);
+    });
+    $('#zimbra_mail_notifier-calendarNotificationFile').on('change', function(evt) {
+        zimbra_notifier_options._zimbra_notifier_Util.loadFile(evt.target.files[0], function(base64file) {
+            zimbra_notifier_options._zimbra_notifier_Prefs.updatePref(zimbra_notifier_options._zimbra_notifier_Prefs.PREF.CALENDAR_SOUND_FILE, base64file)
+        }, window.alert);
+    });
+    $('#zimbra_mail_notifier-calendarNotificationTestPlay').on('click', function() {
+        var selected = zimbra_notifier_options._zimbra_notifier_Prefs.getCalendarSoundSelected();
+        var customSound = zimbra_notifier_options._zimbra_notifier_Prefs.getCalendarSoundCustom();
+        var volumeSound = zimbra_notifier_options._zimbra_notifier_Prefs.getCalendarSoundVolume();
+        zimbra_notifier_options._zimbra_notifier_Util.playSound(selected, customSound, volumeSound);
+    });
+    updateSoundFileButton('calendar', zimbra_notifier_options._zimbra_notifier_Prefs.getCalendarSoundSelected());
+
+
     $('#zimbra_mail_notifier-addNewIdentifier').on('click', function() {
         zimbra_notifier_options._zimbra_notifier_SuperController.addNewIdentifier();
     });
@@ -87,7 +131,7 @@ zimbra_notifier_options.init = function(background) {
 
 /**
  * display account of the controller
- * 
+ *
  * @private
  * @this {Option}
  * @param {zimbra_notifier_Controller} controller
@@ -128,7 +172,7 @@ zimbra_notifier_options.displayIdentifier = function(controller) {
 
 /**
  * Call when the window is closed
- * 
+ *
  * @public
  * @this {Option}
  */
@@ -149,7 +193,7 @@ zimbra_notifier_options.release = function() {
 
 /**
  * show selected content
- * 
+ *
  * @public
  * @this {Options}
  * @param {Number} content Id
@@ -176,7 +220,7 @@ zimbra_notifier_options.showContent = function(contentId, animationTime) {
 
 /**
  * Refresh.
- * 
+ *
  * @public
  * @this {Option}
  * @param {Event} the refresh event
@@ -246,7 +290,7 @@ zimbra_notifier_options.refresh = function(event, forced) {
                             zimbra_notifier_options._zimbra_notifier_Prefs.updatePref($(this).attr("pref"), $(this).val());
                             // refresh screen
                             zimbra_notifier_options.refresh();
-                        }); 
+                        });
                     }
                     else {
                         $(this).on('change', function() {
@@ -257,7 +301,7 @@ zimbra_notifier_options.refresh = function(event, forced) {
                             }
                         });
                     }
-                    
+
                 }
             }
         });
@@ -307,7 +351,7 @@ zimbra_notifier_options.refresh = function(event, forced) {
 
 /**
  * Called when the authentication changed
- * 
+ *
  * @private
  * @this {Option}
  * @param {zimbra_notifier_Controller} controller
@@ -340,7 +384,7 @@ zimbra_notifier_options.authTypeChanged = function(controller) {
 
 /**
  * start connection.
- * 
+ *
  * @private
  * @this {Option}
  * @param {zimbra_notifier_Controller} controller

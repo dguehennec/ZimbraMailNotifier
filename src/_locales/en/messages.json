@@ -16,6 +16,14 @@
         "message": "no",
         "description": ""
     },
+    "custom": {
+        "message": "Personalized",
+        "description": ""
+    },
+    "pixels": {
+        "message": "pixels",
+        "description": ""
+    },
     "seconds": {
         "message": "seconds",
         "description": ""
@@ -95,6 +103,10 @@
         "message": "Web Site :",
         "description": ""
     },
+    "about_donate": {
+        "message": "Donation",
+        "descripton": ""
+    },
     "about_createdby_label": {
         "message": "By David GUEHENNEC and Benjamin ROBIN",
         "description": ""
@@ -132,6 +144,18 @@
         "message": "Auto connection on the web interface",
         "description": ""
     },
+    "option_common_popup_caption": {
+        "message": "Toolbar",
+        "description": ""
+    },
+    "option_common_popupColor": {
+        "message": "Panel color",
+        "description": ""
+    },
+    "option_common_popupWidth": {
+        "message": "Panel width",
+        "description": ""
+    },
     "option_common_mail_notification_caption": {
         "message": "Notification unread mail",
         "description": ""
@@ -142,6 +166,14 @@
     },
     "option_common_mail_soundNotification": {
         "message": "Sound notification",
+        "description": ""
+    },
+    "option_common_mail_soundNotificationSelected": {
+        "message": "Sound",
+        "description": ""
+    },
+    "option_common_mail_notify_volume_caption": {
+        "message": "Volume",
         "description": ""
     },
     "option_common_mail_notify_duration_caption": {
@@ -198,6 +230,14 @@
     },
     "option_calendar_soundNotification": {
         "message": "Sound notification",
+        "description": ""
+    },
+    "option_calendar_soundNotificationSelected": {
+        "message": "Sound",
+        "description": ""
+    },
+    "option_calendar_notify_volume_caption": {
+        "message": "Volume",
         "description": ""
     },
     "option_calendar_repeat": {
@@ -493,6 +533,15 @@
     },
     "unit_bytes_TB": {
         "message": "TB",
+        "description": ""
+    },
+
+    "file_sound_error_size": {
+        "message": "This file is not supported. Max size is 300 Ko, current: ",
+        "description": ""
+    },
+    "file_sound_error_type": {
+        "message": "This file is not supported. Need audio mime-type, current mime-type: ",
         "description": ""
     }
 }

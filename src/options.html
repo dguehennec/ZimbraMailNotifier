@@ -15,7 +15,8 @@
 	<body class="option">
 		<div class="header">
 			<h1 class="title" style="text-shadow:1px 1px 4px #222"><img src="skin/images/zimbra_mail_notifier.png" height=48 alt="Icon" /><span msg="extName"></span></h1>
-		</div>
+            <a class="donate" href="https://www.paypal.me/DavidGUEHENNEC/5" msg="about_donate"></a>
+        </div>
 
 		<div class="content">
 			<ul class="menu">
@@ -24,7 +25,7 @@
 				<li><a contentID="2" href="#"><img src="skin/images/prefs/calendar.png" height="22" alt="Icon" /><span msg="option_calendar_label"></span></a></li>
 				<li><a contentID="3" href="#"><img src="skin/images/prefs/task.png" height="22" alt="Icon" /><span msg="option_task_label"></span></a></li>
 				<li><a contentID="4" href="#"><img src="skin/images/prefs/auth.png" height="22" alt="Icon" /><span msg="option_identifiant_label"></span></a></li>
-			</ul>	       
+			</ul>
 			<div class="tabContentWrapper">
 				<div id="content_0" class="tabContent hide">
 					<fieldset class="options">
@@ -37,6 +38,21 @@
 							<div>
 								<input type="checkbox" id="zimbra_mail_notifier-optionBrowserSetCookies" pref="browserSetCookies" />
 								<label for="zimbra_mail_notifier-optionBrowserSetCookies" msg="option_common_browserSetCookies"></label>
+							</div>
+						</div>
+					</fieldset>
+                    <fieldset class="options">
+						<legend><label class="section" msg="option_common_popup_caption"></label></legend>
+						<div class="subOptions">
+                            <div>
+                                <label msg="option_common_popupColor" msgTemplate="%MSG% : "></label>
+								<input id="zimbra_mail_notifier-optionPopupColor" type="color" pref="popupColor"/>
+								<label msg="color"></label>
+							</div>
+							<div>
+                                <label msg="option_common_popupWidth" msgTemplate="%MSG% : "></label>
+								<input id="zimbra_mail_notifier-optionPopupWidth" type="number" min="200" max="600" step="10" maxlength="3" pref="popupWidth"/>
+								<label msg="pixels"></label>
 							</div>
 						</div>
 					</fieldset>
@@ -65,13 +81,30 @@
 								<label for="zimbra_mail_notifier-optionMailNotification" msg="option_common_mail_systemNotification"></label>
 							</div>
 							<div>
+								<label msg="option_common_mail_notify_duration_caption" msgTemplate="%MSG% : "></label>
+								<input id="zimbra_mail_notifier-optionMailNotificationDuration" type="number" min="2" max="999" step="4" maxlength="3" pref="emailNotificationDuration"/>
+								<label msg="seconds"></label>
+							</div>
+							<div>
 								<input type="checkbox" id="zimbra_mail_notifier-optionMailSound" pref="soundEnabled" />
 								<label for="zimbra_mail_notifier-optionMailSound" msg="option_common_mail_soundNotification"></label>
 							</div>
 							<div>
-								<label msg="option_common_mail_notify_duration_caption" msgTemplate="%MSG% : "></label>
-								<input id="zimbra_mail_notifier-optionMailNotificationDuration" type="number" min="2" max="999" step="4" maxlength="3" pref="emailNotificationDuration"/>
-								<label msg="seconds"></label>
+								<label msg="option_common_mail_soundNotificationSelected" msgTemplate="%MSG% : "></label>
+								<select id="zimbra_mail_notifier-optionMailSoundSelected" pref="emailSoundSelected">
+									<option value="1">Ding</option>
+									<option value="2">Ping</option>
+									<option value="3">Heal</option>
+									<option value="4">Drain</option>
+									<option value="5" msg="custom">Custom</option>
+								</select>
+								<input type="file" id="zimbra_mail_notifier-emailNotificationFile">
+							</div>
+							<div id="zimbra_mail_notifier-emailNotificationSound">
+								<label msg="option_common_mail_notify_volume_caption" msgTemplate="%MSG% : "></label>
+								<input id="zimbra_mail_notifier-optionMailNotificationVolume" type="number" min="0" max="100" step="1" maxlength="3" pref="emailSoundVolume"/>
+								<label>%</label>
+								<input type="button" class="play-button" id="zimbra_mail_notifier-emailNotificationTestPlay" value="&#9658;">
 							</div>
 						</div>
 					</fieldset>
@@ -105,10 +138,6 @@
 								<label for="zimbra_mail_notifier-optionCalendarSystemNotification" msg="option_calendar_systemNotification"></label>
 							</div>
 							<div>
-								<input type="checkbox" id="zimbra_mail_notifier-optionCalendarSoundNotification" pref="calendarSoundEnabled" />
-								<label for="zimbra_mail_notifier-optionCalendarSoundNotification" msg="option_calendar_soundNotification"></label>
-							</div>
-							<div>
 								<label msg="option_task_view_reminder" msgTemplate="%MSG% : "></label>
 								<select id="zimbra_mail_notifier-optionCalendarReminderTimeConf" pref="calendarReminderTimeConf">
 								   <option value="-1" msg="option_task_view_confZimbra"></option>
@@ -129,6 +158,27 @@
 								   <option value="3">3</option>
 								   <option value="5">5</option>
 							   </select>
+							</div>
+							<div>
+								<input type="checkbox" id="zimbra_mail_notifier-optionCalendarSound" pref="calendarSoundEnabled" />
+								<label for="zimbra_mail_notifier-optionCalendarSound" msg="option_calendar_soundNotification"></label>
+							</div>
+							<div>
+								<label msg="option_calendar_soundNotificationSelected" msgTemplate="%MSG% : "></label>
+								<select id="zimbra_mail_notifier-optionCalendarSoundSelected" pref="calendarSoundSelected">
+									<option value="1">Ding</option>
+									<option value="2">Ping</option>
+									<option value="3">Heal</option>
+									<option value="4">Drain</option>
+									<option value="5" msg="custom">Custom</option>
+								</select>
+								<input type="file" id="zimbra_mail_notifier-calendarNotificationFile">
+							</div>
+							<div id="zimbra_mail_notifier-calendarNotificationSound">
+								<label msg="option_calendar_notify_volume_caption" msgTemplate="%MSG% : "></label>
+								<input id="zimbra_mail_notifier-optionCalendarNotificationVolume" type="number" min="0" max="100" step="1" maxlength="3" pref="calendarSoundVolume"/>
+								<label>%</label>
+								<input type="button" class="play-button" id="zimbra_mail_notifier-calendarNotificationTestPlay" value="&#9658;">
 							</div>
 						</div>
 					</fieldset>

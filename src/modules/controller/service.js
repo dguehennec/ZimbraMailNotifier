@@ -1126,7 +1126,10 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOf
 
         // Play a sound if there is new unread email
         if (notify && nbNewMsg > 0 && zimbra_notifier_Prefs.isEmailSoundEnabled()) {
-            zimbra_notifier_Util.playSound();
+            var selected = zimbra_notifier_Prefs.getEmailSoundSelected();
+            var customSound = zimbra_notifier_Prefs.getEmailSoundCustom();
+            var volumeSound = zimbra_notifier_Prefs.getEmailSoundVolume();
+            zimbra_notifier_Util.playSound(selected, customSound, volumeSound);
         }
         // Display a notification with the new unread email
         if (notify && nbNewMsg > 0 && zimbra_notifier_Prefs.isEmailNotificationEnabled()) {
