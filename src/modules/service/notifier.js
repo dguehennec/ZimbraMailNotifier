@@ -125,7 +125,7 @@ zimbra_notifier_Notifier.prototype._notify = function() {
     if (this._withSystemNotification) {
         zimbra_notifier_Util.showNotification(this._event.startDate.toLocaleString(),
                         zimbra_notifier_Util.getBundleString("connector.notification.event").replace("%ACCOUNT%", alias) +
-                        this._event.name, 0, null, null);
+                        this._event.name, 8000, null, null);
     }
     if (this._nbRepeat > 0) {
         this._nbRepeat--;
