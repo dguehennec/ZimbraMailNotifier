@@ -36,13 +36,13 @@
  * ***** END LICENSE BLOCK ***** */
 
  "use strict";
- 
+
 /**
  * Creates a global instance of zimbra_notifier_UiUtil
- * 
+ *
  * @constructor
  * @this {UiUtil}
- * 
+ *
  */
 var zimbra_notifier_UiUtil = {};
 
@@ -56,26 +56,26 @@ zimbra_notifier_UiUtil.initLocale = function() {
     $("*").each(function() {
         var attr = $(this).attr("msg");
         if (attr) {
-            var attrTemplate = $(this).attr("msgTemplate");
+            var attrTemplate = $(this).attr("msgtemplate");
             if (attrTemplate) {
                 $(this).text(attrTemplate.replace("%MSG%", chrome.i18n.getMessage(attr)));
             } else {
                 $(this).text(chrome.i18n.getMessage(attr));
             }
         }
-        attr = $(this).attr("msgTitle");
+        attr = $(this).attr("msgtitle");
         if (attr) {
             $(this).attr("title", chrome.i18n.getMessage(attr));
         }
-        attr = $(this).attr("msgSrc");
+        attr = $(this).attr("msgsrc");
         if (attr) {
             $(this).attr("src", chrome.i18n.getMessage(attr));
         }
-        attr = $(this).attr("msgValue");
+        attr = $(this).attr("msgvalue");
         if (attr) {
             $(this).attr("value", chrome.i18n.getMessage(attr));
         }
-        attr = $(this).attr("msgPlaceholder");
+        attr = $(this).attr("msgplaceholder");
         if (attr) {
             $(this).attr("placeholder", chrome.i18n.getMessage(attr));
         }

@@ -503,7 +503,7 @@
     },
 
     "connector_notification_NewMessage": {
-        "message": "%ACCOUNT% Message of %EMAIL%",
+        "message": "%ACCOUNT% Message from %EMAIL%",
         "description": ""
     },
     "connector_notification_nbUnreadMessages": {
