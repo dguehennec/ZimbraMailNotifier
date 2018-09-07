@@ -280,7 +280,7 @@ zimbra_notifier_popup.initializeTooltipMessage = function() {
     });
     // sort unread messages
     unreadMessages.sort(function(a, b) {
-        return a.date < b.date
+        return b.date - a.date
     });
     // display messages
     if (unreadMessages.length === 0) {
