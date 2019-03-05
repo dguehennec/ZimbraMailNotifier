@@ -248,7 +248,14 @@ zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, l
 
 
                 // add listener to be notify before redirect of request
-                chrome.webRequest.onBeforeRedirect.addListener( this._callbackBeforeRedirect, { urls : [ urlWebService + "/*" ], types : [ "xmlhttprequest" ]}, [ "responseHeaders" ]);
+                var options = chrome.webRequest.OnBeforeRedirectOptions || {};
+                var beforeRedirectOptions = [ "responseHeaders" ];
+                Object.keys(options).forEach(function(key) {
+                    if (options[key] === "extraHeaders") {
+                        beforeRedirectOptions.push("extraHeaders");
+                    }
+                })
+                chrome.webRequest.onBeforeRedirect.addListener( this._callbackBeforeRedirect, { urls : [ urlWebService + "/*" ], types : [ "xmlhttprequest" ]}, beforeRedirectOptions);
                 this._runningReq.setDataRequest(dataReq);
 
                 return true;
