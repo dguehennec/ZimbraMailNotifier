@@ -234,7 +234,7 @@ zimbra_notifier_WebserviceFree.prototype.authRequest = function(urlWebService, l
             that._launchQuery(typeReq, false, false, function() {
 
                 this.infoAuthUpdated(urlWebService, login);
-                this._runningReq = this._buildQueryReq(typeReq, "/zimbra.pl", this._callbackAuthRequest);
+                this._runningReq = this._buildQueryReq(typeReq, "/index.pl", this._callbackAuthRequest);
 
                 this._runningReq._expectedStatus = [0, 200];
                 this._runningReq._setInfoRequest = function() {
