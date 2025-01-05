@@ -324,6 +324,14 @@
         "message": "Sauvegarde du mot de passe",
         "description": ""
     },
+    "option_identifiant_2fatoken_label": {
+        "message": "Token d'authentification à deux facteurs",
+        "description": ""
+    },
+    "option_identifiant_2fatoken_button": {
+        "message": "Envoyer",
+        "description": ""
+    },
     "option_identifiant_server_caption": {
         "message": "Serveur",
         "description": ""
@@ -390,7 +398,11 @@
         "description": ""
     },
     "tooltip_disconnected_descriptionStatus": {
-        "message": "Status: Déconnecté",
+        "message": "Etat: Déconnecté",
+        "description": ""
+    },
+    "tooltip_connecting_descriptionStatus": {
+        "message": "Etat: Connexion en cours...",
         "description": ""
     },
     "tooltip_errorInitPage_title": {

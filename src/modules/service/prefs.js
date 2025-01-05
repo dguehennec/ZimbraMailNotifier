@@ -100,6 +100,7 @@ zimbra_notifier_Prefs.PREF = {
     USER_URL_WEB_SERVICE            : "userServer",
     USER_URL_WEB_INTERFACE          : "userUrlWebInteface",
     USER_SAVEPASSWORD               : "userSavePassword",
+    DEVICE_TRUSTED_INFOS            : "deviceTrustedInfos",
     // About Wait set
     WAITSET_INFO                    : "waitSetInfo",
     REQUEST_QUERY_TIMEOUT           : "requestQueryTimeout",
@@ -249,6 +250,7 @@ zimbra_notifier_Prefs.removeAccount = function(accountId) {
     this._removePref(this.PREF.USER_URL_WEB_SERVICE + accountId);
     this._removePref(this.PREF.USER_URL_WEB_INTERFACE + accountId);
     this._removePref(this.PREF.USER_SAVEPASSWORD + accountId);
+    this._removePref(this.PREF.DEVICE_TRUSTED_INFOS + accountId);
     // remove wait set pref of accountId
     this._removePref(this.PREF.WAITSET_INFO + accountId);
     this._removePref(this.PREF.REQUEST_QUERY_TIMEOUT + accountId);
@@ -431,6 +433,10 @@ zimbra_notifier_Prefs.getPref = function(key) {
             if (value === null) {
                 value = true;
             }
+            break;
+
+        case this.PREF.DEVICE_TRUSTED_INFOS:
+            value = this._getPref(this.PREF.DEVICE_TRUSTED_INFOS + accountId);
             break;
 
         // About Wait set
@@ -1020,6 +1026,44 @@ zimbra_notifier_Prefs.isSavePasswordEnabled = function(accountId) {
  */
 zimbra_notifier_Prefs.getUserPassword = function(accountId) {
     return this.getPref(this.PREF.USER_PASSWORD + accountId);
+};
+
+/**
+ * Get the information about the previous device trusted infos
+ *
+ * @this {Prefs}
+ * @param {String} accountId of the account preference
+ * @return {Object} The device trusted information
+ */
+zimbra_notifier_Prefs.getPreviousDeviceTrustedInfos = function (accountId) {
+    try {
+        var pref_deviceTrusted_info = this.getPref(this.PREF.DEVICE_TRUSTED_INFOS + accountId);
+        return {
+            deviceId: pref_deviceTrusted_info.deviceId,
+            trustedToken: pref_deviceTrusted_info.trustedToken,
+            trustedTokenExpirationTime: pref_deviceTrusted_info.trustedTokenExpirationTime
+        };
+    }
+    catch (e) {
+    }
+    return null;
+};
+
+
+/**
+ * Save the currently used trusted informations
+ *
+ * @this {Prefs}
+ * @param {String} accountId of the account preference
+ * @param {String}
+ *           deviceId The device id trusted
+ * @param {String}
+ *            trustedToken The trusted Token
+ * @param {Date}
+ *            trustedTokenExpirationTime The trusted Token Expiration Time
+ */
+zimbra_notifier_Prefs.saveDeviceTrustedInfos = function (accountId, deviceId = '', trustedToken = '', trustedTokenExpirationTime = new Date(0)) {
+    this._prefs.setPref(this.PREF.DEVICE_TRUSTED_INFOS + accountId, { deviceId, trustedToken, trustedTokenExpirationTime });
 };
 
 /* *************************** About Wait set *************************** */

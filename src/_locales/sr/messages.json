@@ -322,6 +322,14 @@
         "message": "Запамти лозинку",
         "description": ""
     },
+    "option_identifiant_2fatoken_label": {
+        "message": "Двухфакторный токен аутентификации",
+        "description": ""
+    },
+    "option_identifiant_2fatoken_button": {
+        "message": "Отправить",
+        "description": ""
+    },
     "option_identifiant_server_caption": {
         "message": "Сервер",
         "description": ""
@@ -389,6 +397,10 @@
     },
     "tooltip_disconnected_descriptionStatus": {
         "message": "Статус: Није повезано",
+        "description": ""
+    },
+    "tooltip_connecting_descriptionStatus": {
+        "message": "Состояние: соединение выполняется...",
         "description": ""
     },
     "tooltip_errorInitPage_title": {

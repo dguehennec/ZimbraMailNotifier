@@ -56,18 +56,19 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Notifier"];
  *            withSoundNotification indicate if sound is enable
  * @param {Boolean}
  *            withSystemNotification indicate if system notification is enable
-* @param {String}
- *            accountId indicate the account id
+* @param {Object}
+ *            parent
  */
 var zimbra_notifier_Notifier = function(event, timeConf, nbRepeat,
-                                          withSoundNotification, withSystemNotification, accountId) {
+                                          withSoundNotification, withSystemNotification, parent) {
     this._event = event;
     this._timeConf = timeConf;
     this._nbRepeat = nbRepeat;
     this._currentTimer = null;
     this._withSoundNotification = withSoundNotification;
     this._withSystemNotification = withSystemNotification;
-    this._accountId = accountId
+    this._accountId = parent._accountId
+    this._parent = parent
     this.start();
 };
 
@@ -120,7 +121,7 @@ zimbra_notifier_Notifier.prototype._notify = function() {
         var selected = zimbra_notifier_Prefs.getCalendarSoundSelected();
         var customSound = zimbra_notifier_Prefs.getCalendarSoundCustom();
         var volumeSound = zimbra_notifier_Prefs.getCalendarSoundVolume();
-        zimbra_notifier_Util.playSound(selected, customSound, volumeSound);
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.NEED_PLAY_SOUND, { selected, customSound, volumeSound });
     }
     if (this._withSystemNotification) {
         zimbra_notifier_Util.showNotification(this._event.startDate.toLocaleString(),

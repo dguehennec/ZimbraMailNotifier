@@ -82,6 +82,40 @@ zimbra_notifier_UiUtil.initLocale = function() {
     });
 }
 
+
+/**
+ * play sound
+ *
+ * @return {Boolean} true if success
+ */
+zimbra_notifier_UiUtil.playSound = function (selected, customSound, volume) {
+    var sound = './skin/ding.ogg';
+    switch (selected) {
+        case 1:
+            break;
+        case 2:
+            sound = './skin/ping.ogg';
+            break;
+        case 3:
+            sound = './skin/heal.ogg';
+            break;
+        case 4:
+            sound = './skin/drain.ogg';
+            break;
+        case 5:
+            if (customSound) {
+                sound = customSound;
+            }
+            break;
+        default:
+            return false;
+    }
+    var audio = new Audio(sound);
+    audio.volume = parseInt(volume) / 100;
+    audio.play();
+    return true;
+}
+
 /**
  * Option select tab
  *

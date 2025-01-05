@@ -44,9 +44,24 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Session"];
  *
  * @constructor
  * @this {Session}
+ * 
+ * @param {Object}
+ *            device trusted informations
  */
-var zimbra_notifier_Session = function() {
+var zimbra_notifier_Session = function (deviceTrustedInfos) {
     this.clear();
+    this._deviceId = '';
+    if (deviceTrustedInfos?.deviceId) {
+        this._deviceId = deviceTrustedInfos.deviceId;
+    }
+    this._trustedToken = '';
+    if (deviceTrustedInfos?.trustedToken) {
+        this._trustedToken = deviceTrustedInfos.trustedToken;
+    }
+    this._trustedTokenExpirationTime = new Date(0);
+    if (deviceTrustedInfos?.trustedTokenExpirationTime instanceof Date) {
+        this._trustedTokenExpirationTime = deviceTrustedInfos.trustedTokenExpirationTime;
+    }
 };
 
 /**
@@ -60,6 +75,7 @@ zimbra_notifier_Session.prototype.clear = function() {
 
     this._token = '';
     this._tokenExpirationTime = new Date();
+    this._twoFactorAuthentication  = false;
 
     this._waitId = '';
     this._waitSeq = '';
@@ -178,6 +194,50 @@ zimbra_notifier_Session.prototype.isTokenValid = function() {
 };
 
 /**
+ * Check if the Session need two factor authentication
+ *
+ * @this {Session}
+ * @return {Boolean} true if session need two factor authentication process
+ */
+zimbra_notifier_Session.prototype.isTwoFactorAuthRequired = function () {
+    return this.isTokenValid() && this._twoFactorAuthentication
+};
+
+/**
+ * get the device Id
+ *
+ * @this {Session}
+ * @return {String} the device id
+ */
+zimbra_notifier_Session.prototype.deviceId = function() {
+    return this._deviceId;
+}
+
+
+/**
+ * get the trusted Token for this device id
+ *
+ * @this {Session}
+ * @return {String} the trusted Token
+ */
+zimbra_notifier_Session.prototype.trustedToken = function () {
+    if (new Date() < this._trustedTokenExpirationTime) {
+        return this._trustedToken;
+    }
+    return '';
+}
+
+/**
+ * get the trusted token expiration time for this device id
+ *
+ * @this {Session}
+ * @return {Date} the trusted Expiration time
+ */
+zimbra_notifier_Session.prototype.trustedTokenExpirationTime = function () {
+   return this._trustedTokenExpirationTime;
+}
+
+/**
  * Update the authentication token
  *
  * @this {Session}
@@ -185,21 +245,34 @@ zimbra_notifier_Session.prototype.isTokenValid = function() {
  *            token  The new authentication token
  * @param {Number}
  *            lifetime The expiration time in ms
+ * @param {Boolean}
+ *            twoFactorAuthentication The two factor authentication is enable or not
+ * @param {String}
+ *            deviceId The device trusted id 
+ * @param {String}
+ *            trustedToken The trusted token
+ * @param {Integer}
+ *            trustedlifetime The trusted lifetime
  */
-zimbra_notifier_Session.prototype.updateToken = function(token, lifetime) {
+zimbra_notifier_Session.prototype.updateToken = function (token, lifetime, twoFactorAuthentication, deviceId, trustedToken, trustedlifetime) {
 
     token = this._valToStr(token);
 
     if (token.length > 0 && lifetime) {
-        var expDate = new Date();
-        expDate.setTime(expDate.getTime() + lifetime - 1000);
-
-        this._tokenExpirationTime = expDate;
+        this._tokenExpirationTime = new Date(new Date().getTime() + lifetime - 1000);
         this._token = token;
+        this._twoFactorAuthentication = !!twoFactorAuthentication
+        this._deviceId = deviceId || this._deviceId
+        this._trustedToken = trustedToken || this._trustedToken
+        this._trustedTokenExpirationTime = trustedlifetime ? new Date(new Date().getTime() + parseInt(trustedlifetime, 10) - 1000) : this._trustedTokenExpirationTime;
     }
     else {
         this._tokenExpirationTime = new Date(0);
         this._token = '';
+        this._twoFactorAuthentication = false
+        this._deviceId = '';
+        this._trustedToken = '';
+        this._trustedTokenExpirationTime = new Date(0);
     }
 };
 

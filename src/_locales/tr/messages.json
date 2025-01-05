@@ -323,6 +323,14 @@
         "message": "Şifreyi hatırla",
         "description": ""
     },
+    "option_identifiant_2fatoken_label": {
+        "message": "İki faktörlü kimlik doğrulama belirteci",
+        "description": ""
+    },
+    "option_identifiant_2fatoken_button": {
+        "message": "Gönder",
+        "description": ""
+    },
     "option_identifiant_server_caption": {
         "message": "Sunucu",
         "description": ""
@@ -390,6 +398,10 @@
     },
     "tooltip_disconnected_descriptionStatus": {
         "message": "Durum: kesildi",
+        "description": ""
+    },
+    "tooltip_connecting_descriptionStatus": {
+        "message": "Durum: Bağlantı devam ediyor...",
         "description": ""
     },
     "tooltip_errorInitPage_title": {

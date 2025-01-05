@@ -73,6 +73,7 @@ zimbra_notifier_MailBoxInfo.prototype.setQuotaUsed = function(used) {
     else {
         this.quotaUsedString = null;
     }
+    this.setPercentageQuotaUsed()
 };
 
 /**
@@ -90,6 +91,7 @@ zimbra_notifier_MailBoxInfo.prototype.setQuotaSize = function(maxSize) {
     else {
         this.quotaSizeString = null;
     }
+    this.setPercentageQuotaUsed()
 };
 
 /**
@@ -98,12 +100,13 @@ zimbra_notifier_MailBoxInfo.prototype.setQuotaSize = function(maxSize) {
  * @this {MailBoxInfo}
  * @return {String} percentage quota
  */
-zimbra_notifier_MailBoxInfo.prototype.getPercentageQuotaUsed = function() {
+zimbra_notifier_MailBoxInfo.prototype.setPercentageQuotaUsed = function() {
     if (this.quotaSize > 0) {
-        var perc = (this.quotaUsed * 100) / this.quotaSize;
-        return perc.toFixed(1);
+        var perc = ((this.quotaUsed ?? 0) * 100) / this.quotaSize;
+        this.percentageQuotaUsedString = perc.toFixed(1);
+    } else {
+        this.percentageQuotaUsedString = null;
     }
-    return null;
 };
 
 /**

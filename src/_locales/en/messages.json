@@ -322,6 +322,14 @@
         "message": "Remember password",
         "description": ""
     },
+    "option_identifiant_2fatoken_label": {
+        "message": "Two-factor authentication token",
+        "description": ""
+    },
+    "option_identifiant_2fatoken_button": {
+        "message": "Send",
+        "description": ""
+    },
     "option_identifiant_server_caption": {
         "message": "Server",
         "description": ""
@@ -388,7 +396,11 @@
         "description": ""
     },
     "tooltip_disconnected_descriptionStatus": {
-        "message": "Status: Disconnected",
+        "message": "State: Disconnected",
+        "description": ""
+    },
+    "tooltip_connecting_descriptionStatus": {
+        "message": "State: Connection in progress...",
         "description": ""
     },
     "tooltip_errorInitPage_title": {
@@ -400,7 +412,7 @@
         "description": ""
     },
     "tooltip_connected_descriptionStatus": {
-        "message": "Status: Connected",
+        "message": "State: Connected",
         "description": ""
     },
     "tooltip_connected_descriptionAccount": {
