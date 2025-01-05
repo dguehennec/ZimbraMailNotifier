@@ -323,6 +323,14 @@
         "message": "Passwort merken",
         "description": ""
     },
+    "option_identifiant_2fatoken_label": {
+        "message": "Zwei-Faktor-Authentifizierungstoken",
+        "description": ""
+    },
+    "option_identifiant_2fatoken_button": {
+        "message": "Senden",
+        "description": ""
+    },
     "option_identifiant_server_caption": {
         "message": "Server",
         "description": ""
@@ -390,6 +398,10 @@
     },
     "tooltip_disconnected_descriptionStatus": {
         "message": "Status: Getrennt",
+        "description": ""
+    },
+    "tooltip_connecting_descriptionStatus": {
+        "message": "Status: Verbindung läuft...",
         "description": ""
     },
     "tooltip_errorInitPage_title": {

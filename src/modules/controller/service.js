@@ -106,7 +106,9 @@ var zimbra_notifier_SERVICE_EVENT = {
     CHECKING_MAILBOX_INFO  : { startingReq: true,  n: 'CHECKING_MAILBOX_INFO'},
     MAILBOX_INFO_UPDATED   : { startingReq: false, n: 'MAILBOX_INFO_UPDATED'},
     REQUEST_FAILED         : { startingReq: false, n: 'REQUEST_FAILED'},
-    PREF_UPDATED           : { startingReq: false, n: 'PREF_UPDATED'}
+    PREF_UPDATED           : { startingReq: false, n: 'PREF_UPDATED'},
+    TWOFA_AUTHENTICATION_REQUIRED: { startingReq: true, n: 'TWOFA_AUTHENTICATION_REQUIRED'},
+    NEED_PLAY_SOUND        : { startingReq: false, n: 'NEED_PLAY_SOUND' }
 };
 zimbra_notifier_Util.deepFreeze(zimbra_notifier_SERVICE_EVENT);
 
@@ -209,16 +211,12 @@ zimbra_notifier_Service.prototype.shutdown = function() {
  */
 zimbra_notifier_Service.prototype._getWebService = function() {
     if (!this._webservice) {
-
-        if (zimbra_notifier_Prefs.isFreeWebService(this._parent._accountId)) {
-            this._webservice = new zimbra_notifier_WebserviceFree(
-                zimbra_notifier_Prefs.getRequestQueryTimeout(this._parent._accountId), 52000, this);
-        }
-        else {
-            this._webservice = new zimbra_notifier_Webservice(
-                zimbra_notifier_Prefs.getRequestQueryTimeout(this._parent._accountId),
-                zimbra_notifier_Prefs.getRequestWaitTimeout(this._parent._accountId), this);
-        }
+        this._webservice = new zimbra_notifier_Webservice(
+            zimbra_notifier_Prefs.getPreviousDeviceTrustedInfos(this._parent._accountId),
+            zimbra_notifier_Prefs.getRequestQueryTimeout(this._parent._accountId),
+            zimbra_notifier_Prefs.getRequestWaitTimeout(this._parent._accountId),
+            this,
+        );
         // Restore previous wait set
         var wSet = zimbra_notifier_Prefs.getPreviousWaitSet(this._parent._accountId);
         if (wSet !== null) {
@@ -638,8 +636,8 @@ zimbra_notifier_Service.prototype._needRunReq = function(reqType) {
  */
 zimbra_notifier_Service.prototype._doConnect = function(password) {
 
-    var urlWebService = zimbra_notifier_Prefs.getUrlWebService(this._parent._accountId);
-    var userLogin = zimbra_notifier_Prefs.getUserLogin(this._parent._accountId);
+    const urlWebService = zimbra_notifier_Prefs.getUrlWebService(this._parent._accountId);
+    const userLogin = zimbra_notifier_Prefs.getUserLogin(this._parent._accountId);
     if (!password) {
         password = zimbra_notifier_Prefs.getUserPassword(this._parent._accountId);
     }
@@ -767,6 +765,23 @@ zimbra_notifier_Service.prototype.initializeConnection = function(password) {
     this._reqInfoErrors.clearAllErrors();
 
     return this._doConnect(password);
+};
+
+/**
+ * send two factor token
+ *
+ * @this {Service}
+ * @param {String}  token
+ * @return {Boolean} True if we did launch the two factor authentication query
+ */
+zimbra_notifier_Service.prototype.sendTwoFactorToken = function (token) {
+    if (this._currentState !== zimbra_notifier_SERVICE_STATE.CONNECT_RUN) {
+        this._logger.warning("Need connection in progress...");
+        return
+    }
+    if (this._webservice) {
+        this._webservice.createTwoFactorRequest(token);
+    }
 };
 
 /**
@@ -973,11 +988,14 @@ zimbra_notifier_Service.prototype.callbackError = function(typeReq, statusReq) {
  *
  * @this {Service}
  */
-zimbra_notifier_Service.prototype.callbackLoginSuccess = function() {
+zimbra_notifier_Service.prototype.callbackLoginSuccess = function (twoFactorAuthRequired) {
     this._delayWaitConnect = 0;
     this._reqInfoErrors.clearError(zimbra_notifier_REQUEST_TYPE.CONNECT);
-    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN)) {
+
+    if (this._checkExpectedState(zimbra_notifier_SERVICE_STATE.CONNECT_RUN) && !twoFactorAuthRequired) {
         this._changeAndRunState(zimbra_notifier_SERVICE_STATE.CONNECT_OK);
+    } else {
+        this._parent.event(zimbra_notifier_SERVICE_EVENT.TWOFA_AUTHENTICATION_REQUIRED);
     }
 };
 
@@ -997,10 +1015,12 @@ zimbra_notifier_Service.prototype.callbackDisconnect = function() {
  * @param {Session}
  *             session  The session object
  */
-zimbra_notifier_Service.prototype.callbackSessionInfoChanged = function(session) {
+zimbra_notifier_Service.prototype.callbackSessionInfoChanged = function(session, needSaveDevicetrustedInfos = false) {
     zimbra_notifier_Prefs.saveWaitSet(this._parent._accountId, session.waitId(), session.waitSeq(),
                                       session.buildUrl(''), session.user());
-
+    if (needSaveDevicetrustedInfos) {
+        zimbra_notifier_Prefs.saveDeviceTrustedInfos(this._parent._accountId, session.deviceId(), session.trustedToken(), session.trustedTokenExpirationTime());
+    }
     this._parent.getBrowser().updateCookies(session.buildUrl(''), session.getAuthCookies());
 };
 
@@ -1129,7 +1149,7 @@ zimbra_notifier_Service.prototype.callbackNewMessages = function(listMsg, currOf
             var selected = zimbra_notifier_Prefs.getEmailSoundSelected();
             var customSound = zimbra_notifier_Prefs.getEmailSoundCustom();
             var volumeSound = zimbra_notifier_Prefs.getEmailSoundVolume();
-            zimbra_notifier_Util.playSound(selected, customSound, volumeSound);
+            this._parent.event(zimbra_notifier_SERVICE_EVENT.NEED_PLAY_SOUND, {selected, customSound, volumeSound});
         }
         // Display a notification with the new unread email
         if (notify && nbNewMsg > 0 && zimbra_notifier_Prefs.isEmailNotificationEnabled()) {
@@ -1219,7 +1239,7 @@ zimbra_notifier_Service.prototype.callbackCalendar = function(events) {
                         newEvent, zimbra_notifier_Prefs.getCalendarReminderTimeConf(),
                         zimbra_notifier_Prefs.getCalendarReminderNbRepeat(),
                         zimbra_notifier_Prefs.isCalendarSoundEnabled(),
-                        zimbra_notifier_Prefs.isCalendarNotificationEnabled(), this._parent._accountId);
+                        zimbra_notifier_Prefs.isCalendarNotificationEnabled(), this._parent);
             }
             newEvents.push(newEvent);
         }
@@ -1308,6 +1328,19 @@ zimbra_notifier_Service.prototype.callbackMailBoxInfo = function(mailBoxInfo) {
 zimbra_notifier_Service.prototype.isConnected = function() {
     if (this._webservice) {
         return this._webservice.isConnected();
+    }
+    return false;
+};
+
+/**
+ * Indicate if need two factor authentication
+ *
+ * @this {Service}
+ * @return {Boolean} true if needed
+ */
+zimbra_notifier_Service.prototype.isTwoFactorAuthRequired = function () {
+    if (this._webservice) {
+        return this._webservice.isTwoFactorAuthRequired();
     }
     return false;
 };

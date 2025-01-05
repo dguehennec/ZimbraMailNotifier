@@ -65,14 +65,18 @@ zimbra_notifier_Util.deepFreeze(zimbra_notifier_REQUEST_TYPE);
  * @constructor
  * @this {Webservice}
  *
+ * @param {Object}
+ *            device trusted informations
  * @param {Number}
  *            timeout the default timeout for query
+ * @param {Number}
+ *            timeout the default timeout for wait
  * @param {Service}
  *            parent the parent object which must implement callbacks...
  */
-var zimbra_notifier_Webservice = function(timeoutQuery, timeoutWait, parent) {
+var zimbra_notifier_Webservice = function(deviceTrustedInfos, timeoutQuery, timeoutWait, parent) {
     this._logger = new zimbra_notifier_Logger("Webservice");
-    this._session = this.createSession();
+    this._session = this.createSession(deviceTrustedInfos);
     this._timeoutQuery = timeoutQuery;
     this._timeoutWait = timeoutWait;
     this._parent = parent;
@@ -95,9 +99,12 @@ zimbra_notifier_Webservice.prototype.release = function() {
  * Create a new session object
  *
  * @this {Webservice}
+ * 
+ * @param {Object}
+ *            device trusted informations
  */
-zimbra_notifier_Webservice.prototype.createSession = function() {
-    return new zimbra_notifier_Session();
+zimbra_notifier_Webservice.prototype.createSession = function (deviceTrustedInfos) {
+    return new zimbra_notifier_Session(deviceTrustedInfos);
 };
 
 /**
@@ -146,7 +153,17 @@ zimbra_notifier_Webservice.prototype.abortRunningReq = function() {
  * @return {Boolean} true if connected
  */
 zimbra_notifier_Webservice.prototype.isConnected = function() {
-    return this._session.isTokenValid();
+    return this._session.isTokenValid() && !this._session.isTwoFactorAuthRequired();
+};
+
+/**
+ * Check if we need two factor token
+ *
+ * @this {Webservice}
+ * @return {Boolean} true if connected
+ */
+zimbra_notifier_Webservice.prototype.isTwoFactorAuthRequired = function () {
+    return this._session.isTwoFactorAuthRequired();
 };
 
 /**
@@ -157,6 +174,23 @@ zimbra_notifier_Webservice.prototype.isConnected = function() {
  */
 zimbra_notifier_Webservice.prototype.needConnect = function() {
     return !this._session.isTokenValid() || this._session.isTokenGoingToExp();
+};
+
+/**
+ * Restore from previous session the used ddevice trusted infos
+ *
+ * @this {Webservice}
+ * @param {String}
+ *            id The wait set id
+ * @param {String}
+ *            seq The wait set sequence
+ * @param {String}
+ *            urlWebService the URL of the webservice
+ * @param {String}
+ *            login the user login
+ */
+zimbra_notifier_Webservice.prototype.restoreWaitSet = function (id, seq, urlWebService, login) {
+    var upWaitS = this._session.updateWaitSet(id, seq);
 };
 
 /**
@@ -218,7 +252,7 @@ zimbra_notifier_Webservice.prototype.infoAuthUpdated = function(urlWebService, l
  * @param {String}
  *            password the user password
  */
-zimbra_notifier_Webservice.prototype.authRequest = function(urlWebService, login, password) {
+zimbra_notifier_Webservice.prototype.authRequest = function (urlWebService, login, password) {
     var typeReq = zimbra_notifier_REQUEST_TYPE.CONNECT;
     this._launchQuery(typeReq, false, false, function() {
 
@@ -229,7 +263,7 @@ zimbra_notifier_Webservice.prototype.authRequest = function(urlWebService, login
 
         this._runningReq = this._buildQueryReq(typeReq, "/service/soap/AuthRequest",
                                                this._callbackAuthRequest);
-        this._runningReq.setAuthRequest(login, password);
+        this._runningReq.setAuthRequest(login, password, this._session.deviceId(), this._session.trustedToken());
         return true;
     });
 };
@@ -243,7 +277,6 @@ zimbra_notifier_Webservice.prototype.authRequest = function(urlWebService, login
  *            object request
  */
 zimbra_notifier_Webservice.prototype._callbackAuthRequest = function(request) {
-    var isOk = false;
     try {
         if (request !== this._runningReq) {
             this._logger.error("The running auth request != callback object");
@@ -254,9 +287,8 @@ zimbra_notifier_Webservice.prototype._callbackAuthRequest = function(request) {
                 jsonResponse.Body.AuthResponse) {
 
                 this._session.updateToken(jsonResponse.Body.AuthResponse.authToken[0]._content,
-                                          jsonResponse.Body.AuthResponse.lifetime);
-                this._parent.callbackSessionInfoChanged(this._session);
-                isOk = this._session.isTokenValid();
+                    jsonResponse.Body.AuthResponse.lifetime, !!jsonResponse.Body.AuthResponse.twoFactorAuthRequired, jsonResponse.Body.AuthResponse.deviceId?._content, jsonResponse.Body.AuthResponse.trustedToken?._content, jsonResponse.Body.AuthResponse.trustLifetime?._content);
+                this._parent.callbackSessionInfoChanged(this._session, true);
             }
         }
     }
@@ -265,11 +297,11 @@ zimbra_notifier_Webservice.prototype._callbackAuthRequest = function(request) {
     }
     finally {
         this._runningReq = null;
-        if (!isOk) {
+        if (!this._session.isTokenValid()) {
             this._callbackFailed(request);
         }
         else {
-            this._parent.callbackLoginSuccess();
+            this._parent.callbackLoginSuccess(this._session.isTwoFactorAuthRequired());
         }
     }
 };
@@ -292,6 +324,23 @@ zimbra_notifier_Webservice.prototype.disconnect = function() {
         this._logger.error("Disconnect failed: " + e);
     }
     return false;
+};
+
+
+/**
+ * Create the 'object' to send two factor token
+ *
+ * @this {Webservice}
+ * @param {String}  token
+ */
+zimbra_notifier_Webservice.prototype.createTwoFactorRequest = function (token) {
+    var typeReq = zimbra_notifier_REQUEST_TYPE.CONNECT;
+    this._launchQuery(typeReq, false, false, function () {
+        this._runningReq = this._buildQueryReq(typeReq, "/service/soap/AuthRequest",
+            this._callbackAuthRequest);
+        this._runningReq.setAuthRequestWithTwoFactor(this._session, token);
+        return true;
+    });
 };
 
 /**

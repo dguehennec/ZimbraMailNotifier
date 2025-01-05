@@ -216,14 +216,15 @@ zimbra_notifier_Browser.prototype.updateCookies = function(urlWebService, cookie
  */
 zimbra_notifier_Browser.prototype.openWebPage = function() {
     try {
-        if (this._urlWebPage) {
+        const urlWeb = this._urlWebPage || this._urlWebService
+        if (urlWeb) {
             var that = this;
             var openUrlFunction = function(needReload) {
-                zimbra_notifier_BrowserUtil.selectOpenedTab(that._urlWebPage, function(tab) {
+                zimbra_notifier_BrowserUtil.selectOpenedTab(urlWeb, function(tab) {
                     if (tab !== null) {
                         if (tab.url.indexOf("loginOp=") >= 0) {
                             chrome.tabs.update(tab.id, {
-                                "url" : that._urlWebPage
+                                "url": urlWeb
                             });
                         }
                         else if (needReload) {
@@ -231,7 +232,7 @@ zimbra_notifier_Browser.prototype.openWebPage = function() {
                         }
                     }
                     else {
-                        zimbra_notifier_BrowserUtil.openNewTab(that._urlWebPage);
+                        zimbra_notifier_BrowserUtil.openNewTab(urlWeb);
                     }
                 });
             };

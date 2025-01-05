@@ -40,7 +40,7 @@
         _callbacksCookie: [],
         _notifications: [],
         _callbacksNotification: [],
-        browserAction: {
+        action: {
             setIcon: function(details, callback) {
                 if (!details || !details.path) {
                     return;
@@ -165,7 +165,7 @@
                 if(obj.url.indexOf('://')<0) {
                     safari.extension.toolbarItems.forEach(function(item) {
                         if (item.identifier === 'zimbraMailNotifierTab') {
-                            var url = chrome.extension.getURL(obj.url);
+                            var url = chrome.runtime.getURL(obj.url);
                             if(item.popover) {
                                 var identifier = item.popover.identifier;
                                 item.popover.hide();
@@ -332,7 +332,7 @@
                     if(!notificationId) {
                         notificationId = (new Date).getTime();
                     }
-                    var notification = new window.Notification(options.title, {icon: chrome.extension.getURL(options.iconUrl), body: options.message, tag: notificationId});
+                    var notification = new window.Notification(options.title, { icon: chrome.runtime.getURL(options.iconUrl), body: options.message, tag: notificationId});
                     chrome._notifications[notificationId] = notification;
                     notification.onclick = function(event) {
                         event.preventDefault();

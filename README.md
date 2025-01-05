@@ -8,14 +8,10 @@ You can view your next appointments (save in your Zimbra calendar) and be notifi
 Tracking ongoing tasks is also available.
 
 ### Currently supports:
-All websites using default zimbra login interface (example : https://zimbra.sii.fr, https://zimbra.foncia.net/, https://zimbra.inria.fr/, ...)
-And specifique website : http://zimbra.free.fr
+All websites using default zimbra login interface
 
 ### Not supported yet:
-All websites using a pre-authentification interface except http://zimbra.free.fr
-
-### User with Mac OS X:
-Don't forget to install Growl (http://growl.info/) to be notify by system notification.
+All websites using a pre-authentification interface (example: http://zimbra.free.fr)
 
 ## Usage
 

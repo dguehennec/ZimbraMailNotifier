@@ -39,16 +39,6 @@
 
 var EXPORTED_SYMBOLS = ["zimbra_notifier_Message", "zimbra_notifier_MessageManager"];
 
-function sanitizedString(text) {
-    if (!text) {
-        return "";
-    }
-    var element = document.createElement('span');
-    element.innerHTML = text;
-    return element.textContent.trim();
-}
-
-
 /**
  * Creates an instance of Message.
  *
@@ -71,8 +61,8 @@ function sanitizedString(text) {
 var zimbra_notifier_Message = function(id, timestamp, subject, content, senderMail, convId) {
     this.id = id;
     this.date = timestamp ? (new Date(timestamp)) : null;
-    this.subject = sanitizedString(subject);
-    this.content = sanitizedString(content);
+    this.subject = subject;
+    this.content = content;
     this.senderEmail = senderMail;
     this.convId = convId;
 };

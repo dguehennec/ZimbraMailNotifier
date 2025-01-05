@@ -108,6 +108,10 @@ fieldset {
   display: none;
 }
 
+.option #content_1, .option #content_2, .option #content_3 {
+  padding-top: 10px;
+}
+
 .option fieldset {
   background-color: #F6F6F6;
 }

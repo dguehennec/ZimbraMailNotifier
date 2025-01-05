@@ -47,6 +47,7 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Controller"];
  * @this {Controller}
  */
 var zimbra_notifier_Controller = function(accountId) {
+    this.id = 'C' + accountId;
     this._accountId = accountId;
     this._service = null;
     this._browser = new zimbra_notifier_Browser();
@@ -171,6 +172,22 @@ zimbra_notifier_Controller.prototype.initializeConnection = function(password) {
 };
 
 /**
+ * send two factor token
+ *
+ * @this {Controller}
+ * @param {String}
+ *            token
+ *
+ * @return {Boolean} True if we did launch the two factor authentication query
+ */
+zimbra_notifier_Controller.prototype.sendTwoFactorToken = function (token) {
+    if (this.isConnecting() && this.needTwoFactorAuth()) {
+        return this.getService(true).sendTwoFactorToken(token);
+    }
+    return false;
+};
+
+/**
  * Close Connection
  *
  * @this {Controller}
@@ -200,6 +217,17 @@ zimbra_notifier_Controller.prototype.checkNow = function() {
 zimbra_notifier_Controller.prototype.isConnected = function() {
     var srv = this.getService();
     return srv ? srv.isConnected() : false;
+};
+
+/**
+ * Indicate if we need two factor token
+ *
+ * @this {Controller}
+ * @return {Boolean} true if need two factor authentication
+ */
+zimbra_notifier_Controller.prototype.needTwoFactorAuth = function () {
+    var srv = this.getService();
+    return srv ? srv.isTwoFactorAuthRequired() : false;
 };
 
 /**

@@ -53,14 +53,8 @@ var zimbra_notifier_options = {};
  * @param {background} the background extension context
  */
 zimbra_notifier_options.init = function(background) {
-    if (!background || !background['zimbra_notifier_Controller'] || !background['zimbra_notifier_Prefs']) {
-        $('.content').text(chrome.i18n.getMessage("tooltip_errorInitPage_title"));
-        return;
-    }
-    this._zimbra_notifier_SuperController = background['zimbra_notifier_SuperController'];
-    this._zimbra_notifier_Prefs = background['zimbra_notifier_Prefs'];
-    this._zimbra_notifier_Util = background['zimbra_notifier_Util'];
-
+    // Enable messaging between scripts
+    chrome.runtime.onMessage.addListener(this.onMessage);
     // select tab
     if(location.href.split("#").length>1) {
         this.showContent(location.href.split("#")[1], 0);
@@ -69,14 +63,11 @@ zimbra_notifier_options.init = function(background) {
         this.showContent(0, 0);
     }
 
-    // Register
-    this._zimbra_notifier_SuperController.addCallBackRefresh(this);
-
     // Add button event
     $(".menu a").click(function(evt) {
         evt.preventDefault();
         var contentid = $(this).attr("contentid");
-        zimbra_notifier_options.showContent(contentid, 200);
+        zimbra_notifier_options.showContent(contentid, 100);
     });
 
     var updateSoundFileButton = function(type, value) {
@@ -91,17 +82,18 @@ zimbra_notifier_options.init = function(background) {
         updateSoundFileButton('email', value);
     });
     $('#zimbra_mail_notifier-emailNotificationFile').on('change', function(evt) {
-        zimbra_notifier_options._zimbra_notifier_Util.loadFile(evt.target.files[0], function(base64file) {
-            zimbra_notifier_options._zimbra_notifier_Prefs.updatePref(zimbra_notifier_options._zimbra_notifier_Prefs.PREF.EMAIL_SOUND_FILE, base64file)
+        zimbra_notifier_Util.loadFile(evt.target.files[0], function(base64file) {
+            zimbra_notifier_options.updatePref(zimbra_notifier_Prefs.PREF.EMAIL_SOUND_FILE, base64file)
+            zimbra_notifier_options._emailSoundBase64File = base64file
         }, window.alert);
     });
     $('#zimbra_mail_notifier-emailNotificationTestPlay').on('click', function() {
-        var selected = zimbra_notifier_options._zimbra_notifier_Prefs.getEmailSoundSelected();
-        var customSound = zimbra_notifier_options._zimbra_notifier_Prefs.getEmailSoundCustom();
-        var volumeSound = zimbra_notifier_options._zimbra_notifier_Prefs.getEmailSoundVolume();
-        zimbra_notifier_options._zimbra_notifier_Util.playSound(selected, customSound, volumeSound);
+        var selected = parseInt($('#zimbra_mail_notifier-optionMailSoundSelected').val());
+        var customSound = zimbra_notifier_options._emailSoundBase64File || zimbra_notifier_Prefs.getEmailSoundCustom();
+        var volumeSound = parseInt($('#zimbra_mail_notifier-optionMailNotificationVolume').val());
+        zimbra_notifier_UiUtil.playSound(selected, customSound, volumeSound);
     });
-    updateSoundFileButton('email', zimbra_notifier_options._zimbra_notifier_Prefs.getEmailSoundSelected());
+    updateSoundFileButton('email', zimbra_notifier_Prefs.getEmailSoundSelected());
 
     // manage calendar sound notification
     $('#zimbra_mail_notifier-optionCalendarSoundSelected').on('change', function(evt) {
@@ -109,21 +101,22 @@ zimbra_notifier_options.init = function(background) {
         updateSoundFileButton('calendar', value);
     });
     $('#zimbra_mail_notifier-calendarNotificationFile').on('change', function(evt) {
-        zimbra_notifier_options._zimbra_notifier_Util.loadFile(evt.target.files[0], function(base64file) {
-            zimbra_notifier_options._zimbra_notifier_Prefs.updatePref(zimbra_notifier_options._zimbra_notifier_Prefs.PREF.CALENDAR_SOUND_FILE, base64file)
+        zimbra_notifier_Util.loadFile(evt.target.files[0], function(base64file) {
+            zimbra_notifier_options.updatePref(zimbra_notifier_Prefs.PREF.CALENDAR_SOUND_FILE, base64file)
+            zimbra_notifier_options._calendarSoundBase64File = base64file
         }, window.alert);
     });
     $('#zimbra_mail_notifier-calendarNotificationTestPlay').on('click', function() {
-        var selected = zimbra_notifier_options._zimbra_notifier_Prefs.getCalendarSoundSelected();
-        var customSound = zimbra_notifier_options._zimbra_notifier_Prefs.getCalendarSoundCustom();
-        var volumeSound = zimbra_notifier_options._zimbra_notifier_Prefs.getCalendarSoundVolume();
-        zimbra_notifier_options._zimbra_notifier_Util.playSound(selected, customSound, volumeSound);
+        var selected = parseInt($('#zimbra_mail_notifier-optionCalendarSoundSelected').val());;
+        var customSound = zimbra_notifier_options._calendarSoundBase64File || zimbra_notifier_Prefs.getCalendarSoundCustom();
+        var volumeSound = parseInt($('#zimbra_mail_notifier-optionCalendarNotificationVolume').val());
+        zimbra_notifier_UiUtil.playSound(selected, customSound, volumeSound);
     });
-    updateSoundFileButton('calendar', zimbra_notifier_options._zimbra_notifier_Prefs.getCalendarSoundSelected());
+    updateSoundFileButton('calendar', zimbra_notifier_Prefs.getCalendarSoundSelected());
 
 
     $('#zimbra_mail_notifier-addNewIdentifier').on('click', function() {
-        zimbra_notifier_options._zimbra_notifier_SuperController.addNewIdentifier();
+        zimbra_notifier_options.driver('addNewIdentifier')
     });
     // refresh screen
     this.refresh(undefined, true);
@@ -136,24 +129,77 @@ zimbra_notifier_options.init = function(background) {
  * @this {Option}
  * @param {zimbra_notifier_Controller} controller
  */
-zimbra_notifier_options.displayIdentifier = function(controller) {
+zimbra_notifier_options.displayIdentifier = async function(controller) {
     if(!controller) {
         return;
     }
 
-    var accountId = controller.getAccountId();
-    $('<fieldset id="identifier' + accountId + '" class="options identifier"><legend><label msg="option_identifiant_caption" class="section"></label></legend></fieldset>').insertBefore('#zimbra_mail_notifier-addNewIdentifier');
-    $('<fieldset class="options"><legend><label class="section" msg="option_identifiant_params_caption"></label></legend><div class="subOptions"><div><div msg="option_identifiant_alias_label" msgtemplate="%MSG% : " style="width:160px;float:left;"></div><input id="zimbra_mail_notifier-textboxAlias' + accountId + '" type="text" pref="userAlias' + accountId + '" style="width:160px;"></input></div><div><div msg="option_identifiant_login_label" msgtemplate="%MSG% : " style="width:160px;float:left;"></div><input id="zimbra_mail_notifier-textboxLogin' + accountId + '" type="text" pref="userLogin' + accountId + '" style="width:160px;"></input></div><div><div msg="option_identifiant_password_label" msgtemplate="%MSG% : " style="width:160px;float:left;"></div><input id="zimbra_mail_notifier-optionPassword' + accountId + '" type="password" pref="userPassword' + accountId + '" style="width:160px;"></input></div><div><input type="checkbox" id="zimbra_mail_notifier-checkboxSavePassword' + accountId + '" pref="userSavePassword' + accountId + '" style="margin-left:160px;"/><label for="zimbra_mail_notifier-checkboxSavePassword' + accountId + '" msg="option_identifiant_savePassword_label"></label></div></div></fieldset>').appendTo('#identifier' + accountId);
-    $('<fieldset class="options"><legend><label class="section" msg="option_identifiant_server_caption"></label></legend><div class="subOptions"><div><div msg="option_identifiant_authtype_label" msgtemplate="%MSG% : " style="width:160px;float:left;"></div><select id="zimbra_mail_notifier-listAuthType' + accountId + '" pref="userServer|userUrlWebInteface"><option value="" msg="option_identifiant_authtype_normal"></option><option value="https://zimbra.free.fr|https://zimbra.free.fr/zimbra/mail">Free</option><option value="http://zimbra.aliceadsl.fr|http://zimbra.aliceadsl.fr/zimbra/mail">Alice Adsl</option></select></div><div><div msg="option_identifiant_urlwebservice_label" msgtemplate="%MSG% : " style="width:160px;float:left;"></div><input id="zimbra_mail_notifier-textboxUrlWebService' + accountId + '" type="text" pref="userServer' + accountId + '" msgtitle="option_identifiant_urlwebservice_tooltip" style="width:300px"></input></div><div><div msg="option_identifiant_urlwebinterface_label" msgtemplate="%MSG% : " style="width:160px;float:left;"></div><input id="zimbra_mail_notifier-textboxUrlWebInterface' + accountId + '" type="text" pref="userUrlWebInteface' + accountId + '" msgtitle="option_identifiant_urlwebinterface_tooltip" style="width:300px"></input></div></div></fieldset>').appendTo('#identifier' + accountId);
+    var accountId = controller.accountId;
+
+    $('<fieldset id="identifier' + accountId + '" class="options identifier"> \
+        <legend> \
+            <label msg="option_identifiant_caption" class="section"></label> \
+        </legend> \
+    </fieldset>').insertBefore('#zimbra_mail_notifier-addNewIdentifier');
+
+    $('<fieldset class="options"> \
+        <legend> \
+        <label class="section" msg="option_identifiant_params_caption"></label> \
+        </legend> \
+        <div class="subOptions"> \
+            <div> \
+                <div msg="option_identifiant_alias_label" msgtemplate="%MSG% : " style="width:200px;float:left;"></div> \
+                <input id="zimbra_mail_notifier-textboxAlias' + accountId + '" type="text" pref="userAlias' + accountId + '" style="width:160px;"></input> \
+            </div> \
+            <div> \
+                <div msg="option_identifiant_login_label" msgtemplate="%MSG% : " style="width:200px;float:left;"></div> \
+                <input id="zimbra_mail_notifier-textboxLogin' + accountId + '" type="text" pref="userLogin' + accountId + '" style="width:300px;"></input> \
+            </div> \
+            <div> \
+                <div msg="option_identifiant_password_label" msgtemplate="%MSG% : " style="width:200px;float:left;"></div> \
+                <input id="zimbra_mail_notifier-optionPassword' + accountId + '" type="password" pref="userPassword' + accountId + '" style="width:300px;"></input> \
+            </div> \
+            <div> \
+                <input type="checkbox" id="zimbra_mail_notifier-checkboxSavePassword' + accountId + '" pref="userSavePassword' + accountId + '" style="margin-left:200px;"/> \
+                <label for="zimbra_mail_notifier-checkboxSavePassword' + accountId + '" msg="option_identifiant_savePassword_label"></label> \
+            </div> \
+            <div> \
+                <div msg="option_identifiant_2fatoken_label" msgtemplate="%MSG% : " style="width:200px;float:left;"></div> \
+                <input id="zimbra_mail_notifier-option2faToken' + accountId + '" type="text" style="width:100px;margin-right:5px;"></input> \
+                <button id="zimbra_mail_notifier-2faTokenButton' + accountId + '" msg="option_identifiant_2fatoken_button"></button> \
+            </div> \
+        </div> \
+    </fieldset>').appendTo('#identifier' + accountId);
+
+    $('<fieldset class="options"> \
+        <legend> \
+            <label class="section" msg="option_identifiant_server_caption"></label> \
+        </legend> \
+        <div class="subOptions"> \
+            <div> \
+                <div msg="option_identifiant_urlwebservice_label" msgtemplate="%MSG% : " style="width:200px;float:left;"></div> \
+                <input id="zimbra_mail_notifier-textboxUrlWebService' + accountId + '" type="text" pref="userServer' + accountId + '" msgtitle="option_identifiant_urlwebservice_tooltip" style="width:300px"></input> \
+            </div> \
+            <div> \
+                <div msg="option_identifiant_urlwebinterface_label" msgtemplate="%MSG% : " style="width:200px;float:left;"></div><input id="zimbra_mail_notifier-textboxUrlWebInterface' + accountId + '" type="text" pref="userUrlWebInteface' + accountId + '" msgtitle="option_identifiant_urlwebinterface_tooltip" style="width:300px"></input> \
+            </div> \
+        </div> \
+    </fieldset>').appendTo('#identifier' + accountId);
+
     $('<div id="zimbra_mail_notifier-serverError' + accountId + '" class="zimbra_mail_notifier-serverError"></div>').appendTo('#identifier' + accountId);
-    $('<div class="actionButtons"><button id="zimbra_mail_notifier-removeButton' + accountId + '" msg="option_identifiant_remove_button" ></button><button id="zimbra_mail_notifier-connectButton' + accountId + '" msg="option_identifiant_connect_button" style="float:right"></button><button id="zimbra_mail_notifier-connectCancelButton' + accountId + '" msg="option_identifiant_connectCancel_button" style="float:right"></button><button id="zimbra_mail_notifier-disconnectButton' + accountId + '" msg="option_identifiant_disconnect_button" style="float:right"></button></div></fieldset>').appendTo('#identifier' + accountId);
+    $('<div class="actionButtons"> \
+        <button id="zimbra_mail_notifier-removeButton' + accountId + '" msg="option_identifiant_remove_button"></button> \
+        <button id="zimbra_mail_notifier-connectButton' + accountId + '" msg="option_identifiant_connect_button" style="float:right"></button> \
+        <button id="zimbra_mail_notifier-connectCancelButton' + accountId + '" msg="option_identifiant_connectCancel_button" style="float:right"></button> \
+        <button id="zimbra_mail_notifier-disconnectButton' + accountId + '" msg="option_identifiant_disconnect_button" style="float:right"></button> \
+    </div>').appendTo('#identifier' + accountId);
 
     $('#zimbra_mail_notifier-listAuthType' + accountId).on('click', $.proxy(function() {
         this.authTypeChanged(controller);
     }, this));
 
     $('#zimbra_mail_notifier-removeButton' + accountId).on('click', $.proxy(function() {
-        this._zimbra_notifier_SuperController.removeController(controller);
+       this.remove(controller);
     }, this));
 
     $('#zimbra_mail_notifier-connectButton' + accountId).on('click', $.proxy(function() {
@@ -168,6 +214,10 @@ zimbra_notifier_options.displayIdentifier = function(controller) {
     $('#zimbra_mail_notifier-disconnectButton' + accountId).on('click', $.proxy(function() {
         this.disconnect(controller);
     }, this));
+
+    $('#zimbra_mail_notifier-2faTokenButton' + accountId).on('click', $.proxy(function () {
+        this.sendTwoFactorToken(controller);
+    }, this));
 }
 
 /**
@@ -177,18 +227,28 @@ zimbra_notifier_options.displayIdentifier = function(controller) {
  * @this {Option}
  */
 zimbra_notifier_options.release = function() {
-    if(!this._zimbra_notifier_SuperController) {
-        return;
-    }
-
-    this._zimbra_notifier_SuperController.removeCallBackRefresh(this);
-
+    // Disable messaging between scripts
+    chrome.runtime.onMessage.removeListener(this.onMessage);
     // clear password if needed
-    this._zimbra_notifier_SuperController.getControllers().forEach(function(controller) {
-        if (!$("#zimbra_mail_notifier-checkboxSavePassword" + controller.getAccountId()).is(":checked")) {
-            zimbra_notifier_options._zimbra_notifier_Prefs.clearPassword(controller.getAccountId());
+    $(".identifier").each(function () {
+        var accountId = $(this).attr("id").replace("identifier", "");
+        if (!$("#zimbra_mail_notifier-checkboxSavePassword" + accountId).is(":checked")) {
+            zimbra_notifier_options.updatePref("userPassword" + accountId, "");
         }
     });
+};
+
+/**
+   * Enable scripts to call options functions through messaging
+   * @param {Object} message
+   * @param {Object} sender
+   * @param {Function} callback
+   */
+zimbra_notifier_options.onMessage = function ({ source, func, args }, sender, callback) {
+    if (func !== 'needRefresh') {
+        return
+    }
+    zimbra_notifier_options.refresh(args[0])
 };
 
 /**
@@ -203,10 +263,11 @@ zimbra_notifier_options.showContent = function(contentId, animationTime) {
     if(!$.isNumeric(contentId) || (Math.floor(contentId) != contentId) || (contentId<0) || (contentId>4) ) {
         contentId = 0;
     }
-    $.when($(".tabContent").fadeOut("fast")).done(function() {
+
+    $.when($(".tabContent").hide()).done(function() {
         $(".tabContent").eq(contentId).animate({
-            opacity : 'show',
-            height : 'show'
+            opacity: 'show',
+            height: 'show'
         }, animationTime);
     });
 
@@ -226,22 +287,22 @@ zimbra_notifier_options.showContent = function(contentId, animationTime) {
  * @param {Event} the refresh event
  * @param {Boolean} is forced (optional)
  */
-zimbra_notifier_options.refresh = function(event, forced) {
+zimbra_notifier_options.refresh = async function(event, forced) {
     var newIdentifierDisplayed = (forced === true);
+    // check identifier added
+    const controllers = await this.driver('getControllers')
     // check identifier removed
     var identifiersDisplayed = [];
-    var accountsAvailable = this._zimbra_notifier_Prefs.getAccounts();
     $(".identifier").each(function() {
         var accountId = $(this).attr("id").replace("identifier", "");
-        if(accountsAvailable.indexOf(accountId)<0) {
+        if (!controllers.some((controller) => controller.accountId === accountId)) {
             $("#identifier" + accountId).remove();
         } else {
             identifiersDisplayed.push(accountId);
         }
     });
-    // check identifier added
-    this._zimbra_notifier_SuperController.getControllers().forEach(function(controller) {
-        if(identifiersDisplayed.indexOf(controller.getAccountId())<0) {
+    controllers.forEach(function(controller) {
+        if(identifiersDisplayed.indexOf(controller.accountId)<0) {
             zimbra_notifier_options.displayIdentifier(controller);
             newIdentifierDisplayed = true;
         }
@@ -255,7 +316,7 @@ zimbra_notifier_options.refresh = function(event, forced) {
                 // Initialize value
                 if ($(this).attr("id").indexOf("zimbra_mail_notifier-listAuthType")>=0) {
                     var accountId = $(this).attr("id").replace("zimbra_mail_notifier-listAuthType", "");
-                    $(this).val(zimbra_notifier_options._zimbra_notifier_Prefs.getPref("userServer" + accountId) + "|" + zimbra_notifier_options._zimbra_notifier_Prefs.getPref("userUrlWebInteface" + accountId));
+                    $(this).val(zimbra_notifier_Prefs.getPref("userServer" + accountId) + "|" + zimbra_notifier_Prefs.getPref("userUrlWebInteface" + accountId));
                     if (!$(this).val()) {
                         $(this).val("");
                     }
@@ -271,13 +332,13 @@ zimbra_notifier_options.refresh = function(event, forced) {
                         }
                         // update prefs
                         var prefs = $(this).attr("pref").split('|', 2);
-                        zimbra_notifier_options._zimbra_notifier_Prefs.updatePref(prefs[0] + accountId, $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).val());
-                        zimbra_notifier_options._zimbra_notifier_Prefs.updatePref(prefs[1] + accountId, $("#zimbra_mail_notifier-textboxUrlWebInterface" + accountId).val());
+                        zimbra_notifier_options.updatePref(prefs[0] + accountId, $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).val());
+                        zimbra_notifier_options.updatePref(prefs[1] + accountId, $("#zimbra_mail_notifier-textboxUrlWebInterface" + accountId).val());
                         // refresh screen
                         zimbra_notifier_options.refresh();
                     });
                 } else {
-                    var value = zimbra_notifier_options._zimbra_notifier_Prefs.getPref(attr);
+                    var value = zimbra_notifier_Prefs.getPref(attr);
                     if ($(this).attr("type") === "checkbox") {
                         $(this).attr("checked", value && 1);
                     } else {
@@ -286,8 +347,8 @@ zimbra_notifier_options.refresh = function(event, forced) {
                     // add event on change
                     if(($(this).attr("id").indexOf("zimbra_mail_notifier-textboxLogin")>=0) || ($(this).attr("id").indexOf("zimbra_mail_notifier-optionPassword")>=0) || ($(this).attr("id").indexOf("zimbra_mail_notifier-textboxUrlWebService")>=0)) {
                         // add event on keyup
-                        $(this).on('keyup', function() {
-                            zimbra_notifier_options._zimbra_notifier_Prefs.updatePref($(this).attr("pref"), $(this).val());
+                        $(this).on('focusout', function() {
+                            zimbra_notifier_options.updatePref($(this).attr("pref"), $(this).val());
                             // refresh screen
                             zimbra_notifier_options.refresh();
                         });
@@ -295,9 +356,9 @@ zimbra_notifier_options.refresh = function(event, forced) {
                     else {
                         $(this).on('change', function() {
                             if ($(this).attr("type") === "checkbox") {
-                                zimbra_notifier_options._zimbra_notifier_Prefs.updatePref($(this).attr("pref"), $(this).is(":checked"));
+                                zimbra_notifier_options.updatePref($(this).attr("pref"), $(this).is(":checked"));
                             } else {
-                                zimbra_notifier_options._zimbra_notifier_Prefs.updatePref($(this).attr("pref"), $(this).val());
+                                zimbra_notifier_options.updatePref($(this).attr("pref"), $(this).val());
                             }
                         });
                     }
@@ -308,14 +369,14 @@ zimbra_notifier_options.refresh = function(event, forced) {
         zimbra_notifier_UiUtil.initLocale();
     }
     // Update buttons in interface
-    this._zimbra_notifier_SuperController.getControllers().forEach(function(controller) {
-        var accountId = controller.getAccountId();
+    await Promise.all(controllers.map(async function(controller) {
+        var accountId = controller.accountId;
         if ($("#zimbra_mail_notifier-textboxLogin" + accountId).val() !== '' && $("#zimbra_mail_notifier-optionPassword" + accountId).val() !== '' && $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).val() !== '') {
             $("#zimbra_mail_notifier-connectButton" + accountId).removeAttr('disabled');
         } else {
             $("#zimbra_mail_notifier-connectButton" + accountId).attr('disabled', 'disabled');
         }
-        if (controller.isConnected()) {
+        if (controller.isConnected) {
             $("#zimbra_mail_notifier-connectButton" + accountId).hide();
             $("#zimbra_mail_notifier-disconnectButton" + accountId).show()
             $("#zimbra_mail_notifier-connectCancelButton" + accountId).hide();
@@ -323,7 +384,10 @@ zimbra_notifier_options.refresh = function(event, forced) {
             $("#zimbra_mail_notifier-optionPassword" + accountId).attr('disabled', 'disabled');
             $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).attr('disabled', 'disabled');
             $("#zimbra_mail_notifier-listAuthType" + accountId).attr('disabled', 'disabled');
-        } else if (controller.isConnecting()) {
+            $("#zimbra_mail_notifier-option2faToken" + accountId).attr('disabled', 'disabled');
+            $("#zimbra_mail_notifier-option2faToken" + accountId).val("");
+            $("#zimbra_mail_notifier-2faTokenButton" + accountId).attr('disabled', 'disabled');
+        } else if (controller.isConnecting) {
             $("#zimbra_mail_notifier-connectButton" + accountId).hide();
             $("#zimbra_mail_notifier-disconnectButton" + accountId).hide();
             $("#zimbra_mail_notifier-connectCancelButton" + accountId).show()
@@ -344,9 +408,16 @@ zimbra_notifier_options.refresh = function(event, forced) {
             }
             $("#zimbra_mail_notifier-listAuthType" + accountId).removeAttr('disabled');
         }
-        $("#zimbra_mail_notifier-serverError" + accountId).html(controller.getLastErrorMessage());
-    });
-
+        if (controller.needTwoFactorAuth) {
+            $("#zimbra_mail_notifier-option2faToken" + accountId).removeAttr('disabled');
+            $("#zimbra_mail_notifier-2faTokenButton" + accountId).removeAttr('disabled');
+        } else {
+            $("#zimbra_mail_notifier-option2faToken" + accountId).attr('disabled', 'disabled');
+            $("#zimbra_mail_notifier-option2faToken" + accountId).val("");
+            $("#zimbra_mail_notifier-2faTokenButton" + accountId).attr('disabled', 'disabled');
+        }
+        $("#zimbra_mail_notifier-serverError" + accountId).html(controller.lastErrorMessage);
+    }));
 };
 
 /**
@@ -354,14 +425,14 @@ zimbra_notifier_options.refresh = function(event, forced) {
  *
  * @private
  * @this {Option}
- * @param {zimbra_notifier_Controller} controller
+ * @param {Controller}
  */
-zimbra_notifier_options.authTypeChanged = function(controller) {
-    if(!controller) {
-        return;
+zimbra_notifier_options.authTypeChanged = async function (controller) {
+    if (!controller) {
+        return
     }
 
-    var accountId = controller.getAccountId();
+    var accountId = controller.accountId
     var newAuthType = $("#zimbra_mail_notifier-listAuthType" + accountId).val();
     if (this._previousAuthType !== newAuthType) {
 
@@ -387,14 +458,13 @@ zimbra_notifier_options.authTypeChanged = function(controller) {
  *
  * @private
  * @this {Option}
- * @param {zimbra_notifier_Controller} controller
+ * @param {Controller}
  */
-zimbra_notifier_options.connect = function(controller) {
-    if(!controller) {
-        return;
+zimbra_notifier_options.connect = async function(controller) {
+    if (!controller) {
+        return
     }
-
-    var accountId = controller.getAccountId();
+    var accountId = controller.accountId
     // update screen view
     $("#zimbra_mail_notifier-connectButton" + accountId).hide();
     $("#zimbra_mail_notifier-disconnectButton" + accountId).hide();
@@ -406,7 +476,26 @@ zimbra_notifier_options.connect = function(controller) {
     $("#zimbra_mail_notifier-serverError" + accountId).val("");
 
     // initialize connection
-    controller.initializeConnection($("#zimbra_mail_notifier-optionPassword" + accountId).val());
+    await this.driver('initializeConnection', controller.id, $("#zimbra_mail_notifier-optionPassword" + accountId).val());
+};
+
+/**
+ * send two factor token.
+ *
+ * @private
+ * @this {Option}
+ * @param {Controller}
+ * @return {Promise}
+ */
+zimbra_notifier_options.sendTwoFactorToken = async function (controller) {
+    if (!controller) {
+        return
+    }
+    const accountId = controller.accountId
+    const token = $("#zimbra_mail_notifier-option2faToken" + accountId).val()
+    if (token) {
+        await this.driver('sendTwoFactorToken', controller.id, token);
+    }
 };
 
 /**
@@ -415,19 +504,74 @@ zimbra_notifier_options.connect = function(controller) {
  * @private
  * @this {Option}
  * @param {zimbra_notifier_Controller} controller
+ * @return {Promise}
  */
-zimbra_notifier_options.disconnect = function(controller) {
-    if(controller) {
-        controller.closeConnection();
+zimbra_notifier_options.disconnect = async function(controller) {
+    if (!controller) {
+        return
     }
+    await this.driver('closeConnection', controller.id);
+};
+
+/**
+ * remove.
+ *
+ * @private
+ * @this {Option}
+ * @param {zimbra_notifier_Controller} controller
+ * @return {Promise}
+ */
+zimbra_notifier_options.remove = async function (controller) {
+    if (!controller) {
+        return
+    }
+    await this.driver('removeController', controller.id);
+};
+
+/**
+ * updatePref.
+ *
+ * @private
+ * @this {Option}
+ * @param {String} key
+ * @param {Any} val
+ * @return {Promise}
+ */
+zimbra_notifier_options.updatePref = async function (key, val) {
+    await this.driver('updatePref', key, val);
+};
+
+/**
+ * driver
+ * @this {Option}
+ * @param {func}
+ * @param {args}
+ * @return {Promise}
+ */
+zimbra_notifier_options.driver = function (func, ...args) {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage(
+            {
+                source: 'options.js',
+                func,
+                args: args ? (Array.isArray(args) ? args : [args]) : [],
+            },
+            (response) => {
+                chrome.runtime.lastError
+                    ? reject(chrome.runtime.lastError)
+                    : resolve(response)
+            }
+        )
+    })
 };
 
 /**
  * add event listener to notify when content is loaded
  */
-document.addEventListener('DOMContentLoaded', function() {
-    var backgroundPage = chrome.extension.getBackgroundPage();
-    zimbra_notifier_options.init(backgroundPage);
+document.addEventListener('DOMContentLoaded', async function() {
+    zimbra_notifier_Prefs.init(() => {
+        zimbra_notifier_options.init();
+    })
 });
 
 /**

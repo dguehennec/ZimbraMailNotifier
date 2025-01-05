@@ -323,6 +323,14 @@
         "message": "Ricordare la password",
         "description": ""
     },
+    "option_identifiant_2fatoken_label": {
+        "message": "Token di autenticazione a due fattori",
+        "description": ""
+    },
+    "option_identifiant_2fatoken_button": {
+        "message": "Invia",
+        "description": ""
+    },
     "option_identifiant_server_caption": {
         "message": "Server",
         "description": ""
@@ -390,6 +398,10 @@
     },
     "tooltip_disconnected_descriptionStatus": {
         "message": "Stato: Disconnesso",
+        "description": ""
+    },
+    "tooltip_connecting_descriptionStatus": {
+        "message": "Stato: Connessione in corso...",
         "description": ""
     },
     "tooltip_errorInitPage_title": {

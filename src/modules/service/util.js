@@ -210,22 +210,21 @@ zimbra_notifier_Util.convertBytesToStringValue = function(bytes) {
 zimbra_notifier_Util.showNotification = function(title, text, duration, callback, callbackThis) {
     try {
         // Show the notification
-        chrome.notifications.create("", { type: "basic", iconUrl : "skin/images/zimbra_mail_notifier.png", title : title, message : text, isClickable : true}, function (notificationId) {
-            chrome.notifications.onClicked.addListener(function(notificationIdClicked) {
-                if(notificationIdClicked == notificationId) {
-                    callback.apply(callbackThis);
-                    chrome.notifications.clear(notificationId, function(wasCleared) {
-                        //Nothing to do
-                    });
-                }
-            });
-            // hide notification after the duration timeout
-            zimbra_notifier_Util.setTimer(null, function() {
-                chrome.notifications.clear(notificationId, function(wasCleared) {
-                    //Nothing to do
-                });
-            }, duration);
-        });
+        const notificationId = Math.random().toString(16).slice(2);
+        chrome.notifications.create(notificationId, { type: "basic", iconUrl: "../skin/images/zimbra_mail_notifier.png", title: title, message: text, isClickable: true });
+        // manage click event for this notification
+        const notificationListener = function (notificationIdClicked) {
+            if (notificationIdClicked == notificationId) {
+                callback.apply(callbackThis);
+                chrome.notifications.clear(notificationId);
+                chrome.notifications.onClicked.removeListener(notificationListener);
+            }
+        }
+        chrome.notifications.onClicked.addListener(notificationListener);
+        // hide notification after the duration timeout
+        zimbra_notifier_Util.setTimer(null, function () {
+            chrome.notifications.clear(notificationId);
+        }, duration);
     }
     catch (e) {
         return false;
@@ -263,39 +262,6 @@ zimbra_notifier_Util.loadFile = function(file, cb, cbError) {
     };
     reader.onerror = window.alert;
     reader.readAsDataURL(file);
-    return true;
-}
-
-/**
- * play sound
- *
- * @return {Boolean} true if success
- */
-zimbra_notifier_Util.playSound = function(selected, customSound, volume) {
-    var sound = './skin/ding.ogg';
-    switch(selected) {
-        case 1:
-            break;
-        case 2:
-            sound = './skin/ping.ogg';
-            break;
-        case 3:
-            sound = './skin/heal.ogg';
-            break;
-        case 4:
-            sound = './skin/drain.ogg';
-            break;
-        case 5:
-            if(customSound) {
-                sound = customSound;
-            }
-            break;
-        defaut:
-            return false;
-    }
-    var audio = new Audio(sound);
-    audio.volume = parseInt(volume)/100;
-    audio.play();
     return true;
 }
 
