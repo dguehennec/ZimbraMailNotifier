@@ -194,10 +194,6 @@ zimbra_notifier_options.displayIdentifier = async function(controller) {
         <button id="zimbra_mail_notifier-disconnectButton' + accountId + '" msg="option_identifiant_disconnect_button" style="float:right"></button> \
     </div>').appendTo('#identifier' + accountId);
 
-    $('#zimbra_mail_notifier-listAuthType' + accountId).on('click', $.proxy(function() {
-        this.authTypeChanged(controller);
-    }, this));
-
     $('#zimbra_mail_notifier-removeButton' + accountId).on('click', $.proxy(function() {
        this.remove(controller);
     }, this));
@@ -314,55 +310,30 @@ zimbra_notifier_options.refresh = async function(event, forced) {
             var attr = $(this).attr("pref");
             if (attr) {
                 // Initialize value
-                if ($(this).attr("id").indexOf("zimbra_mail_notifier-listAuthType")>=0) {
-                    var accountId = $(this).attr("id").replace("zimbra_mail_notifier-listAuthType", "");
-                    $(this).val(zimbra_notifier_Prefs.getPref("userServer" + accountId) + "|" + zimbra_notifier_Prefs.getPref("userUrlWebInteface" + accountId));
-                    if (!$(this).val()) {
-                        $(this).val("");
-                    }
-                    // add event on change
-                    $(this).on('change', function() {
-                        var urls = $(this).val().split('|', 2);
-                        if (urls.length === 2) {
-                            $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).val(urls[0]);
-                            $("#zimbra_mail_notifier-textboxUrlWebInterface" + accountId).val(urls[1]);
-                        } else {
-                            $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).val("");
-                            $("#zimbra_mail_notifier-textboxUrlWebInterface" + accountId).val("");
-                        }
-                        // update prefs
-                        var prefs = $(this).attr("pref").split('|', 2);
-                        zimbra_notifier_options.updatePref(prefs[0] + accountId, $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).val());
-                        zimbra_notifier_options.updatePref(prefs[1] + accountId, $("#zimbra_mail_notifier-textboxUrlWebInterface" + accountId).val());
+
+                var value = zimbra_notifier_Prefs.getPref(attr);
+                if ($(this).attr("type") === "checkbox") {
+                    $(this).attr("checked", value && 1);
+                } else {
+                    $(this).val(value);
+                }
+                // add event on change
+                if(($(this).attr("id").indexOf("zimbra_mail_notifier-textboxLogin")>=0) || ($(this).attr("id").indexOf("zimbra_mail_notifier-optionPassword")>=0) || ($(this).attr("id").indexOf("zimbra_mail_notifier-textboxUrlWebService")>=0)) {
+                    // add event on keyup
+                    $(this).on('focusout', function() {
+                        zimbra_notifier_options.updatePref($(this).attr("pref"), $(this).val());
                         // refresh screen
                         zimbra_notifier_options.refresh();
                     });
-                } else {
-                    var value = zimbra_notifier_Prefs.getPref(attr);
-                    if ($(this).attr("type") === "checkbox") {
-                        $(this).attr("checked", value && 1);
-                    } else {
-                        $(this).val(value);
-                    }
-                    // add event on change
-                    if(($(this).attr("id").indexOf("zimbra_mail_notifier-textboxLogin")>=0) || ($(this).attr("id").indexOf("zimbra_mail_notifier-optionPassword")>=0) || ($(this).attr("id").indexOf("zimbra_mail_notifier-textboxUrlWebService")>=0)) {
-                        // add event on keyup
-                        $(this).on('focusout', function() {
+                }
+                else {
+                    $(this).on('change', function() {
+                        if ($(this).attr("type") === "checkbox") {
+                            zimbra_notifier_options.updatePref($(this).attr("pref"), $(this).is(":checked"));
+                        } else {
                             zimbra_notifier_options.updatePref($(this).attr("pref"), $(this).val());
-                            // refresh screen
-                            zimbra_notifier_options.refresh();
-                        });
-                    }
-                    else {
-                        $(this).on('change', function() {
-                            if ($(this).attr("type") === "checkbox") {
-                                zimbra_notifier_options.updatePref($(this).attr("pref"), $(this).is(":checked"));
-                            } else {
-                                zimbra_notifier_options.updatePref($(this).attr("pref"), $(this).val());
-                            }
-                        });
-                    }
-
+                        }
+                    });
                 }
             }
         });
@@ -383,7 +354,6 @@ zimbra_notifier_options.refresh = async function(event, forced) {
             $("#zimbra_mail_notifier-textboxLogin" + accountId).attr('disabled', 'disabled');
             $("#zimbra_mail_notifier-optionPassword" + accountId).attr('disabled', 'disabled');
             $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).attr('disabled', 'disabled');
-            $("#zimbra_mail_notifier-listAuthType" + accountId).attr('disabled', 'disabled');
             $("#zimbra_mail_notifier-option2faToken" + accountId).attr('disabled', 'disabled');
             $("#zimbra_mail_notifier-option2faToken" + accountId).val("");
             $("#zimbra_mail_notifier-2faTokenButton" + accountId).attr('disabled', 'disabled');
@@ -394,19 +364,13 @@ zimbra_notifier_options.refresh = async function(event, forced) {
             $("#zimbra_mail_notifier-textboxLogin" + accountId).attr('disabled', 'disabled');
             $("#zimbra_mail_notifier-optionPassword" + accountId).attr('disabled', 'disabled');
             $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).attr('disabled', 'disabled');
-            $("#zimbra_mail_notifier-listAuthType" + accountId).attr('disabled', 'disabled');
         } else {
             $("#zimbra_mail_notifier-connectButton" + accountId).show()
             $("#zimbra_mail_notifier-disconnectButton" + accountId).hide();
             $("#zimbra_mail_notifier-connectCancelButton" + accountId).hide();
             $("#zimbra_mail_notifier-textboxLogin" + accountId).removeAttr('disabled');
             $("#zimbra_mail_notifier-optionPassword" + accountId).removeAttr('disabled');
-            if ($("#zimbra_mail_notifier-listAuthType" + accountId).val() === "") {
-                $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).removeAttr('disabled');
-            } else {
-                $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).attr('disabled', 'disabled');
-            }
-            $("#zimbra_mail_notifier-listAuthType" + accountId).removeAttr('disabled');
+            $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).removeAttr('disabled');
         }
         if (controller.needTwoFactorAuth) {
             $("#zimbra_mail_notifier-option2faToken" + accountId).removeAttr('disabled');
@@ -418,39 +382,6 @@ zimbra_notifier_options.refresh = async function(event, forced) {
         }
         $("#zimbra_mail_notifier-serverError" + accountId).html(controller.lastErrorMessage);
     }));
-};
-
-/**
- * Called when the authentication changed
- *
- * @private
- * @this {Option}
- * @param {Controller}
- */
-zimbra_notifier_options.authTypeChanged = async function (controller) {
-    if (!controller) {
-        return
-    }
-
-    var accountId = controller.accountId
-    var newAuthType = $("#zimbra_mail_notifier-listAuthType" + accountId).val();
-    if (this._previousAuthType !== newAuthType) {
-
-        if (newAuthType !== '') {
-            var urls = newAuthType.split('|', 2);
-            $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).attr('disabled', 'disabled');
-            $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).val(urls[0]);
-
-            $("#zimbra_mail_notifier-textboxUrlWebInterface" + accountId).attr('disabled', 'disabled');
-            $("#zimbra_mail_notifier-textboxUrlWebInterface" + accountId).val(urls[1]);
-        } else {
-            $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).val("");
-            $("#zimbra_mail_notifier-textboxUrlWebInterface" + accountId).val("");
-            $("#zimbra_mail_notifier-textboxUrlWebInterface" + accountId).removeAttr('disabled');
-        }
-        this._previousAuthType = newAuthType;
-    }
-    this.refresh();
 };
 
 /**
@@ -472,7 +403,6 @@ zimbra_notifier_options.connect = async function(controller) {
     $("#zimbra_mail_notifier-textboxLogin" + accountId).attr('disabled', 'disabled');
     $("#zimbra_mail_notifier-optionPassword" + accountId).attr('disabled', 'disabled');
     $("#zimbra_mail_notifier-textboxUrlWebService" + accountId).attr('disabled', 'disabled');
-    $("#zimbra_mail_notifier-listAuthType" + accountId).attr('disabled', 'disabled');
     $("#zimbra_mail_notifier-serverError" + accountId).val("");
 
     // initialize connection

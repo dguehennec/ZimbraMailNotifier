@@ -6,7 +6,7 @@
     <groupId>com.zimbra</groupId>
     <artifactId>ZimbraMailNotifier</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
 
     <name>Zimbra Notifier</name>
 
