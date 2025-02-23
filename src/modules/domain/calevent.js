@@ -35,9 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_CalEvent"];
+'use strict';
 
 /**
  * Creates an instance of CalEvent.
@@ -56,7 +54,7 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_CalEvent"];
  * @param {Number}
  *            timeConf the time configuration
  */
-var zimbra_notifier_CalEvent = function(id, name, timestamp, duration, timeConf) {
+var zimbra_notifier_CalEvent = function (id, name, timestamp, duration, timeConf) {
     this.id = id;
     this.name = name;
     this.startDate = new Date(timestamp);
@@ -67,7 +65,6 @@ var zimbra_notifier_CalEvent = function(id, name, timestamp, duration, timeConf)
     this.startWeek = this.weekDate(this.startDate);
 };
 
-
 /**
  * Indicate the week date / Week number of the specified date
  * @see http://en.wikipedia.org/wiki/ISO_week_date
@@ -77,7 +74,7 @@ var zimbra_notifier_CalEvent = function(id, name, timestamp, duration, timeConf)
  *            date The date
  * @return {Number} Week number
  */
-zimbra_notifier_CalEvent.prototype.weekDate = function(date) {
+zimbra_notifier_CalEvent.prototype.weekDate = function (date) {
     // If we are in december, this is possible that we are in W1 of the next year
     if (date.getMonth() === 11) {
         var dateW1NextY = this.dateBeginW1(date.getFullYear() + 1);
@@ -100,9 +97,9 @@ zimbra_notifier_CalEvent.prototype.weekDate = function(date) {
  *            year  The year
  * @return {Date} The date of the first day of W1
  */
-zimbra_notifier_CalEvent.prototype.dateBeginW1 = function(year) {
+zimbra_notifier_CalEvent.prototype.dateBeginW1 = function (year) {
     var dateDay4 = new Date(year, 0, 4, 0, 0, 0, 0);
-    return new Date(dateDay4.getTime() - (dateDay4.getDay() * 86400000));
+    return new Date(dateDay4.getTime() - dateDay4.getDay() * 86400000);
 };
 
 /**

@@ -35,9 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_Message", "zimbra_notifier_MessageManager"];
+'use strict';
 
 /**
  * Creates an instance of Message.
@@ -58,9 +56,9 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Message", "zimbra_notifier_MessageManag
  * @param {String}
  *            convId the conversation id
  */
-var zimbra_notifier_Message = function(id, timestamp, subject, content, senderMail, convId) {
+var zimbra_notifier_Message = function (id, timestamp, subject, content, senderMail, convId) {
     this.id = id;
-    this.date = timestamp ? (new Date(timestamp)) : null;
+    this.date = timestamp ? new Date(timestamp) : null;
     this.subject = subject;
     this.content = content;
     this.senderEmail = senderMail;
@@ -79,7 +77,7 @@ Object.freeze(zimbra_notifier_Message);
  * @constructor
  * @this {MessageManager}
  */
-var zimbra_notifier_MessageManager = function() {
+var zimbra_notifier_MessageManager = function () {
     this._oldNbMessages = 0;
     this._nbMessages = 0;
     this._tmpNbMessages = 0;
@@ -98,7 +96,7 @@ var zimbra_notifier_MessageManager = function() {
  *
  * @return messages
  */
-zimbra_notifier_MessageManager.prototype.getMessages = function() {
+zimbra_notifier_MessageManager.prototype.getMessages = function () {
     return this._listMessages;
 };
 
@@ -109,7 +107,7 @@ zimbra_notifier_MessageManager.prototype.getMessages = function() {
  *
  * @return {Number} Number of messages
  */
-zimbra_notifier_MessageManager.prototype.nbMessages = function() {
+zimbra_notifier_MessageManager.prototype.nbMessages = function () {
     return this._nbMessages;
 };
 
@@ -120,7 +118,7 @@ zimbra_notifier_MessageManager.prototype.nbMessages = function() {
  *
  * @return {Number} Number of new message since the last call
  */
-zimbra_notifier_MessageManager.prototype.endAddingMessages = function() {
+zimbra_notifier_MessageManager.prototype.endAddingMessages = function () {
     // Get the number of new messages since the last call
     var diff = this._nbMessages - this._oldNbMessages;
     this._oldNbMessages = this._nbMessages;
@@ -145,7 +143,7 @@ zimbra_notifier_MessageManager.prototype.endAddingMessages = function() {
  *            msg  The message to add
  * @return {Number} Number of new mail (0 or 1)
  */
-zimbra_notifier_MessageManager.prototype.addMessage = function(msg) {
+zimbra_notifier_MessageManager.prototype.addMessage = function (msg) {
     var nbNewMsg = 0;
 
     // First check if the message doesn't already exist in temporary list
@@ -160,8 +158,7 @@ zimbra_notifier_MessageManager.prototype.addMessage = function(msg) {
         this._tmpMapMsgId2IdxList[msg.id] = this._tmpListMessages.length;
         this._tmpListMessages.push(msg);
         this._tmpNbMessages++;
-    }
-    else {
+    } else {
         // Update the message
         this._tmpListMessages[idxList] = msg;
     }

@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
+'use strict';
 
 /**
  * The Class Main.
@@ -43,7 +43,11 @@
  * @constructor
  * @this {Main}
  */
-var zimbra_notifier_main = {};
+var zimbra_notifier_main = {
+    _logger: new zimbra_notifier_Logger('Background'),
+    creatingOffscreenDocumentPromise: undefined,
+    keepAliveTimer: undefined,
+};
 
 /**
  * Init module.
@@ -52,12 +56,16 @@ var zimbra_notifier_main = {};
  */
 zimbra_notifier_main.init = function () {
     try {
-        chrome.action.setIcon({ path: '../skin/images/icon_disabled.png' });
-        chrome.action.setBadgeText({ text: '' });
+        chrome.action.setIcon({path: '../skin/images/icon_disabled.png'});
+        chrome.action.setBadgeText({text: ''});
         // Register
         zimbra_notifier_SuperController.addCallBackRefresh(this);
         // Enable messaging between scripts
         chrome.runtime.onMessage.addListener(this.onMessage);
+        // Keep the service worker alive
+        zimbra_notifier_main.keepAlive();
+        chrome.alarms.create({periodInMinutes: 2});
+        chrome.alarms.onAlarm.addListener(zimbra_notifier_main.keepAlive);
     } catch (e) {
         console.error('FATAL in zimbra_notifier_main.init: ' + e);
     }
@@ -72,19 +80,40 @@ zimbra_notifier_main.release = function () {
     zimbra_notifier_SuperController.removeCallBackRefresh(this);
     // Disable messaging between scripts
     chrome.runtime.onMessage.removeListener(this.onMessage);
+    // Remove keepAlive
+    clearTimeout(zimbra_notifier_main.keepAliveTimer);
+};
+
+/**
+ * keepAlive
+ * @return {Promise}
+ */
+zimbra_notifier_main.keepAlive = async function () {
+    const platformInfo = await chrome.runtime.getPlatformInfo();
+    zimbra_notifier_main.log('KeepAlive on ' + platformInfo.os + ' (' + platformInfo.arch + ')');
+    // Create offscreen document if not started
+    return zimbra_notifier_main.createOffscreenDocument();
 };
 
 /**
  * createOffscreenDocument
  */
 zimbra_notifier_main.createOffscreenDocument = async function () {
-    const offscreenDocuement = await chrome.offscreen.hasDocument();
-    if (!offscreenDocuement) {
-        await chrome.offscreen.createDocument({
-            url:  "offscreen.html",
+    const offscreenDocument = await chrome.offscreen.hasDocument();
+    if (offscreenDocument) {
+        return;
+    }
+    // create offscreen document
+    if (zimbra_notifier_main.creatingOffscreenDocumentPromise) {
+        await zimbra_notifier_main.creatingOffscreenDocumentPromise;
+    } else {
+        zimbra_notifier_main.creatingOffscreenDocumentPromise = chrome.offscreen.createDocument({
+            url: 'offscreen.html',
             reasons: ['AUDIO_PLAYBACK'],
-            justification: 'Needed to play sound'
+            justification: 'Needed to play sound',
         });
+        await zimbra_notifier_main.creatingOffscreenDocumentPromise;
+        zimbra_notifier_main.creatingOffscreenDocumentPromise = null;
     }
 };
 
@@ -96,52 +125,45 @@ zimbra_notifier_main.createOffscreenDocument = async function () {
 zimbra_notifier_main.refresh = function (event, data) {
     if (event === zimbra_notifier_SERVICE_EVENT.NEED_PLAY_SOUND) {
         // Create offscreen document if not started
-        zimbra_notifier_main.createOffscreenDocument()
+        zimbra_notifier_main.createOffscreenDocument();
         // send notification to offscreen after 200 ms (time needed in rder to create this page)
         clearTimeout(zimbra_notifier_main._refreshTimer);
-        zimbra_notifier_main._refreshTimer = setTimeout(function() {
-            chrome.runtime.sendMessage(
-                {
-                    source: 'background.js',
-                    func: 'playSound',
-                    args: [data.selected, data.customSound, data.volumeSound],
-                }
-            );
+        zimbra_notifier_main._refreshTimer = setTimeout(function () {
+            chrome.runtime.sendMessage({
+                source: 'background.js',
+                func: 'playSound',
+                args: [data.selected, data.customSound, data.volumeSound],
+            });
         }, 200);
         return;
     } else if (event && event.startingReq) {
-        chrome.action.setIcon({ path: '../skin/images/icon_refresh.png' });
+        chrome.action.setIcon({path: '../skin/images/icon_refresh.png'});
     } else {
         var nbUnreadMessages = -1;
         if (zimbra_notifier_SuperController.hasConnectionActivated()) {
-            var hasError = (zimbra_notifier_SuperController.getLastErrorMessage() !== '');
+            var hasError = zimbra_notifier_SuperController.getLastErrorMessage() !== '';
             nbUnreadMessages = zimbra_notifier_SuperController.getNbMessageUnread();
             if (hasError) {
-                chrome.action.setIcon({ path: '../skin/images/icon_warning.png' });
+                chrome.action.setIcon({path: '../skin/images/icon_warning.png'});
+            } else {
+                chrome.action.setIcon({path: '../skin/images/icon_default.png'});
             }
-            else {
-                chrome.action.setIcon({ path: '../skin/images/icon_default.png' });
-            }
-        }
-        else {
-            chrome.action.setIcon({ path: '../skin/images/icon_disabled.png' });
+        } else {
+            chrome.action.setIcon({path: '../skin/images/icon_disabled.png'});
         }
         // ToolBar
         if (nbUnreadMessages > 0) {
-            chrome.action.setBadgeText({ text: String(nbUnreadMessages) });
-        }
-        else {
-            chrome.action.setBadgeText({ text: '' });
+            chrome.action.setBadgeText({text: String(nbUnreadMessages)});
+        } else {
+            chrome.action.setBadgeText({text: ''});
         }
     }
     // send notification to option.js and popup.js
-    chrome.runtime.sendMessage(
-        {
-            source: 'background.js',
-            func: 'needRefresh',
-            args: [],
-        }
-    )
+    chrome.runtime.sendMessage({
+        source: 'background.js',
+        func: 'needRefresh',
+        args: [],
+    });
 };
 
 /**
@@ -159,9 +181,9 @@ zimbra_notifier_main.getControllers = function () {
             unreadMessages: controller.getUnreadMessages(),
             lastErrorMessage: controller.getLastErrorMessage(),
             mailBoxInfo: controller.getMailBoxInfo(),
-        }
-    })
-}
+        };
+    });
+};
 
 /**
  * initializeConnection
@@ -170,13 +192,15 @@ zimbra_notifier_main.getControllers = function () {
  * @return {Boolean}
  */
 zimbra_notifier_main.initializeConnection = function (id, password) {
-    const controller = zimbra_notifier_SuperController.getControllers().find((controller) => controller.id === id)
+    const controller = zimbra_notifier_SuperController
+        .getControllers()
+        .find((controller) => controller.id === id);
     if (controller) {
-        zimbra_notifier_Prefs.load()
-        return controller.initializeConnection(password)
+        zimbra_notifier_Prefs.load();
+        return controller.initializeConnection(password);
     }
-    return false
-}
+    return false;
+};
 
 /**
  * sendTwoFactorToken
@@ -185,12 +209,14 @@ zimbra_notifier_main.initializeConnection = function (id, password) {
  * @return {Boolean}
  */
 zimbra_notifier_main.sendTwoFactorToken = function (id, token) {
-    const controller = zimbra_notifier_SuperController.getControllers().find((controller) => controller.id === id)
+    const controller = zimbra_notifier_SuperController
+        .getControllers()
+        .find((controller) => controller.id === id);
     if (controller) {
-        return controller.sendTwoFactorToken(token)
+        return controller.sendTwoFactorToken(token);
     }
-    return false
-}
+    return false;
+};
 
 /**
  * closeConnection
@@ -198,12 +224,14 @@ zimbra_notifier_main.sendTwoFactorToken = function (id, token) {
  * @return {Boolean}
  */
 zimbra_notifier_main.closeConnection = function (id) {
-    const controller = zimbra_notifier_SuperController.getControllers().find((controller) => controller.id === id)
+    const controller = zimbra_notifier_SuperController
+        .getControllers()
+        .find((controller) => controller.id === id);
     if (controller) {
-        return controller.closeConnection()
+        return controller.closeConnection();
     }
-    return false
-}
+    return false;
+};
 
 /**
  * checkNow
@@ -211,12 +239,14 @@ zimbra_notifier_main.closeConnection = function (id) {
  * @return {Boolean}
  */
 zimbra_notifier_main.checkNow = function (id) {
-    const controller = zimbra_notifier_SuperController.getControllers().find((controller) => controller.id === id)
+    const controller = zimbra_notifier_SuperController
+        .getControllers()
+        .find((controller) => controller.id === id);
     if (controller) {
-        return controller.checkNow()
+        return controller.checkNow();
     }
-    return false
-}
+    return false;
+};
 
 /**
  * removeController
@@ -224,12 +254,14 @@ zimbra_notifier_main.checkNow = function (id) {
  * @return {Boolean}
  */
 zimbra_notifier_main.removeController = function (id) {
-    const controller = zimbra_notifier_SuperController.getControllers().find((controller) => controller.id === id)
+    const controller = zimbra_notifier_SuperController
+        .getControllers()
+        .find((controller) => controller.id === id);
     if (controller) {
-        return zimbra_notifier_SuperController.removeController(controller)
+        return zimbra_notifier_SuperController.removeController(controller);
     }
-    return false
-}
+    return false;
+};
 
 /**
  * addNewIdentifier
@@ -237,7 +269,7 @@ zimbra_notifier_main.removeController = function (id) {
  */
 zimbra_notifier_main.addNewIdentifier = function () {
     return zimbra_notifier_SuperController.addNewIdentifier();
-}
+};
 
 /**
  * getEvents
@@ -252,17 +284,17 @@ zimbra_notifier_main.getEvents = function () {
             startDate: event.startDate,
             endDate: event.endDate,
             startWeek: event.startWeek,
-        }
-    })
-}
+        };
+    });
+};
 
 /**
  * getTasks
  * @return {Array<Object>}
  */
 zimbra_notifier_main.getTasks = function () {
-    return zimbra_notifier_SuperController.getTasks()
-}
+    return zimbra_notifier_SuperController.getTasks();
+};
 
 /**
  * updatePref
@@ -271,8 +303,8 @@ zimbra_notifier_main.getTasks = function () {
  * @return {Boolean}
  */
 zimbra_notifier_main.updatePref = function (key, value) {
-    return zimbra_notifier_Prefs.updatePref(key, value)
-}
+    return zimbra_notifier_Prefs.updatePref(key, value);
+};
 
 /**
  * openZimbraWebInterface
@@ -280,12 +312,14 @@ zimbra_notifier_main.updatePref = function (key, value) {
  * @return {Boolean}
  */
 zimbra_notifier_main.openZimbraWebInterface = function (accountId) {
-    const controller = zimbra_notifier_SuperController.getControllers().find((controller) => controller.getAccountId() === accountId)
+    const controller = zimbra_notifier_SuperController
+        .getControllers()
+        .find((controller) => controller.getAccountId() === accountId);
     if (controller) {
-        return controller.openZimbraWebInterface()
+        return controller.openZimbraWebInterface();
     }
-    return false
-}
+    return false;
+};
 
 /**
  * Log debug messages to the console
@@ -293,9 +327,20 @@ zimbra_notifier_main.openZimbraWebInterface = function (accountId) {
  * @param {String} source
  * @param {String} type
  */
-zimbra_notifier_main.log = function (message, source = 'background', type = 'log') {
-    // eslint-disable-next-line no-console
-    console[type](message)
+zimbra_notifier_main.log = function (message, source = 'background.js', type = 'trace') {
+    switch (type) {
+        case 'error':
+            this._logger.error(message);
+            break;
+        case 'warning':
+            this._logger.warning(message);
+            break;
+        case 'info':
+            this._logger.info(message);
+            break;
+        default:
+            this._logger.trace(message);
+    }
 };
 
 /**
@@ -303,8 +348,8 @@ zimbra_notifier_main.log = function (message, source = 'background', type = 'log
  * @param {String} error
  * @param {String} source
  */
-zimbra_notifier_main.error = function (error, source = 'background') {
-    zimbra_notifier_main.log(error, source, 'error')
+zimbra_notifier_main.error = function (error, source) {
+    zimbra_notifier_main.log(error, source, 'error');
 };
 
 /**
@@ -313,28 +358,40 @@ zimbra_notifier_main.error = function (error, source = 'background') {
  * @param {Object} sender
  * @param {Function} callback
  */
-zimbra_notifier_main.onMessage = function ({ source, func, args }, sender, callback) {
+zimbra_notifier_main.onMessage = function ({source, func, args}, sender, callback) {
     if (!func) {
-        return
+        return false;
     }
 
     if (func === 'log') {
-        zimbra_notifier_main.log({ source, func, args })
-        return
+        zimbra_notifier_main.log(args[0], source, args[1]);
+        return false;
+    }
+
+    if (func === 'needKeepAlive') {
+        clearTimeout(zimbra_notifier_main.keepAliveTimer);
+        zimbra_notifier_main.keepAliveTimer = setTimeout(() => {
+            zimbra_notifier_main.keepAlive();
+        }, 5000);
+        return false;
     }
 
     if (!zimbra_notifier_main[func]) {
-        zimbra_notifier_main.error(new Error(`Method does not exist: zimbra_notifier_main.${func}`))
-        return
+        zimbra_notifier_main.error(
+            new Error(`Method does not exist: zimbra_notifier_main.${func}`),
+            source,
+        );
+        return false;
     }
 
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
-        resolve(zimbra_notifier_main[func].call(zimbra_notifier_main[func], ...(args || [])))
-    }).then(callback)
-    .catch(zimbra_notifier_main.error)
+        resolve(zimbra_notifier_main[func].call(zimbra_notifier_main[func], ...(args || [])));
+    })
+        .then(callback)
+        .catch(zimbra_notifier_main.error);
 
-    return !!callback
+    return !!callback;
 };
 
 // starting initial process

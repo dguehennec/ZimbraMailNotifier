@@ -35,9 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_Task"];
+'use strict';
 
 /**
  * Creates an instance of Task.
@@ -54,7 +52,7 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Task"];
  * @param {Number}
  *            priority the priority
  */
-var zimbra_notifier_Task = function(name, timestamp, percentComplete, priority) {
+var zimbra_notifier_Task = function (name, timestamp, percentComplete, priority) {
     this.name = name;
     this.date = new Date(timestamp);
     this.percentComplete = percentComplete;

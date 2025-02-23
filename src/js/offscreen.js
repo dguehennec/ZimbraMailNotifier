@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
+'use strict';
 
 /**
  * Creates an instance of offscreen.
@@ -54,7 +54,15 @@ var zimbra_notifier_offscreen = {};
 zimbra_notifier_offscreen.init = function () {
     // Enable messaging between scripts
     chrome.runtime.onMessage.addListener(this.onMessage);
-}
+    // Message to background before release offscreen screen by chrome
+    setTimeout(() => {
+        chrome.runtime.sendMessage({
+            source: 'offscreen.js',
+            func: 'needKeepAlive',
+            args: [],
+        });
+    }, 28000);
+};
 
 /**
  * Call when the window is closed
@@ -68,21 +76,20 @@ zimbra_notifier_offscreen.release = function () {
 };
 
 /**
-   * Enable scripts to call options functions through messaging
-   * @param {Object} message
-   * @param {Object} sender
-   * @param {Function} callback
-   */
-zimbra_notifier_offscreen.onMessage = function ({ source, func, args }, sender, callback) {
+ * Enable scripts to call options functions through messaging
+ * @param {Object} message
+ * @param {Object} sender
+ * @param {Function} callback
+ */
+zimbra_notifier_offscreen.onMessage = function ({source, func, args}, sender, callback) {
     if (func === 'playSound') {
         zimbra_notifier_UiUtil.playSound(...args);
-    }  
+    }
 };
-
 
 /**
  * add event listener to notify when content is loaded
  */
-document.addEventListener("DOMContentLoaded", async function () {
-    zimbra_notifier_offscreen.init()
+document.addEventListener('DOMContentLoaded', async function () {
+    zimbra_notifier_offscreen.init();
 });

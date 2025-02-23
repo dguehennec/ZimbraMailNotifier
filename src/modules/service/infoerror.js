@@ -34,9 +34,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_InfoErrors"];
+'use strict';
 
 /**
  * Creates an instance of ReqInfoError.
@@ -48,7 +46,7 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_InfoErrors"];
  * @param {Number}
  *            reqStatus the error code of the request
  */
-var zimbra_notifier_ReqInfoError = function(reqType, reqStatus) {
+var zimbra_notifier_ReqInfoError = function (reqType, reqStatus) {
     this.requestType = reqType;
     this.lastReqStatus = reqStatus;
     this.nbTotalFail = 1;
@@ -62,13 +60,21 @@ var zimbra_notifier_ReqInfoError = function(reqType, reqStatus) {
  * @this {ReqInfoError}
  * @return The human representation of the error
  */
-zimbra_notifier_ReqInfoError.prototype.toString = function() {
-
-    return "{" + this.requestType + ", status:" +  this.lastReqStatus +
-           ", loop:" + this.nbLoopFail + ", total:" + this.nbTotalFail +
-           ", date:" + this.dateLastFail.toTimeString() + "}";
+zimbra_notifier_ReqInfoError.prototype.toString = function () {
+    return (
+        '{' +
+        this.requestType +
+        ', status:' +
+        this.lastReqStatus +
+        ', loop:' +
+        this.nbLoopFail +
+        ', total:' +
+        this.nbTotalFail +
+        ', date:' +
+        this.dateLastFail.toTimeString() +
+        '}'
+    );
 };
-
 
 /**
  * Creates an instance of InfoErrors.
@@ -76,7 +82,7 @@ zimbra_notifier_ReqInfoError.prototype.toString = function() {
  * @constructor
  * @this {InfoErrors}
  */
-var zimbra_notifier_InfoErrors = function() {
+var zimbra_notifier_InfoErrors = function () {
     this._lstReqInfoErr = [];
 };
 
@@ -89,12 +95,11 @@ var zimbra_notifier_InfoErrors = function() {
  * @param {Number}
  *            reqStatus the error code of the request
  */
-zimbra_notifier_InfoErrors.prototype.addError = function(reqType, reqStatus) {
+zimbra_notifier_InfoErrors.prototype.addError = function (reqType, reqStatus) {
     var reqInfo = null;
 
     // Get a reference of the request info error and remove it from the array
-    for ( var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
-
+    for (var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
         if (this._lstReqInfoErr[idx].requestType === reqType) {
             reqInfo = this._lstReqInfoErr[idx];
             this._lstReqInfoErr.splice(idx, 1);
@@ -107,8 +112,7 @@ zimbra_notifier_InfoErrors.prototype.addError = function(reqType, reqStatus) {
         reqInfo.nbLoopFail += 1;
         reqInfo.dateLastFail = new Date();
         reqInfo.lastReqStatus = reqStatus;
-    }
-    else {
+    } else {
         reqInfo = new zimbra_notifier_ReqInfoError(reqType, reqStatus);
     }
     // Add the error to the front
@@ -122,10 +126,8 @@ zimbra_notifier_InfoErrors.prototype.addError = function(reqType, reqStatus) {
  * @param {String}
  *            reqType the type of the request
  */
-zimbra_notifier_InfoErrors.prototype.resetLoopErrorCounter = function(reqType) {
-
-    for ( var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
-
+zimbra_notifier_InfoErrors.prototype.resetLoopErrorCounter = function (reqType) {
+    for (var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
         var reqInfo = this._lstReqInfoErr[idx];
         if (reqInfo.requestType === reqType) {
             reqInfo.nbLoopFail = 0;
@@ -143,10 +145,8 @@ zimbra_notifier_InfoErrors.prototype.resetLoopErrorCounter = function(reqType) {
  *
  * @return {Number} The loop counter, 0 if does not exist
  */
-zimbra_notifier_InfoErrors.prototype.getLoopErrorCounter = function(reqType) {
-
-    for ( var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
-
+zimbra_notifier_InfoErrors.prototype.getLoopErrorCounter = function (reqType) {
+    for (var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
         var reqInfo = this._lstReqInfoErr[idx];
         if (reqInfo.requestType === reqType) {
             return reqInfo.nbLoopFail;
@@ -162,10 +162,8 @@ zimbra_notifier_InfoErrors.prototype.getLoopErrorCounter = function(reqType) {
  * @param {String}
  *            reqType the type of the request
  */
-zimbra_notifier_InfoErrors.prototype.clearError = function(reqType) {
-
-    for ( var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
-
+zimbra_notifier_InfoErrors.prototype.clearError = function (reqType) {
+    for (var idx = 0; idx < this._lstReqInfoErr.length; idx++) {
         if (this._lstReqInfoErr[idx].requestType === reqType) {
             this._lstReqInfoErr.splice(idx, 1);
             break;
@@ -178,7 +176,7 @@ zimbra_notifier_InfoErrors.prototype.clearError = function(reqType) {
  *
  * @this {InfoErrors}
  */
-zimbra_notifier_InfoErrors.prototype.clearAllErrors = function() {
+zimbra_notifier_InfoErrors.prototype.clearAllErrors = function () {
     this._lstReqInfoErr = [];
 };
 
@@ -188,7 +186,7 @@ zimbra_notifier_InfoErrors.prototype.clearAllErrors = function() {
  * @this {InfoErrors}
  * @return {ReqInfoError} The information about the error
  */
-zimbra_notifier_InfoErrors.prototype.getLastError = function() {
+zimbra_notifier_InfoErrors.prototype.getLastError = function () {
     if (this._lstReqInfoErr.length > 0) {
         return this._lstReqInfoErr[0];
     }
@@ -201,7 +199,7 @@ zimbra_notifier_InfoErrors.prototype.getLastError = function() {
  * @this {InfoErrors}
  * @return {Number}
  */
-zimbra_notifier_InfoErrors.prototype.getNbErrors = function() {
+zimbra_notifier_InfoErrors.prototype.getNbErrors = function () {
     return this._lstReqInfoErr.length;
 };
 
@@ -211,18 +209,16 @@ zimbra_notifier_InfoErrors.prototype.getNbErrors = function() {
  * @this {InfoErrors}
  * @return The human representation of the error
  */
-zimbra_notifier_InfoErrors.prototype.toString = function() {
-
+zimbra_notifier_InfoErrors.prototype.toString = function () {
     if (this._lstReqInfoErr.length > 0) {
-
-        var txt = "errors:[ " + this._lstReqInfoErr[0].toString();
+        var txt = 'errors:[ ' + this._lstReqInfoErr[0].toString();
 
         for (var idx = 1; idx < this._lstReqInfoErr.length; idx++) {
-            txt += ",\n    " + this._lstReqInfoErr[idx].toString();
+            txt += ',\n    ' + this._lstReqInfoErr[idx].toString();
         }
-        return txt + " ]";
+        return txt + ' ]';
     }
-    return "errors:null";
+    return 'errors:null';
 };
 
 /**

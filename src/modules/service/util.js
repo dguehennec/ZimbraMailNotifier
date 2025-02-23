@@ -35,9 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_Util"];
+'use strict';
 
 /**
  * Creates a global instance of zimbra_notifier_Util
@@ -50,7 +48,7 @@ var zimbra_notifier_Util = {
     /**
      * @private bundle
      */
-    _bundle: null
+    _bundle: null,
 };
 
 /**
@@ -62,14 +60,13 @@ var zimbra_notifier_Util = {
  *            param parameter value to get
  * @return {String} value of parameter
  */
-zimbra_notifier_Util.getBundleString = function(param) {
+zimbra_notifier_Util.getBundleString = function (param) {
     try {
         if (this._bundle === null) {
             this._bundle = chrome.i18n;
         }
-        return this._bundle.getMessage(param.replace(/\./g,'_'));
-    }
-    catch (e) {
+        return this._bundle.getMessage(param.replace(/\./g, '_'));
+    } catch (e) {
         return '';
     }
 };
@@ -89,9 +86,9 @@ zimbra_notifier_Util.getBundleString = function(param) {
  *
  * @return {nsITimer} The created timer
  */
-zimbra_notifier_Util.setTimer = function(timer, func, delay) {
+zimbra_notifier_Util.setTimer = function (timer, func, delay) {
     clearTimeout(timer);
-    timer =  setTimeout(func, delay)
+    timer = setTimeout(func, delay);
     return timer;
 };
 
@@ -103,17 +100,17 @@ zimbra_notifier_Util.setTimer = function(timer, func, delay) {
  *            time in seconds.
  * @return {String} time in format hh:mm:ss.
  */
-zimbra_notifier_Util.secToTimeStr = function(time) {
+zimbra_notifier_Util.secToTimeStr = function (time) {
     if (time === null || time < 0) {
-        return "";
+        return '';
     }
     var tmp = time;
     var h = Math.floor(tmp / 3600);
-    tmp = tmp - (h * 3600);
+    tmp = tmp - h * 3600;
     var m = Math.floor(tmp / 60);
-    tmp = tmp - (m * 60);
+    tmp = tmp - m * 60;
     var s = Math.floor(tmp);
-    return ((h < 10) ? "0" + h : h) + ":" + ((m < 10) ? "0" + m : m) + ":" + ((s < 10) ? "0" + s : s);
+    return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
 };
 
 /**
@@ -124,13 +121,13 @@ zimbra_notifier_Util.secToTimeStr = function(time) {
  *            date to convert in seconds
  * @return {String} date in format jj.mm.aaaa hh:mm
  */
-zimbra_notifier_Util.formatDateTime = function(date) {
+zimbra_notifier_Util.formatDateTime = function (date) {
     if (date === null) {
-        return "";
+        return '';
     }
     var h = date.getHours();
     var m = date.getMinutes();
-    return date.toLocaleDateString() + " " + ((h < 10) ? "0" + h : h) + ":" + ((m < 10) ? "0" + m : m);
+    return date.toLocaleDateString() + ' ' + (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m);
 };
 
 /**
@@ -143,8 +140,8 @@ zimbra_notifier_Util.formatDateTime = function(date) {
  *            length max text length.
  * @return {String} text limited with ....
  */
-zimbra_notifier_Util.maxStringLength = function(text, length) {
-    if (text === null || (text.length < length)) {
+zimbra_notifier_Util.maxStringLength = function (text, length) {
+    if (text === null || text.length < length) {
         return text;
     }
     if (length <= 0) {
@@ -153,7 +150,7 @@ zimbra_notifier_Util.maxStringLength = function(text, length) {
     if (length < 6) {
         return text.substring(0, length);
     }
-    return text.substring(0, length - 3) + "...";
+    return text.substring(0, length - 3) + '...';
 };
 
 /**
@@ -164,27 +161,23 @@ zimbra_notifier_Util.maxStringLength = function(text, length) {
  *            bytes.
  * @return {String} bytes in string format.
  */
-zimbra_notifier_Util.convertBytesToStringValue = function(bytes) {
+zimbra_notifier_Util.convertBytesToStringValue = function (bytes) {
     var v = 0;
     var unit = 'unit.bytes.B';
 
     if (bytes >= 1099511627776) {
         v = bytes / 1099511627776;
         unit = 'unit.bytes.TB';
-    }
-    else if (bytes >= 1073741824) {
+    } else if (bytes >= 1073741824) {
         v = bytes / 1073741824;
         unit = 'unit.bytes.GB';
-    }
-    else if (bytes >= 1048576) {
+    } else if (bytes >= 1048576) {
         v = bytes / 1048576;
         unit = 'unit.bytes.MB';
-    }
-    else if (bytes >= 1024) {
+    } else if (bytes >= 1024) {
         v = bytes / 1024;
         unit = 'unit.bytes.KB';
-    }
-    else if (bytes >= 0) {
+    } else if (bytes >= 0) {
         v = bytes;
     }
 
@@ -207,11 +200,17 @@ zimbra_notifier_Util.convertBytesToStringValue = function(bytes) {
  *
  * @return {Boolean} true if success
  */
-zimbra_notifier_Util.showNotification = function(title, text, duration, callback, callbackThis) {
+zimbra_notifier_Util.showNotification = function (title, text, duration, callback, callbackThis) {
     try {
         // Show the notification
         const notificationId = Math.random().toString(16).slice(2);
-        chrome.notifications.create(notificationId, { type: "basic", iconUrl: "../skin/images/zimbra_mail_notifier.png", title: title, message: text, isClickable: true });
+        chrome.notifications.create(notificationId, {
+            type: 'basic',
+            iconUrl: '../skin/images/zimbra_mail_notifier.png',
+            title: title,
+            message: text,
+            isClickable: true,
+        });
         // manage click event for this notification
         const notificationListener = function (notificationIdClicked) {
             if (notificationIdClicked == notificationId) {
@@ -219,14 +218,17 @@ zimbra_notifier_Util.showNotification = function(title, text, duration, callback
                 chrome.notifications.clear(notificationId);
                 chrome.notifications.onClicked.removeListener(notificationListener);
             }
-        }
+        };
         chrome.notifications.onClicked.addListener(notificationListener);
         // hide notification after the duration timeout
-        zimbra_notifier_Util.setTimer(null, function () {
-            chrome.notifications.clear(notificationId);
-        }, duration);
-    }
-    catch (e) {
+        zimbra_notifier_Util.setTimer(
+            null,
+            function () {
+                chrome.notifications.clear(notificationId);
+            },
+            duration,
+        );
+    } catch (e) {
         return false;
     }
     return true;
@@ -241,29 +243,32 @@ zimbra_notifier_Util.showNotification = function(title, text, duration, callback
  *            cb The callback
  * @return {Boolean} true if success
  */
-zimbra_notifier_Util.loadFile = function(file, cb, cbError) {
-    if(file.size > 300 * 1024) {
-        if(cbError) {
-            cbError(zimbra_notifier_Util.getBundleString("file.sound.error.size") + zimbra_notifier_Util.convertBytesToStringValue(file.size));
+zimbra_notifier_Util.loadFile = function (file, cb, cbError) {
+    if (file.size > 300 * 1024) {
+        if (cbError) {
+            cbError(
+                zimbra_notifier_Util.getBundleString('file.sound.error.size') +
+                    zimbra_notifier_Util.convertBytesToStringValue(file.size),
+            );
         }
         return false;
     }
     if (!file.type.startsWith('audio/')) {
-        if(cbError) {
-            cbError(zimbra_notifier_Util.getBundleString("file.sound.error.type") + file.type);
+        if (cbError) {
+            cbError(zimbra_notifier_Util.getBundleString('file.sound.error.type') + file.type);
         }
         return false;
     }
     const reader = new FileReader();
-    reader.onload = function() {
-        if(cb) {
+    reader.onload = function () {
+        if (cb) {
             cb(reader.result);
         }
     };
     reader.onerror = window.alert;
     reader.readAsDataURL(file);
     return true;
-}
+};
 
 /**
  * Extend the Object properties
@@ -275,8 +280,8 @@ zimbra_notifier_Util.loadFile = function(file, cb, cbError) {
  * @param {String}
  *            superPropName The name of the property to access of parent "class"
  */
-zimbra_notifier_Util.extend = function(base, sub, superPropName) {
-    var tmp = function() {};
+zimbra_notifier_Util.extend = function (base, sub, superPropName) {
+    var tmp = function () {};
     // Copy the prototype from the base to setup inheritance
     tmp.prototype = base.prototype;
     sub.prototype = new tmp();
@@ -296,7 +301,7 @@ zimbra_notifier_Util.extend = function(base, sub, superPropName) {
  * @param {String}
  *            pref The prefix to display for each line
  */
-zimbra_notifier_Util.dump = function(obj, pref) {
+zimbra_notifier_Util.dump = function (obj, pref) {
     if (!pref && pref !== '') {
         pref = '=> ';
     }
@@ -305,23 +310,19 @@ zimbra_notifier_Util.dump = function(obj, pref) {
             console.log(pref + p);
             var v = obj[p];
             if (v) {
-                if (typeof(v) === 'object') {
-                    console.log("\n");
+                if (typeof v === 'object') {
+                    console.log('\n');
                     zimbra_notifier_Util.dump(v, pref + p + '.');
+                } else if (typeof v !== 'function') {
+                    console.log(' : ' + v + ';');
                 }
-                else if (typeof(v) !== 'function') {
-                    console.log(" : " + v + ";");
-                }
+            } else {
+                console.log(' : ' + v + ';');
             }
-            else {
-                console.log(" : " + v + ";");
-            }
-        }
-        catch (e) {
-            console.log(" ... ");
-        }
-        finally {
-            console.log("\n");
+        } catch (e) {
+            console.log(' ... ');
+        } finally {
+            console.log('\n');
         }
     }
 };
@@ -332,14 +333,14 @@ zimbra_notifier_Util.dump = function(obj, pref) {
  * @param {Object}
  *            obj The object to freeze
  */
-zimbra_notifier_Util.deepFreeze = function(obj) {
+zimbra_notifier_Util.deepFreeze = function (obj) {
     // First freeze the object
     Object.freeze(obj);
     // Iterate over properties of object
     for (var propKey in obj) {
         if (obj.hasOwnProperty(propKey)) {
             var prop = obj[propKey];
-            if (typeof(prop) === 'object') {
+            if (typeof prop === 'object') {
                 zimbra_notifier_Util.deepFreeze(prop);
             }
         }

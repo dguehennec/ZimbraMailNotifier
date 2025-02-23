@@ -1,103 +1,104 @@
 fieldset {
-  border-radius:5px;
-  margin-top: 8px;
+    border-radius: 5px;
+    margin-top: 8px;
 }
 
 .option {
-  background-color: #999;
-  font-size: 14px;
+    background-color: #999;
+    font-size: 14px;
 }
 
 .option .header {
-  width:680px;
-  margin: 0 auto;
-  padding: 0px 30px;
-  position: relative;
+    width: 680px;
+    margin: 0 auto;
+    padding: 0px 30px;
+    position: relative;
 }
 
-.option .header .donate{
-  padding: 10px;
-  text-align: center;
-  background-color: #F07600;
-  border-radius: 20px;
-  box-shadow: 3px 3px 5px #555;
-  vertical-align: middle;
-  position: absolute;
-  top: 12px;
-  right: 30px;
-  color: #FFF;
-  text-decoration: none !important;
+.option .header .donate {
+    padding: 10px;
+    text-align: center;
+    background-color: #f07600;
+    border-radius: 20px;
+    box-shadow: 3px 3px 5px #555;
+    vertical-align: middle;
+    position: absolute;
+    top: 12px;
+    right: 30px;
+    color: #fff;
+    text-decoration: none !important;
 }
 
 .option .footer {
-  padding-top: 6px;
-  width: 100%;
-  font-size: 11px;
-  color: #333;
+    padding-top: 6px;
+    width: 100%;
+    font-size: 11px;
+    color: #333;
 }
 
-.option .footer .createby{
-  float:right;
-  text-align: right;
-  color: #522;
+.option .footer .createby {
+    float: right;
+    text-align: right;
+    color: #522;
 }
 
 .option img {
-  padding-right: 6px;
+    padding-right: 6px;
 }
 
 .option .content {
-  width: 680px;
-  margin: 0 auto;
-  padding: 0;
+    width: 680px;
+    margin: 0 auto;
+    padding: 0;
 }
 
 .option .tabContentWrapper {
-  min-width: 680px;
-  text-align: left;
-  display: inline-block;
-  background-color: #fff;
-  box-shadow: 3px 3px 5px #555;
-  border-radius: 5px;
+    min-width: 680px;
+    text-align: left;
+    display: inline-block;
+    background-color: #fff;
+    box-shadow: 3px 3px 5px #555;
+    border-radius: 5px;
 }
 
 .option .tabContent {
-  min-height: 270px;
-  padding:3px 20px 20px 20px
+    min-height: 270px;
+    padding: 3px 20px 20px 20px;
 }
 
 .option .menu {
-  padding-left:20px;
-  margin:0;
-  list-style-type: none;
+    padding-left: 20px;
+    margin: 0;
+    list-style-type: none;
 }
 
 .option .menu li {
-  padding: 0;
-  list-style: none;
-  display:inline-block;
+    padding: 0;
+    list-style: none;
+    display: inline-block;
 }
 
 .option .menu li a {
-  -webkit-transition:background-color .3s;
-  line-height: 30px;
-  border-radius:5px 5px 0 0;
-  padding:10px 8px 8px 8px;
-  border: 0 !important;
-  background-color: #ccc;
-  font-size:100%;
-  font-weight: bold;
-  color:black !important
+    -webkit-transition: background-color 0.3s;
+    line-height: 30px;
+    border-radius: 5px 5px 0 0;
+    padding: 10px 8px 8px 8px;
+    border: 0 !important;
+    background-color: #ccc;
+    font-size: 100%;
+    font-weight: bold;
+    color: black !important;
 }
 
-.option .menu li a:hover, .option .menu li a.active {
-  background-color:white;
-  text-shadow:none
+.option .menu li a:hover,
+.option .menu li a.active {
+    background-color: white;
+    text-shadow: none;
 }
 
 .option .zimbra_mail_notifier-serverError {
-  padding: 5px;
-  color: red;
+    padding: 5px;
+    color: red;
 }
 
 .option .actionButtons {
@@ -105,19 +106,21 @@ fieldset {
 }
 
 .option .hide {
-  display: none;
+    display: none;
 }
 
-.option #content_1, .option #content_2, .option #content_3 {
-  padding-top: 10px;
+.option #content_1,
+.option #content_2,
+.option #content_3 {
+    padding-top: 10px;
 }
 
 .option fieldset {
-  background-color: #F6F6F6;
+    background-color: #f6f6f6;
 }
 
-.option .subOptions>div{
-  padding-bottom: 5px;
+.option .subOptions > div {
+    padding-bottom: 5px;
 }
 
 .option input {
@@ -125,117 +128,118 @@ fieldset {
 }
 
 .option input:invalid {
-  border-color: red;
-  background-color: rgba(255, 0, 0, 0.2);
+    border-color: red;
+    background-color: rgba(255, 0, 0, 0.2);
 }
 
 .option .play-button {
-    float:right;
+    float: right;
 }
 
 .option .play {
-  border-top: 10px solid white;
-  border-bottom: 10px solid white;
-  border-left: 20px solid black;
-  height: 0px;
+    border-top: 10px solid white;
+    border-bottom: 10px solid white;
+    border-left: 20px solid black;
+    height: 0px;
 }
 
 .popup {
-  font-size: 12px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  cursor: default;
-  min-width: 200px;
-  min-height: 60px;
-  background-color: #FFFFFF;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    cursor: default;
+    min-width: 200px;
+    min-height: 60px;
+    background-color: #ffffff;
 }
 
 .popup .tooltipDescription {
-  text-align:center;
+    text-align: center;
 }
 .popup .tooltipIdentifier {
-  padding: 3px;
-  position: relative;
+    padding: 3px;
+    position: relative;
 }
 .popup .tooltipIdentifier:not(:first-child) {
-  border-top: solid 1px #CCC;
+    border-top: solid 1px #ccc;
 }
 
 .popup .tooltipTitle {
-  font-weight:bold
+    font-weight: bold;
 }
 
-.popup  fieldset {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 3px;
-  margin-bottom: 3px;
-  background-color: rgba(0,0,0,0.1);
+.popup fieldset {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .popup .actionidentifier {
-  position:absolute;
-  top:3px;
+    position: absolute;
+    top: 3px;
 }
 
 .popup #zimbra_mail_notifier_tooltipMessage div {
-  margin: 2px 0px;
+    margin: 2px 0px;
 }
 
-.popup .action > img, .popup #zimbra_mail_notifier_tooltipMessage .tooltipMessageAbstract {
-  cursor: pointer;
+.popup .action > img,
+.popup #zimbra_mail_notifier_tooltipMessage .tooltipMessageAbstract {
+    cursor: pointer;
 }
 
 .popup #zimbra_mail_notifier_tooltipTask div {
-  width: 100%;
+    width: 100%;
 }
 .popup .action {
-  width: 100%;
-  text-align: right;
+    width: 100%;
+    text-align: right;
 }
 
 .popup .action img {
-  width: 18px;
-  height: 18px;
-  margin-left: 6px;
+    width: 18px;
+    height: 18px;
+    margin-left: 6px;
 }
 
 .popup .section {
-  color: #333;
+    color: #333;
 }
 
-.popup legend{
-  font-size: 13px;
-  font-weight:bold;
+.popup legend {
+    font-size: 13px;
+    font-weight: bold;
 }
 
-.popup  .eventLabelDate {
-  color: green;
-  font-size: 11px;
+.popup .eventLabelDate {
+    color: green;
+    font-size: 11px;
 }
 
-.popup  .eventLabelDesc {
-  padding-left:15px;
+.popup .eventLabelDesc {
+    padding-left: 15px;
 }
 
-.popup  .taskLabelPriority {
-  color: red;
+.popup .taskLabelPriority {
+    color: red;
 }
 
-.popup  .taskLabelPriority[status="5"] {
-  color: green;
+.popup .taskLabelPriority[status='5'] {
+    color: green;
 }
 
-.popup  .taskLabelPriority[status="9"] {
-  color: blue;
+.popup .taskLabelPriority[status='9'] {
+    color: blue;
 }
 
-.popup  .taskLabelDesc {
-  padding-left:15px;
+.popup .taskLabelDesc {
+    padding-left: 15px;
 }
 
-.popup  .taskLabelPurcent {
-  width: 40px;
-  float: right;
-  text-align: right;
+.popup .taskLabelPurcent {
+    width: 40px;
+    float: right;
+    text-align: right;
 }

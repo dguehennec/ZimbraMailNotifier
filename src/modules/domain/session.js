@@ -35,16 +35,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_Session"];
+'use strict';
 
 /**
  * Creates an instance of Session.
  *
  * @constructor
  * @this {Session}
- * 
+ *
  * @param {Object}
  *            device trusted informations
  */
@@ -69,13 +67,13 @@ var zimbra_notifier_Session = function (deviceTrustedInfos) {
  *
  * @this {Session}
  */
-zimbra_notifier_Session.prototype.clear = function() {
+zimbra_notifier_Session.prototype.clear = function () {
     this._user = '';
     this._urlWebService = '';
 
     this._token = '';
     this._tokenExpirationTime = new Date();
-    this._twoFactorAuthentication  = false;
+    this._twoFactorAuthentication = false;
 
     this._waitId = '';
     this._waitSeq = '';
@@ -87,7 +85,7 @@ zimbra_notifier_Session.prototype.clear = function() {
  * @this {Session}
  * @return {String} The token
  */
-zimbra_notifier_Session.prototype.token = function() {
+zimbra_notifier_Session.prototype.token = function () {
     return this._token;
 };
 
@@ -97,7 +95,7 @@ zimbra_notifier_Session.prototype.token = function() {
  * @this {Session}
  * @return {String} The user to login
  */
-zimbra_notifier_Session.prototype.user = function() {
+zimbra_notifier_Session.prototype.user = function () {
     return this._user;
 };
 
@@ -107,7 +105,7 @@ zimbra_notifier_Session.prototype.user = function() {
  * @this {Session}
  * @return {String} The wait set id
  */
-zimbra_notifier_Session.prototype.waitId = function() {
+zimbra_notifier_Session.prototype.waitId = function () {
     return this._waitId;
 };
 
@@ -117,7 +115,7 @@ zimbra_notifier_Session.prototype.waitId = function() {
  * @this {Session}
  * @return {String} The wait set sequence
  */
-zimbra_notifier_Session.prototype.waitSeq = function() {
+zimbra_notifier_Session.prototype.waitSeq = function () {
     return this._waitSeq;
 };
 
@@ -129,7 +127,7 @@ zimbra_notifier_Session.prototype.waitSeq = function() {
  *           baseUrl  The path of the url
  * @return {String} The full url with the scheme, hostname and path
  */
-zimbra_notifier_Session.prototype.buildUrl = function(baseUrl) {
+zimbra_notifier_Session.prototype.buildUrl = function (baseUrl) {
     if (this._urlWebService.length > 0) {
         return this._urlWebService + baseUrl;
     }
@@ -149,22 +147,20 @@ zimbra_notifier_Session.prototype.buildUrl = function(baseUrl) {
  *
  * @return {Boolean} True if changed
  */
-zimbra_notifier_Session.prototype.updateLoginInfo = function(urlWebService, user, clearSession) {
+zimbra_notifier_Session.prototype.updateLoginInfo = function (urlWebService, user, clearSession) {
     var changed = false;
 
     urlWebService = this._valToStr(urlWebService);
     user = this._valToStr(user);
 
     if (user.length > 0 && urlWebService.length > 0) {
-
         if (urlWebService.lastIndexOf('/') === urlWebService.length - 1) {
             urlWebService = urlWebService.slice(0, -1);
         }
         if (this._user !== user || this._urlWebService !== urlWebService) {
             changed = true;
         }
-    }
-    else {
+    } else {
         if (this._user.length > 0 || this._urlWebService.length > 0) {
             changed = true;
         }
@@ -188,9 +184,13 @@ zimbra_notifier_Session.prototype.updateLoginInfo = function(urlWebService, user
  * @this {Session}
  * @return {Boolean} true if the token and the associated info are valid
  */
-zimbra_notifier_Session.prototype.isTokenValid = function() {
-    return this._user.length > 0 && this._urlWebService.length > 0 &&
-           this._token.length > 0 && this._tokenExpirationTime > new Date();
+zimbra_notifier_Session.prototype.isTokenValid = function () {
+    return (
+        this._user.length > 0 &&
+        this._urlWebService.length > 0 &&
+        this._token.length > 0 &&
+        this._tokenExpirationTime > new Date()
+    );
 };
 
 /**
@@ -200,7 +200,7 @@ zimbra_notifier_Session.prototype.isTokenValid = function() {
  * @return {Boolean} true if session need two factor authentication process
  */
 zimbra_notifier_Session.prototype.isTwoFactorAuthRequired = function () {
-    return this.isTokenValid() && this._twoFactorAuthentication
+    return this.isTokenValid() && this._twoFactorAuthentication;
 };
 
 /**
@@ -209,10 +209,9 @@ zimbra_notifier_Session.prototype.isTwoFactorAuthRequired = function () {
  * @this {Session}
  * @return {String} the device id
  */
-zimbra_notifier_Session.prototype.deviceId = function() {
+zimbra_notifier_Session.prototype.deviceId = function () {
     return this._deviceId;
-}
-
+};
 
 /**
  * get the trusted Token for this device id
@@ -225,7 +224,7 @@ zimbra_notifier_Session.prototype.trustedToken = function () {
         return this._trustedToken;
     }
     return '';
-}
+};
 
 /**
  * get the trusted token expiration time for this device id
@@ -234,8 +233,8 @@ zimbra_notifier_Session.prototype.trustedToken = function () {
  * @return {Date} the trusted Expiration time
  */
 zimbra_notifier_Session.prototype.trustedTokenExpirationTime = function () {
-   return this._trustedTokenExpirationTime;
-}
+    return this._trustedTokenExpirationTime;
+};
 
 /**
  * Update the authentication token
@@ -248,28 +247,35 @@ zimbra_notifier_Session.prototype.trustedTokenExpirationTime = function () {
  * @param {Boolean}
  *            twoFactorAuthentication The two factor authentication is enable or not
  * @param {String}
- *            deviceId The device trusted id 
+ *            deviceId The device trusted id
  * @param {String}
  *            trustedToken The trusted token
  * @param {Integer}
  *            trustedlifetime The trusted lifetime
  */
-zimbra_notifier_Session.prototype.updateToken = function (token, lifetime, twoFactorAuthentication, deviceId, trustedToken, trustedlifetime) {
-
+zimbra_notifier_Session.prototype.updateToken = function (
+    token,
+    lifetime,
+    twoFactorAuthentication,
+    deviceId,
+    trustedToken,
+    trustedlifetime,
+) {
     token = this._valToStr(token);
 
     if (token.length > 0 && lifetime) {
         this._tokenExpirationTime = new Date(new Date().getTime() + lifetime - 1000);
         this._token = token;
-        this._twoFactorAuthentication = !!twoFactorAuthentication
-        this._deviceId = deviceId || this._deviceId
-        this._trustedToken = trustedToken || this._trustedToken
-        this._trustedTokenExpirationTime = trustedlifetime ? new Date(new Date().getTime() + parseInt(trustedlifetime, 10) - 1000) : this._trustedTokenExpirationTime;
-    }
-    else {
+        this._twoFactorAuthentication = !!twoFactorAuthentication;
+        this._deviceId = deviceId || this._deviceId;
+        this._trustedToken = trustedToken || this._trustedToken;
+        this._trustedTokenExpirationTime = trustedlifetime
+            ? new Date(new Date().getTime() + parseInt(trustedlifetime, 10) - 1000)
+            : this._trustedTokenExpirationTime;
+    } else {
         this._tokenExpirationTime = new Date(0);
         this._token = '';
-        this._twoFactorAuthentication = false
+        this._twoFactorAuthentication = false;
         this._deviceId = '';
         this._trustedToken = '';
         this._trustedTokenExpirationTime = new Date(0);
@@ -282,7 +288,7 @@ zimbra_notifier_Session.prototype.updateToken = function (token, lifetime, twoFa
  *
  * @this {Session}
  */
-zimbra_notifier_Session.prototype.markTokenExpired = function() {
+zimbra_notifier_Session.prototype.markTokenExpired = function () {
     this._tokenExpirationTime = new Date(0);
 };
 
@@ -292,8 +298,9 @@ zimbra_notifier_Session.prototype.markTokenExpired = function() {
  * @this {Session}
  * @return {Boolean} True if the token is going to be non valid soon
  */
-zimbra_notifier_Session.prototype.isTokenGoingToExp = function() {
-    var timeExp = this._tokenExpirationTime.getTime() - zimbra_notifier_Constant.SESSION.TOKEN_LIFETIME_EXPIR;
+zimbra_notifier_Session.prototype.isTokenGoingToExp = function () {
+    var timeExp =
+        this._tokenExpirationTime.getTime() - zimbra_notifier_Constant.SESSION.TOKEN_LIFETIME_EXPIR;
     if (new Date().getTime() > timeExp) {
         return true;
     }
@@ -306,7 +313,7 @@ zimbra_notifier_Session.prototype.isTokenGoingToExp = function() {
  * @this {Session}
  * @return {Boolean} true the WaitSet is valid
  */
-zimbra_notifier_Session.prototype.isWaitSetValid = function() {
+zimbra_notifier_Session.prototype.isWaitSetValid = function () {
     return this._waitId.length > 0 && this._waitSeq.length > 0;
 };
 
@@ -320,21 +327,19 @@ zimbra_notifier_Session.prototype.isWaitSetValid = function() {
  *            seq The waitSet sequence
  * @return {Boolean} True if changed
  */
-zimbra_notifier_Session.prototype.updateWaitSet = function(id, seq) {
+zimbra_notifier_Session.prototype.updateWaitSet = function (id, seq) {
     var changed = false;
 
     id = this._valToStr(id);
     seq = this._valToStr(seq);
 
     if (id.length > 0 && seq.length > 0) {
-
         if (this._waitId !== id || this._waitSeq !== seq) {
             changed = true;
         }
         this._waitId = id;
         this._waitSeq = seq;
-    }
-    else {
+    } else {
         if (this._waitId.length > 0 || this._waitSeq.length > 0) {
             changed = true;
         }
@@ -350,9 +355,9 @@ zimbra_notifier_Session.prototype.updateWaitSet = function(id, seq) {
  * @this {Session}
  * @return {Object[]} Cookies
  */
-zimbra_notifier_Session.prototype.getAuthCookies = function() {
+zimbra_notifier_Session.prototype.getAuthCookies = function () {
     var cookies = [];
-    cookies.push({ key: 'ZM_AUTH_TOKEN', val: this._token});
+    cookies.push({key: 'ZM_AUTH_TOKEN', val: this._token});
     return cookies;
 };
 
@@ -364,7 +369,7 @@ zimbra_notifier_Session.prototype.getAuthCookies = function() {
  *            val  The value
  * @return {Boolean} True if changed
  */
-zimbra_notifier_Session.prototype._valToStr = function(val) {
+zimbra_notifier_Session.prototype._valToStr = function (val) {
     if (!val && val !== 0) {
         return '';
     }

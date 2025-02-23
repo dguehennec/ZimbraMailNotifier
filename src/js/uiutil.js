@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
- "use strict";
+'use strict';
 
 /**
  * Creates a global instance of zimbra_notifier_UiUtil
@@ -52,36 +52,35 @@ var zimbra_notifier_UiUtil = {};
  * @public
  * @this {UiUtil}
  */
-zimbra_notifier_UiUtil.initLocale = function() {
-    $("*").each(function() {
-        var attr = $(this).attr("msg");
+zimbra_notifier_UiUtil.initLocale = function () {
+    $('*').each(function () {
+        var attr = $(this).attr('msg');
         if (attr) {
-            var attrTemplate = $(this).attr("msgtemplate");
+            var attrTemplate = $(this).attr('msgtemplate');
             if (attrTemplate) {
-                $(this).text(attrTemplate.replace("%MSG%", chrome.i18n.getMessage(attr)));
+                $(this).text(attrTemplate.replace('%MSG%', chrome.i18n.getMessage(attr)));
             } else {
                 $(this).text(chrome.i18n.getMessage(attr));
             }
         }
-        attr = $(this).attr("msgtitle");
+        attr = $(this).attr('msgtitle');
         if (attr) {
-            $(this).attr("title", chrome.i18n.getMessage(attr));
+            $(this).attr('title', chrome.i18n.getMessage(attr));
         }
-        attr = $(this).attr("msgsrc");
+        attr = $(this).attr('msgsrc');
         if (attr) {
-            $(this).attr("src", chrome.i18n.getMessage(attr));
+            $(this).attr('src', chrome.i18n.getMessage(attr));
         }
-        attr = $(this).attr("msgvalue");
+        attr = $(this).attr('msgvalue');
         if (attr) {
-            $(this).attr("value", chrome.i18n.getMessage(attr));
+            $(this).attr('value', chrome.i18n.getMessage(attr));
         }
-        attr = $(this).attr("msgplaceholder");
+        attr = $(this).attr('msgplaceholder');
         if (attr) {
-            $(this).attr("placeholder", chrome.i18n.getMessage(attr));
+            $(this).attr('placeholder', chrome.i18n.getMessage(attr));
         }
     });
-}
-
+};
 
 /**
  * play sound
@@ -114,7 +113,7 @@ zimbra_notifier_UiUtil.playSound = function (selected, customSound, volume) {
     audio.volume = parseInt(volume) / 100;
     audio.play();
     return true;
-}
+};
 
 /**
  * Option select tab
@@ -123,16 +122,16 @@ zimbra_notifier_UiUtil.playSound = function (selected, customSound, volume) {
  *
  */
 zimbra_notifier_UiUtil.OPTION_SELECT_TAB = {
-    GENERAL         : 0,
-    MESSAGE         : 1,
-    CALENDAR        : 2,
-    TASK            : 3,
-    IDENTIFICATION  : 4
+    GENERAL: 0,
+    MESSAGE: 1,
+    CALENDAR: 2,
+    TASK: 3,
+    IDENTIFICATION: 4,
 };
 
 /**
  * Add event listener to notify when content is loaded
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     zimbra_notifier_UiUtil.initLocale();
 });

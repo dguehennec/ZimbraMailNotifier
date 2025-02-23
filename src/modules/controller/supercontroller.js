@@ -34,9 +34,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_SuperController"];
+'use strict';
 
 /* ************************* Controller ****************************** */
 
@@ -46,9 +44,9 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_SuperController"];
  * @constructor
  * @this {SuperController}
  */
-var zimbra_notifier_SuperController = { 
+var zimbra_notifier_SuperController = {
     _controllers: [],
-    _callbackList: []
+    _callbackList: [],
 };
 
 /**
@@ -57,14 +55,14 @@ var zimbra_notifier_SuperController = {
  * @public
  * @this {SuperController}
  */
-zimbra_notifier_SuperController.init = function() {
+zimbra_notifier_SuperController.init = function () {
     // Load preferences before started controllers
-    zimbra_notifier_Prefs.init( function() {
-        zimbra_notifier_Prefs.getAccounts().forEach(function(accountId){
+    zimbra_notifier_Prefs.init(function () {
+        zimbra_notifier_Prefs.getAccounts().forEach(function (accountId) {
             var controller = new zimbra_notifier_Controller(accountId);
             zimbra_notifier_SuperController._controllers.push(controller);
             // Add callback to the controller if already added to the superController
-            zimbra_notifier_SuperController._callbackList.forEach(function(callback) {
+            zimbra_notifier_SuperController._callbackList.forEach(function (callback) {
                 if (callback !== null) {
                     controller.addCallBackRefresh(callback);
                 }
@@ -72,7 +70,7 @@ zimbra_notifier_SuperController.init = function() {
             controller.autoConnect();
         });
     });
-}
+};
 
 /**
  * Called when application closes
@@ -80,24 +78,23 @@ zimbra_notifier_SuperController.init = function() {
  * @public
  * @this {SuperController}
  */
-zimbra_notifier_SuperController.shutdown = function() {
-    this._controllers.forEach(function(controller) {
+zimbra_notifier_SuperController.shutdown = function () {
+    this._controllers.forEach(function (controller) {
         controller.shutdown();
     });
     zimbra_notifier_Prefs.release();
 };
 
-
 /**
  * Add CallBack to Refresh
  *
-  * @public
+ * @public
  * @this {SuperController}
  * @param {Object}
  *            callback Object which has this function : refresh(startRequest)
  */
-zimbra_notifier_SuperController.addCallBackRefresh = function(callback) {
-    this._controllers.forEach(function(controller) {
+zimbra_notifier_SuperController.addCallBackRefresh = function (callback) {
+    this._controllers.forEach(function (controller) {
         controller.addCallBackRefresh(callback);
     });
     this._callbackList.push(callback);
@@ -111,8 +108,8 @@ zimbra_notifier_SuperController.addCallBackRefresh = function(callback) {
  * @param {Object}
  *            callback Object which has this function : refresh(startRequest)
  */
-zimbra_notifier_SuperController.removeCallBackRefresh = function(callback) {
-    this._controllers.forEach(function(controller) {
+zimbra_notifier_SuperController.removeCallBackRefresh = function (callback) {
+    this._controllers.forEach(function (controller) {
         controller.removeCallBackRefresh(callback);
     });
 
@@ -130,7 +127,7 @@ zimbra_notifier_SuperController.removeCallBackRefresh = function(callback) {
  * @public
  * @this {SuperController}
  */
-zimbra_notifier_SuperController.addNewIdentifier = function() {
+zimbra_notifier_SuperController.addNewIdentifier = function () {
     var accountId = zimbra_notifier_Prefs.addNewAccount();
     var controller = new zimbra_notifier_Controller(accountId);
     zimbra_notifier_SuperController._controllers.push(controller);
@@ -152,22 +149,26 @@ zimbra_notifier_SuperController.addNewIdentifier = function() {
  * @this {SuperController}
  * @param {zimbra_notifier_Controller} controller
  */
-zimbra_notifier_SuperController.removeController = function(controller) {
-    for (var index = 0; index < this._controllers.length; index++) {
-        if (this._controllers[index] === controller) {
-            this._controllers.splice(index, 1);
-            zimbra_notifier_Prefs.removeAccount(controller.getAccountId())
+zimbra_notifier_SuperController.removeController = function (controller) {
+    for (var indexController = 0; indexController < this._controllers.length; indexController++) {
+        if (this._controllers[indexController] === controller) {
+            this._controllers.splice(indexController, 1);
+            zimbra_notifier_Prefs.removeAccount(controller.getAccountId());
             controller.shutdown();
             // Notify the UI of the change
-            for (var index = 0; index < this._callbackList.length; index++) {
-                var callback = this._callbackList[index];
+            for (
+                var indexCallback = 0;
+                indexCallback < this._callbackList.length;
+                indexCallback++
+            ) {
+                var callback = this._callbackList[indexCallback];
                 if (callback !== null) {
                     callback.refresh();
                 }
             }
             break;
         }
-    }    
+    }
 };
 
 /**
@@ -177,14 +178,14 @@ zimbra_notifier_SuperController.removeController = function(controller) {
  * @this {SuperController}
  * @return {Boolean} true if connected
  */
-zimbra_notifier_SuperController.hasConnectionActivated = function() {
+zimbra_notifier_SuperController.hasConnectionActivated = function () {
     var nbConnected = 0;
-    this._controllers.forEach(function(controller) {
+    this._controllers.forEach(function (controller) {
         if (controller.isConnected()) {
             nbConnected++;
         }
     });
-    return (nbConnected > 0);
+    return nbConnected > 0;
 };
 
 /**
@@ -193,10 +194,9 @@ zimbra_notifier_SuperController.hasConnectionActivated = function() {
  * @this {SuperController}
  * @return {controller[]} controllers list
  */
-zimbra_notifier_SuperController.getControllers = function() {
+zimbra_notifier_SuperController.getControllers = function () {
     return this._controllers;
 };
-
 
 /**
  * Get nb of unread messages
@@ -205,14 +205,13 @@ zimbra_notifier_SuperController.getControllers = function() {
  * @this {SuperController}
  * @return {Number} nb of unread messages
  */
-zimbra_notifier_SuperController.getNbMessageUnread = function() {
+zimbra_notifier_SuperController.getNbMessageUnread = function () {
     var nbMessageUnread = 0;
-    this._controllers.forEach(function(controller) {
+    this._controllers.forEach(function (controller) {
         nbMessageUnread += controller.getNbMessageUnread();
     });
     return nbMessageUnread;
 };
-
 
 /**
  * Get unread messages
@@ -221,9 +220,9 @@ zimbra_notifier_SuperController.getNbMessageUnread = function() {
  * @this {Controller}
  * @return {Message[]} unread messages
  */
-zimbra_notifier_SuperController.getUnreadMessages = function() {
+zimbra_notifier_SuperController.getUnreadMessages = function () {
     var unreadMessages = [];
-    this._controllers.forEach(function(controller) {
+    this._controllers.forEach(function (controller) {
         unreadMessages = unreadMessages.concat(controller.getUnreadMessages());
     });
     return unreadMessages;
@@ -236,16 +235,15 @@ zimbra_notifier_SuperController.getUnreadMessages = function() {
  * @this {SuperController}
  * @return {String} the last server error message
  */
-zimbra_notifier_SuperController.getLastErrorMessage = function() {
-    var message = "";
-    this._controllers.forEach(function(controller) {
-        if(controller.getLastErrorMessage() !== "") {
-            message = controller.getLastErrorMessage(); 
+zimbra_notifier_SuperController.getLastErrorMessage = function () {
+    var message = '';
+    this._controllers.forEach(function (controller) {
+        if (controller.getLastErrorMessage() !== '') {
+            message = controller.getLastErrorMessage();
         }
     });
     return message;
-}
-
+};
 
 /**
  * Get events
@@ -254,14 +252,14 @@ zimbra_notifier_SuperController.getLastErrorMessage = function() {
  * @this {SuperController}
  * @return {CalEvent[]} events
  */
-zimbra_notifier_SuperController.getEvents = function() {
+zimbra_notifier_SuperController.getEvents = function () {
     var events = [];
-    this._controllers.forEach(function(controller) {
+    this._controllers.forEach(function (controller) {
         events = events.concat(controller.getEvents());
     });
     // sort unread messages
-    events.sort(function(a, b) {
-        return a.startDate > b.startDate
+    events.sort(function (a, b) {
+        return a.startDate > b.startDate;
     });
     return events;
 };
@@ -273,14 +271,14 @@ zimbra_notifier_SuperController.getEvents = function() {
  * @this {SuperController}
  * @return {Task[]} tasks
  */
-zimbra_notifier_SuperController.getTasks = function() {
+zimbra_notifier_SuperController.getTasks = function () {
     var tasks = [];
-    this._controllers.forEach(function(controller) {
+    this._controllers.forEach(function (controller) {
         tasks = tasks.concat(controller.getTasks());
     });
     // sort tasks by prioity
-    tasks.sort(function(a, b) {
-        return a.priority > b.priority
+    tasks.sort(function (a, b) {
+        return a.priority > b.priority;
     });
     return tasks;
 };

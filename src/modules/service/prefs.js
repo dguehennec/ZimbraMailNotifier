@@ -35,9 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_Prefs"];
+'use strict';
 
 /**
  * Creates an instance of Prefs.
@@ -48,7 +46,7 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Prefs"];
 var zimbra_notifier_Prefs = {
     _prefs: null,
     _is_first_launch: false,
-    _previous_version: 0
+    _previous_version: 0,
 };
 
 /**
@@ -58,56 +56,56 @@ var zimbra_notifier_Prefs = {
  */
 zimbra_notifier_Prefs.PREF = {
     // email + general
-    CURRENT_VERSION                 : "currentVersion",
-    AUTOCONNECT                     : "autoConnect",
-    EMAIL_NOTIFICATION_ENABLED      : "systemNotificationEnabled",
-    EMAIL_SOUND_ENABLED             : "soundEnabled",
-    EMAIL_SOUND_SELECTED            : "emailSoundSelected",
-    EMAIL_SOUND_FILE                : "emailSoundFile",
-    EMAIL_SOUND_VOLUME              : "emailSoundVolume",
-    EMAIL_NOTIFICATION_DURATION     : "emailNotificationDuration",
+    CURRENT_VERSION: 'currentVersion',
+    AUTOCONNECT: 'autoConnect',
+    EMAIL_NOTIFICATION_ENABLED: 'systemNotificationEnabled',
+    EMAIL_SOUND_ENABLED: 'soundEnabled',
+    EMAIL_SOUND_SELECTED: 'emailSoundSelected',
+    EMAIL_SOUND_FILE: 'emailSoundFile',
+    EMAIL_SOUND_VOLUME: 'emailSoundVolume',
+    EMAIL_NOTIFICATION_DURATION: 'emailNotificationDuration',
     // Browser
-    BROWSER_SET_COOKIES             : "browserSetCookies",
-    BROWSER_COOKIE_HTTP_ONLY        : "browserCookieHttpOnly",
+    BROWSER_SET_COOKIES: 'browserSetCookies',
+    BROWSER_COOKIE_HTTP_ONLY: 'browserCookieHttpOnly',
     // popup
-    POPUP_COLOR                     : "popupColor",
-    POPUP_WIDTH                     : "popupWidth",
+    POPUP_COLOR: 'popupColor',
+    POPUP_WIDTH: 'popupWidth',
     // Message
-    MESSAGE_ENABLED                 : "messageEnabled",
-    MESSAGE_NB_DISPLAYED            : "messageNbDisplayed",
-    MESSAGE_NB_CHARACTERS_DISPLAYED : "messageNbCharactersDisplayed",
+    MESSAGE_ENABLED: 'messageEnabled',
+    MESSAGE_NB_DISPLAYED: 'messageNbDisplayed',
+    MESSAGE_NB_CHARACTERS_DISPLAYED: 'messageNbCharactersDisplayed',
     // calendar
-    CALENDAR_ENABLED                : "calendarEnabled",
-    CALENDAR_PERIOD_DISPLAYED       : "calendarPeriodDisplayed",
-    CALENDAR_NB_DISPLAYED           : "calendarNbDisplayed",
-    CALENDAR_NOTIFICATION_ENABLED   : "calendarSystemNotificationEnabled",
-    CALENDAR_SOUND_ENABLED          : "calendarSoundEnabled",
-    CALENDAR_SOUND_SELECTED         : "calendarSoundSelected",
-    CALENDAR_SOUND_FILE             : "calendarSoundFile",
-    CALENDAR_SOUND_VOLUME           : "calendarSoundVolume",
-    CALENDAR_REMINDER_TIME_CONF     : "calendarReminderTimeConf",
-    CALENDAR_REMINDER_NB_REPEAT     : "calendarReminderRepeatNb",
+    CALENDAR_ENABLED: 'calendarEnabled',
+    CALENDAR_PERIOD_DISPLAYED: 'calendarPeriodDisplayed',
+    CALENDAR_NB_DISPLAYED: 'calendarNbDisplayed',
+    CALENDAR_NOTIFICATION_ENABLED: 'calendarSystemNotificationEnabled',
+    CALENDAR_SOUND_ENABLED: 'calendarSoundEnabled',
+    CALENDAR_SOUND_SELECTED: 'calendarSoundSelected',
+    CALENDAR_SOUND_FILE: 'calendarSoundFile',
+    CALENDAR_SOUND_VOLUME: 'calendarSoundVolume',
+    CALENDAR_REMINDER_TIME_CONF: 'calendarReminderTimeConf',
+    CALENDAR_REMINDER_NB_REPEAT: 'calendarReminderRepeatNb',
     // task
-    TASK_ENABLED                    : "taskEnabled",
-    TASK_NB_DISPLAYED               : "taskNbDisplayed",
-    TASK_PRIORITIES                 : "taskPriorities",
+    TASK_ENABLED: 'taskEnabled',
+    TASK_NB_DISPLAYED: 'taskNbDisplayed',
+    TASK_PRIORITIES: 'taskPriorities',
     // account
-    ACCOUNTS                        : "accounts",
+    ACCOUNTS: 'accounts',
     // user
-    USER_ALIAS                      : "userAlias",
-    USER_LOGIN                      : "userLogin",
-    USER_PASSWORD                   : "userPassword",
-    USER_URL_WEB_SERVICE            : "userServer",
-    USER_URL_WEB_INTERFACE          : "userUrlWebInteface",
-    USER_SAVEPASSWORD               : "userSavePassword",
-    DEVICE_TRUSTED_INFOS            : "deviceTrustedInfos",
+    USER_ALIAS: 'userAlias',
+    USER_LOGIN: 'userLogin',
+    USER_PASSWORD: 'userPassword',
+    USER_URL_WEB_SERVICE: 'userServer',
+    USER_URL_WEB_INTERFACE: 'userUrlWebInteface',
+    USER_SAVEPASSWORD: 'userSavePassword',
+    DEVICE_TRUSTED_INFOS: 'deviceTrustedInfos',
     // About Wait set
-    WAITSET_INFO                    : "waitSetInfo",
-    REQUEST_QUERY_TIMEOUT           : "requestQueryTimeout",
-    REQUEST_WAIT_TIMEOUT            : "requestWaitTimeout",
-    REQUEST_WAIT_LOOP_TIME          : "requestWaitLoopTime",
+    WAITSET_INFO: 'waitSetInfo',
+    REQUEST_QUERY_TIMEOUT: 'requestQueryTimeout',
+    REQUEST_WAIT_TIMEOUT: 'requestWaitTimeout',
+    REQUEST_WAIT_LOOP_TIME: 'requestWaitLoopTime',
 
-    USER_PASSWORD_KEY               : "ZimDguBro"
+    USER_PASSWORD_KEY: 'ZimDguBro',
 };
 zimbra_notifier_Util.deepFreeze(zimbra_notifier_Prefs.PREF);
 
@@ -116,27 +114,47 @@ zimbra_notifier_Util.deepFreeze(zimbra_notifier_Prefs.PREF);
  *
  * @this {Prefs}
  */
-zimbra_notifier_Prefs.load = function() {
-
+zimbra_notifier_Prefs.load = function () {
     // Get the previous version
     var previous_version = this._getPref(this.PREF.CURRENT_VERSION);
 
     // Check if this is the first time the extension is started
-    if (previous_version===0) {
+    if (previous_version === 0) {
         this._is_first_launch = true;
     } else if (previous_version < 0x020000) {
         var accountId = this.addNewAccount();
         // user
         this.updatePref(this.PREF.USER_LOGIN + accountId, this._getPref(this.PREF.USER_LOGIN));
-        this.updatePref(this.PREF.USER_PASSWORD + accountId, this._getPref(this.PREF.USER_PASSWORD));
-        this.updatePref(this.PREF.USER_SAVEPASSWORD + accountId, this._getPref(this.PREF.USER_SAVEPASSWORD));
-        this.updatePref(this.PREF.USER_URL_WEB_SERVICE + accountId, this._getPref(this.PREF.USER_URL_WEB_SERVICE));
-        this.updatePref(this.PREF.USER_URL_WEB_INTERFACE + accountId, this._getPref(this.PREF.USER_URL_WEB_INTERFACE));
+        this.updatePref(
+            this.PREF.USER_PASSWORD + accountId,
+            this._getPref(this.PREF.USER_PASSWORD),
+        );
+        this.updatePref(
+            this.PREF.USER_SAVEPASSWORD + accountId,
+            this._getPref(this.PREF.USER_SAVEPASSWORD),
+        );
+        this.updatePref(
+            this.PREF.USER_URL_WEB_SERVICE + accountId,
+            this._getPref(this.PREF.USER_URL_WEB_SERVICE),
+        );
+        this.updatePref(
+            this.PREF.USER_URL_WEB_INTERFACE + accountId,
+            this._getPref(this.PREF.USER_URL_WEB_INTERFACE),
+        );
         // About Wait set
         this.updatePref(this.PREF.WAITSET_INFO + accountId, this._getPref(this.PREF.WAITSET_INFO));
-        this.updatePref(this.PREF.REQUEST_QUERY_TIMEOUT + accountId, this._getPref(this.PREF.REQUEST_QUERY_TIMEOUT));
-        this.updatePref(this.PREF.REQUEST_WAIT_TIMEOUT + accountId, this._getPref(this.PREF.REQUEST_WAIT_TIMEOUT));
-        this.updatePref(this.PREF.REQUEST_WAIT_LOOP_TIME + accountId, this._getPref(this.PREF.REQUEST_WAIT_LOOP_TIME));
+        this.updatePref(
+            this.PREF.REQUEST_QUERY_TIMEOUT + accountId,
+            this._getPref(this.PREF.REQUEST_QUERY_TIMEOUT),
+        );
+        this.updatePref(
+            this.PREF.REQUEST_WAIT_TIMEOUT + accountId,
+            this._getPref(this.PREF.REQUEST_WAIT_TIMEOUT),
+        );
+        this.updatePref(
+            this.PREF.REQUEST_WAIT_LOOP_TIME + accountId,
+            this._getPref(this.PREF.REQUEST_WAIT_LOOP_TIME),
+        );
     }
 
     // Set the current version
@@ -144,38 +162,42 @@ zimbra_notifier_Prefs.load = function() {
     this._prefs.setPref(this.PREF.CURRENT_VERSION, this.pref_current_version);
 
     // email + general
-    this.pref_autoConnect                  = this._getPref(this.PREF.AUTOCONNECT);
-    this.pref_email_notification_enabled   = this._getPref(this.PREF.EMAIL_NOTIFICATION_ENABLED);
-    this.pref_email_sound_enabled          = this._getPref(this.PREF.EMAIL_SOUND_ENABLED);
-    this.pref_email_sound_selected         = this._getPref(this.PREF.EMAIL_SOUND_SELECTED);
-    this.pref_email_sound_file             = this._getPref(this.PREF.EMAIL_SOUND_FILE);
-    this.pref_email_sound_volume           = this._getPref(this.PREF.EMAIL_SOUND_VOLUME);
-    this.pref_email_notification_duration  = this._getPref(this.PREF.EMAIL_NOTIFICATION_DURATION);
+    this.pref_autoConnect = this._getPref(this.PREF.AUTOCONNECT);
+    this.pref_email_notification_enabled = this._getPref(this.PREF.EMAIL_NOTIFICATION_ENABLED);
+    this.pref_email_sound_enabled = this._getPref(this.PREF.EMAIL_SOUND_ENABLED);
+    this.pref_email_sound_selected = this._getPref(this.PREF.EMAIL_SOUND_SELECTED);
+    this.pref_email_sound_file = this._getPref(this.PREF.EMAIL_SOUND_FILE);
+    this.pref_email_sound_volume = this._getPref(this.PREF.EMAIL_SOUND_VOLUME);
+    this.pref_email_notification_duration = this._getPref(this.PREF.EMAIL_NOTIFICATION_DURATION);
     // Browser
-    this.pref_browser_set_cookies          = this._getPref(this.PREF.BROWSER_SET_COOKIES);
-    this.pref_browser_cookie_http_only     = this._getPref(this.PREF.BROWSER_COOKIE_HTTP_ONLY);
+    this.pref_browser_set_cookies = this._getPref(this.PREF.BROWSER_SET_COOKIES);
+    this.pref_browser_cookie_http_only = this._getPref(this.PREF.BROWSER_COOKIE_HTTP_ONLY);
     // Popup
-    this.pref_popup_color                  = this._getPref(this.PREF.POPUP_COLOR);
-    this.pref_popup_width                  = this._getPref(this.PREF.POPUP_WIDTH);
+    this.pref_popup_color = this._getPref(this.PREF.POPUP_COLOR);
+    this.pref_popup_width = this._getPref(this.PREF.POPUP_WIDTH);
     // message
-    this.pref_message_enabled                 = this._getPref(this.PREF.MESSAGE_ENABLED);
-    this.pref_message_nb_displayed            = this._getPref(this.PREF.MESSAGE_NB_DISPLAYED);
-    this.pref_message_nb_characters_displayed = this._getPref(this.PREF.MESSAGE_NB_CHARACTERS_DISPLAYED);
+    this.pref_message_enabled = this._getPref(this.PREF.MESSAGE_ENABLED);
+    this.pref_message_nb_displayed = this._getPref(this.PREF.MESSAGE_NB_DISPLAYED);
+    this.pref_message_nb_characters_displayed = this._getPref(
+        this.PREF.MESSAGE_NB_CHARACTERS_DISPLAYED,
+    );
     // calendar
-    this.pref_calendar_enabled               = this._getPref(this.PREF.CALENDAR_ENABLED);
-    this.pref_calendar_period_displayed      = this._getPref(this.PREF.CALENDAR_PERIOD_DISPLAYED);
-    this.pref_calendar_nb_displayed          = this._getPref(this.PREF.CALENDAR_NB_DISPLAYED);
-    this.pref_calendar_notification_enabled  = this._getPref(this.PREF.CALENDAR_NOTIFICATION_ENABLED);
-    this.pref_calendar_sound_enabled         = this._getPref(this.PREF.CALENDAR_SOUND_ENABLED);
-    this.pref_calendar_sound_selected        = this._getPref(this.PREF.CALENDAR_SOUND_SELECTED);
-    this.pref_calendar_sound_file            = this._getPref(this.PREF.CALENDAR_SOUND_FILE);
-    this.pref_calendar_sound_volume           = this._getPref(this.PREF.CALENDAR_SOUND_VOLUME);
-    this.pref_calendar_reminder_time_conf    = this._getPref(this.PREF.CALENDAR_REMINDER_TIME_CONF);
-    this.pref_calendar_reminder_nb_repeat    = this._getPref(this.PREF.CALENDAR_REMINDER_NB_REPEAT);
+    this.pref_calendar_enabled = this._getPref(this.PREF.CALENDAR_ENABLED);
+    this.pref_calendar_period_displayed = this._getPref(this.PREF.CALENDAR_PERIOD_DISPLAYED);
+    this.pref_calendar_nb_displayed = this._getPref(this.PREF.CALENDAR_NB_DISPLAYED);
+    this.pref_calendar_notification_enabled = this._getPref(
+        this.PREF.CALENDAR_NOTIFICATION_ENABLED,
+    );
+    this.pref_calendar_sound_enabled = this._getPref(this.PREF.CALENDAR_SOUND_ENABLED);
+    this.pref_calendar_sound_selected = this._getPref(this.PREF.CALENDAR_SOUND_SELECTED);
+    this.pref_calendar_sound_file = this._getPref(this.PREF.CALENDAR_SOUND_FILE);
+    this.pref_calendar_sound_volume = this._getPref(this.PREF.CALENDAR_SOUND_VOLUME);
+    this.pref_calendar_reminder_time_conf = this._getPref(this.PREF.CALENDAR_REMINDER_TIME_CONF);
+    this.pref_calendar_reminder_nb_repeat = this._getPref(this.PREF.CALENDAR_REMINDER_NB_REPEAT);
     // task
-    this.pref_task_enabled            = this._getPref(this.PREF.TASK_ENABLED);
-    this.pref_task_nb_displayed       = this._getPref(this.PREF.TASK_NB_DISPLAYED);
-    this.pref_task_priorities         = this._getPref(this.PREF.TASK_PRIORITIES);
+    this.pref_task_enabled = this._getPref(this.PREF.TASK_ENABLED);
+    this.pref_task_nb_displayed = this._getPref(this.PREF.TASK_NB_DISPLAYED);
+    this.pref_task_priorities = this._getPref(this.PREF.TASK_PRIORITIES);
 };
 
 /**
@@ -183,19 +205,18 @@ zimbra_notifier_Prefs.load = function() {
  *
  * @this {Prefs}
  */
-zimbra_notifier_Prefs.init = function(callback) {
+zimbra_notifier_Prefs.init = function (callback) {
     if (!this._prefs) {
         this._prefs = PrefsService;
-    this._prefs.init( function() {
-        zimbra_notifier_Prefs.load();
-        if(callback) {
-            callback();
-        }
-    });
-    }
-    else {
+        this._prefs.init(function () {
+            zimbra_notifier_Prefs.load();
+            if (callback) {
+                callback();
+            }
+        });
+    } else {
         this.load();
-        if(callback) {
+        if (callback) {
             callback();
         }
     }
@@ -206,7 +227,7 @@ zimbra_notifier_Prefs.init = function(callback) {
  *
  * @this {Prefs}
  */
-zimbra_notifier_Prefs.release = function() {
+zimbra_notifier_Prefs.release = function () {
     if (this._prefs) {
         // synchronize before release
         this._prefs.synchronize(true);
@@ -220,13 +241,13 @@ zimbra_notifier_Prefs.release = function() {
  * @this {Prefs}
  * @return {String} accountId
  */
-zimbra_notifier_Prefs.addNewAccount = function() {
-    var accountId = "-" + Math.floor(Math.random() * 9999);
+zimbra_notifier_Prefs.addNewAccount = function () {
+    var accountId = '-' + Math.floor(Math.random() * 9999);
     var accounts = this.getPref(this.PREF.ACCOUNTS);
     accounts.push(accountId);
     this.updatePref(this.PREF.ACCOUNTS, accounts);
     return accountId;
-}
+};
 
 /**
  * Remove account
@@ -234,7 +255,7 @@ zimbra_notifier_Prefs.addNewAccount = function() {
  * @this {Prefs}
  * @param {String} accountId
  */
-zimbra_notifier_Prefs.removeAccount = function(accountId) {
+zimbra_notifier_Prefs.removeAccount = function (accountId) {
     var accounts = this.getPref(this.PREF.ACCOUNTS);
     for (var index = 0; index < accounts.length; index++) {
         if (accounts[index] === accountId) {
@@ -256,7 +277,7 @@ zimbra_notifier_Prefs.removeAccount = function(accountId) {
     this._removePref(this.PREF.REQUEST_QUERY_TIMEOUT + accountId);
     this._removePref(this.PREF.REQUEST_WAIT_TIMEOUT + accountId);
     this._removePref(this.PREF.REQUEST_WAIT_LOOP_TIME + accountId);
-}
+};
 
 /**
  * get preference
@@ -265,14 +286,14 @@ zimbra_notifier_Prefs.removeAccount = function(accountId) {
  * @param {String} key of the preference
  * @return {Object} value of the preference key
  */
-zimbra_notifier_Prefs.getPref = function(key) {
+zimbra_notifier_Prefs.getPref = function (key) {
     var value = undefined;
     var accountId = undefined;
-    if(key) {
-        var result = key.split("-");
-        if(result.length == 2) {
+    if (key) {
+        var result = key.split('-');
+        if (result.length == 2) {
             key = result[0];
-            accountId = "-" + result[1];
+            accountId = '-' + result[1];
         }
     }
     switch (key) {
@@ -385,7 +406,7 @@ zimbra_notifier_Prefs.getPref = function(key) {
             value = this.pref_task_priorities;
             break;
 
-         // accounts
+        // accounts
         case this.PREF.ACCOUNTS:
             value = this._getPref(this.PREF.ACCOUNTS);
             if (value === null) {
@@ -397,13 +418,13 @@ zimbra_notifier_Prefs.getPref = function(key) {
         case this.PREF.USER_ALIAS:
             value = this._getPref(this.PREF.USER_ALIAS + accountId);
             if (value === null) {
-               value = '';
+                value = '';
             }
             break;
         case this.PREF.USER_LOGIN:
             value = this._getPref(this.PREF.USER_LOGIN + accountId);
             if (value === null) {
-               value = '';
+                value = '';
             }
             break;
 
@@ -472,15 +493,15 @@ zimbra_notifier_Prefs.getPref = function(key) {
             break;
     }
     return value;
-}
+};
 
 /**
  * Update preference
  *
  * @this {Prefs}
  */
-zimbra_notifier_Prefs.updatePref = function(key, value) {
-    if(!key) {
+zimbra_notifier_Prefs.updatePref = function (key, value) {
+    if (!key) {
         return;
     }
     // update pref
@@ -615,7 +636,7 @@ zimbra_notifier_Prefs.updatePref = function(key, value) {
  * @this {Prefs}
  * @param {Boolean} True if the flag should be reseted
  */
-zimbra_notifier_Prefs.isFirstStart = function(reset) {
+zimbra_notifier_Prefs.isFirstStart = function (reset) {
     var ret = this._is_first_launch;
     if (reset) {
         this._is_first_launch = false;
@@ -629,8 +650,8 @@ zimbra_notifier_Prefs.isFirstStart = function(reset) {
  * @this {Prefs}
  * @param {String} accountId of the account preference
  */
-zimbra_notifier_Prefs.clearPassword = function(accountId) {
-    this.updatePref(this.PREF.USER_PASSWORD + accountId, "");
+zimbra_notifier_Prefs.clearPassword = function (accountId) {
+    this.updatePref(this.PREF.USER_PASSWORD + accountId, '');
 };
 
 /**
@@ -640,11 +661,13 @@ zimbra_notifier_Prefs.clearPassword = function(accountId) {
  * @param {String} accountId of the account preference
  * @return {Boolean} True if the url of the webservice contain the free domain
  */
-zimbra_notifier_Prefs.isFreeWebService = function(accountId) {
-    var pref_user_url_web_service = this.getPref(this.PREF.USER_URL_WEB_SERVICE + accountId)
+zimbra_notifier_Prefs.isFreeWebService = function (accountId) {
+    var pref_user_url_web_service = this.getPref(this.PREF.USER_URL_WEB_SERVICE + accountId);
     if (pref_user_url_web_service) {
-        return (pref_user_url_web_service.search("zimbra.free.fr") > 0) ||
-               (pref_user_url_web_service.search("zimbra.aliceadsl.fr") > 0);
+        return (
+            pref_user_url_web_service.search('zimbra.free.fr') > 0 ||
+            pref_user_url_web_service.search('zimbra.aliceadsl.fr') > 0
+        );
     }
     return false;
 };
@@ -657,7 +680,7 @@ zimbra_notifier_Prefs.isFreeWebService = function(accountId) {
  * @this {Prefs}
  * @return {Number} the current version
  */
-zimbra_notifier_Prefs.getCurrentVersion = function() {
+zimbra_notifier_Prefs.getCurrentVersion = function () {
     return this.pref_current_version;
 };
 
@@ -667,7 +690,7 @@ zimbra_notifier_Prefs.getCurrentVersion = function() {
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
-zimbra_notifier_Prefs.isAutoConnectEnabled = function() {
+zimbra_notifier_Prefs.isAutoConnectEnabled = function () {
     return this.pref_autoConnect;
 };
 
@@ -677,7 +700,7 @@ zimbra_notifier_Prefs.isAutoConnectEnabled = function() {
  * @this {Prefs}
  * @return {String} the color
  */
-zimbra_notifier_Prefs.getPopupColor = function() {
+zimbra_notifier_Prefs.getPopupColor = function () {
     return this.pref_popup_color;
 };
 
@@ -687,7 +710,7 @@ zimbra_notifier_Prefs.getPopupColor = function() {
  * @this {Prefs}
  * @return {Number} the width
  */
-zimbra_notifier_Prefs.getPopupWidth = function() {
+zimbra_notifier_Prefs.getPopupWidth = function () {
     return this.pref_popup_width;
 };
 
@@ -697,7 +720,7 @@ zimbra_notifier_Prefs.getPopupWidth = function() {
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
-zimbra_notifier_Prefs.isEmailNotificationEnabled = function() {
+zimbra_notifier_Prefs.isEmailNotificationEnabled = function () {
     return this.pref_email_notification_enabled;
 };
 
@@ -707,7 +730,7 @@ zimbra_notifier_Prefs.isEmailNotificationEnabled = function() {
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
-zimbra_notifier_Prefs.isEmailSoundEnabled = function() {
+zimbra_notifier_Prefs.isEmailSoundEnabled = function () {
     return this.pref_email_sound_enabled;
 };
 
@@ -717,7 +740,7 @@ zimbra_notifier_Prefs.isEmailSoundEnabled = function() {
  * @this {Prefs}
  * @return {Number} the selected sound
  */
-zimbra_notifier_Prefs.getEmailSoundSelected = function() {
+zimbra_notifier_Prefs.getEmailSoundSelected = function () {
     return parseInt(this.pref_email_sound_selected);
 };
 
@@ -727,7 +750,7 @@ zimbra_notifier_Prefs.getEmailSoundSelected = function() {
  * @this {Prefs}
  * @return {String} the file in base64
  */
-zimbra_notifier_Prefs.getEmailSoundCustom = function() {
+zimbra_notifier_Prefs.getEmailSoundCustom = function () {
     return this.pref_email_sound_file;
 };
 
@@ -737,7 +760,7 @@ zimbra_notifier_Prefs.getEmailSoundCustom = function() {
  * @this {Prefs}
  * @return {Number} the volume
  */
-zimbra_notifier_Prefs.getEmailSoundVolume = function() {
+zimbra_notifier_Prefs.getEmailSoundVolume = function () {
     return parseInt(this.pref_email_sound_volume);
 };
 
@@ -747,8 +770,8 @@ zimbra_notifier_Prefs.getEmailSoundVolume = function() {
  * @this {Prefs}
  * @return {Number} The duration of the notification in ms
  */
-zimbra_notifier_Prefs.getEmailNotificationDuration = function() {
-    return (this.pref_email_notification_duration * 1000);
+zimbra_notifier_Prefs.getEmailNotificationDuration = function () {
+    return this.pref_email_notification_duration * 1000;
 };
 
 /* *************************** Browser *************************** */
@@ -759,7 +782,7 @@ zimbra_notifier_Prefs.getEmailNotificationDuration = function() {
  * @this {Prefs}
  * @return {Boolean}
  */
-zimbra_notifier_Prefs.isSyncBrowserCookiesEnabled = function() {
+zimbra_notifier_Prefs.isSyncBrowserCookiesEnabled = function () {
     return this.pref_browser_set_cookies;
 };
 
@@ -769,7 +792,7 @@ zimbra_notifier_Prefs.isSyncBrowserCookiesEnabled = function() {
  * @this {Prefs}
  * @return {Boolean}
  */
-zimbra_notifier_Prefs.isBrowserCookieHttpOnly = function() {
+zimbra_notifier_Prefs.isBrowserCookieHttpOnly = function () {
     return this.pref_browser_cookie_http_only;
 };
 
@@ -781,7 +804,7 @@ zimbra_notifier_Prefs.isBrowserCookieHttpOnly = function() {
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
-zimbra_notifier_Prefs.isMessageEnabled = function() {
+zimbra_notifier_Prefs.isMessageEnabled = function () {
     return this.pref_message_enabled;
 };
 
@@ -791,7 +814,7 @@ zimbra_notifier_Prefs.isMessageEnabled = function() {
  * @this {Prefs}
  * @return {Number}
  */
-zimbra_notifier_Prefs.getMessageNbDisplayed = function() {
+zimbra_notifier_Prefs.getMessageNbDisplayed = function () {
     return this.pref_message_nb_displayed;
 };
 
@@ -801,7 +824,7 @@ zimbra_notifier_Prefs.getMessageNbDisplayed = function() {
  * @this {Prefs}
  * @return {Number}
  */
-zimbra_notifier_Prefs.getMessageNbCharactersDisplayed = function() {
+zimbra_notifier_Prefs.getMessageNbCharactersDisplayed = function () {
     return this.pref_message_nb_characters_displayed;
 };
 
@@ -813,7 +836,7 @@ zimbra_notifier_Prefs.getMessageNbCharactersDisplayed = function() {
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
-zimbra_notifier_Prefs.isCalendarEnabled = function() {
+zimbra_notifier_Prefs.isCalendarEnabled = function () {
     return this.pref_calendar_enabled;
 };
 
@@ -823,7 +846,7 @@ zimbra_notifier_Prefs.isCalendarEnabled = function() {
  * @this {Prefs}
  * @return {Number}
  */
-zimbra_notifier_Prefs.getCalendarPeriodDisplayed = function() {
+zimbra_notifier_Prefs.getCalendarPeriodDisplayed = function () {
     return this.pref_calendar_period_displayed;
 };
 
@@ -833,7 +856,7 @@ zimbra_notifier_Prefs.getCalendarPeriodDisplayed = function() {
  * @this {Prefs}
  * @return {Number}
  */
-zimbra_notifier_Prefs.getCalendarNbDisplayed = function() {
+zimbra_notifier_Prefs.getCalendarNbDisplayed = function () {
     return this.pref_calendar_nb_displayed;
 };
 
@@ -843,7 +866,7 @@ zimbra_notifier_Prefs.getCalendarNbDisplayed = function() {
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
-zimbra_notifier_Prefs.isCalendarNotificationEnabled = function() {
+zimbra_notifier_Prefs.isCalendarNotificationEnabled = function () {
     return this.pref_calendar_notification_enabled;
 };
 
@@ -853,7 +876,7 @@ zimbra_notifier_Prefs.isCalendarNotificationEnabled = function() {
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
-zimbra_notifier_Prefs.isCalendarSoundEnabled = function() {
+zimbra_notifier_Prefs.isCalendarSoundEnabled = function () {
     return this.pref_calendar_sound_enabled;
 };
 
@@ -863,7 +886,7 @@ zimbra_notifier_Prefs.isCalendarSoundEnabled = function() {
  * @this {Prefs}
  * @return {Number} the selected sound
  */
-zimbra_notifier_Prefs.getCalendarSoundSelected = function() {
+zimbra_notifier_Prefs.getCalendarSoundSelected = function () {
     return parseInt(this.pref_calendar_sound_selected);
 };
 
@@ -873,7 +896,7 @@ zimbra_notifier_Prefs.getCalendarSoundSelected = function() {
  * @this {Prefs}
  * @return {String} the file in base64
  */
-zimbra_notifier_Prefs.getCalendarSoundCustom = function() {
+zimbra_notifier_Prefs.getCalendarSoundCustom = function () {
     return this.pref_calendar_sound_file;
 };
 
@@ -883,7 +906,7 @@ zimbra_notifier_Prefs.getCalendarSoundCustom = function() {
  * @this {Prefs}
  * @return {Number} the volume
  */
-zimbra_notifier_Prefs.getCalendarSoundVolume = function() {
+zimbra_notifier_Prefs.getCalendarSoundVolume = function () {
     return parseInt(this.pref_calendar_sound_volume);
 };
 
@@ -893,7 +916,7 @@ zimbra_notifier_Prefs.getCalendarSoundVolume = function() {
  * @this {Prefs}
  * @return {Number}
  */
-zimbra_notifier_Prefs.getCalendarReminderTimeConf = function() {
+zimbra_notifier_Prefs.getCalendarReminderTimeConf = function () {
     return this.pref_calendar_reminder_time_conf;
 };
 
@@ -903,7 +926,7 @@ zimbra_notifier_Prefs.getCalendarReminderTimeConf = function() {
  * @this {Prefs}
  * @return {Number}
  */
-zimbra_notifier_Prefs.getCalendarReminderNbRepeat = function() {
+zimbra_notifier_Prefs.getCalendarReminderNbRepeat = function () {
     return this.pref_calendar_reminder_nb_repeat;
 };
 
@@ -915,7 +938,7 @@ zimbra_notifier_Prefs.getCalendarReminderNbRepeat = function() {
  * @this {Prefs}
  * @return {Boolean} true if enabled
  */
-zimbra_notifier_Prefs.isTaskEnabled = function() {
+zimbra_notifier_Prefs.isTaskEnabled = function () {
     return this.pref_task_enabled;
 };
 
@@ -925,7 +948,7 @@ zimbra_notifier_Prefs.isTaskEnabled = function() {
  * @this {Prefs}
  * @return {Number}
  */
-zimbra_notifier_Prefs.getTaskNbDisplayed = function() {
+zimbra_notifier_Prefs.getTaskNbDisplayed = function () {
     return this.pref_task_nb_displayed;
 };
 
@@ -935,7 +958,7 @@ zimbra_notifier_Prefs.getTaskNbDisplayed = function() {
  * @this {Prefs}
  * @return {Number}
  */
-zimbra_notifier_Prefs.getTaskPrioritiesDisplayed = function() {
+zimbra_notifier_Prefs.getTaskPrioritiesDisplayed = function () {
     return this.pref_task_priorities;
 };
 /* *************************** account *************************** */
@@ -946,7 +969,7 @@ zimbra_notifier_Prefs.getTaskPrioritiesDisplayed = function() {
  * @this {Prefs}
  * @return {Array} account list
  */
-zimbra_notifier_Prefs.getAccounts = function() {
+zimbra_notifier_Prefs.getAccounts = function () {
     return this.getPref(this.PREF.ACCOUNTS);
 };
 
@@ -959,7 +982,7 @@ zimbra_notifier_Prefs.getAccounts = function() {
  * @param {Integer} accountId of the account preference
  * @return {String} the alias
  */
-zimbra_notifier_Prefs.getUserAlias = function(accountId) {
+zimbra_notifier_Prefs.getUserAlias = function (accountId) {
     var alias = this.getPref(this.PREF.USER_ALIAS + accountId);
     if (!alias || alias === '') {
         alias = this.getPref(this.PREF.USER_LOGIN + accountId);
@@ -975,7 +998,7 @@ zimbra_notifier_Prefs.getUserAlias = function(accountId) {
  * @param {Integer} accountId of the account preference
  * @return {String} the login
  */
-zimbra_notifier_Prefs.getUserLogin = function(accountId) {
+zimbra_notifier_Prefs.getUserLogin = function (accountId) {
     return this.getPref(this.PREF.USER_LOGIN + accountId);
 };
 
@@ -986,7 +1009,7 @@ zimbra_notifier_Prefs.getUserLogin = function(accountId) {
  * @param {Integer} accountId of the account preference
  * @return {String} the URL
  */
-zimbra_notifier_Prefs.getUrlWebService = function(accountId) {
+zimbra_notifier_Prefs.getUrlWebService = function (accountId) {
     return this.getPref(this.PREF.USER_URL_WEB_SERVICE + accountId);
 };
 
@@ -998,9 +1021,9 @@ zimbra_notifier_Prefs.getUrlWebService = function(accountId) {
  * @param {Integer} accountId of the account preference
  * @return {String} the URL
  */
-zimbra_notifier_Prefs.getUrlUserInterface = function(accountId) {
+zimbra_notifier_Prefs.getUrlUserInterface = function (accountId) {
     var pref_user_url_web_interface = this.getPref(this.PREF.USER_URL_WEB_INTERFACE + accountId);
-    if (pref_user_url_web_interface && (pref_user_url_web_interface!=="")) {
+    if (pref_user_url_web_interface && pref_user_url_web_interface !== '') {
         return pref_user_url_web_interface;
     }
     return this.getPref(this.PREF.USER_URL_WEB_SERVICE + accountId);
@@ -1013,7 +1036,7 @@ zimbra_notifier_Prefs.getUrlUserInterface = function(accountId) {
  * @param {Integer} accountId of the account preference
  * @return {Boolean} true if enabled
  */
-zimbra_notifier_Prefs.isSavePasswordEnabled = function(accountId) {
+zimbra_notifier_Prefs.isSavePasswordEnabled = function (accountId) {
     return this.getPref(this.PREF.USER_SAVEPASSWORD + accountId);
 };
 
@@ -1024,7 +1047,7 @@ zimbra_notifier_Prefs.isSavePasswordEnabled = function(accountId) {
  * @param {Integer} accountId of the account preference
  * @return {String} the password
  */
-zimbra_notifier_Prefs.getUserPassword = function(accountId) {
+zimbra_notifier_Prefs.getUserPassword = function (accountId) {
     return this.getPref(this.PREF.USER_PASSWORD + accountId);
 };
 
@@ -1041,14 +1064,13 @@ zimbra_notifier_Prefs.getPreviousDeviceTrustedInfos = function (accountId) {
         return {
             deviceId: pref_deviceTrusted_info.deviceId,
             trustedToken: pref_deviceTrusted_info.trustedToken,
-            trustedTokenExpirationTime: pref_deviceTrusted_info.trustedTokenExpirationTime
+            trustedTokenExpirationTime: pref_deviceTrusted_info.trustedTokenExpirationTime,
         };
-    }
-    catch (e) {
+    } catch (e) {
+        // Nothing to do
     }
     return null;
 };
-
 
 /**
  * Save the currently used trusted informations
@@ -1062,8 +1084,17 @@ zimbra_notifier_Prefs.getPreviousDeviceTrustedInfos = function (accountId) {
  * @param {Date}
  *            trustedTokenExpirationTime The trusted Token Expiration Time
  */
-zimbra_notifier_Prefs.saveDeviceTrustedInfos = function (accountId, deviceId = '', trustedToken = '', trustedTokenExpirationTime = new Date(0)) {
-    this._prefs.setPref(this.PREF.DEVICE_TRUSTED_INFOS + accountId, { deviceId, trustedToken, trustedTokenExpirationTime });
+zimbra_notifier_Prefs.saveDeviceTrustedInfos = function (
+    accountId,
+    deviceId = '',
+    trustedToken = '',
+    trustedTokenExpirationTime = new Date(0),
+) {
+    this._prefs.setPref(this.PREF.DEVICE_TRUSTED_INFOS + accountId, {
+        deviceId,
+        trustedToken,
+        trustedTokenExpirationTime,
+    });
 };
 
 /* *************************** About Wait set *************************** */
@@ -1075,25 +1106,30 @@ zimbra_notifier_Prefs.saveDeviceTrustedInfos = function (accountId, deviceId = '
  * @param {String} accountId of the account preference
  * @return {Object} The wait set information
  */
-zimbra_notifier_Prefs.getPreviousWaitSet = function(accountId) {
+zimbra_notifier_Prefs.getPreviousWaitSet = function (accountId) {
     try {
         var pref_waitset_info = this.getPref(this.PREF.WAITSET_INFO + accountId);
-        if (pref_waitset_info &&
-            pref_waitset_info.id && pref_waitset_info.id.length > 0 &&
-            pref_waitset_info.seq && pref_waitset_info.seq.length > 0 &&
+        if (
+            pref_waitset_info &&
+            pref_waitset_info.id &&
+            pref_waitset_info.id.length > 0 &&
+            pref_waitset_info.seq &&
+            pref_waitset_info.seq.length > 0 &&
             parseInt(pref_waitset_info.seq, 10) >= 0 &&
-            pref_waitset_info.urlWebService && pref_waitset_info.urlWebService.length > 0 &&
-            pref_waitset_info.user && pref_waitset_info.user.length > 0) {
-
+            pref_waitset_info.urlWebService &&
+            pref_waitset_info.urlWebService.length > 0 &&
+            pref_waitset_info.user &&
+            pref_waitset_info.user.length > 0
+        ) {
             return {
                 id: pref_waitset_info.id,
                 seq: pref_waitset_info.seq,
-                urlWebService : pref_waitset_info.urlWebService,
-                user : pref_waitset_info.user
+                urlWebService: pref_waitset_info.urlWebService,
+                user: pref_waitset_info.user,
             };
         }
-    }
-    catch (e) {
+    } catch (e) {
+        // Nothing to do
     }
     return null;
 };
@@ -1112,13 +1148,18 @@ zimbra_notifier_Prefs.getPreviousWaitSet = function(accountId) {
  * @param {String}
  *            user The user used with this wait set
  */
-zimbra_notifier_Prefs.saveWaitSet = function(accountId, id, seq, urlWebService, user) {
+zimbra_notifier_Prefs.saveWaitSet = function (accountId, id, seq, urlWebService, user) {
     if (!id || !seq || !(parseInt(seq, 10) >= 0)) {
-        id  = '';
+        id = '';
         seq = '';
     }
     if (urlWebService && urlWebService.length > 0 && user && user.length > 0) {
-        this._prefs.setPref(this.PREF.WAITSET_INFO + accountId, { id: id, seq: seq, urlWebService: urlWebService, user: user });
+        this._prefs.setPref(this.PREF.WAITSET_INFO + accountId, {
+            id: id,
+            seq: seq,
+            urlWebService: urlWebService,
+            user: user,
+        });
     }
 };
 
@@ -1129,7 +1170,7 @@ zimbra_notifier_Prefs.saveWaitSet = function(accountId, id, seq, urlWebService, 
  * @param {String} accountId of the account preference
  * @return {Number}
  */
-zimbra_notifier_Prefs.getRequestQueryTimeout = function(accountId) {
+zimbra_notifier_Prefs.getRequestQueryTimeout = function (accountId) {
     return this.getPref(this.PREF.REQUEST_QUERY_TIMEOUT + accountId);
 };
 
@@ -1140,7 +1181,7 @@ zimbra_notifier_Prefs.getRequestQueryTimeout = function(accountId) {
  * @param {String} accountId of the account preference
  * @return {Number}
  */
-zimbra_notifier_Prefs.getRequestWaitTimeout = function(accountId) {
+zimbra_notifier_Prefs.getRequestWaitTimeout = function (accountId) {
     return this.getPref(this.PREF.REQUEST_WAIT_TIMEOUT + accountId);
 };
 
@@ -1151,7 +1192,7 @@ zimbra_notifier_Prefs.getRequestWaitTimeout = function(accountId) {
  * @param {String} accountId of the account preference
  * @return {Number}
  */
-zimbra_notifier_Prefs.getRequestWaitLoopTime = function(accountId) {
+zimbra_notifier_Prefs.getRequestWaitLoopTime = function (accountId) {
     return this.getPref(this.PREF.REQUEST_WAIT_LOOP_TIME + accountId);
 };
 
@@ -1166,7 +1207,7 @@ zimbra_notifier_Prefs.getRequestWaitLoopTime = function(accountId) {
  *            pref the preference name
  * @return {Object} the preference value
  */
-zimbra_notifier_Prefs._getPref = function(pref) {
+zimbra_notifier_Prefs._getPref = function (pref) {
     if (this._prefs) {
         return this._prefs.getPref(pref);
     }
@@ -1181,7 +1222,7 @@ zimbra_notifier_Prefs._getPref = function(pref) {
  * @param {String}
  *            pref the preference name
  */
-zimbra_notifier_Prefs._removePref = function(pref) {
+zimbra_notifier_Prefs._removePref = function (pref) {
     if (this._prefs) {
         this._prefs.removePref(pref);
     }
@@ -1194,38 +1235,38 @@ zimbra_notifier_Prefs._removePref = function(pref) {
  * @this {PrefsService}
  */
 var PrefsService = {
-    _defaultsPref : {
-        prefs : {
-            'currentVersion' : 0,
-            'autoConnect' : true,
-            'systemNotificationEnabled' : true,
-            'popupColor' : '#ffffff',
-            'popupWidth' : 300,
-            'soundEnabled' : true,
-            'emailSoundSelected' : 1,
-            'emailSoundVolume' : 100,
-            'emailNotificationDuration' : 14,
-            'messageEnabled' : true,
-            'messageNbDisplayed' : 5,
-            'messageNbCharactersDisplayed' : 80,
-            'calendarEnabled' : true,
-            'calendarPeriodDisplayed' : 14,
-            'calendarNbDisplayed' : 5,
-            'calendarSystemNotificationEnabled' : true,
-            'calendarSoundEnabled' : true,
-            'calendarSoundSelected' : 1,
-            'calendarSoundVolume' : 100,
-            'calendarReminderTimeConf' : -1,
-            'calendarReminderRepeatNb' : 0,
-            'taskEnabled' : true,
-            'taskNbDisplayed' : 5,
-            'taskPriorities' : 0,
-            'browserSetCookies' : true,
-            'browserCookieHttpOnly' : false,
-        }
+    _defaultsPref: {
+        prefs: {
+            currentVersion: 0,
+            autoConnect: true,
+            systemNotificationEnabled: true,
+            popupColor: '#ffffff',
+            popupWidth: 300,
+            soundEnabled: true,
+            emailSoundSelected: 1,
+            emailSoundVolume: 100,
+            emailNotificationDuration: 14,
+            messageEnabled: true,
+            messageNbDisplayed: 5,
+            messageNbCharactersDisplayed: 80,
+            calendarEnabled: true,
+            calendarPeriodDisplayed: 14,
+            calendarNbDisplayed: 5,
+            calendarSystemNotificationEnabled: true,
+            calendarSoundEnabled: true,
+            calendarSoundSelected: 1,
+            calendarSoundVolume: 100,
+            calendarReminderTimeConf: -1,
+            calendarReminderRepeatNb: 0,
+            taskEnabled: true,
+            taskNbDisplayed: 5,
+            taskPriorities: 0,
+            browserSetCookies: true,
+            browserCookieHttpOnly: false,
+        },
     },
-    _currentPref : undefined,
-    _saveTimerDelay : undefined
+    _currentPref: undefined,
+    _saveTimerDelay: undefined,
 };
 
 /**
@@ -1234,18 +1275,24 @@ var PrefsService = {
  * @this {PrefsService}
  * @param {Function} the callback when initialized
  */
-PrefsService.init = function(callback) {
-    var loadFunction = function(syncStorage) {
-        Object.assign(PrefsService._currentPref.prefs, syncStorage && syncStorage.prefs ? syncStorage.prefs : {});
+PrefsService.init = function (callback) {
+    var loadFunction = function (syncStorage) {
+        Object.assign(
+            PrefsService._currentPref.prefs,
+            syncStorage && syncStorage.prefs ? syncStorage.prefs : {},
+        );
         if (callback) {
             callback();
         }
     };
     // get local storage and overwrite by the synchronize storage
-    chrome.storage.local.get(this._defaultsPref, function(localStorage) {
+    chrome.storage.local.get(this._defaultsPref, function (localStorage) {
         PrefsService._currentPref = Object.assign({}, PrefsService._defaultsPref);
-        Object.assign(PrefsService._currentPref.prefs, localStorage && localStorage.prefs ? localStorage.prefs : {});
-        if(chrome.storage.sync) {
+        Object.assign(
+            PrefsService._currentPref.prefs,
+            localStorage && localStorage.prefs ? localStorage.prefs : {},
+        );
+        if (chrome.storage.sync) {
             chrome.storage.sync.get(localStorage, loadFunction);
         } else {
             loadFunction(localStorage);
@@ -1260,28 +1307,32 @@ PrefsService.init = function(callback) {
  * @param {String} the key
  * @return {Object} the value
  */
-PrefsService.getPref = function(key) {
-    var value = null;
-    if(this._currentPref && this._currentPref.prefs[key] !== undefined) {
-        if(key.indexOf(zimbra_notifier_Prefs.PREF.USER_PASSWORD) == 0) {
-            if(this._currentPref.prefs[key]) {
-                value = AesCtr.decrypt(this._currentPref.prefs[key], zimbra_notifier_Prefs.PREF.USER_PASSWORD_KEY , 128);
+PrefsService.getPref = function (key) {
+    let value = null;
+    if (this._currentPref && this._currentPref.prefs[key] !== undefined) {
+        if (key.indexOf(zimbra_notifier_Prefs.PREF.USER_PASSWORD) == 0) {
+            if (this._currentPref.prefs[key]) {
+                value = AesCtr.decrypt(
+                    this._currentPref.prefs[key],
+                    zimbra_notifier_Prefs.PREF.USER_PASSWORD_KEY,
+                    128,
+                );
             } else {
                 value = '';
             }
-        }
-        else if((key.indexOf(zimbra_notifier_Prefs.PREF.ACCOUNTS) == 0) || (key.indexOf(zimbra_notifier_Prefs.PREF.WAITSET_INFO) == 0)) {
-            var value = null;
+        } else if (
+            key.indexOf(zimbra_notifier_Prefs.PREF.ACCOUNTS) == 0 ||
+            key.indexOf(zimbra_notifier_Prefs.PREF.WAITSET_INFO) == 0
+        ) {
             try {
                 var strVal = this._currentPref.prefs[key];
                 if (strVal && strVal.length > 0) {
                     value = JSON.parse(strVal);
                 }
+            } catch (e) {
+                // Nothing to do
             }
-            catch (e) {
-            }
-        }
-        else {
+        } else {
             value = this._currentPref.prefs[key];
         }
     }
@@ -1295,14 +1346,19 @@ PrefsService.getPref = function(key) {
  * @param {String} the key
  * @param {Object} the value
  */
-PrefsService.setPref = function(key, value) {
-    if(key.indexOf(zimbra_notifier_Prefs.PREF.USER_PASSWORD) == 0) {
-        this._currentPref.prefs[key] = AesCtr.encrypt(value, zimbra_notifier_Prefs.PREF.USER_PASSWORD_KEY , 128);
-    }
-    else if((key.indexOf(zimbra_notifier_Prefs.PREF.ACCOUNTS) == 0) || (key.indexOf(zimbra_notifier_Prefs.PREF.WAITSET_INFO) == 0)) {
+PrefsService.setPref = function (key, value) {
+    if (key.indexOf(zimbra_notifier_Prefs.PREF.USER_PASSWORD) == 0) {
+        this._currentPref.prefs[key] = AesCtr.encrypt(
+            value,
+            zimbra_notifier_Prefs.PREF.USER_PASSWORD_KEY,
+            128,
+        );
+    } else if (
+        key.indexOf(zimbra_notifier_Prefs.PREF.ACCOUNTS) == 0 ||
+        key.indexOf(zimbra_notifier_Prefs.PREF.WAITSET_INFO) == 0
+    ) {
         this._currentPref.prefs[key] = JSON.stringify(value);
-    }
-    else {
+    } else {
         this._currentPref.prefs[key] = value;
     }
     this.synchronize();
@@ -1314,8 +1370,8 @@ PrefsService.setPref = function(key, value) {
  * @this {PrefsService}
  * @param {String} the key
  */
-PrefsService.removePref = function(key) {
-    if(this._currentPref.prefs[key] !== undefined) {
+PrefsService.removePref = function (key) {
+    if (this._currentPref.prefs[key] !== undefined) {
         delete this._currentPref.prefs[key];
         this.synchronize();
     }
@@ -1328,13 +1384,13 @@ PrefsService.removePref = function(key) {
  * @this {PrefsService}
  * @param {String} the key
  */
-PrefsService.synchronize = function(forced) {
+PrefsService.synchronize = function (forced) {
     //synchronise preference after 1 seconds no change delay if not forced
     clearTimeout(this._saveTimerDelay);
     var that = this;
-    var saveFunction = function() {
+    var saveFunction = function () {
         chrome.storage.local.set(that._currentPref);
-        if(chrome.storage.sync) {
+        if (chrome.storage.sync) {
             // not save file in synchro storage because the size is limited
             var synchroPrefs = JSON.parse(JSON.stringify(that._currentPref));
             delete synchroPrefs.prefs.emailSoundFile;
@@ -1342,10 +1398,10 @@ PrefsService.synchronize = function(forced) {
             chrome.storage.sync.set(synchroPrefs);
         }
     };
-    if(forced) {
+    if (forced) {
         saveFunction();
     } else {
-        this._saveTimerDelay = setTimeout(function() {
+        this._saveTimerDelay = setTimeout(function () {
             saveFunction();
         }, 1000);
     }

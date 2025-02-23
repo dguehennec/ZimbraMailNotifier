@@ -35,28 +35,28 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/* globals chrome, importScripts */
+/* importScripts */
 
-importScripts(chrome.runtime.getURL('modules/service/util.js'))
-importScripts(chrome.runtime.getURL('modules/constant/zimbrahelper.js'))
+importScripts(chrome.runtime.getURL('modules/service/util.js'));
+importScripts(chrome.runtime.getURL('modules/constant/zimbrahelper.js'));
 
-importScripts(chrome.runtime.getURL('modules/domain/calevent.js'))
-importScripts(chrome.runtime.getURL('modules/domain/mailboxinfo.js'))
-importScripts(chrome.runtime.getURL('modules/domain/message.js'))
-importScripts(chrome.runtime.getURL('modules/domain/session.js'))
-importScripts(chrome.runtime.getURL('modules/domain/task.js'))
+importScripts(chrome.runtime.getURL('modules/domain/calevent.js'));
+importScripts(chrome.runtime.getURL('modules/domain/mailboxinfo.js'));
+importScripts(chrome.runtime.getURL('modules/domain/message.js'));
+importScripts(chrome.runtime.getURL('modules/domain/session.js'));
+importScripts(chrome.runtime.getURL('modules/domain/task.js'));
 
-importScripts(chrome.runtime.getURL('modules/service/logger.js'))
-importScripts(chrome.runtime.getURL('modules/service/browser.js'))
-importScripts(chrome.runtime.getURL('modules/service/prefs.js'))
-importScripts(chrome.runtime.getURL('modules/service/infoerror.js'))
-importScripts(chrome.runtime.getURL('modules/service/notifier.js'))
-importScripts(chrome.runtime.getURL('modules/service/request.js'))
-importScripts(chrome.runtime.getURL('modules/service/webservices.js'))
-importScripts(chrome.runtime.getURL('modules/service/aes.js'))
+importScripts(chrome.runtime.getURL('modules/service/logger.js'));
+importScripts(chrome.runtime.getURL('modules/service/browser.js'));
+importScripts(chrome.runtime.getURL('modules/service/prefs.js'));
+importScripts(chrome.runtime.getURL('modules/service/infoerror.js'));
+importScripts(chrome.runtime.getURL('modules/service/notifier.js'));
+importScripts(chrome.runtime.getURL('modules/service/request.js'));
+importScripts(chrome.runtime.getURL('modules/service/webservices.js'));
+importScripts(chrome.runtime.getURL('modules/service/aes.js'));
 
-importScripts(chrome.runtime.getURL('modules/controller/service.js'))
-importScripts(chrome.runtime.getURL('modules/controller/controller.js'))
-importScripts(chrome.runtime.getURL('modules/controller/supercontroller.js'))
+importScripts(chrome.runtime.getURL('modules/controller/service.js'));
+importScripts(chrome.runtime.getURL('modules/controller/controller.js'));
+importScripts(chrome.runtime.getURL('modules/controller/supercontroller.js'));
 
-importScripts(chrome.runtime.getURL('js/background.js'))
+importScripts(chrome.runtime.getURL('js/background.js'));

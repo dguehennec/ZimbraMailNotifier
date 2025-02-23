@@ -35,9 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_MailBoxInfo"];
+'use strict';
 
 /**
  * Creates an instance of MailBoxInfo.
@@ -52,7 +50,7 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_MailBoxInfo"];
  * @param {Number}
  *            used
  */
-var zimbra_notifier_MailBoxInfo = function(version, maxSize, used) {
+var zimbra_notifier_MailBoxInfo = function (version, maxSize, used) {
     this.version = version;
     this.setQuotaSize(maxSize);
     this.setQuotaUsed(used);
@@ -65,15 +63,14 @@ var zimbra_notifier_MailBoxInfo = function(version, maxSize, used) {
  * @param {Number}
  *            used  The quota used in bytes
  */
-zimbra_notifier_MailBoxInfo.prototype.setQuotaUsed = function(used) {
+zimbra_notifier_MailBoxInfo.prototype.setQuotaUsed = function (used) {
     this.quotaUsed = used;
     if (used > 0) {
         this.quotaUsedString = zimbra_notifier_Util.convertBytesToStringValue(used);
-    }
-    else {
+    } else {
         this.quotaUsedString = null;
     }
-    this.setPercentageQuotaUsed()
+    this.setPercentageQuotaUsed();
 };
 
 /**
@@ -83,15 +80,14 @@ zimbra_notifier_MailBoxInfo.prototype.setQuotaUsed = function(used) {
  * @param {Number}
  *            maxSize  The quota in bytes
  */
-zimbra_notifier_MailBoxInfo.prototype.setQuotaSize = function(maxSize) {
+zimbra_notifier_MailBoxInfo.prototype.setQuotaSize = function (maxSize) {
     this.quotaSize = maxSize;
     if (maxSize > 0) {
         this.quotaSizeString = zimbra_notifier_Util.convertBytesToStringValue(maxSize);
-    }
-    else {
+    } else {
         this.quotaSizeString = null;
     }
-    this.setPercentageQuotaUsed()
+    this.setPercentageQuotaUsed();
 };
 
 /**
@@ -100,7 +96,7 @@ zimbra_notifier_MailBoxInfo.prototype.setQuotaSize = function(maxSize) {
  * @this {MailBoxInfo}
  * @return {String} percentage quota
  */
-zimbra_notifier_MailBoxInfo.prototype.setPercentageQuotaUsed = function() {
+zimbra_notifier_MailBoxInfo.prototype.setPercentageQuotaUsed = function () {
     if (this.quotaSize > 0) {
         var perc = ((this.quotaUsed ?? 0) * 100) / this.quotaSize;
         this.percentageQuotaUsedString = perc.toFixed(1);

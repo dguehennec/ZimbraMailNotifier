@@ -35,9 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_Logger"];
+'use strict';
 
 /**
  * Creates an instance of logger.
@@ -46,7 +44,7 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Logger"];
  * @this {Logger}
  *
  */
-var zimbra_notifier_Logger = function(name) {
+var zimbra_notifier_Logger = function (name) {
     this._name = name;
 };
 
@@ -57,10 +55,10 @@ var zimbra_notifier_Logger = function(name) {
  * @param {String}
  *            message message of the trace
  */
-zimbra_notifier_Logger.prototype.error = function(message) {
+zimbra_notifier_Logger.prototype.error = function (message) {
     if (zimbra_notifier_Constant.LOGGER.LEVEL > 0) {
         this._printStack();
-        console.error(this._getStrDate() + "ERROR in " + this._name + " : " + message + "\n");
+        console.error(this._getStrDate() + 'ERROR in ' + this._name + ' : ' + message + '\n');
     }
 };
 
@@ -71,10 +69,10 @@ zimbra_notifier_Logger.prototype.error = function(message) {
  * @param {String}
  *            message message of the trace
  */
-zimbra_notifier_Logger.prototype.warning = function(message) {
+zimbra_notifier_Logger.prototype.warning = function (message) {
     if (zimbra_notifier_Constant.LOGGER.LEVEL > 1) {
         this._printStack();
-        console.warn(this._getStrDate() + "WARNING in " + this._name + " : " + message + "\n");
+        console.warn(this._getStrDate() + 'WARNING in ' + this._name + ' : ' + message + '\n');
     }
 };
 
@@ -85,10 +83,10 @@ zimbra_notifier_Logger.prototype.warning = function(message) {
  * @param {String}
  *            message message of the trace
  */
-zimbra_notifier_Logger.prototype.info = function(message) {
+zimbra_notifier_Logger.prototype.info = function (message) {
     if (zimbra_notifier_Constant.LOGGER.LEVEL > 2) {
         this._printStack();
-        console.info(this._getStrDate() + "INFO in " + this._name + " : " + message + "\n");
+        console.info(this._getStrDate() + 'INFO in ' + this._name + ' : ' + message + '\n');
     }
 };
 
@@ -99,10 +97,10 @@ zimbra_notifier_Logger.prototype.info = function(message) {
  * @param {String}
  *            message message of the trace
  */
-zimbra_notifier_Logger.prototype.trace = function(message) {
+zimbra_notifier_Logger.prototype.trace = function (message) {
     if (zimbra_notifier_Constant.LOGGER.LEVEL > 3) {
         this._printStack();
-        console.log(this._getStrDate() + "TRACE in " + this._name + " : " + message + "\n");
+        console.log(this._getStrDate() + 'TRACE in ' + this._name + ' : ' + message + '\n');
     }
 };
 
@@ -115,11 +113,10 @@ zimbra_notifier_Logger.prototype.trace = function(message) {
  * @param {String}
  *            data The request data to display conditionally
  */
-zimbra_notifier_Logger.prototype.errorReqData = function(message, data) {
+zimbra_notifier_Logger.prototype.errorReqData = function (message, data) {
     if (zimbra_notifier_Constant.LOGGER.PRINT_DATA_REQUEST) {
-        this.error(message + " ->\n" + data + "\n");
-    }
-    else {
+        this.error(message + ' ->\n' + data + '\n');
+    } else {
         this.error(message);
     }
 };
@@ -133,11 +130,10 @@ zimbra_notifier_Logger.prototype.errorReqData = function(message, data) {
  * @param {String}
  *            data The request data to display conditionally
  */
-zimbra_notifier_Logger.prototype.warningReqData = function(message, data) {
+zimbra_notifier_Logger.prototype.warningReqData = function (message, data) {
     if (zimbra_notifier_Constant.LOGGER.PRINT_DATA_REQUEST) {
-        this.warning(message + " ->\n" + data + "\n");
-    }
-    else {
+        this.warning(message + ' ->\n' + data + '\n');
+    } else {
         this.warning(message);
     }
 };
@@ -151,16 +147,13 @@ zimbra_notifier_Logger.prototype.warningReqData = function(message, data) {
  * @param {String}
  *            data The request data to display conditionally
  */
-zimbra_notifier_Logger.prototype.traceReqData = function(message, data) {
+zimbra_notifier_Logger.prototype.traceReqData = function (message, data) {
     if (zimbra_notifier_Constant.LOGGER.PRINT_DATA_REQUEST) {
-        this.trace(message + " ->\n" + data + "\n");
-    }
-    else {
+        this.trace(message + ' ->\n' + data + '\n');
+    } else {
         this.trace(message);
     }
 };
-
-
 
 /**
  * Print the stack trace
@@ -168,13 +161,13 @@ zimbra_notifier_Logger.prototype.traceReqData = function(message, data) {
  * @private
  * @this {Logger}
  */
-zimbra_notifier_Logger.prototype._printStack = function() {
+zimbra_notifier_Logger.prototype._printStack = function () {
     if (zimbra_notifier_Constant.LOGGER.PRINT_STACK === true) {
         try {
             throw Error('');
-        } catch(err) {
-            var stack = err.stack.split("\n").slice(2).join("\n");
-            console.log("--------\n" + stack + "--------\n");
+        } catch (err) {
+            var stack = err.stack.split('\n').slice(2).join('\n');
+            console.log('--------\n' + stack + '--------\n');
         }
     }
 };
@@ -185,17 +178,24 @@ zimbra_notifier_Logger.prototype._printStack = function() {
  * @private
  * @this {Logger}
  */
-zimbra_notifier_Logger.prototype._getStrDate = function() {
+zimbra_notifier_Logger.prototype._getStrDate = function () {
     if (zimbra_notifier_Constant.LOGGER.PRINT_DATE === true) {
         var date = new Date();
         var h = date.getHours();
         var m = date.getMinutes();
         var s = date.getSeconds();
         var ms = date.getMilliseconds();
-        return "[" + ((h < 10) ? "0" + h : h) + ":" +
-                     ((m < 10) ? "0" + m : m) + ":" +
-                     ((s < 10) ? "0" + s : s) + "." +
-                     ((ms < 10) ? "00" + ms : ((ms < 100) ? "0" + ms : ms)) + "] ";
+        return (
+            '[' +
+            (h < 10 ? '0' + h : h) +
+            ':' +
+            (m < 10 ? '0' + m : m) +
+            ':' +
+            (s < 10 ? '0' + s : s) +
+            '.' +
+            (ms < 10 ? '00' + ms : ms < 100 ? '0' + ms : ms) +
+            '] '
+        );
     }
     return '';
 };

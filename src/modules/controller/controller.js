@@ -34,9 +34,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_Controller"];
+'use strict';
 
 /* ************************* Controller ****************************** */
 
@@ -46,7 +44,7 @@ var EXPORTED_SYMBOLS = ["zimbra_notifier_Controller"];
  * @constructor
  * @this {Controller}
  */
-var zimbra_notifier_Controller = function(accountId) {
+var zimbra_notifier_Controller = function (accountId) {
     this.id = 'C' + accountId;
     this._accountId = accountId;
     this._service = null;
@@ -59,7 +57,7 @@ var zimbra_notifier_Controller = function(accountId) {
  *
  * @this {Controller}
  */
-zimbra_notifier_Controller.prototype.shutdown = function() {
+zimbra_notifier_Controller.prototype.shutdown = function () {
     if (this._service !== null) {
         this._service.shutdown();
         this._service = null;
@@ -72,7 +70,7 @@ zimbra_notifier_Controller.prototype.shutdown = function() {
  *
  * @this {Controller}
  */
-zimbra_notifier_Controller.prototype.getService = function(create) {
+zimbra_notifier_Controller.prototype.getService = function (create) {
     if (this._service === null && create) {
         this._service = new zimbra_notifier_Service(this);
     }
@@ -84,7 +82,7 @@ zimbra_notifier_Controller.prototype.getService = function(create) {
  *
  * @this {Controller}
  */
-zimbra_notifier_Controller.prototype.getBrowser = function() {
+zimbra_notifier_Controller.prototype.getBrowser = function () {
     return this._browser;
 };
 
@@ -93,7 +91,7 @@ zimbra_notifier_Controller.prototype.getBrowser = function() {
  *
  * @this {Controller}
  */
-zimbra_notifier_Controller.prototype.getAccountId = function() {
+zimbra_notifier_Controller.prototype.getAccountId = function () {
     return this._accountId;
 };
 
@@ -104,7 +102,7 @@ zimbra_notifier_Controller.prototype.getAccountId = function() {
  * @param {Object}
  *            callback Object which has this function : refresh(startRequest)
  */
-zimbra_notifier_Controller.prototype.addCallBackRefresh = function(callback) {
+zimbra_notifier_Controller.prototype.addCallBackRefresh = function (callback) {
     this._callbackList.push(callback);
 };
 
@@ -115,7 +113,7 @@ zimbra_notifier_Controller.prototype.addCallBackRefresh = function(callback) {
  * @param {Object}
  *            callback Object which has this function : refresh(startRequest)
  */
-zimbra_notifier_Controller.prototype.removeCallBackRefresh = function(callback) {
+zimbra_notifier_Controller.prototype.removeCallBackRefresh = function (callback) {
     for (var index = 0; index < this._callbackList.length; index++) {
         if (this._callbackList[index] === callback) {
             this._callbackList.splice(index, 1);
@@ -133,7 +131,7 @@ zimbra_notifier_Controller.prototype.removeCallBackRefresh = function(callback) 
  * @param {Object}
  *            data  The data associated with the event, can be undefined
  */
-zimbra_notifier_Controller.prototype.event = function(event, data) {
+zimbra_notifier_Controller.prototype.event = function (event, data) {
     for (var index = 0; index < this._callbackList.length; index++) {
         var callback = this._callbackList[index];
         if (callback !== null) {
@@ -148,7 +146,7 @@ zimbra_notifier_Controller.prototype.event = function(event, data) {
  * @this {Controller}
  * @return {Boolean} False if we need to ask the password
  */
-zimbra_notifier_Controller.prototype.autoConnect = function() {
+zimbra_notifier_Controller.prototype.autoConnect = function () {
     if (!this.isConnected() && zimbra_notifier_Prefs.isAutoConnectEnabled()) {
         return this.initializeConnection();
     }
@@ -164,7 +162,7 @@ zimbra_notifier_Controller.prototype.autoConnect = function() {
  *
  * @return {Boolean} True if we did launch the connect query
  */
-zimbra_notifier_Controller.prototype.initializeConnection = function(password) {
+zimbra_notifier_Controller.prototype.initializeConnection = function (password) {
     if (!this.isConnected()) {
         return this.getService(true).initializeConnection(password);
     }
@@ -192,7 +190,7 @@ zimbra_notifier_Controller.prototype.sendTwoFactorToken = function (token) {
  *
  * @this {Controller}
  */
-zimbra_notifier_Controller.prototype.closeConnection = function() {
+zimbra_notifier_Controller.prototype.closeConnection = function () {
     var srv = this.getService();
     if (srv) {
         srv.closeConnection();
@@ -204,7 +202,7 @@ zimbra_notifier_Controller.prototype.closeConnection = function() {
  *
  * @this {Controller}
  */
-zimbra_notifier_Controller.prototype.checkNow = function() {
+zimbra_notifier_Controller.prototype.checkNow = function () {
     this.getService(true).checkNow();
 };
 
@@ -214,7 +212,7 @@ zimbra_notifier_Controller.prototype.checkNow = function() {
  * @this {Controller}
  * @return {Boolean} true if connected
  */
-zimbra_notifier_Controller.prototype.isConnected = function() {
+zimbra_notifier_Controller.prototype.isConnected = function () {
     var srv = this.getService();
     return srv ? srv.isConnected() : false;
 };
@@ -236,13 +234,15 @@ zimbra_notifier_Controller.prototype.needTwoFactorAuth = function () {
  * @this {Controller}
  * @return {Boolean} true if connecting
  */
-zimbra_notifier_Controller.prototype.isConnecting = function() {
+zimbra_notifier_Controller.prototype.isConnecting = function () {
     var srv = this.getService();
     var cSt = srv ? srv.getCurrentState() : zimbra_notifier_SERVICE_STATE.NOTHING_TO_DO;
 
-    return cSt === zimbra_notifier_SERVICE_STATE.CONNECT_RUN ||
-           cSt === zimbra_notifier_SERVICE_STATE.CONNECT_ERR ||
-           cSt === zimbra_notifier_SERVICE_STATE.CONNECT_WAIT;
+    return (
+        cSt === zimbra_notifier_SERVICE_STATE.CONNECT_RUN ||
+        cSt === zimbra_notifier_SERVICE_STATE.CONNECT_ERR ||
+        cSt === zimbra_notifier_SERVICE_STATE.CONNECT_WAIT
+    );
 };
 
 /**
@@ -251,7 +251,7 @@ zimbra_notifier_Controller.prototype.isConnecting = function() {
  * @this {Controller}
  * @return {MailBoxInfo} mailBoxInfo
  */
-zimbra_notifier_Controller.prototype.getMailBoxInfo = function() {
+zimbra_notifier_Controller.prototype.getMailBoxInfo = function () {
     var srv = this.getService();
     return srv ? srv.getMailBoxInfo() : null;
 };
@@ -262,7 +262,7 @@ zimbra_notifier_Controller.prototype.getMailBoxInfo = function() {
  * @this {Controller}
  * @return {Number} nb of unread messages
  */
-zimbra_notifier_Controller.prototype.getNbMessageUnread = function() {
+zimbra_notifier_Controller.prototype.getNbMessageUnread = function () {
     var srv = this.getService();
     return srv ? srv.getMessageManager().nbMessages() : 0;
 };
@@ -273,7 +273,7 @@ zimbra_notifier_Controller.prototype.getNbMessageUnread = function() {
  * @this {Controller}
  * @return unread messages
  */
-zimbra_notifier_Controller.prototype.getUnreadMessages = function() {
+zimbra_notifier_Controller.prototype.getUnreadMessages = function () {
     var srv = this.getService();
     return srv ? srv.getMessageManager().getMessages() : [];
 };
@@ -284,7 +284,7 @@ zimbra_notifier_Controller.prototype.getUnreadMessages = function() {
  * @this {Controller}
  * @return {CalEvent[]} events
  */
-zimbra_notifier_Controller.prototype.getEvents = function() {
+zimbra_notifier_Controller.prototype.getEvents = function () {
     var srv = this.getService();
     return srv ? srv.getEvents() : [];
 };
@@ -295,7 +295,7 @@ zimbra_notifier_Controller.prototype.getEvents = function() {
  * @this {Controller}
  * @return {Task[]} tasks
  */
-zimbra_notifier_Controller.prototype.getTasks = function() {
+zimbra_notifier_Controller.prototype.getTasks = function () {
     var srv = this.getService();
     return srv ? srv.getTasks() : [];
 };
@@ -306,9 +306,9 @@ zimbra_notifier_Controller.prototype.getTasks = function() {
  * @this {Controller}
  * @return {String} the last server error message
  */
-zimbra_notifier_Controller.prototype.getLastErrorMessage = function() {
-    var message = "";
-    var reason = "";
+zimbra_notifier_Controller.prototype.getLastErrorMessage = function () {
+    var message = '';
+    var reason = '';
     var util = zimbra_notifier_Util;
     var srv = this.getService();
     var lastErr = srv ? srv.getLastError() : null;
@@ -316,55 +316,55 @@ zimbra_notifier_Controller.prototype.getLastErrorMessage = function() {
     if (lastErr !== null) {
         switch (lastErr.requestType) {
             case zimbra_notifier_REQUEST_TYPE.CONNECT:
-                message = util.getBundleString("connector.error.authentification");
+                message = util.getBundleString('connector.error.authentification');
                 break;
             case zimbra_notifier_REQUEST_TYPE.CREATE_WAIT:
-                message = util.getBundleString("connector.error.createwait");
+                message = util.getBundleString('connector.error.createwait');
                 break;
             case zimbra_notifier_REQUEST_TYPE.WAIT_NO_BLOCK:
             case zimbra_notifier_REQUEST_TYPE.WAIT_BLOCK:
-                message = util.getBundleString("connector.error.wait");
+                message = util.getBundleString('connector.error.wait');
                 break;
             case zimbra_notifier_REQUEST_TYPE.MAILBOX_INFO:
-                message = util.getBundleString("connector.error.mailboxinfo");
+                message = util.getBundleString('connector.error.mailboxinfo');
                 break;
             case zimbra_notifier_REQUEST_TYPE.UNREAD_MSG:
-                message = util.getBundleString("connector.error.unreadmsg");
+                message = util.getBundleString('connector.error.unreadmsg');
                 break;
             case zimbra_notifier_REQUEST_TYPE.CALENDAR:
-                message = util.getBundleString("connector.error.calendar");
+                message = util.getBundleString('connector.error.calendar');
                 break;
             case zimbra_notifier_REQUEST_TYPE.TASK:
-                message = util.getBundleString("connector.error.task");
+                message = util.getBundleString('connector.error.task');
                 break;
             default:
-                message = util.getBundleString("connector.error.req.internal");
+                message = util.getBundleString('connector.error.req.internal');
         }
 
         switch (lastErr.lastReqStatus) {
             case zimbra_notifier_REQUEST_STATUS.REQUEST_INVALID:
-                reason = util.getBundleString("connector.error.req.invalid");
+                reason = util.getBundleString('connector.error.req.invalid');
                 break;
             case zimbra_notifier_REQUEST_STATUS.TIMEOUT:
-                reason = util.getBundleString("connector.error.req.timeout");
+                reason = util.getBundleString('connector.error.req.timeout');
                 break;
             case zimbra_notifier_REQUEST_STATUS.SERVER_ERROR:
-                reason = util.getBundleString("connector.error.req.server");
+                reason = util.getBundleString('connector.error.req.server');
                 break;
             case zimbra_notifier_REQUEST_STATUS.NETWORK_ERROR:
-                reason = util.getBundleString("connector.error.req.network");
+                reason = util.getBundleString('connector.error.req.network');
                 break;
             case zimbra_notifier_REQUEST_STATUS.AUTH_REQUIRED:
-                reason = util.getBundleString("connector.error.req.authreq");
+                reason = util.getBundleString('connector.error.req.authreq');
                 break;
             case zimbra_notifier_REQUEST_STATUS.LOGIN_INVALID:
-                reason = util.getBundleString("connector.error.req.logininvalid");
+                reason = util.getBundleString('connector.error.req.logininvalid');
                 break;
             default:
-                reason = util.getBundleString("connector.error.req.internal");
+                reason = util.getBundleString('connector.error.req.internal');
                 break;
         }
-        message = message.replace("%REASON%", reason);
+        message = message.replace('%REASON%', reason);
     }
     return message;
 };
@@ -374,10 +374,12 @@ zimbra_notifier_Controller.prototype.getLastErrorMessage = function() {
  *
  * @this {Controller}
  */
-zimbra_notifier_Controller.prototype.openZimbraWebInterface = function() {
-    this._browser.setWebPageInfo(zimbra_notifier_Prefs.getUrlUserInterface(this.getAccountId()),
-            zimbra_notifier_Prefs.isSyncBrowserCookiesEnabled(),
-            zimbra_notifier_Prefs.isBrowserCookieHttpOnly());
+zimbra_notifier_Controller.prototype.openZimbraWebInterface = function () {
+    this._browser.setWebPageInfo(
+        zimbra_notifier_Prefs.getUrlUserInterface(this.getAccountId()),
+        zimbra_notifier_Prefs.isSyncBrowserCookiesEnabled(),
+        zimbra_notifier_Prefs.isBrowserCookieHttpOnly(),
+    );
     this._browser.openWebPage();
 };
 
@@ -385,4 +387,3 @@ zimbra_notifier_Controller.prototype.openZimbraWebInterface = function() {
  * Freeze the interface
  */
 Object.freeze(zimbra_notifier_Controller);
-

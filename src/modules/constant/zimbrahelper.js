@@ -35,9 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
-
-var EXPORTED_SYMBOLS = ["zimbra_notifier_Constant"];
+'use strict';
 
 /* ************************* Constant ****************************** */
 
@@ -62,10 +60,10 @@ zimbra_notifier_Constant.VERSION = 0x020501;
  * @constant
  */
 zimbra_notifier_Constant.LOGGER = {
-    LEVEL : 0,
-    PRINT_STACK : false,
-    PRINT_DATE : true,
-    PRINT_DATA_REQUEST : false
+    LEVEL: 0,
+    PRINT_STACK: false,
+    PRINT_DATE: true,
+    PRINT_DATA_REQUEST: false,
 };
 
 /**
@@ -75,7 +73,7 @@ zimbra_notifier_Constant.LOGGER = {
  *
  */
 zimbra_notifier_Constant.OBSERVER = {
-    PREF_SAVED : "zimbra_mail_notifier.pref.saved"
+    PREF_SAVED: 'zimbra_mail_notifier.pref.saved',
 };
 
 /**
@@ -85,7 +83,7 @@ zimbra_notifier_Constant.OBSERVER = {
  *
  */
 zimbra_notifier_Constant.STRING_BUNDLE = {
-    DEFAULT_URL : "chrome://zimbra_mail_notifier/locale/zimbra_mail_notifier.properties"
+    DEFAULT_URL: 'chrome://zimbra_mail_notifier/locale/zimbra_mail_notifier.properties',
 };
 
 /**
@@ -95,7 +93,7 @@ zimbra_notifier_Constant.STRING_BUNDLE = {
  *
  */
 zimbra_notifier_Constant.NOTIFIER = {
-    REPEAT_DELAY_MS : 60000
+    REPEAT_DELAY_MS: 60000,
 };
 
 /**
@@ -105,7 +103,7 @@ zimbra_notifier_Constant.NOTIFIER = {
  *
  */
 zimbra_notifier_Constant.SESSION = {
-    TOKEN_LIFETIME_EXPIR : 180000
+    TOKEN_LIFETIME_EXPIR: 180000,
 };
 
 /**
@@ -115,16 +113,16 @@ zimbra_notifier_Constant.SESSION = {
  *
  */
 zimbra_notifier_Constant.SERVICE = {
-    CONNECT_BASE_WAIT_AFTER_FAILURE : 20000,
-    CONNECT_MAX_WAIT_AFTER_FAILURE : 300000,
-    REFRESH_WAIT_AFTER_FAILURE : 10000,
-    WAITSET_MIN_DURATION : 50000,
-    NB_RETRY_QUERY : 3,
-    NOTIFY_DELAY_FIRST_UNREAD : 12000,
-    NOTIFY_MAX_NB_MSG : 15,
-    NOTIFY_MAX_LEN_TITLE : 75,
-    NB_MAX_MSG_WITH_CONTENT : 200,
-    EVENTS_DELTA_START_FROM_NOW : 10800000
+    CONNECT_BASE_WAIT_AFTER_FAILURE: 20000,
+    CONNECT_MAX_WAIT_AFTER_FAILURE: 300000,
+    REFRESH_WAIT_AFTER_FAILURE: 10000,
+    WAITSET_MIN_DURATION: 50000,
+    NB_RETRY_QUERY: 3,
+    NOTIFY_DELAY_FIRST_UNREAD: 12000,
+    NOTIFY_MAX_NB_MSG: 15,
+    NOTIFY_MAX_LEN_TITLE: 75,
+    NB_MAX_MSG_WITH_CONTENT: 200,
+    EVENTS_DELTA_START_FROM_NOW: 10800000,
 };
 
 /**
@@ -134,8 +132,8 @@ zimbra_notifier_Constant.SERVICE = {
  *
  */
 zimbra_notifier_Constant.WEBSERVICE = {
-    WAITSET_WATCH_TYPES : 'all',
-    COOKIE_KEY_TOKEN : "ZM_AUTH_TOKEN"
+    WAITSET_WATCH_TYPES: 'all',
+    COOKIE_KEY_TOKEN: 'ZM_AUTH_TOKEN',
 };
 
 // Freeze the constants
