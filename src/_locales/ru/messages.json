@@ -4,523 +4,523 @@
     "description": ""
   },
   "extDescription": {
-    "message": "This extension notifies you when new messages arrive in your zimbra mailbox.",
+    "message": "Это расширение уведомляет вас о новых сообщениях в вашем почтовом ящике Zimbra.",
     "description": ""
   },
   "yes": {
-    "message": "yes",
+    "message": "да",
     "description": ""
   },
   "no": {
-    "message": "no",
+    "message": "нет",
     "description": ""
   },
   "custom": {
-    "message": "Personalized",
+    "message": "Пользовательский",
     "description": ""
   },
   "pixels": {
-    "message": "pixels",
+    "message": "пикселей",
     "description": ""
   },
   "seconds": {
-    "message": "seconds",
+    "message": "секунд",
     "description": ""
   },
   "week": {
-    "message": "week",
+    "message": "неделя",
     "description": ""
   },
   "weeks": {
-    "message": "weeks",
+    "message": "недели",
     "description": ""
   },
   "time": {
-    "message": "time",
+    "message": "раз",
     "description": ""
   },
   "atTime": {
-    "message": "at time",
+    "message": "вовремя",
     "description": ""
   },
   "minuteBefore": {
-    "message": "minute before",
+    "message": "минуту до",
     "description": ""
   },
   "minutesBefore": {
-    "message": "minutes before",
+    "message": "минут до",
     "description": ""
   },
   "hourBefore": {
-    "message": "hour before",
+    "message": "час до",
     "description": ""
   },
   "hoursBefore": {
-    "message": "hours before",
+    "message": "часов до",
     "description": ""
   },
   "main_checkNow": {
-    "message": "Refresh...",
+    "message": "Обновить...",
     "description": ""
   },
   "main_connect": {
-    "message": "Connect",
+    "message": "Подключить",
     "description": ""
   },
   "main_disconnect": {
-    "message": "Disconnect",
+    "message": "Отключить",
     "description": ""
   },
   "main_options_label": {
-    "message": "Preferences",
+    "message": "Настройки",
     "description": ""
   },
   "main_about_label": {
-    "message": "About Zimbra Mail Notifier",
+    "message": "О Zimbra Mail Notifier",
     "description": ""
   },
   "main_homepage_label": {
-    "message": "Web Site",
+    "message": "Веб-сайт",
     "description": ""
   },
   "tooltip_message_caption": {
-    "message": "Unread Emails",
+    "message": "Непрочитанные письма",
     "description": ""
   },
   "tooltip_calendar_caption": {
-    "message": "Next events",
+    "message": "Ближайшие события",
     "description": ""
   },
   "tooltip_task_caption": {
-    "message": "Current tasks",
+    "message": "Текущие задачи",
     "description": ""
   },
   "about_homepage_label": {
-    "message": "Web Site :",
+    "message": "Веб-сайт :",
     "description": ""
   },
   "about_donate": {
-    "message": "Donation",
+    "message": "Пожертвование",
     "description": ""
   },
   "about_createdby_label": {
-    "message": "By David GUEHENNEC",
+    "message": "Автор: David GUEHENNEC",
     "description": ""
   },
   "about_version_label": {
-    "message": "Version",
+    "message": "Версия",
     "description": ""
   },
   "about_legal_label": {
-    "message": "This extension is not affiliated or endorsed by VMware.",
+    "message": "Это расширение не связано с VMware и не одобрено VMware.",
     "description": ""
   },
   "about_close_label": {
-    "message": "Close",
+    "message": "Закрыть",
     "description": ""
   },
   "option_option_label": {
-    "message": "Preferences",
+    "message": "Настройки",
     "description": ""
   },
   "option_common_label": {
-    "message": "General",
+    "message": "Общие",
     "description": ""
   },
   "option_common_connection_caption": {
-    "message": "Connection",
+    "message": "Подключение",
     "description": ""
   },
   "option_common_autoConnect": {
-    "message": "Auto connection on startup",
+    "message": "Автоподключение при запуске",
     "description": ""
   },
   "option_common_browserSetCookies": {
-    "message": "Auto connection on the web interface",
+    "message": "Автоподключение в веб-интерфейсе",
     "description": ""
   },
   "option_common_popup_caption": {
-    "message": "Toolbar",
+    "message": "Панель инструментов",
     "description": ""
   },
   "option_common_popupColor": {
-    "message": "Panel color",
+    "message": "Цвет панели",
     "description": ""
   },
   "option_common_popupWidth": {
-    "message": "Panel width",
+    "message": "Ширина панели",
     "description": ""
   },
   "option_common_mail_notification_caption": {
-    "message": "Notification unread mail",
+    "message": "Уведомление о непрочитанной почте",
     "description": ""
   },
   "option_common_mail_systemNotification": {
-    "message": "System notification",
+    "message": "Системное уведомление",
     "description": ""
   },
   "option_common_mail_soundNotification": {
-    "message": "Sound notification",
+    "message": "Звуковое уведомление",
     "description": ""
   },
   "option_common_mail_soundNotificationSelected": {
-    "message": "Sound",
+    "message": "Звук",
     "description": ""
   },
   "option_common_mail_notify_volume_caption": {
-    "message": "Volume",
+    "message": "Громкость",
     "description": ""
   },
   "option_common_mail_notify_duration_caption": {
-    "message": "Notification duration",
+    "message": "Длительность уведомления",
     "description": ""
   },
   "option_message_label": {
-    "message": "Email",
+    "message": "Почта",
     "description": ""
   },
   "option_message_activate": {
-    "message": "Enable unread Emails management",
+    "message": "Включить управление непрочитанными письмами",
     "description": ""
   },
   "option_message_view_caption": {
-    "message": "Displaying",
+    "message": "Отображение",
     "description": ""
   },
   "option_message_view_nbMax_label": {
-    "message": "Maximum number of Emails displayed",
+    "message": "Максимальное число отображаемых писем",
     "description": ""
   },
   "option_message_view_nbMax_characters_label": {
-    "message": "Maximum number of characters displayed in Email abstract",
+    "message": "Максимальное число символов в кратком описании письма",
     "description": ""
   },
   "option_message_view_filter_label": {
-    "message": "Email filter (regular expression)",
-    "description": "Label for the optional unread email regex filter in options."
+    "message": "Фильтр писем (регулярное выражение)",
+    "description": "Метка необязательного regex-фильтра непрочитанных писем в настройках."
   },
   "option_message_view_filter_description": {
-    "message": "Optional. Only unread emails matching this regular expression on sender, subject, or body are shown and counted. Leave empty to disable filtering.",
-    "description": "Help text for the optional unread email regex filter in options."
+    "message": "Необязательно. Отображаются и учитываются только непрочитанные письма, у которых отправитель, тема или текст соответствуют этому регулярному выражению. Оставьте пустым, чтобы отключить фильтрацию.",
+    "description": "Справка по необязательному regex-фильтру непрочитанных писем в настройках."
   },
   "option_calendar_label": {
-    "message": "Calendar",
+    "message": "Календарь",
     "description": ""
   },
   "option_calendar_activate": {
-    "message": "Enable calendar management",
+    "message": "Включить управление календарём",
     "description": ""
   },
   "option_calendar_view_caption": {
-    "message": "Displaying",
+    "message": "Отображение",
     "description": ""
   },
   "option_calendar_view_period_label": {
-    "message": "Period displayed",
+    "message": "Отображаемый период",
     "description": ""
   },
   "option_calendar_view_nbMax_label": {
-    "message": "Maximum number of appointments displayed",
+    "message": "Максимальное число отображаемых встреч",
     "description": ""
   },
   "option_calendar_notification_caption": {
-    "message": "Notification",
+    "message": "Уведомление",
     "description": ""
   },
   "option_calendar_systemNotification": {
-    "message": "System notification",
+    "message": "Системное уведомление",
     "description": ""
   },
   "option_calendar_soundNotification": {
-    "message": "Sound notification",
+    "message": "Звуковое уведомление",
     "description": ""
   },
   "option_calendar_soundNotificationSelected": {
-    "message": "Sound",
+    "message": "Звук",
     "description": ""
   },
   "option_calendar_notify_volume_caption": {
-    "message": "Volume",
+    "message": "Громкость",
     "description": ""
   },
   "option_calendar_repeat": {
-    "message": "Repeat",
+    "message": "Повтор",
     "description": ""
   },
   "option_task_label": {
-    "message": "Tasks",
+    "message": "Задачи",
     "description": ""
   },
   "option_task_activate": {
-    "message": "Enable Tasks management",
+    "message": "Включить управление задачами",
     "description": ""
   },
   "option_task_view_caption": {
-    "message": "Displaying",
+    "message": "Отображение",
     "description": ""
   },
   "option_task_view_reminder": {
-    "message": "Reminder",
+    "message": "Напоминание",
     "description": ""
   },
   "option_task_view_confZimbra": {
-    "message": "Zimbra configuration",
+    "message": "Конфигурация Zimbra",
     "description": ""
   },
   "option_task_view_nbTasks": {
-    "message": "Maximum number of tasks displayed",
+    "message": "Максимальное число отображаемых задач",
     "description": ""
   },
   "option_task_view_nbPriorities": {
-    "message": "Priorities set",
+    "message": "Приоритеты",
     "description": ""
   },
   "option_task_view_all": {
-    "message": "All",
+    "message": "Все",
     "description": ""
   },
   "option_task_view_highAndNormal": {
-    "message": "High and normal",
+    "message": "Высокий и обычный",
     "description": ""
   },
   "option_task_view_high": {
-    "message": "High",
+    "message": "Высокий",
     "description": ""
   },
   "option_task_view_normal": {
-    "message": "Normal",
+    "message": "Обычный",
     "description": ""
   },
   "option_task_view_low": {
-    "message": "Low",
+    "message": "Низкий",
     "description": ""
   },
   "option_identifiant_label": {
-    "message": "Accounts",
+    "message": "Учётные записи",
     "description": ""
   },
   "option_identifiant_caption": {
-    "message": "Account",
+    "message": "Учётная запись",
     "description": ""
   },
   "option_identifiant_params_caption": {
-    "message": "Authentication",
+    "message": "Аутентификация",
     "description": ""
   },
   "option_identifiant_alias_label": {
-    "message": "Alias",
+    "message": "Псевдоним",
     "description": ""
   },
   "option_identifiant_login_label": {
-    "message": "Login",
+    "message": "Логин",
     "description": ""
   },
   "option_identifiant_password_label": {
-    "message": "Password",
+    "message": "Пароль",
     "description": ""
   },
   "option_identifiant_savePassword_label": {
-    "message": "Remember password",
+    "message": "Запомнить пароль",
     "description": ""
   },
   "option_identifiant_2fatoken_label": {
-    "message": "Two-factor authentication token",
+    "message": "Токен двухфакторной аутентификации",
     "description": ""
   },
   "option_identifiant_2fatoken_button": {
-    "message": "Send",
+    "message": "Отправить",
     "description": ""
   },
   "option_identifiant_server_caption": {
-    "message": "Server",
+    "message": "Сервер",
     "description": ""
   },
   "option_identifiant_authtype_label": {
-    "message": "Authentication",
+    "message": "Аутентификация",
     "description": ""
   },
   "option_identifiant_authtype_normal": {
-    "message": "Normal",
+    "message": "Обычная",
     "description": ""
   },
   "option_identifiant_urlwebservice_label": {
-    "message": "Web service URL",
+    "message": "URL веб-сервиса",
     "description": ""
   },
   "option_identifiant_urlwebservice_tooltip": {
-    "message": "The URL of the mail service, most of the time the same as the web interface URL",
+    "message": "URL почтового сервиса, обычно совпадает с URL веб-интерфейса",
     "description": ""
   },
   "option_identifiant_urlwebinterface_label": {
-    "message": "Web interface URL",
+    "message": "URL веб-интерфейса",
     "description": ""
   },
   "option_identifiant_urlwebinterface_tooltip": {
-    "message": "The URL displayed in the Web browser when connected (Optional)",
+    "message": "URL, отображаемый в браузере при подключении (необязательно)",
     "description": ""
   },
   "option_identifiant_add_button": {
-    "message": "Add new account",
+    "message": "Добавить учётную запись",
     "description": ""
   },
   "option_identifiant_remove_button": {
-    "message": "Remove",
+    "message": "Удалить",
     "description": ""
   },
   "option_identifiant_connect_button": {
-    "message": "Connect",
+    "message": "Подключить",
     "description": ""
   },
   "option_identifiant_connectCancel_button": {
-    "message": "Cancel...",
+    "message": "Отмена...",
     "description": ""
   },
   "option_identifiant_disconnect_button": {
-    "message": "Disconnect",
+    "message": "Отключить",
     "description": ""
   },
   "tooltip_notConnected_title": {
-    "message": "Disconnected",
+    "message": "Отключено",
     "description": ""
   },
   "tooltip_configuration_description": {
-    "message": "For notifications, please configure your account(s).",
+    "message": "Для уведомлений настройте учётную запись.",
     "description": ""
   },
   "tooltip_notConnected_description": {
-    "message": "For notifications, please log in.",
+    "message": "Для уведомлений выполните вход.",
     "description": ""
   },
   "tooltip_errorConnected_title": {
-    "message": "Update failed",
+    "message": "Ошибка обновления",
     "description": ""
   },
   "tooltip_disconnected_descriptionStatus": {
-    "message": "State: Disconnected",
+    "message": "Состояние: отключено",
     "description": ""
   },
   "tooltip_connecting_descriptionStatus": {
-    "message": "State: Connection in progress...",
+    "message": "Состояние: подключение...",
     "description": ""
   },
   "tooltip_errorInitPage_title": {
-    "message": "Sorry, an error has occurred, please reload this page.",
+    "message": "Произошла ошибка, перезагрузите эту страницу.",
     "description": ""
   },
   "tooltip_unreadMessages_title": {
-    "message": "Unread Emails: %NB% ",
+    "message": "Непрочитанные письма: %NB% ",
     "description": ""
   },
   "tooltip_connected_descriptionStatus": {
-    "message": "State: Connected",
+    "message": "Состояние: подключено",
     "description": ""
   },
   "tooltip_connected_descriptionAccount": {
-    "message": "Account: %EMAIL%",
+    "message": "Учётная запись: %EMAIL%",
     "description": ""
   },
   "tooltip_connected_descriptionQuota": {
-    "message": "Quota: %PERCENTAGE%% (%USED% of %SIZE%)",
+    "message": "Квота: %PERCENTAGE%% (%USED% из %SIZE%)",
     "description": ""
   },
   "tooltip_noUnreadMessage": {
-    "message": "No unread Email",
+    "message": "Нет непрочитанных писем",
     "description": ""
   },
   "tooltip_noEvent": {
-    "message": "No event in progress",
+    "message": "Нет текущих событий",
     "description": ""
   },
   "tooltip_priority_high": {
-    "message": "High priority",
+    "message": "Высокий приоритет",
     "description": ""
   },
   "tooltip_priority_low": {
-    "message": "Low priority",
+    "message": "Низкий приоритет",
     "description": ""
   },
   "tooltip_priority_normal": {
-    "message": "Normal priority",
+    "message": "Обычный приоритет",
     "description": ""
   },
   "tooltip_noTask": {
-    "message": "No task in progress",
+    "message": "Нет текущих задач",
     "description": ""
   },
   "tooltip_week": {
-    "message": "W%WEEK%",
+    "message": "Н%WEEK%",
     "description": ""
   },
   "tooltip_noEmailContent": {
-    "message": "Without any content",
+    "message": "Без содержимого",
     "description": ""
   },
   "connector_error_req_internal": {
-    "message": "Internal error",
+    "message": "Внутренняя ошибка",
     "description": ""
   },
   "connector_error_req_invalid": {
-    "message": "Invalid request",
+    "message": "Недопустимый запрос",
     "description": ""
   },
   "connector_error_req_timeout": {
-    "message": "No response",
+    "message": "Нет ответа",
     "description": ""
   },
   "connector_error_req_server": {
-    "message": "Server error",
+    "message": "Ошибка сервера",
     "description": ""
   },
   "connector_error_req_network": {
-    "message": "Network error",
+    "message": "Сетевая ошибка",
     "description": ""
   },
   "connector_error_req_authreq": {
-    "message": "Authentication expired",
+    "message": "Срок действия аутентификации истёк",
     "description": ""
   },
   "connector_error_req_logininvalid": {
-    "message": "Invalid login",
+    "message": "Неверный логин",
     "description": ""
   },
   "connector_error_authentification": {
-    "message": "Authentication error",
+    "message": "Ошибка аутентификации",
     "description": ""
   },
   "connector_error_createwait": {
-    "message": "Error during create wait request",
+    "message": "Ошибка при создании запроса ожидания",
     "description": ""
   },
   "connector_error_wait": {
-    "message": "Error waiting for a new message",
+    "message": "Ошибка при ожидании нового сообщения",
     "description": ""
   },
   "connector_error_mailboxinfo": {
-    "message": "Error when retrieving information from the mailbox",
+    "message": "Ошибка при получении информации о почтовом ящике",
     "description": ""
   },
   "connector_error_unreadmsg": {
-    "message": "Error when retrieving for new Emails",
+    "message": "Ошибка при получении новых писем",
     "description": ""
   },
   "connector_error_calendar": {
-    "message": "Error when retrieving the calendar events",
+    "message": "Ошибка при получении событий календаря",
     "description": ""
   },
   "connector_error_task": {
-    "message": "Error when retrieving the tasks",
+    "message": "Ошибка при получении задач",
     "description": ""
   },
   "connector_notification_NewMessage": {
-    "message": "Message from %EMAIL%",
+    "message": "Сообщение от %EMAIL%",
     "description": ""
   },
   "connector_notification_nbUnreadMessages": {
-    "message": "%NB% new unread Emails!",
+    "message": "%NB% новых непрочитанных писем!",
     "description": ""
   },
   "connector_notification_event": {
-    "message": "Event:",
+    "message": "Событие:",
     "description": ""
   },
   "unit_bytes_B": {
@@ -544,19 +544,19 @@
     "description": ""
   },
   "file_sound_error_size": {
-    "message": "This file is not supported. Max size is 300 KB, current: ",
+    "message": "Этот файл не поддерживается. Максимальный размер 300 КБ, текущий: ",
     "description": ""
   },
   "file_sound_error_type": {
-    "message": "This file is not supported. Need audio mime-type, current mime-type: ",
+    "message": "Этот файл не поддерживается. Требуется audio MIME-тип, текущий MIME-тип: ",
     "description": ""
   },
   "repeatNone": {
-    "message": "No",
+    "message": "Нет",
     "description": ""
   },
   "uploadFile": {
-    "message": "Choose file…",
+    "message": "Выбрать файл…",
     "description": ""
   }
 }

@@ -4,447 +4,447 @@
     "description": ""
   },
   "extDescription": {
-    "message": "This extension notifies you when new messages arrive in your zimbra mailbox.",
+    "message": "Zimbra メールボックスに新着メッセージが届いたときに通知します。",
     "description": ""
   },
   "yes": {
-    "message": "yes",
+    "message": "はい",
     "description": ""
   },
   "no": {
-    "message": "no",
+    "message": "いいえ",
     "description": ""
   },
   "custom": {
-    "message": "Personalized",
+    "message": "カスタム",
     "description": ""
   },
   "pixels": {
-    "message": "pixels",
+    "message": "ピクセル",
     "description": ""
   },
   "seconds": {
-    "message": "seconds",
+    "message": "秒",
     "description": ""
   },
   "week": {
-    "message": "week",
+    "message": "週",
     "description": ""
   },
   "weeks": {
-    "message": "weeks",
+    "message": "週",
     "description": ""
   },
   "time": {
-    "message": "time",
+    "message": "回",
     "description": ""
   },
   "atTime": {
-    "message": "at time",
+    "message": "定刻",
     "description": ""
   },
   "minuteBefore": {
-    "message": "minute before",
+    "message": "分前",
     "description": ""
   },
   "minutesBefore": {
-    "message": "minutes before",
+    "message": "分前",
     "description": ""
   },
   "hourBefore": {
-    "message": "hour before",
+    "message": "時間前",
     "description": ""
   },
   "hoursBefore": {
-    "message": "hours before",
+    "message": "時間前",
     "description": ""
   },
   "main_checkNow": {
-    "message": "Refresh...",
+    "message": "更新...",
     "description": ""
   },
   "main_connect": {
-    "message": "Connect",
+    "message": "接続",
     "description": ""
   },
   "main_disconnect": {
-    "message": "Disconnect",
+    "message": "切断",
     "description": ""
   },
   "main_options_label": {
-    "message": "Preferences",
+    "message": "設定",
     "description": ""
   },
   "main_about_label": {
-    "message": "About Zimbra Mail Notifier",
+    "message": "Zimbra Mail Notifier について",
     "description": ""
   },
   "main_homepage_label": {
-    "message": "Web Site",
+    "message": "Web サイト",
     "description": ""
   },
   "tooltip_message_caption": {
-    "message": "Unread Emails",
+    "message": "未読メール",
     "description": ""
   },
   "tooltip_calendar_caption": {
-    "message": "Next events",
+    "message": "次の予定",
     "description": ""
   },
   "tooltip_task_caption": {
-    "message": "Current tasks",
+    "message": "現在のタスク",
     "description": ""
   },
   "about_homepage_label": {
-    "message": "Web Site :",
+    "message": "Web サイト :",
     "description": ""
   },
   "about_donate": {
-    "message": "Donation",
+    "message": "寄付",
     "description": ""
   },
   "about_createdby_label": {
-    "message": "By David GUEHENNEC",
+    "message": "作成者: David GUEHENNEC",
     "description": ""
   },
   "about_version_label": {
-    "message": "Version",
+    "message": "バージョン",
     "description": ""
   },
   "about_legal_label": {
-    "message": "This extension is not affiliated or endorsed by VMware.",
+    "message": "この拡張機能は VMware とは提携・公認関係にありません。",
     "description": ""
   },
   "about_close_label": {
-    "message": "Close",
+    "message": "閉じる",
     "description": ""
   },
   "option_option_label": {
-    "message": "Preferences",
+    "message": "設定",
     "description": ""
   },
   "option_common_label": {
-    "message": "General",
+    "message": "一般",
     "description": ""
   },
   "option_common_connection_caption": {
-    "message": "Connection",
+    "message": "接続",
     "description": ""
   },
   "option_common_autoConnect": {
-    "message": "Auto connection on startup",
+    "message": "起動時に自動接続",
     "description": ""
   },
   "option_common_browserSetCookies": {
-    "message": "Auto connection on the web interface",
+    "message": "Web インターフェースで自動接続",
     "description": ""
   },
   "option_common_popup_caption": {
-    "message": "Toolbar",
+    "message": "ツールバー",
     "description": ""
   },
   "option_common_popupColor": {
-    "message": "Panel color",
+    "message": "パネルの色",
     "description": ""
   },
   "option_common_popupWidth": {
-    "message": "Panel width",
+    "message": "パネルの幅",
     "description": ""
   },
   "option_common_mail_notification_caption": {
-    "message": "Notification unread mail",
+    "message": "未読メールの通知",
     "description": ""
   },
   "option_common_mail_systemNotification": {
-    "message": "System notification",
+    "message": "システム通知",
     "description": ""
   },
   "option_common_mail_soundNotification": {
-    "message": "Sound notification",
+    "message": "サウンド通知",
     "description": ""
   },
   "option_common_mail_soundNotificationSelected": {
-    "message": "Sound",
+    "message": "通知音",
     "description": ""
   },
   "option_common_mail_notify_volume_caption": {
-    "message": "Volume",
+    "message": "通知音量",
     "description": ""
   },
   "option_common_mail_notify_duration_caption": {
-    "message": "Notification duration",
+    "message": "通知の表示時間",
     "description": ""
   },
   "option_message_label": {
-    "message": "Email",
+    "message": "メール",
     "description": ""
   },
   "option_message_activate": {
-    "message": "Enable unread Emails management",
+    "message": "未読メール管理を有効にする",
     "description": ""
   },
   "option_message_view_caption": {
-    "message": "Displaying",
+    "message": "表示",
     "description": ""
   },
   "option_message_view_nbMax_label": {
-    "message": "Maximum number of Emails displayed",
+    "message": "表示する未読メールの最大数",
     "description": ""
   },
   "option_message_view_nbMax_characters_label": {
-    "message": "Maximum number of characters displayed in Email abstract",
+    "message": "メール概要に表示する最大文字数",
     "description": ""
   },
   "option_message_view_filter_label": {
-    "message": "Email filter (regular expression)",
-    "description": "Label for the optional unread email regex filter in options."
+    "message": "メールフィルター（正規表現）",
+    "description": "オプションの未読メール regex フィルターのラベル。"
   },
   "option_message_view_filter_description": {
-    "message": "Optional. Only unread emails matching this regular expression on sender, subject, or body are shown and counted. Leave empty to disable filtering.",
-    "description": "Help text for the optional unread email regex filter in options."
+    "message": "任意。送信者・件名・本文がこの正規表現に一致する未読メールのみ表示・カウントされます。空欄の場合はフィルターを無効にします。",
+    "description": "オプションの未読メール regex フィルターのヘルプテキスト。"
   },
   "option_calendar_label": {
-    "message": "Calendar",
+    "message": "カレンダー",
     "description": ""
   },
   "option_calendar_activate": {
-    "message": "Enable calendar management",
+    "message": "カレンダー管理を有効にする",
     "description": ""
   },
   "option_calendar_view_caption": {
-    "message": "Displaying",
+    "message": "表示",
     "description": ""
   },
   "option_calendar_view_period_label": {
-    "message": "Period displayed",
+    "message": "表示期間",
     "description": ""
   },
   "option_calendar_view_nbMax_label": {
-    "message": "Maximum number of appointments displayed",
+    "message": "表示する予定の最大数",
     "description": ""
   },
   "option_calendar_notification_caption": {
-    "message": "Notification",
+    "message": "通知",
     "description": ""
   },
   "option_calendar_systemNotification": {
-    "message": "System notification",
+    "message": "システム通知",
     "description": ""
   },
   "option_calendar_soundNotification": {
-    "message": "Sound notification",
+    "message": "サウンド通知",
     "description": ""
   },
   "option_calendar_soundNotificationSelected": {
-    "message": "Sound",
+    "message": "通知音",
     "description": ""
   },
   "option_calendar_notify_volume_caption": {
-    "message": "Volume",
+    "message": "通知音量",
     "description": ""
   },
   "option_calendar_repeat": {
-    "message": "Repeat",
+    "message": "繰り返し",
     "description": ""
   },
   "option_task_label": {
-    "message": "Tasks",
+    "message": "タスク",
     "description": ""
   },
   "option_task_activate": {
-    "message": "Enable Tasks management",
+    "message": "タスク管理を有効にする",
     "description": ""
   },
   "option_task_view_caption": {
-    "message": "Displaying",
+    "message": "表示",
     "description": ""
   },
   "option_task_view_reminder": {
-    "message": "Reminder",
+    "message": "リマインダー",
     "description": ""
   },
   "option_task_view_confZimbra": {
-    "message": "Zimbra configuration",
+    "message": "Zimbra 設定",
     "description": ""
   },
   "option_task_view_nbTasks": {
-    "message": "Maximum number of tasks displayed",
+    "message": "表示するタスクの最大数",
     "description": ""
   },
   "option_task_view_nbPriorities": {
-    "message": "Priorities set",
+    "message": "優先度",
     "description": ""
   },
   "option_task_view_all": {
-    "message": "All",
+    "message": "すべて",
     "description": ""
   },
   "option_task_view_highAndNormal": {
-    "message": "High and normal",
+    "message": "高と通常",
     "description": ""
   },
   "option_task_view_high": {
-    "message": "High",
+    "message": "高",
     "description": ""
   },
   "option_task_view_normal": {
-    "message": "Normal",
+    "message": "通常",
     "description": ""
   },
   "option_task_view_low": {
-    "message": "Low",
+    "message": "低",
     "description": ""
   },
   "option_identifiant_label": {
-    "message": "Accounts",
+    "message": "アカウント",
     "description": ""
   },
   "option_identifiant_caption": {
-    "message": "Account",
+    "message": "アカウント",
     "description": ""
   },
   "option_identifiant_params_caption": {
-    "message": "Authentication",
+    "message": "認証",
     "description": ""
   },
   "option_identifiant_alias_label": {
-    "message": "Alias",
+    "message": "エイリアス",
     "description": ""
   },
   "option_identifiant_login_label": {
-    "message": "Login",
+    "message": "ログイン",
     "description": ""
   },
   "option_identifiant_password_label": {
-    "message": "Password",
+    "message": "パスワード",
     "description": ""
   },
   "option_identifiant_savePassword_label": {
-    "message": "Remember password",
+    "message": "パスワードを保存",
     "description": ""
   },
   "option_identifiant_2fatoken_label": {
-    "message": "Two-factor authentication token",
+    "message": "二要素認証トークン",
     "description": ""
   },
   "option_identifiant_2fatoken_button": {
-    "message": "Send",
+    "message": "送信",
     "description": ""
   },
   "option_identifiant_server_caption": {
-    "message": "Server",
+    "message": "サーバー",
     "description": ""
   },
   "option_identifiant_authtype_label": {
-    "message": "Authentication",
+    "message": "認証",
     "description": ""
   },
   "option_identifiant_authtype_normal": {
-    "message": "Normal",
+    "message": "通常",
     "description": ""
   },
   "option_identifiant_urlwebservice_label": {
-    "message": "Web service URL",
+    "message": "Web サービス URL",
     "description": ""
   },
   "option_identifiant_urlwebservice_tooltip": {
-    "message": "The URL of the mail service, most of the time the same as the web interface URL",
+    "message": "メールサービスの URL。多くの場合 Web インターフェース URL と同じです",
     "description": ""
   },
   "option_identifiant_urlwebinterface_label": {
-    "message": "Web interface URL",
+    "message": "Web インターフェース URL",
     "description": ""
   },
   "option_identifiant_urlwebinterface_tooltip": {
-    "message": "The URL displayed in the Web browser when connected (Optional)",
+    "message": "接続時にブラウザに表示される URL（任意）",
     "description": ""
   },
   "option_identifiant_add_button": {
-    "message": "Add new account",
+    "message": "アカウントを追加",
     "description": ""
   },
   "option_identifiant_remove_button": {
-    "message": "Remove",
+    "message": "削除",
     "description": ""
   },
   "option_identifiant_connect_button": {
-    "message": "Connect",
+    "message": "接続",
     "description": ""
   },
   "option_identifiant_connectCancel_button": {
-    "message": "Cancel...",
+    "message": "キャンセル...",
     "description": ""
   },
   "option_identifiant_disconnect_button": {
-    "message": "Disconnect",
+    "message": "切断",
     "description": ""
   },
   "tooltip_notConnected_title": {
-    "message": "Disconnected",
+    "message": "未接続",
     "description": ""
   },
   "tooltip_configuration_description": {
-    "message": "For notifications, please configure your account(s).",
+    "message": "通知を受け取るには、アカウントを設定してください。",
     "description": ""
   },
   "tooltip_notConnected_description": {
-    "message": "For notifications, please log in.",
+    "message": "通知を受け取るには、ログインしてください。",
     "description": ""
   },
   "tooltip_errorConnected_title": {
-    "message": "Update failed",
+    "message": "更新に失敗しました",
     "description": ""
   },
   "tooltip_disconnected_descriptionStatus": {
-    "message": "State: Disconnected",
+    "message": "状態: 未接続",
     "description": ""
   },
   "tooltip_connecting_descriptionStatus": {
-    "message": "State: Connection in progress...",
+    "message": "状態: 接続中...",
     "description": ""
   },
   "tooltip_errorInitPage_title": {
-    "message": "Sorry, an error has occurred, please reload this page.",
+    "message": "エラーが発生しました。このページを再読み込みしてください。",
     "description": ""
   },
   "tooltip_unreadMessages_title": {
-    "message": "Unread Emails: %NB% ",
+    "message": "未読メール: %NB% ",
     "description": ""
   },
   "tooltip_connected_descriptionStatus": {
-    "message": "State: Connected",
+    "message": "状態: 接続済み",
     "description": ""
   },
   "tooltip_connected_descriptionAccount": {
-    "message": "Account: %EMAIL%",
+    "message": "アカウント: %EMAIL%",
     "description": ""
   },
   "tooltip_connected_descriptionQuota": {
-    "message": "Quota: %PERCENTAGE%% (%USED% of %SIZE%)",
+    "message": "容量: %PERCENTAGE%% (%USED% / %SIZE%)",
     "description": ""
   },
   "tooltip_noUnreadMessage": {
-    "message": "No unread Email",
+    "message": "未読メールはありません",
     "description": ""
   },
   "tooltip_noEvent": {
-    "message": "No event in progress",
+    "message": "進行中の予定はありません",
     "description": ""
   },
   "tooltip_priority_high": {
-    "message": "High priority",
+    "message": "優先度: 高",
     "description": ""
   },
   "tooltip_priority_low": {
-    "message": "Low priority",
+    "message": "優先度: 低",
     "description": ""
   },
   "tooltip_priority_normal": {
-    "message": "Normal priority",
+    "message": "優先度: 通常",
     "description": ""
   },
   "tooltip_noTask": {
-    "message": "No task in progress",
+    "message": "進行中のタスクはありません",
     "description": ""
   },
   "tooltip_week": {
@@ -452,75 +452,75 @@
     "description": ""
   },
   "tooltip_noEmailContent": {
-    "message": "Without any content",
+    "message": "内容なし",
     "description": ""
   },
   "connector_error_req_internal": {
-    "message": "Internal error",
+    "message": "内部エラー",
     "description": ""
   },
   "connector_error_req_invalid": {
-    "message": "Invalid request",
+    "message": "無効なリクエスト",
     "description": ""
   },
   "connector_error_req_timeout": {
-    "message": "No response",
+    "message": "応答がありません",
     "description": ""
   },
   "connector_error_req_server": {
-    "message": "Server error",
+    "message": "サーバーエラー",
     "description": ""
   },
   "connector_error_req_network": {
-    "message": "Network error",
+    "message": "ネットワークエラー",
     "description": ""
   },
   "connector_error_req_authreq": {
-    "message": "Authentication expired",
+    "message": "認証の有効期限が切れました",
     "description": ""
   },
   "connector_error_req_logininvalid": {
-    "message": "Invalid login",
+    "message": "ログインが無効です",
     "description": ""
   },
   "connector_error_authentification": {
-    "message": "Authentication error",
+    "message": "認証エラー",
     "description": ""
   },
   "connector_error_createwait": {
-    "message": "Error during create wait request",
+    "message": "待機リクエストの作成中にエラーが発生しました",
     "description": ""
   },
   "connector_error_wait": {
-    "message": "Error waiting for a new message",
+    "message": "新着メッセージの待機中にエラーが発生しました",
     "description": ""
   },
   "connector_error_mailboxinfo": {
-    "message": "Error when retrieving information from the mailbox",
+    "message": "メールボックス情報の取得中にエラーが発生しました",
     "description": ""
   },
   "connector_error_unreadmsg": {
-    "message": "Error when retrieving for new Emails",
+    "message": "新着メールの取得中にエラーが発生しました",
     "description": ""
   },
   "connector_error_calendar": {
-    "message": "Error when retrieving the calendar events",
+    "message": "カレンダー予定の取得中にエラーが発生しました",
     "description": ""
   },
   "connector_error_task": {
-    "message": "Error when retrieving the tasks",
+    "message": "タスクの取得中にエラーが発生しました",
     "description": ""
   },
   "connector_notification_NewMessage": {
-    "message": "Message from %EMAIL%",
+    "message": "%EMAIL% からのメッセージ",
     "description": ""
   },
   "connector_notification_nbUnreadMessages": {
-    "message": "%NB% new unread Emails!",
+    "message": "%NB% 件の新着未読メール！",
     "description": ""
   },
   "connector_notification_event": {
-    "message": "Event:",
+    "message": "予定:",
     "description": ""
   },
   "unit_bytes_B": {
@@ -544,19 +544,19 @@
     "description": ""
   },
   "file_sound_error_size": {
-    "message": "This file is not supported. Max size is 300 KB, current: ",
+    "message": "このファイルはサポートされていません。最大サイズは 300 KB です。現在: ",
     "description": ""
   },
   "file_sound_error_type": {
-    "message": "This file is not supported. Need audio mime-type, current mime-type: ",
+    "message": "このファイルはサポートされていません。audio MIME タイプが必要です。現在の MIME タイプ: ",
     "description": ""
   },
   "repeatNone": {
-    "message": "No",
+    "message": "なし",
     "description": ""
   },
   "uploadFile": {
-    "message": "Choose file…",
+    "message": "ファイルを選択…",
     "description": ""
   }
 }

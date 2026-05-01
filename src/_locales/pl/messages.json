@@ -4,307 +4,307 @@
     "description": ""
   },
   "extDescription": {
-    "message": "This extension notifies you when new messages arrive in your zimbra mailbox.",
+    "message": "To rozszerzenie powiadamia o nowych wiadomościach w skrzynce Zimbra.",
     "description": ""
   },
   "yes": {
-    "message": "yes",
+    "message": "tak",
     "description": ""
   },
   "no": {
-    "message": "no",
+    "message": "nie",
     "description": ""
   },
   "custom": {
-    "message": "Personalized",
+    "message": "Niestandardowy",
     "description": ""
   },
   "pixels": {
-    "message": "pixels",
+    "message": "pikseli",
     "description": ""
   },
   "seconds": {
-    "message": "seconds",
+    "message": "sekund",
     "description": ""
   },
   "week": {
-    "message": "week",
+    "message": "tydzień",
     "description": ""
   },
   "weeks": {
-    "message": "weeks",
+    "message": "tygodnie",
     "description": ""
   },
   "time": {
-    "message": "time",
+    "message": "raz",
     "description": ""
   },
   "atTime": {
-    "message": "at time",
+    "message": "o czasie",
     "description": ""
   },
   "minuteBefore": {
-    "message": "minute before",
+    "message": "minutę wcześniej",
     "description": ""
   },
   "minutesBefore": {
-    "message": "minutes before",
+    "message": "minut wcześniej",
     "description": ""
   },
   "hourBefore": {
-    "message": "hour before",
+    "message": "godzinę wcześniej",
     "description": ""
   },
   "hoursBefore": {
-    "message": "hours before",
+    "message": "godzin wcześniej",
     "description": ""
   },
   "main_checkNow": {
-    "message": "Refresh...",
+    "message": "Odśwież...",
     "description": ""
   },
   "main_connect": {
-    "message": "Connect",
+    "message": "Połącz",
     "description": ""
   },
   "main_disconnect": {
-    "message": "Disconnect",
+    "message": "Rozłącz",
     "description": ""
   },
   "main_options_label": {
-    "message": "Preferences",
+    "message": "Preferencje",
     "description": ""
   },
   "main_about_label": {
-    "message": "About Zimbra Mail Notifier",
+    "message": "O Zimbra Mail Notifier",
     "description": ""
   },
   "main_homepage_label": {
-    "message": "Web Site",
+    "message": "Strona internetowa",
     "description": ""
   },
   "tooltip_message_caption": {
-    "message": "Unread Emails",
+    "message": "Nieprzeczytane e-maile",
     "description": ""
   },
   "tooltip_calendar_caption": {
-    "message": "Next events",
+    "message": "Nadchodzące wydarzenia",
     "description": ""
   },
   "tooltip_task_caption": {
-    "message": "Current tasks",
+    "message": "Bieżące zadania",
     "description": ""
   },
   "about_homepage_label": {
-    "message": "Web Site :",
+    "message": "Strona internetowa :",
     "description": ""
   },
   "about_donate": {
-    "message": "Donation",
+    "message": "Darowizna",
     "description": ""
   },
   "about_createdby_label": {
-    "message": "By David GUEHENNEC",
+    "message": "Autor: David GUEHENNEC",
     "description": ""
   },
   "about_version_label": {
-    "message": "Version",
+    "message": "Wersja",
     "description": ""
   },
   "about_legal_label": {
-    "message": "This extension is not affiliated or endorsed by VMware.",
+    "message": "To rozszerzenie nie jest powiązane z VMware ani zatwierdzone przez VMware.",
     "description": ""
   },
   "about_close_label": {
-    "message": "Close",
+    "message": "Zamknij",
     "description": ""
   },
   "option_option_label": {
-    "message": "Preferences",
+    "message": "Preferencje",
     "description": ""
   },
   "option_common_label": {
-    "message": "General",
+    "message": "Ogólne",
     "description": ""
   },
   "option_common_connection_caption": {
-    "message": "Connection",
+    "message": "Połączenie",
     "description": ""
   },
   "option_common_autoConnect": {
-    "message": "Auto connection on startup",
+    "message": "Automatyczne łączenie przy starcie",
     "description": ""
   },
   "option_common_browserSetCookies": {
-    "message": "Auto connection on the web interface",
+    "message": "Automatyczne łączenie w interfejsie web",
     "description": ""
   },
   "option_common_popup_caption": {
-    "message": "Toolbar",
+    "message": "Pasek narzędzi",
     "description": ""
   },
   "option_common_popupColor": {
-    "message": "Panel color",
+    "message": "Kolor panelu",
     "description": ""
   },
   "option_common_popupWidth": {
-    "message": "Panel width",
+    "message": "Szerokość panelu",
     "description": ""
   },
   "option_common_mail_notification_caption": {
-    "message": "Notification unread mail",
+    "message": "Powiadomienie o nieprzeczytanej poczcie",
     "description": ""
   },
   "option_common_mail_systemNotification": {
-    "message": "System notification",
+    "message": "Powiadomienie systemowe",
     "description": ""
   },
   "option_common_mail_soundNotification": {
-    "message": "Sound notification",
+    "message": "Powiadomienie dźwiękowe",
     "description": ""
   },
   "option_common_mail_soundNotificationSelected": {
-    "message": "Sound",
+    "message": "Dźwięk",
     "description": ""
   },
   "option_common_mail_notify_volume_caption": {
-    "message": "Volume",
+    "message": "Głośność",
     "description": ""
   },
   "option_common_mail_notify_duration_caption": {
-    "message": "Notification duration",
+    "message": "Czas trwania powiadomienia",
     "description": ""
   },
   "option_message_label": {
-    "message": "Email",
+    "message": "E-mail",
     "description": ""
   },
   "option_message_activate": {
-    "message": "Enable unread Emails management",
+    "message": "Włącz zarządzanie nieprzeczytanymi e-mailami",
     "description": ""
   },
   "option_message_view_caption": {
-    "message": "Displaying",
+    "message": "Wyświetlanie",
     "description": ""
   },
   "option_message_view_nbMax_label": {
-    "message": "Maximum number of Emails displayed",
+    "message": "Maksymalna liczba wyświetlanych e-maili",
     "description": ""
   },
   "option_message_view_nbMax_characters_label": {
-    "message": "Maximum number of characters displayed in Email abstract",
+    "message": "Maksymalna liczba znaków w skrócie e-maila",
     "description": ""
   },
   "option_message_view_filter_label": {
-    "message": "Email filter (regular expression)",
-    "description": "Label for the optional unread email regex filter in options."
+    "message": "Filtr e-maili (wyrażenie regularne)",
+    "description": "Etykieta opcjonalnego filtra regex nieprzeczytanych e-maili w ustawieniach."
   },
   "option_message_view_filter_description": {
-    "message": "Optional. Only unread emails matching this regular expression on sender, subject, or body are shown and counted. Leave empty to disable filtering.",
-    "description": "Help text for the optional unread email regex filter in options."
+    "message": "Opcjonalnie. Wyświetlane i liczone są tylko nieprzeczytane e-maile, których nadawca, temat lub treść pasują do tego wyrażenia regularnego. Pozostaw puste, aby wyłączyć filtrowanie.",
+    "description": "Tekst pomocy opcjonalnego filtra regex nieprzeczytanych e-maili w ustawieniach."
   },
   "option_calendar_label": {
-    "message": "Calendar",
+    "message": "Kalendarz",
     "description": ""
   },
   "option_calendar_activate": {
-    "message": "Enable calendar management",
+    "message": "Włącz zarządzanie kalendarzem",
     "description": ""
   },
   "option_calendar_view_caption": {
-    "message": "Displaying",
+    "message": "Wyświetlanie",
     "description": ""
   },
   "option_calendar_view_period_label": {
-    "message": "Period displayed",
+    "message": "Wyświetlany okres",
     "description": ""
   },
   "option_calendar_view_nbMax_label": {
-    "message": "Maximum number of appointments displayed",
+    "message": "Maksymalna liczba wyświetlanych spotkań",
     "description": ""
   },
   "option_calendar_notification_caption": {
-    "message": "Notification",
+    "message": "Powiadomienie",
     "description": ""
   },
   "option_calendar_systemNotification": {
-    "message": "System notification",
+    "message": "Powiadomienie systemowe",
     "description": ""
   },
   "option_calendar_soundNotification": {
-    "message": "Sound notification",
+    "message": "Powiadomienie dźwiękowe",
     "description": ""
   },
   "option_calendar_soundNotificationSelected": {
-    "message": "Sound",
+    "message": "Dźwięk",
     "description": ""
   },
   "option_calendar_notify_volume_caption": {
-    "message": "Volume",
+    "message": "Głośność",
     "description": ""
   },
   "option_calendar_repeat": {
-    "message": "Repeat",
+    "message": "Powtarzanie",
     "description": ""
   },
   "option_task_label": {
-    "message": "Tasks",
+    "message": "Zadania",
     "description": ""
   },
   "option_task_activate": {
-    "message": "Enable Tasks management",
+    "message": "Włącz zarządzanie zadaniami",
     "description": ""
   },
   "option_task_view_caption": {
-    "message": "Displaying",
+    "message": "Wyświetlanie",
     "description": ""
   },
   "option_task_view_reminder": {
-    "message": "Reminder",
+    "message": "Przypomnienie",
     "description": ""
   },
   "option_task_view_confZimbra": {
-    "message": "Zimbra configuration",
+    "message": "Konfiguracja Zimbra",
     "description": ""
   },
   "option_task_view_nbTasks": {
-    "message": "Maximum number of tasks displayed",
+    "message": "Maksymalna liczba wyświetlanych zadań",
     "description": ""
   },
   "option_task_view_nbPriorities": {
-    "message": "Priorities set",
+    "message": "Priorytety",
     "description": ""
   },
   "option_task_view_all": {
-    "message": "All",
+    "message": "Wszystkie",
     "description": ""
   },
   "option_task_view_highAndNormal": {
-    "message": "High and normal",
+    "message": "Wysoki i normalny",
     "description": ""
   },
   "option_task_view_high": {
-    "message": "High",
+    "message": "Wysoki",
     "description": ""
   },
   "option_task_view_normal": {
-    "message": "Normal",
+    "message": "Normalny",
     "description": ""
   },
   "option_task_view_low": {
-    "message": "Low",
+    "message": "Niski",
     "description": ""
   },
   "option_identifiant_label": {
-    "message": "Accounts",
+    "message": "Konta",
     "description": ""
   },
   "option_identifiant_caption": {
-    "message": "Account",
+    "message": "Konto",
     "description": ""
   },
   "option_identifiant_params_caption": {
-    "message": "Authentication",
+    "message": "Uwierzytelnianie",
     "description": ""
   },
   "option_identifiant_alias_label": {
@@ -316,211 +316,211 @@
     "description": ""
   },
   "option_identifiant_password_label": {
-    "message": "Password",
+    "message": "Hasło",
     "description": ""
   },
   "option_identifiant_savePassword_label": {
-    "message": "Remember password",
+    "message": "Zapamiętaj hasło",
     "description": ""
   },
   "option_identifiant_2fatoken_label": {
-    "message": "Two-factor authentication token",
+    "message": "Token uwierzytelniania dwuskładnikowego",
     "description": ""
   },
   "option_identifiant_2fatoken_button": {
-    "message": "Send",
+    "message": "Wyślij",
     "description": ""
   },
   "option_identifiant_server_caption": {
-    "message": "Server",
+    "message": "Serwer",
     "description": ""
   },
   "option_identifiant_authtype_label": {
-    "message": "Authentication",
+    "message": "Uwierzytelnianie",
     "description": ""
   },
   "option_identifiant_authtype_normal": {
-    "message": "Normal",
+    "message": "Normalne",
     "description": ""
   },
   "option_identifiant_urlwebservice_label": {
-    "message": "Web service URL",
+    "message": "URL usługi web",
     "description": ""
   },
   "option_identifiant_urlwebservice_tooltip": {
-    "message": "The URL of the mail service, most of the time the same as the web interface URL",
+    "message": "Adres URL usługi pocztowej, zwykle taki sam jak URL interfejsu web",
     "description": ""
   },
   "option_identifiant_urlwebinterface_label": {
-    "message": "Web interface URL",
+    "message": "URL interfejsu web",
     "description": ""
   },
   "option_identifiant_urlwebinterface_tooltip": {
-    "message": "The URL displayed in the Web browser when connected (Optional)",
+    "message": "Adres URL wyświetlany w przeglądarce po połączeniu (opcjonalnie)",
     "description": ""
   },
   "option_identifiant_add_button": {
-    "message": "Add new account",
+    "message": "Dodaj nowe konto",
     "description": ""
   },
   "option_identifiant_remove_button": {
-    "message": "Remove",
+    "message": "Usuń",
     "description": ""
   },
   "option_identifiant_connect_button": {
-    "message": "Connect",
+    "message": "Połącz",
     "description": ""
   },
   "option_identifiant_connectCancel_button": {
-    "message": "Cancel...",
+    "message": "Anuluj...",
     "description": ""
   },
   "option_identifiant_disconnect_button": {
-    "message": "Disconnect",
+    "message": "Rozłącz",
     "description": ""
   },
   "tooltip_notConnected_title": {
-    "message": "Disconnected",
+    "message": "Rozłączono",
     "description": ""
   },
   "tooltip_configuration_description": {
-    "message": "For notifications, please configure your account(s).",
+    "message": "Aby otrzymywać powiadomienia, skonfiguruj konto.",
     "description": ""
   },
   "tooltip_notConnected_description": {
-    "message": "For notifications, please log in.",
+    "message": "Aby otrzymywać powiadomienia, zaloguj się.",
     "description": ""
   },
   "tooltip_errorConnected_title": {
-    "message": "Update failed",
+    "message": "Aktualizacja nie powiodła się",
     "description": ""
   },
   "tooltip_disconnected_descriptionStatus": {
-    "message": "State: Disconnected",
+    "message": "Stan: rozłączono",
     "description": ""
   },
   "tooltip_connecting_descriptionStatus": {
-    "message": "State: Connection in progress...",
+    "message": "Stan: łączenie...",
     "description": ""
   },
   "tooltip_errorInitPage_title": {
-    "message": "Sorry, an error has occurred, please reload this page.",
+    "message": "Wystąpił błąd, przeładuj tę stronę.",
     "description": ""
   },
   "tooltip_unreadMessages_title": {
-    "message": "Unread Emails: %NB% ",
+    "message": "Nieprzeczytane e-maile: %NB% ",
     "description": ""
   },
   "tooltip_connected_descriptionStatus": {
-    "message": "State: Connected",
+    "message": "Stan: połączono",
     "description": ""
   },
   "tooltip_connected_descriptionAccount": {
-    "message": "Account: %EMAIL%",
+    "message": "Konto: %EMAIL%",
     "description": ""
   },
   "tooltip_connected_descriptionQuota": {
-    "message": "Quota: %PERCENTAGE%% (%USED% of %SIZE%)",
+    "message": "Limit: %PERCENTAGE%% (%USED% z %SIZE%)",
     "description": ""
   },
   "tooltip_noUnreadMessage": {
-    "message": "No unread Email",
+    "message": "Brak nieprzeczytanych e-maili",
     "description": ""
   },
   "tooltip_noEvent": {
-    "message": "No event in progress",
+    "message": "Brak bieżących wydarzeń",
     "description": ""
   },
   "tooltip_priority_high": {
-    "message": "High priority",
+    "message": "Wysoki priorytet",
     "description": ""
   },
   "tooltip_priority_low": {
-    "message": "Low priority",
+    "message": "Niski priorytet",
     "description": ""
   },
   "tooltip_priority_normal": {
-    "message": "Normal priority",
+    "message": "Normalny priorytet",
     "description": ""
   },
   "tooltip_noTask": {
-    "message": "No task in progress",
+    "message": "Brak bieżących zadań",
     "description": ""
   },
   "tooltip_week": {
-    "message": "W%WEEK%",
+    "message": "T%WEEK%",
     "description": ""
   },
   "tooltip_noEmailContent": {
-    "message": "Without any content",
+    "message": "Bez treści",
     "description": ""
   },
   "connector_error_req_internal": {
-    "message": "Internal error",
+    "message": "Błąd wewnętrzny",
     "description": ""
   },
   "connector_error_req_invalid": {
-    "message": "Invalid request",
+    "message": "Nieprawidłowe żądanie",
     "description": ""
   },
   "connector_error_req_timeout": {
-    "message": "No response",
+    "message": "Brak odpowiedzi",
     "description": ""
   },
   "connector_error_req_server": {
-    "message": "Server error",
+    "message": "Błąd serwera",
     "description": ""
   },
   "connector_error_req_network": {
-    "message": "Network error",
+    "message": "Błąd sieci",
     "description": ""
   },
   "connector_error_req_authreq": {
-    "message": "Authentication expired",
+    "message": "Uwierzytelnianie wygasło",
     "description": ""
   },
   "connector_error_req_logininvalid": {
-    "message": "Invalid login",
+    "message": "Nieprawidłowy login",
     "description": ""
   },
   "connector_error_authentification": {
-    "message": "Authentication error",
+    "message": "Błąd uwierzytelniania",
     "description": ""
   },
   "connector_error_createwait": {
-    "message": "Error during create wait request",
+    "message": "Błąd podczas tworzenia żądania oczekiwania",
     "description": ""
   },
   "connector_error_wait": {
-    "message": "Error waiting for a new message",
+    "message": "Błąd podczas oczekiwania na nową wiadomość",
     "description": ""
   },
   "connector_error_mailboxinfo": {
-    "message": "Error when retrieving information from the mailbox",
+    "message": "Błąd podczas pobierania informacji o skrzynce",
     "description": ""
   },
   "connector_error_unreadmsg": {
-    "message": "Error when retrieving for new Emails",
+    "message": "Błąd podczas pobierania nowych e-maili",
     "description": ""
   },
   "connector_error_calendar": {
-    "message": "Error when retrieving the calendar events",
+    "message": "Błąd podczas pobierania wydarzeń kalendarza",
     "description": ""
   },
   "connector_error_task": {
-    "message": "Error when retrieving the tasks",
+    "message": "Błąd podczas pobierania zadań",
     "description": ""
   },
   "connector_notification_NewMessage": {
-    "message": "Message from %EMAIL%",
+    "message": "Wiadomość od %EMAIL%",
     "description": ""
   },
   "connector_notification_nbUnreadMessages": {
-    "message": "%NB% new unread Emails!",
+    "message": "%NB% nowych nieprzeczytanych e-maili!",
     "description": ""
   },
   "connector_notification_event": {
-    "message": "Event:",
+    "message": "Wydarzenie:",
     "description": ""
   },
   "unit_bytes_B": {
@@ -544,19 +544,19 @@
     "description": ""
   },
   "file_sound_error_size": {
-    "message": "This file is not supported. Max size is 300 KB, current: ",
+    "message": "Ten plik nie jest obsługiwany. Maks. rozmiar to 300 KB, bieżący: ",
     "description": ""
   },
   "file_sound_error_type": {
-    "message": "This file is not supported. Need audio mime-type, current mime-type: ",
+    "message": "Ten plik nie jest obsługiwany. Wymagany typ MIME audio, bieżący typ MIME: ",
     "description": ""
   },
   "repeatNone": {
-    "message": "No",
+    "message": "Nie",
     "description": ""
   },
   "uploadFile": {
-    "message": "Choose file…",
+    "message": "Wybierz plik…",
     "description": ""
   }
 }
