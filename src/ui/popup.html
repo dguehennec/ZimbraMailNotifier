@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zimbra Mail Notifier</title>
+  <link rel="stylesheet" href="skin/popup.css" />
+</head>
+<body class="popup-body">
+
+  <!-- Header -->
+  <header class="popup-header">
+    <img src="skin/images/zimbra_mail_notifier_32.png" alt="Zimbra" class="popup-logo" />
+    <div class="popup-header-text">
+      <span class="popup-title" msg="extName">Zimbra Mail Notifier</span>
+      <span class="popup-version" id="popup-version"></span>
+    </div>
+    <div class="popup-header-actions">
+      <button class="btn-icon" id="btn-check-now" data-action="check-now" msgtitle="main_checkNow">
+        <svg class="icon"><use href="skin/icons.svg#icon-refresh"/></svg>
+      </button>
+      <button class="btn-icon" id="btn-options" data-action="open-options" msgtitle="main_options_label">
+        <svg class="icon"><use href="skin/icons.svg#icon-settings"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Accounts -->
+  <section class="popup-section" id="accounts-section">
+    <div id="accounts-container"></div>
+  </section>
+
+  <!-- Messages -->
+  <section class="popup-section collapsible" id="messages-group" style="display:none">
+    <div class="section-header">
+      <svg class="icon icon--sm"><use href="skin/icons.svg#icon-mail"/></svg>
+      <span msg="tooltip_message_caption">Messages</span>
+    </div>
+    <div id="messages-list"></div>
+  </section>
+
+  <!-- Calendar -->
+  <section class="popup-section collapsible" id="calendar-group" style="display:none">
+    <div class="section-header">
+      <svg class="icon icon--sm"><use href="skin/icons.svg#icon-calendar"/></svg>
+      <span msg="tooltip_calendar_caption">Calendar</span>
+    </div>
+    <div id="calendar-list"></div>
+  </section>
+
+  <!-- Tasks -->
+  <section class="popup-section collapsible" id="tasks-group" style="display:none">
+    <div class="section-header">
+      <svg class="icon icon--sm"><use href="skin/icons.svg#icon-task"/></svg>
+      <span msg="tooltip_task_caption">Tasks</span>
+    </div>
+    <div id="tasks-list"></div>
+  </section>
+
+  <!-- Donate nudge -->
+  <footer class="popup-footer">
+    <a href="https://www.paypal.me/DavidGUEHENNEC/5" target="_blank" class="donate-link" msg="about_donate">☕ Donate</a>
+  </footer>
+
+  <script src="js/popup.js"></script>
+</body>
+</html>

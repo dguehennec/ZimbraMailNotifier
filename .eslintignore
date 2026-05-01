@@ -1,0 +1,6 @@
+coverage/
+dist/
+node_modules/
+mock-server/
+script/
+webpack.config.js

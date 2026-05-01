@@ -1,0 +1,11 @@
+{
+  "name": "zimbra-mock-server",
+  "version": "1.0.0",
+  "description": "Mock Zimbra SOAP server for ZimbraMailNotifier plugin testing",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:verbose": "LOG_LEVEL=verbose node server.js"
+  },
+  "engines": { "node": ">=16" }
+}

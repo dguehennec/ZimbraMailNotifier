@@ -4,447 +4,447 @@
     "description": ""
   },
   "extDescription": {
-    "message": "This extension notifies you when new messages arrive in your zimbra mailbox.",
+    "message": "当您的 Zimbra 邮箱收到新邮件时，此扩展会通知您。",
     "description": ""
   },
   "yes": {
-    "message": "yes",
+    "message": "是",
     "description": ""
   },
   "no": {
-    "message": "no",
+    "message": "否",
     "description": ""
   },
   "custom": {
-    "message": "Personalized",
+    "message": "自定义",
     "description": ""
   },
   "pixels": {
-    "message": "pixels",
+    "message": "像素",
     "description": ""
   },
   "seconds": {
-    "message": "seconds",
+    "message": "秒",
     "description": ""
   },
   "week": {
-    "message": "week",
+    "message": "周",
     "description": ""
   },
   "weeks": {
-    "message": "weeks",
+    "message": "周",
     "description": ""
   },
   "time": {
-    "message": "time",
+    "message": "次",
     "description": ""
   },
   "atTime": {
-    "message": "at time",
+    "message": "准时",
     "description": ""
   },
   "minuteBefore": {
-    "message": "minute before",
+    "message": "分钟前",
     "description": ""
   },
   "minutesBefore": {
-    "message": "minutes before",
+    "message": "分钟前",
     "description": ""
   },
   "hourBefore": {
-    "message": "hour before",
+    "message": "小时前",
     "description": ""
   },
   "hoursBefore": {
-    "message": "hours before",
+    "message": "小时前",
     "description": ""
   },
   "main_checkNow": {
-    "message": "Refresh...",
+    "message": "刷新...",
     "description": ""
   },
   "main_connect": {
-    "message": "Connect",
+    "message": "连接",
     "description": ""
   },
   "main_disconnect": {
-    "message": "Disconnect",
+    "message": "断开",
     "description": ""
   },
   "main_options_label": {
-    "message": "Preferences",
+    "message": "首选项",
     "description": ""
   },
   "main_about_label": {
-    "message": "About Zimbra Mail Notifier",
+    "message": "关于 Zimbra Mail Notifier",
     "description": ""
   },
   "main_homepage_label": {
-    "message": "Web Site",
+    "message": "网站",
     "description": ""
   },
   "tooltip_message_caption": {
-    "message": "Unread Emails",
+    "message": "未读邮件",
     "description": ""
   },
   "tooltip_calendar_caption": {
-    "message": "Next events",
+    "message": "即将到来的事件",
     "description": ""
   },
   "tooltip_task_caption": {
-    "message": "Current tasks",
+    "message": "当前任务",
     "description": ""
   },
   "about_homepage_label": {
-    "message": "Web Site :",
+    "message": "网站 :",
     "description": ""
   },
   "about_donate": {
-    "message": "Donation",
+    "message": "捐赠",
     "description": ""
   },
   "about_createdby_label": {
-    "message": "By David GUEHENNEC",
+    "message": "作者：David GUEHENNEC",
     "description": ""
   },
   "about_version_label": {
-    "message": "Version",
+    "message": "版本",
     "description": ""
   },
   "about_legal_label": {
-    "message": "This extension is not affiliated or endorsed by VMware.",
+    "message": "此扩展与 VMware 无关联，也未获 VMware 认可。",
     "description": ""
   },
   "about_close_label": {
-    "message": "Close",
+    "message": "关闭",
     "description": ""
   },
   "option_option_label": {
-    "message": "Preferences",
+    "message": "首选项",
     "description": ""
   },
   "option_common_label": {
-    "message": "General",
+    "message": "常规",
     "description": ""
   },
   "option_common_connection_caption": {
-    "message": "Connection",
+    "message": "连接",
     "description": ""
   },
   "option_common_autoConnect": {
-    "message": "Auto connection on startup",
+    "message": "启动时自动连接",
     "description": ""
   },
   "option_common_browserSetCookies": {
-    "message": "Auto connection on the web interface",
+    "message": "在 Web 界面自动连接",
     "description": ""
   },
   "option_common_popup_caption": {
-    "message": "Toolbar",
+    "message": "工具栏",
     "description": ""
   },
   "option_common_popupColor": {
-    "message": "Panel color",
+    "message": "面板颜色",
     "description": ""
   },
   "option_common_popupWidth": {
-    "message": "Panel width",
+    "message": "面板宽度",
     "description": ""
   },
   "option_common_mail_notification_caption": {
-    "message": "Notification unread mail",
+    "message": "未读邮件通知",
     "description": ""
   },
   "option_common_mail_systemNotification": {
-    "message": "System notification",
+    "message": "系统通知",
     "description": ""
   },
   "option_common_mail_soundNotification": {
-    "message": "Sound notification",
+    "message": "声音通知",
     "description": ""
   },
   "option_common_mail_soundNotificationSelected": {
-    "message": "Sound",
+    "message": "通知声音",
     "description": ""
   },
   "option_common_mail_notify_volume_caption": {
-    "message": "Volume",
+    "message": "通知音量",
     "description": ""
   },
   "option_common_mail_notify_duration_caption": {
-    "message": "Notification duration",
+    "message": "通知持续时间",
     "description": ""
   },
   "option_message_label": {
-    "message": "Email",
+    "message": "邮件",
     "description": ""
   },
   "option_message_activate": {
-    "message": "Enable unread Emails management",
+    "message": "启用未读邮件管理",
     "description": ""
   },
   "option_message_view_caption": {
-    "message": "Displaying",
+    "message": "显示",
     "description": ""
   },
   "option_message_view_nbMax_label": {
-    "message": "Maximum number of Emails displayed",
+    "message": "显示未读邮件的最大数量",
     "description": ""
   },
   "option_message_view_nbMax_characters_label": {
-    "message": "Maximum number of characters displayed in Email abstract",
+    "message": "邮件摘要显示的最大字符数",
     "description": ""
   },
   "option_message_view_filter_label": {
-    "message": "Email filter (regular expression)",
-    "description": "Label for the optional unread email regex filter in options."
+    "message": "邮件过滤器（正则表达式）",
+    "description": "选项中可选未读邮件正则过滤器标签。"
   },
   "option_message_view_filter_description": {
-    "message": "Optional. Only unread emails matching this regular expression on sender, subject, or body are shown and counted. Leave empty to disable filtering.",
-    "description": "Help text for the optional unread email regex filter in options."
+    "message": "可选。仅显示并统计发件人、主题或正文匹配此正则表达式的未读邮件。留空则禁用过滤。",
+    "description": "选项中可选未读邮件正则过滤器帮助文本。"
   },
   "option_calendar_label": {
-    "message": "Calendar",
+    "message": "日历",
     "description": ""
   },
   "option_calendar_activate": {
-    "message": "Enable calendar management",
+    "message": "启用日历管理",
     "description": ""
   },
   "option_calendar_view_caption": {
-    "message": "Displaying",
+    "message": "显示",
     "description": ""
   },
   "option_calendar_view_period_label": {
-    "message": "Period displayed",
+    "message": "显示时间段",
     "description": ""
   },
   "option_calendar_view_nbMax_label": {
-    "message": "Maximum number of appointments displayed",
+    "message": "显示约会的最大数量",
     "description": ""
   },
   "option_calendar_notification_caption": {
-    "message": "Notification",
+    "message": "通知",
     "description": ""
   },
   "option_calendar_systemNotification": {
-    "message": "System notification",
+    "message": "系统通知",
     "description": ""
   },
   "option_calendar_soundNotification": {
-    "message": "Sound notification",
+    "message": "声音通知",
     "description": ""
   },
   "option_calendar_soundNotificationSelected": {
-    "message": "Sound",
+    "message": "通知声音",
     "description": ""
   },
   "option_calendar_notify_volume_caption": {
-    "message": "Volume",
+    "message": "通知音量",
     "description": ""
   },
   "option_calendar_repeat": {
-    "message": "Repeat",
+    "message": "重复",
     "description": ""
   },
   "option_task_label": {
-    "message": "Tasks",
+    "message": "任务",
     "description": ""
   },
   "option_task_activate": {
-    "message": "Enable Tasks management",
+    "message": "启用任务管理",
     "description": ""
   },
   "option_task_view_caption": {
-    "message": "Displaying",
+    "message": "显示",
     "description": ""
   },
   "option_task_view_reminder": {
-    "message": "Reminder",
+    "message": "提醒",
     "description": ""
   },
   "option_task_view_confZimbra": {
-    "message": "Zimbra configuration",
+    "message": "Zimbra 配置",
     "description": ""
   },
   "option_task_view_nbTasks": {
-    "message": "Maximum number of tasks displayed",
+    "message": "显示任务的最大数量",
     "description": ""
   },
   "option_task_view_nbPriorities": {
-    "message": "Priorities set",
+    "message": "优先级",
     "description": ""
   },
   "option_task_view_all": {
-    "message": "All",
+    "message": "全部",
     "description": ""
   },
   "option_task_view_highAndNormal": {
-    "message": "High and normal",
+    "message": "高和正常",
     "description": ""
   },
   "option_task_view_high": {
-    "message": "High",
+    "message": "高",
     "description": ""
   },
   "option_task_view_normal": {
-    "message": "Normal",
+    "message": "正常",
     "description": ""
   },
   "option_task_view_low": {
-    "message": "Low",
+    "message": "低",
     "description": ""
   },
   "option_identifiant_label": {
-    "message": "Accounts",
+    "message": "账户",
     "description": ""
   },
   "option_identifiant_caption": {
-    "message": "Account",
+    "message": "账户",
     "description": ""
   },
   "option_identifiant_params_caption": {
-    "message": "Authentication",
+    "message": "身份验证",
     "description": ""
   },
   "option_identifiant_alias_label": {
-    "message": "Alias",
+    "message": "别名",
     "description": ""
   },
   "option_identifiant_login_label": {
-    "message": "Login",
+    "message": "登录名",
     "description": ""
   },
   "option_identifiant_password_label": {
-    "message": "Password",
+    "message": "密码",
     "description": ""
   },
   "option_identifiant_savePassword_label": {
-    "message": "Remember password",
+    "message": "记住密码",
     "description": ""
   },
   "option_identifiant_2fatoken_label": {
-    "message": "Two-factor authentication token",
+    "message": "双因素身份验证令牌",
     "description": ""
   },
   "option_identifiant_2fatoken_button": {
-    "message": "Send",
+    "message": "发送",
     "description": ""
   },
   "option_identifiant_server_caption": {
-    "message": "Server",
+    "message": "服务器",
     "description": ""
   },
   "option_identifiant_authtype_label": {
-    "message": "Authentication",
+    "message": "身份验证",
     "description": ""
   },
   "option_identifiant_authtype_normal": {
-    "message": "Normal",
+    "message": "正常",
     "description": ""
   },
   "option_identifiant_urlwebservice_label": {
-    "message": "Web service URL",
+    "message": "Web 服务 URL",
     "description": ""
   },
   "option_identifiant_urlwebservice_tooltip": {
-    "message": "The URL of the mail service, most of the time the same as the web interface URL",
+    "message": "邮件服务的 URL，通常与 Web 界面 URL 相同",
     "description": ""
   },
   "option_identifiant_urlwebinterface_label": {
-    "message": "Web interface URL",
+    "message": "Web 界面 URL",
     "description": ""
   },
   "option_identifiant_urlwebinterface_tooltip": {
-    "message": "The URL displayed in the Web browser when connected (Optional)",
+    "message": "连接时在浏览器中显示的 URL（可选）",
     "description": ""
   },
   "option_identifiant_add_button": {
-    "message": "Add new account",
+    "message": "添加新账户",
     "description": ""
   },
   "option_identifiant_remove_button": {
-    "message": "Remove",
+    "message": "删除",
     "description": ""
   },
   "option_identifiant_connect_button": {
-    "message": "Connect",
+    "message": "连接",
     "description": ""
   },
   "option_identifiant_connectCancel_button": {
-    "message": "Cancel...",
+    "message": "取消...",
     "description": ""
   },
   "option_identifiant_disconnect_button": {
-    "message": "Disconnect",
+    "message": "断开",
     "description": ""
   },
   "tooltip_notConnected_title": {
-    "message": "Disconnected",
+    "message": "未连接",
     "description": ""
   },
   "tooltip_configuration_description": {
-    "message": "For notifications, please configure your account(s).",
+    "message": "如需接收通知，请配置您的账户。",
     "description": ""
   },
   "tooltip_notConnected_description": {
-    "message": "For notifications, please log in.",
+    "message": "如需接收通知，请登录。",
     "description": ""
   },
   "tooltip_errorConnected_title": {
-    "message": "Update failed",
+    "message": "更新失败",
     "description": ""
   },
   "tooltip_disconnected_descriptionStatus": {
-    "message": "State: Disconnected",
+    "message": "状态：未连接",
     "description": ""
   },
   "tooltip_connecting_descriptionStatus": {
-    "message": "State: Connection in progress...",
+    "message": "状态：正在连接...",
     "description": ""
   },
   "tooltip_errorInitPage_title": {
-    "message": "Sorry, an error has occurred, please reload this page.",
+    "message": "抱歉，发生错误，请重新加载此页面。",
     "description": ""
   },
   "tooltip_unreadMessages_title": {
-    "message": "Unread Emails: %NB% ",
+    "message": "未读邮件：%NB% ",
     "description": ""
   },
   "tooltip_connected_descriptionStatus": {
-    "message": "State: Connected",
+    "message": "状态：已连接",
     "description": ""
   },
   "tooltip_connected_descriptionAccount": {
-    "message": "Account: %EMAIL%",
+    "message": "账户：%EMAIL%",
     "description": ""
   },
   "tooltip_connected_descriptionQuota": {
-    "message": "Quota: %PERCENTAGE%% (%USED% of %SIZE%)",
+    "message": "配额：%PERCENTAGE%%（%USED% / %SIZE%）",
     "description": ""
   },
   "tooltip_noUnreadMessage": {
-    "message": "No unread Email",
+    "message": "没有未读邮件",
     "description": ""
   },
   "tooltip_noEvent": {
-    "message": "No event in progress",
+    "message": "没有进行中的事件",
     "description": ""
   },
   "tooltip_priority_high": {
-    "message": "High priority",
+    "message": "高优先级",
     "description": ""
   },
   "tooltip_priority_low": {
-    "message": "Low priority",
+    "message": "低优先级",
     "description": ""
   },
   "tooltip_priority_normal": {
-    "message": "Normal priority",
+    "message": "正常优先级",
     "description": ""
   },
   "tooltip_noTask": {
-    "message": "No task in progress",
+    "message": "没有进行中的任务",
     "description": ""
   },
   "tooltip_week": {
@@ -452,75 +452,75 @@
     "description": ""
   },
   "tooltip_noEmailContent": {
-    "message": "Without any content",
+    "message": "无内容",
     "description": ""
   },
   "connector_error_req_internal": {
-    "message": "Internal error",
+    "message": "内部错误",
     "description": ""
   },
   "connector_error_req_invalid": {
-    "message": "Invalid request",
+    "message": "无效请求",
     "description": ""
   },
   "connector_error_req_timeout": {
-    "message": "No response",
+    "message": "无响应",
     "description": ""
   },
   "connector_error_req_server": {
-    "message": "Server error",
+    "message": "服务器错误",
     "description": ""
   },
   "connector_error_req_network": {
-    "message": "Network error",
+    "message": "网络错误",
     "description": ""
   },
   "connector_error_req_authreq": {
-    "message": "Authentication expired",
+    "message": "身份验证已过期",
     "description": ""
   },
   "connector_error_req_logininvalid": {
-    "message": "Invalid login",
+    "message": "登录无效",
     "description": ""
   },
   "connector_error_authentification": {
-    "message": "Authentication error",
+    "message": "身份验证错误",
     "description": ""
   },
   "connector_error_createwait": {
-    "message": "Error during create wait request",
+    "message": "创建等待请求时出错",
     "description": ""
   },
   "connector_error_wait": {
-    "message": "Error waiting for a new message",
+    "message": "等待新消息时出错",
     "description": ""
   },
   "connector_error_mailboxinfo": {
-    "message": "Error when retrieving information from the mailbox",
+    "message": "获取邮箱信息时出错",
     "description": ""
   },
   "connector_error_unreadmsg": {
-    "message": "Error when retrieving for new Emails",
+    "message": "获取新邮件时出错",
     "description": ""
   },
   "connector_error_calendar": {
-    "message": "Error when retrieving the calendar events",
+    "message": "获取日历事件时出错",
     "description": ""
   },
   "connector_error_task": {
-    "message": "Error when retrieving the tasks",
+    "message": "获取任务时出错",
     "description": ""
   },
   "connector_notification_NewMessage": {
-    "message": "Message from %EMAIL%",
+    "message": "来自 %EMAIL% 的消息",
     "description": ""
   },
   "connector_notification_nbUnreadMessages": {
-    "message": "%NB% new unread Emails!",
+    "message": "%NB% 封新未读邮件！",
     "description": ""
   },
   "connector_notification_event": {
-    "message": "Event:",
+    "message": "事件：",
     "description": ""
   },
   "unit_bytes_B": {
@@ -544,19 +544,19 @@
     "description": ""
   },
   "file_sound_error_size": {
-    "message": "This file is not supported. Max size is 300 KB, current: ",
+    "message": "不支持此文件。最大大小为 300 KB，当前：",
     "description": ""
   },
   "file_sound_error_type": {
-    "message": "This file is not supported. Need audio mime-type, current mime-type: ",
+    "message": "不支持此文件。需要 audio MIME 类型，当前 MIME 类型：",
     "description": ""
   },
   "repeatNone": {
-    "message": "No",
+    "message": "否",
     "description": ""
   },
   "uploadFile": {
-    "message": "Choose file…",
+    "message": "选择文件…",
     "description": ""
   }
 }

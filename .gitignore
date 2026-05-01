@@ -1,8 +1,10 @@
 .DS_Store
+.metadata
 .project
 .settings/*
-.metadata
 target/*
 */.DS_Store
 *~
-src_delete
+/coverage
+/dist
+/node_modules

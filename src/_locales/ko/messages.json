@@ -4,447 +4,447 @@
     "description": ""
   },
   "extDescription": {
-    "message": "This extension notifies you when new messages arrive in your zimbra mailbox.",
+    "message": "Zimbra 사서함에 새 메시지가 도착하면 알려줍니다.",
     "description": ""
   },
   "yes": {
-    "message": "yes",
+    "message": "예",
     "description": ""
   },
   "no": {
-    "message": "no",
+    "message": "아니요",
     "description": ""
   },
   "custom": {
-    "message": "Personalized",
+    "message": "사용자 지정",
     "description": ""
   },
   "pixels": {
-    "message": "pixels",
+    "message": "픽셀",
     "description": ""
   },
   "seconds": {
-    "message": "seconds",
+    "message": "초",
     "description": ""
   },
   "week": {
-    "message": "week",
+    "message": "주",
     "description": ""
   },
   "weeks": {
-    "message": "weeks",
+    "message": "주",
     "description": ""
   },
   "time": {
-    "message": "time",
+    "message": "회",
     "description": ""
   },
   "atTime": {
-    "message": "at time",
+    "message": "정시",
     "description": ""
   },
   "minuteBefore": {
-    "message": "minute before",
+    "message": "분 전",
     "description": ""
   },
   "minutesBefore": {
-    "message": "minutes before",
+    "message": "분 전",
     "description": ""
   },
   "hourBefore": {
-    "message": "hour before",
+    "message": "시간 전",
     "description": ""
   },
   "hoursBefore": {
-    "message": "hours before",
+    "message": "시간 전",
     "description": ""
   },
   "main_checkNow": {
-    "message": "Refresh...",
+    "message": "새로고침...",
     "description": ""
   },
   "main_connect": {
-    "message": "Connect",
+    "message": "연결",
     "description": ""
   },
   "main_disconnect": {
-    "message": "Disconnect",
+    "message": "연결 해제",
     "description": ""
   },
   "main_options_label": {
-    "message": "Preferences",
+    "message": "환경설정",
     "description": ""
   },
   "main_about_label": {
-    "message": "About Zimbra Mail Notifier",
+    "message": "Zimbra Mail Notifier 정보",
     "description": ""
   },
   "main_homepage_label": {
-    "message": "Web Site",
+    "message": "웹사이트",
     "description": ""
   },
   "tooltip_message_caption": {
-    "message": "Unread Emails",
+    "message": "읽지 않은 메일",
     "description": ""
   },
   "tooltip_calendar_caption": {
-    "message": "Next events",
+    "message": "다음 일정",
     "description": ""
   },
   "tooltip_task_caption": {
-    "message": "Current tasks",
+    "message": "현재 작업",
     "description": ""
   },
   "about_homepage_label": {
-    "message": "Web Site :",
+    "message": "웹사이트 :",
     "description": ""
   },
   "about_donate": {
-    "message": "Donation",
+    "message": "기부",
     "description": ""
   },
   "about_createdby_label": {
-    "message": "By David GUEHENNEC",
+    "message": "제작: David GUEHENNEC",
     "description": ""
   },
   "about_version_label": {
-    "message": "Version",
+    "message": "버전",
     "description": ""
   },
   "about_legal_label": {
-    "message": "This extension is not affiliated or endorsed by VMware.",
+    "message": "이 확장 프로그램은 VMware와 제휴하거나 VMware의 승인을 받지 않았습니다.",
     "description": ""
   },
   "about_close_label": {
-    "message": "Close",
+    "message": "닫기",
     "description": ""
   },
   "option_option_label": {
-    "message": "Preferences",
+    "message": "환경설정",
     "description": ""
   },
   "option_common_label": {
-    "message": "General",
+    "message": "일반",
     "description": ""
   },
   "option_common_connection_caption": {
-    "message": "Connection",
+    "message": "연결",
     "description": ""
   },
   "option_common_autoConnect": {
-    "message": "Auto connection on startup",
+    "message": "시작 시 자동 연결",
     "description": ""
   },
   "option_common_browserSetCookies": {
-    "message": "Auto connection on the web interface",
+    "message": "웹 인터페이스에서 자동 연결",
     "description": ""
   },
   "option_common_popup_caption": {
-    "message": "Toolbar",
+    "message": "도구 모음",
     "description": ""
   },
   "option_common_popupColor": {
-    "message": "Panel color",
+    "message": "패널 색상",
     "description": ""
   },
   "option_common_popupWidth": {
-    "message": "Panel width",
+    "message": "패널 너비",
     "description": ""
   },
   "option_common_mail_notification_caption": {
-    "message": "Notification unread mail",
+    "message": "읽지 않은 메일 알림",
     "description": ""
   },
   "option_common_mail_systemNotification": {
-    "message": "System notification",
+    "message": "시스템 알림",
     "description": ""
   },
   "option_common_mail_soundNotification": {
-    "message": "Sound notification",
+    "message": "소리 알림",
     "description": ""
   },
   "option_common_mail_soundNotificationSelected": {
-    "message": "Sound",
+    "message": "알림음",
     "description": ""
   },
   "option_common_mail_notify_volume_caption": {
-    "message": "Volume",
+    "message": "알림 볼륨",
     "description": ""
   },
   "option_common_mail_notify_duration_caption": {
-    "message": "Notification duration",
+    "message": "알림 지속 시간",
     "description": ""
   },
   "option_message_label": {
-    "message": "Email",
+    "message": "이메일",
     "description": ""
   },
   "option_message_activate": {
-    "message": "Enable unread Emails management",
+    "message": "읽지 않은 메일 관리 사용",
     "description": ""
   },
   "option_message_view_caption": {
-    "message": "Displaying",
+    "message": "표시",
     "description": ""
   },
   "option_message_view_nbMax_label": {
-    "message": "Maximum number of Emails displayed",
+    "message": "표시할 읽지 않은 메일 최대 개수",
     "description": ""
   },
   "option_message_view_nbMax_characters_label": {
-    "message": "Maximum number of characters displayed in Email abstract",
+    "message": "메일 요약에 표시할 최대 문자 수",
     "description": ""
   },
   "option_message_view_filter_label": {
-    "message": "Email filter (regular expression)",
-    "description": "Label for the optional unread email regex filter in options."
+    "message": "이메일 필터(정규식)",
+    "description": "옵션의 선택적 읽지 않은 메일 정규식 필터 레이블."
   },
   "option_message_view_filter_description": {
-    "message": "Optional. Only unread emails matching this regular expression on sender, subject, or body are shown and counted. Leave empty to disable filtering.",
-    "description": "Help text for the optional unread email regex filter in options."
+    "message": "선택 사항. 발신자, 제목 또는 본문이 이 정규식과 일치하는 읽지 않은 메일만 표시하고 집계합니다. 비워 두면 필터를 사용하지 않습니다.",
+    "description": "옵션의 선택적 읽지 않은 메일 정규식 필터 도움말."
   },
   "option_calendar_label": {
-    "message": "Calendar",
+    "message": "캘린더",
     "description": ""
   },
   "option_calendar_activate": {
-    "message": "Enable calendar management",
+    "message": "캘린더 관리 사용",
     "description": ""
   },
   "option_calendar_view_caption": {
-    "message": "Displaying",
+    "message": "표시",
     "description": ""
   },
   "option_calendar_view_period_label": {
-    "message": "Period displayed",
+    "message": "표시 기간",
     "description": ""
   },
   "option_calendar_view_nbMax_label": {
-    "message": "Maximum number of appointments displayed",
+    "message": "표시할 약속 최대 개수",
     "description": ""
   },
   "option_calendar_notification_caption": {
-    "message": "Notification",
+    "message": "알림",
     "description": ""
   },
   "option_calendar_systemNotification": {
-    "message": "System notification",
+    "message": "시스템 알림",
     "description": ""
   },
   "option_calendar_soundNotification": {
-    "message": "Sound notification",
+    "message": "소리 알림",
     "description": ""
   },
   "option_calendar_soundNotificationSelected": {
-    "message": "Sound",
+    "message": "알림음",
     "description": ""
   },
   "option_calendar_notify_volume_caption": {
-    "message": "Volume",
+    "message": "알림 볼륨",
     "description": ""
   },
   "option_calendar_repeat": {
-    "message": "Repeat",
+    "message": "반복",
     "description": ""
   },
   "option_task_label": {
-    "message": "Tasks",
+    "message": "작업",
     "description": ""
   },
   "option_task_activate": {
-    "message": "Enable Tasks management",
+    "message": "작업 관리 사용",
     "description": ""
   },
   "option_task_view_caption": {
-    "message": "Displaying",
+    "message": "표시",
     "description": ""
   },
   "option_task_view_reminder": {
-    "message": "Reminder",
+    "message": "미리 알림",
     "description": ""
   },
   "option_task_view_confZimbra": {
-    "message": "Zimbra configuration",
+    "message": "Zimbra 구성",
     "description": ""
   },
   "option_task_view_nbTasks": {
-    "message": "Maximum number of tasks displayed",
+    "message": "표시할 작업 최대 개수",
     "description": ""
   },
   "option_task_view_nbPriorities": {
-    "message": "Priorities set",
+    "message": "우선순위",
     "description": ""
   },
   "option_task_view_all": {
-    "message": "All",
+    "message": "모두",
     "description": ""
   },
   "option_task_view_highAndNormal": {
-    "message": "High and normal",
+    "message": "높음 및 보통",
     "description": ""
   },
   "option_task_view_high": {
-    "message": "High",
+    "message": "높음",
     "description": ""
   },
   "option_task_view_normal": {
-    "message": "Normal",
+    "message": "보통",
     "description": ""
   },
   "option_task_view_low": {
-    "message": "Low",
+    "message": "낮음",
     "description": ""
   },
   "option_identifiant_label": {
-    "message": "Accounts",
+    "message": "계정",
     "description": ""
   },
   "option_identifiant_caption": {
-    "message": "Account",
+    "message": "계정",
     "description": ""
   },
   "option_identifiant_params_caption": {
-    "message": "Authentication",
+    "message": "인증",
     "description": ""
   },
   "option_identifiant_alias_label": {
-    "message": "Alias",
+    "message": "별칭",
     "description": ""
   },
   "option_identifiant_login_label": {
-    "message": "Login",
+    "message": "로그인",
     "description": ""
   },
   "option_identifiant_password_label": {
-    "message": "Password",
+    "message": "비밀번호",
     "description": ""
   },
   "option_identifiant_savePassword_label": {
-    "message": "Remember password",
+    "message": "비밀번호 저장",
     "description": ""
   },
   "option_identifiant_2fatoken_label": {
-    "message": "Two-factor authentication token",
+    "message": "2단계 인증 토큰",
     "description": ""
   },
   "option_identifiant_2fatoken_button": {
-    "message": "Send",
+    "message": "보내기",
     "description": ""
   },
   "option_identifiant_server_caption": {
-    "message": "Server",
+    "message": "서버",
     "description": ""
   },
   "option_identifiant_authtype_label": {
-    "message": "Authentication",
+    "message": "인증",
     "description": ""
   },
   "option_identifiant_authtype_normal": {
-    "message": "Normal",
+    "message": "일반",
     "description": ""
   },
   "option_identifiant_urlwebservice_label": {
-    "message": "Web service URL",
+    "message": "웹 서비스 URL",
     "description": ""
   },
   "option_identifiant_urlwebservice_tooltip": {
-    "message": "The URL of the mail service, most of the time the same as the web interface URL",
+    "message": "메일 서비스 URL, 대부분 웹 인터페이스 URL과 동일합니다",
     "description": ""
   },
   "option_identifiant_urlwebinterface_label": {
-    "message": "Web interface URL",
+    "message": "웹 인터페이스 URL",
     "description": ""
   },
   "option_identifiant_urlwebinterface_tooltip": {
-    "message": "The URL displayed in the Web browser when connected (Optional)",
+    "message": "연결 시 브라우저에 표시되는 URL(선택 사항)",
     "description": ""
   },
   "option_identifiant_add_button": {
-    "message": "Add new account",
+    "message": "새 계정 추가",
     "description": ""
   },
   "option_identifiant_remove_button": {
-    "message": "Remove",
+    "message": "제거",
     "description": ""
   },
   "option_identifiant_connect_button": {
-    "message": "Connect",
+    "message": "연결",
     "description": ""
   },
   "option_identifiant_connectCancel_button": {
-    "message": "Cancel...",
+    "message": "취소...",
     "description": ""
   },
   "option_identifiant_disconnect_button": {
-    "message": "Disconnect",
+    "message": "연결 해제",
     "description": ""
   },
   "tooltip_notConnected_title": {
-    "message": "Disconnected",
+    "message": "연결 안 됨",
     "description": ""
   },
   "tooltip_configuration_description": {
-    "message": "For notifications, please configure your account(s).",
+    "message": "알림을 받으려면 계정을 구성하세요.",
     "description": ""
   },
   "tooltip_notConnected_description": {
-    "message": "For notifications, please log in.",
+    "message": "알림을 받으려면 로그인하세요.",
     "description": ""
   },
   "tooltip_errorConnected_title": {
-    "message": "Update failed",
+    "message": "업데이트 실패",
     "description": ""
   },
   "tooltip_disconnected_descriptionStatus": {
-    "message": "State: Disconnected",
+    "message": "상태: 연결 안 됨",
     "description": ""
   },
   "tooltip_connecting_descriptionStatus": {
-    "message": "State: Connection in progress...",
+    "message": "상태: 연결 중...",
     "description": ""
   },
   "tooltip_errorInitPage_title": {
-    "message": "Sorry, an error has occurred, please reload this page.",
+    "message": "오류가 발생했습니다. 이 페이지를 새로고침하세요.",
     "description": ""
   },
   "tooltip_unreadMessages_title": {
-    "message": "Unread Emails: %NB% ",
+    "message": "읽지 않은 메일: %NB% ",
     "description": ""
   },
   "tooltip_connected_descriptionStatus": {
-    "message": "State: Connected",
+    "message": "상태: 연결됨",
     "description": ""
   },
   "tooltip_connected_descriptionAccount": {
-    "message": "Account: %EMAIL%",
+    "message": "계정: %EMAIL%",
     "description": ""
   },
   "tooltip_connected_descriptionQuota": {
-    "message": "Quota: %PERCENTAGE%% (%USED% of %SIZE%)",
+    "message": "할당량: %PERCENTAGE%% (%USED% / %SIZE%)",
     "description": ""
   },
   "tooltip_noUnreadMessage": {
-    "message": "No unread Email",
+    "message": "읽지 않은 메일 없음",
     "description": ""
   },
   "tooltip_noEvent": {
-    "message": "No event in progress",
+    "message": "진행 중인 일정 없음",
     "description": ""
   },
   "tooltip_priority_high": {
-    "message": "High priority",
+    "message": "높은 우선순위",
     "description": ""
   },
   "tooltip_priority_low": {
-    "message": "Low priority",
+    "message": "낮은 우선순위",
     "description": ""
   },
   "tooltip_priority_normal": {
-    "message": "Normal priority",
+    "message": "보통 우선순위",
     "description": ""
   },
   "tooltip_noTask": {
-    "message": "No task in progress",
+    "message": "진행 중인 작업 없음",
     "description": ""
   },
   "tooltip_week": {
@@ -452,75 +452,75 @@
     "description": ""
   },
   "tooltip_noEmailContent": {
-    "message": "Without any content",
+    "message": "내용 없음",
     "description": ""
   },
   "connector_error_req_internal": {
-    "message": "Internal error",
+    "message": "내부 오류",
     "description": ""
   },
   "connector_error_req_invalid": {
-    "message": "Invalid request",
+    "message": "잘못된 요청",
     "description": ""
   },
   "connector_error_req_timeout": {
-    "message": "No response",
+    "message": "응답 없음",
     "description": ""
   },
   "connector_error_req_server": {
-    "message": "Server error",
+    "message": "서버 오류",
     "description": ""
   },
   "connector_error_req_network": {
-    "message": "Network error",
+    "message": "네트워크 오류",
     "description": ""
   },
   "connector_error_req_authreq": {
-    "message": "Authentication expired",
+    "message": "인증 만료",
     "description": ""
   },
   "connector_error_req_logininvalid": {
-    "message": "Invalid login",
+    "message": "잘못된 로그인",
     "description": ""
   },
   "connector_error_authentification": {
-    "message": "Authentication error",
+    "message": "인증 오류",
     "description": ""
   },
   "connector_error_createwait": {
-    "message": "Error during create wait request",
+    "message": "대기 요청 생성 중 오류",
     "description": ""
   },
   "connector_error_wait": {
-    "message": "Error waiting for a new message",
+    "message": "새 메시지 대기 중 오류",
     "description": ""
   },
   "connector_error_mailboxinfo": {
-    "message": "Error when retrieving information from the mailbox",
+    "message": "사서함 정보를 가져오는 중 오류",
     "description": ""
   },
   "connector_error_unreadmsg": {
-    "message": "Error when retrieving for new Emails",
+    "message": "새 이메일을 가져오는 중 오류",
     "description": ""
   },
   "connector_error_calendar": {
-    "message": "Error when retrieving the calendar events",
+    "message": "캘린더 일정을 가져오는 중 오류",
     "description": ""
   },
   "connector_error_task": {
-    "message": "Error when retrieving the tasks",
+    "message": "작업을 가져오는 중 오류",
     "description": ""
   },
   "connector_notification_NewMessage": {
-    "message": "Message from %EMAIL%",
+    "message": "%EMAIL%의 메시지",
     "description": ""
   },
   "connector_notification_nbUnreadMessages": {
-    "message": "%NB% new unread Emails!",
+    "message": "%NB%개의 새 읽지 않은 메일!",
     "description": ""
   },
   "connector_notification_event": {
-    "message": "Event:",
+    "message": "일정:",
     "description": ""
   },
   "unit_bytes_B": {
@@ -544,19 +544,19 @@
     "description": ""
   },
   "file_sound_error_size": {
-    "message": "This file is not supported. Max size is 300 KB, current: ",
+    "message": "지원되지 않는 파일입니다. 최대 크기 300KB, 현재: ",
     "description": ""
   },
   "file_sound_error_type": {
-    "message": "This file is not supported. Need audio mime-type, current mime-type: ",
+    "message": "지원되지 않는 파일입니다. audio MIME 유형이 필요합니다. 현재 MIME 유형: ",
     "description": ""
   },
   "repeatNone": {
-    "message": "No",
+    "message": "아니요",
     "description": ""
   },
   "uploadFile": {
-    "message": "Choose file…",
+    "message": "파일 선택…",
     "description": ""
   }
 }

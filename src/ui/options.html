@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title msg="extName">Zimbra Mail Notifier — Settings</title>
+  <link rel="stylesheet" href="skin/options.css" />
+</head>
+<body class="options-body">
+
+  <div class="options-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <img src="skin/images/zimbra_mail_notifier_48.png" alt="Zimbra" />
+        <span msg="extName">Zimbra Mail Notifier</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab-target="general">
+          <svg class="icon"><use href="skin/icons.svg#icon-settings"/></svg>
+          <span msg="option_common_label">General</span>
+        </button>
+        <button class="nav-item" data-tab-target="messages">
+          <svg class="icon"><use href="skin/icons.svg#icon-mail"/></svg>
+          <span msg="option_message_label">Email</span>
+        </button>
+        <button class="nav-item" data-tab-target="calendar">
+          <svg class="icon"><use href="skin/icons.svg#icon-calendar"/></svg>
+          <span msg="option_calendar_label">Calendar</span>
+        </button>
+        <button class="nav-item" data-tab-target="tasks">
+          <svg class="icon"><use href="skin/icons.svg#icon-task"/></svg>
+          <span msg="option_task_label">Tasks</span>
+        </button>
+        <button class="nav-item" data-tab-target="accounts">
+          <svg class="icon"><use href="skin/icons.svg#icon-user"/></svg>
+          <span msg="option_identifiant_label">Accounts</span>
+        </button>
+        <button class="nav-item" data-tab-target="about">
+          <svg class="icon"><use href="skin/icons.svg#icon-info"/></svg>
+          <span msg="main_about_label">About</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-donate">
+        <a href="https://www.paypal.me/DavidGUEHENNEC/5" target="_blank" class="btn-donate">
+          ☕ <span msg="about_donate">Donation</span>
+        </a>
+        <p class="donate-msg" msg="extDescription"></p>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="options-main">
+
+      <!-- ═══════════════════════════════════════════════════
+           General
+           ═══════════════════════════════════════════════════ -->
+      <section data-tab-panel="general" class="tab-panel">
+        <h2 msg="option_common_label">General</h2>
+
+        <div class="pref-group">
+          <h3 msg="option_common_connection_caption">Connection</h3>
+          <label class="pref-row">
+            <span msg="option_common_autoConnect">Auto connection on startup</span>
+            <input type="checkbox" id="opt-auto-connect" />
+          </label>
+          <label class="pref-row">
+            <span msg="option_common_browserSetCookies">Auto connection on the web interface</span>
+            <input type="checkbox" id="opt-set-cookies" />
+          </label>
+        </div>
+
+        <div class="pref-group">
+          <h3 msg="option_common_popup_caption">Toolbar</h3>
+          <label class="pref-row">
+            <span msg="option_common_popupColor">Panel color</span>
+            <input type="color" id="opt-popup-color" />
+          </label>
+          <label class="pref-row">
+            <span msg="option_common_popupWidth">Panel width</span>
+            <div class="input-unit-row">
+              <input type="number" id="opt-popup-width" min="200" max="800" step="10" class="input-sm" />
+              <span class="unit-label" msg="pixels">pixels</span>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════
+           Messages / Email
+           ═══════════════════════════════════════════════════ -->
+      <section data-tab-panel="messages" class="tab-panel hidden">
+        <h2 msg="option_message_label">Email</h2>
+
+        <!-- Activation -->
+        <div class="pref-group">
+          <label class="pref-row pref-row--activate">
+            <span msg="option_message_activate">Enable unread Emails management</span>
+            <input type="checkbox" id="opt-msg-enabled" />
+          </label>
+        </div>
+
+        <!-- Display -->
+        <div class="pref-group">
+          <h3 msg="option_message_view_caption">Displaying</h3>
+          <label class="pref-row">
+            <span msg="option_message_view_nbMax_label">Maximum number of Emails displayed</span>
+            <input type="number" id="opt-msg-nb" min="1" max="20" class="input-sm" />
+          </label>
+          <label class="pref-row">
+            <span msg="option_message_view_nbMax_characters_label">Maximum characters in Email abstract</span>
+            <input type="number" id="opt-msg-chars" min="10" max="500" class="input-sm" />
+          </label>
+          <div class="pref-row pref-row--stacked">
+            <div class="pref-row-text">
+              <span msg="option_message_view_filter_label">Email filter (regular expression)</span>
+              <p class="pref-hint" msg="option_message_view_filter_description">Optional. Only unread emails matching this regular expression on sender, subject, or body are shown and counted. Leave empty to disable filtering.</p>
+            </div>
+            <input type="text" id="opt-msg-filter" class="pref-input-wide" spellcheck="false" autocomplete="off" placeholder="urgent|@boss\.com" />
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="pref-group" id="group-email-notif">
+          <div class="group-header">
+            <h3 msg="option_common_mail_notification_caption">Notification unread mail</h3>
+            <label class="toggle-label">
+              <input type="checkbox" id="opt-email-notif" class="toggle-input" />
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            </label>
+          </div>
+          <div class="group-body">
+          <label class="pref-row">
+            <span msg="option_common_mail_notify_duration_caption">Notification duration</span>
+            <div class="input-unit-row">
+              <input type="number" id="opt-email-duration" min="0" max="60" class="input-sm" />
+              <span class="unit-label" msg="seconds">seconds</span>
+            </div>
+          </label>
+          </div><!-- /group-body -->
+        </div>
+
+        <!-- Sound -->
+        <div class="pref-group" id="group-email-sound">
+          <div class="group-header">
+            <h3 msg="option_common_mail_soundNotification">Sound notification</h3>
+            <label class="toggle-label">
+              <input type="checkbox" id="opt-email-sound" class="toggle-input" />
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            </label>
+          </div>
+          <div class="group-body">
+          <div class="pref-row" id="opt-email-sound-options">
+            <span msg="option_common_mail_soundNotificationSelected">Sound</span>
+            <div class="sound-selector">
+              <label class="sound-option">
+                <input type="radio" name="emailSound" value="ding" id="opt-email-sound-ding" />
+                <span class="sound-label">
+                  <svg class="icon icon--md"><use href="skin/icons.svg#icon-sound-bell"/></svg>
+                  Ding
+                </span>
+              </label>
+              <label class="sound-option">
+                <input type="radio" name="emailSound" value="drain" id="opt-email-sound-drain" />
+                <span class="sound-label">
+                  <svg class="icon icon--md"><use href="skin/icons.svg#icon-sound-play"/></svg>
+                  Drain
+                </span>
+              </label>
+              <label class="sound-option">
+                <input type="radio" name="emailSound" value="ping" id="opt-email-sound-ping" />
+                <span class="sound-label">
+                  <svg class="icon icon--md"><use href="skin/icons.svg#icon-sound-ping" /></svg>
+                  Ping
+                </span>
+              </label>
+              <label class="sound-option">
+                <input type="radio" name="emailSound" value="heal" id="opt-email-sound-heal" />
+                <span class="sound-label">
+                  <svg class="icon icon--md"><use href="skin/icons.svg#icon-sound-music"/></svg>
+                  Heal
+                </span>
+              </label>
+              <label class="sound-option">
+                <input type="radio" name="emailSound" value="custom" id="opt-email-sound-custom" />
+                <span class="sound-label">
+                  <svg class="icon icon--md"><use href="skin/icons.svg#icon-sound-file"/></svg>
+                  <span msg="custom">Personalized</span>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="pref-row" id="opt-email-sound-file-row">
+            <span msg="custom">Personalized sound</span>
+            <div class="upload-sound-wrapper">
+              <label class="btn-upload" for="opt-email-sound-upload">
+                <svg class="icon icon--sm"><use href="skin/icons.svg#icon-sound-file"/></svg>
+                <span msg="uploadFile">Choose file…</span>
+              </label>
+              <input type="file" id="opt-email-sound-upload" class="upload-hidden"
+                     accept="audio/*" data-sound-group="email" />
+              <span class="upload-filename" id="opt-email-sound-filename">—</span>
+              <button class="btn-upload-clear" id="opt-email-sound-clear" title="Remove">✕</button>
+            </div>
+            <div class="upload-error" id="opt-email-sound-error"></div>
+          </div>
+          <label class="pref-row">
+            <span msg="option_common_mail_notify_volume_caption">Volume</span>
+            <div class="volume-row">
+              <svg class="icon icon--sm volume-icon"><use href="skin/icons.svg#icon-volume-low"/></svg>
+              <input type="range" id="opt-email-volume" min="0" max="100" />
+              <svg class="icon icon--sm volume-icon"><use href="skin/icons.svg#icon-volume-high"/></svg>
+              <span class="volume-val" id="opt-email-volume-val">80%</span>
+            </div>
+          </label>
+          <div class="pref-row">
+            <span></span>
+            <button class="btn-test-sound" data-sound-group="email">▶ Test</button>
+          </div>
+          </div><!-- /group-body -->
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════
+           Calendar
+           ═══════════════════════════════════════════════════ -->
+      <section data-tab-panel="calendar" class="tab-panel hidden">
+        <h2 msg="option_calendar_label">Calendar</h2>
+
+        <!-- Activation -->
+        <div class="pref-group">
+          <label class="pref-row pref-row--activate">
+            <span msg="option_calendar_activate">Enable calendar management</span>
+            <input type="checkbox" id="opt-cal-enabled" />
+          </label>
+        </div>
+
+        <!-- Display -->
+        <div class="pref-group">
+          <h3 msg="option_calendar_view_caption">Displaying</h3>
+          <label class="pref-row">
+            <span msg="option_calendar_view_period_label">Period displayed</span>
+            <div class="input-unit-row">
+              <input type="number" id="opt-cal-period" min="1" max="4" class="input-sm" />
+              <span class="unit-label" msg="weeks">weeks</span>
+            </div>
+          </label>
+          <label class="pref-row">
+            <span msg="option_calendar_view_nbMax_label">Maximum number of appointments displayed</span>
+            <input type="number" id="opt-cal-nb" min="1" max="20" class="input-sm" />
+          </label>
+        </div>
+
+        <!-- Notifications -->
+        <div class="pref-group" id="group-cal-notif">
+          <div class="group-header">
+            <h3 msg="option_calendar_notification_caption">Notification</h3>
+            <label class="toggle-label">
+              <input type="checkbox" id="opt-cal-notif" class="toggle-input" />
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            </label>
+          </div>
+          <div class="group-body">
+
+          <!-- Reminder delay -->
+          <label class="pref-row">
+            <span msg="option_task_view_reminder">Reminder</span>
+            <select id="opt-cal-reminder-select" class="pref-select">
+              <option value="-1" msg="option_task_view_confZimbra">Zimbra config</option>
+              <option value="0"  msg="atTime">At time</option>
+              <option value="1">1 min</option>
+              <option value="5">5 min</option>
+              <option value="10">10 min</option>
+              <option value="15">15 min</option>
+              <option value="30">30 min</option>
+              <option value="60">1 h</option>
+            </select>
+          </label>
+
+          <!-- Repeat count -->
+          <label class="pref-row">
+            <span msg="option_calendar_repeat">Repeat</span>
+            <div class="repeat-chips" id="opt-cal-reminder-repeat-chips">
+              <label class="chip">
+                <input type="radio" name="calRepeat" value="0" id="cal-repeat-0" />
+                <span msg="repeatNone">No</span>
+              </label>
+              <label class="chip">
+                <input type="radio" name="calRepeat" value="1" id="cal-repeat-1" />
+                <span>1×</span>
+              </label>
+              <label class="chip">
+                <input type="radio" name="calRepeat" value="2" id="cal-repeat-2" />
+                <span>2×</span>
+              </label>
+              <label class="chip">
+                <input type="radio" name="calRepeat" value="3" id="cal-repeat-3" />
+                <span>3×</span>
+              </label>
+              <label class="chip">
+                <input type="radio" name="calRepeat" value="5" id="cal-repeat-5" />
+                <span>5×</span>
+              </label>
+            </div>
+          </label>
+
+          </div><!-- /group-body -->
+        </div>
+
+        <!-- Sound -->
+        <div class="pref-group" id="group-cal-sound">
+          <div class="group-header">
+            <h3 msg="option_calendar_soundNotification">Sound notification</h3>
+            <label class="toggle-label">
+              <input type="checkbox" id="opt-cal-sound" class="toggle-input" />
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            </label>
+          </div>
+          <div class="group-body">
+          <div class="pref-row" id="opt-cal-sound-options">
+            <span msg="option_calendar_soundNotificationSelected">Sound</span>
+            <div class="sound-selector">
+              <label class="sound-option">
+                <input type="radio" name="calSound" value="ding" id="opt-cal-sound-ding" />
+                <span class="sound-label">
+                  <svg class="icon icon--md"><use href="skin/icons.svg#icon-sound-bell"/></svg>
+                  Ding
+                </span>
+              </label>
+              <label class="sound-option">
+                <input type="radio" name="calSound" value="drain" id="opt-cal-sound-drain" />
+                <span class="sound-label">
+                  <svg class="icon icon--md"><use href="skin/icons.svg#icon-sound-play"/></svg>
+                  Drain
+                </span>
+              </label>
+              <label class="sound-option">
+                <input type="radio" name="calSound" value="ping" id="opt-cal-sound-ping" />
+                <span class="sound-label">
+                  <svg class="icon icon--md"><use href="skin/icons.svg#icon-sound-ping" /></svg>
+                  Ping
+                </span>
+              </label>
+              <label class="sound-option">
+                <input type="radio" name="calSound" value="heal" id="opt-cal-sound-heal" />
+                <span class="sound-label">
+                  <svg class="icon icon--md"><use href="skin/icons.svg#icon-sound-music"/></svg>
+                  Heal
+                </span>
+              </label>
+              <label class="sound-option">
+                <input type="radio" name="calSound" value="custom" id="opt-cal-sound-custom" />
+                <span class="sound-label">
+                  <svg class="icon icon--md"><use href="skin/icons.svg#icon-sound-file"/></svg>
+                  <span msg="custom">Personalized</span>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="pref-row" id="opt-cal-sound-file-row">
+            <span msg="custom">Personalized sound</span>
+            <div class="upload-sound-wrapper">
+              <label class="btn-upload" for="opt-cal-sound-upload">
+                <svg class="icon icon--sm"><use href="skin/icons.svg#icon-sound-file"/></svg>
+                <span msg="uploadFile">Choose file…</span>
+              </label>
+              <input type="file" id="opt-cal-sound-upload" class="upload-hidden"
+                     accept="audio/*" data-sound-group="cal" />
+              <span class="upload-filename" id="opt-cal-sound-filename">—</span>
+              <button class="btn-upload-clear" id="opt-cal-sound-clear" title="Remove">✕</button>
+            </div>
+            <div class="upload-error" id="opt-cal-sound-error"></div>
+          </div>
+          <label class="pref-row">
+            <span msg="option_calendar_notify_volume_caption">Volume</span>
+            <div class="volume-row">
+              <svg class="icon icon--sm volume-icon"><use href="skin/icons.svg#icon-volume-low"/></svg>
+              <input type="range" id="opt-cal-volume" min="0" max="100" />
+              <svg class="icon icon--sm volume-icon"><use href="skin/icons.svg#icon-volume-high"/></svg>
+              <span class="volume-val" id="opt-cal-volume-val">80%</span>
+            </div>
+          </label>
+          <div class="pref-row">
+            <span></span>
+            <button class="btn-test-sound" data-sound-group="cal">▶ Test</button>
+          </div>
+          </div><!-- /group-body -->
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════
+           Tasks
+           ═══════════════════════════════════════════════════ -->
+      <section data-tab-panel="tasks" class="tab-panel hidden">
+        <h2 msg="option_task_label">Tasks</h2>
+
+        <!-- Activation -->
+        <div class="pref-group">
+          <label class="pref-row pref-row--activate">
+            <span msg="option_task_activate">Enable Tasks management</span>
+            <input type="checkbox" id="opt-task-enabled" />
+          </label>
+        </div>
+
+        <!-- Display -->
+        <div class="pref-group">
+          <h3 msg="option_task_view_caption">Displaying</h3>
+          <label class="pref-row">
+            <span msg="option_task_view_nbTasks">Maximum number of tasks displayed</span>
+            <input type="number" id="opt-task-nb" min="1" max="20" class="input-sm" />
+          </label>
+        </div>
+
+        <!-- Priorities -->
+        <div class="pref-group">
+          <h3 msg="option_task_view_nbPriorities">Priorities set</h3>
+          <div class="pref-row">
+            <span msg="option_task_view_nbPriorities">Priorities displayed</span>
+            <div class="priority-selector">
+              <label class="priority-option priority-high">
+                <input type="checkbox" id="opt-task-prio-high" value="1" />
+                <span msg="option_task_view_high">High</span>
+              </label>
+              <label class="priority-option priority-normal">
+                <input type="checkbox" id="opt-task-prio-normal" value="5" />
+                <span msg="option_task_view_normal">Normal</span>
+              </label>
+              <label class="priority-option priority-low">
+                <input type="checkbox" id="opt-task-prio-low" value="9" />
+                <span msg="option_task_view_low">Low</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════
+           Accounts
+           ═══════════════════════════════════════════════════ -->
+      <section data-tab-panel="accounts" class="tab-panel hidden">
+        <div class="section-header-row">
+          <h2 msg="option_identifiant_label">Accounts</h2>
+          <button class="btn-primary" data-action="add-account">
+            + <span msg="option_identifiant_add_button">Add new account</span>
+          </button>
+        </div>
+        <div id="accounts-list"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════
+           About
+           ═══════════════════════════════════════════════════ -->
+      <section data-tab-panel="about" class="tab-panel hidden">
+        <h2 msg="main_about_label">About Zimbra Mail Notifier</h2>
+        <div class="about-card">
+          <img src="skin/images/zimbra_mail_notifier_128.png" alt="Zimbra Mail Notifier" class="about-logo" />
+          <h3 msg="extName">Zimbra Mail Notifier</h3>
+          <p msg="extDescription">This extension notifies you when new messages arrive in your zimbra mailbox.</p>
+          <div class="about-links">
+            <a href="https://github.com/dguehennec/ZimbraMailNotifier" target="_blank">GitHub</a>
+            <a href="http://zimbramailnotifier.free.fr/" target="_blank" msg="about_homepage_label">Web Site</a>
+            <a href="https://www.paypal.me/DavidGUEHENNEC/5" target="_blank" class="btn-donate-inline" msg="about_donate">☕ Donation</a>
+          </div>
+          <p class="about-createdby" msg="about_createdby_label">By David GUEHENNEC and Benjamin ROBIN</p>
+          <p class="about-legal" msg="about_legal_label">This extension is not affiliated or endorsed by VMware.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="js/options.js"></script>
+</body>
+</html>
