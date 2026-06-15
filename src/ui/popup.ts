@@ -37,6 +37,7 @@ async function render(): Promise<void> {
   renderMessages(prefs as AppPrefs | null);
   renderCalendar(prefs as AppPrefs | null);
   renderTasks(prefs as AppPrefs | null);
+  renderDraftMessages(prefs as AppPrefs | null);
 }
 
 function renderHeader(): void {
@@ -151,8 +152,8 @@ function renderMessages(prefs: AppPrefs | null): void {
       div.setAttribute('data-account-id', `${ctrl.accountId}`);
     }
     div.innerHTML = `
-      <div class="msg-from">${escHtml(currentMsg.from)}</div>
-      <div class="msg-subject">${escHtml(currentMsg.subject)}</div>
+      <div class="msg-from">${escHtml(i18n('tooltip_message_from').replace('%FROM%', currentMsg.from))}</div>
+      <div class="msg-subject">${escHtml(currentMsg.subject || i18n('tooltip_no_subject'))}</div>
       <div class="msg-abstract">${escHtml(currentMsg.abstract.substring(0,prefs?.messageNbCharsDisplayed || 200))}</div>
       <div class="msg-date">${formatRelativeDateTime(currentMsg.date)}</div>
     `;
@@ -221,7 +222,7 @@ function renderTasks(prefs: AppPrefs | null): void {
   const container = document.getElementById('tasks-list')!;
   container.innerHTML = '';
 
-  const allTasks = controllers.flatMap((c) => c.tasks);
+  const allTasks = controllers.flatMap((c) => c.tasks ?? []);
   if (allTasks.length === 0) {
     container.innerHTML = `<div class="no-items">${i18n('tooltip_noTask')}</div>`;
     return;
@@ -237,6 +238,38 @@ function renderTasks(prefs: AppPrefs | null): void {
       <span class="task-priority p${currentTask.priority}"></span>
       <span class="task-name">${escHtml(currentTask.name)}</span>
       <span class="task-pct">${currentTask.percentComplete}%</span>
+    `;
+    container.appendChild(div);
+  }
+}
+
+function renderDraftMessages(prefs: AppPrefs | null): void {
+  const group = document.getElementById('drafts-group')!;
+  if (!prefs?.draftEnabled) {
+    group.style.display = 'none';
+    return;
+  }
+  group.style.display = '';
+  const container = document.getElementById('drafts-list')!;
+  container.innerHTML = '';
+
+  const allDrafts = controllers.flatMap((c) => c.draftMessages ?? []).map((m) => { m.date = new Date(m.date); return m; });
+  if (allDrafts.length === 0) {
+    container.innerHTML = `<div class="no-items">${i18n('tooltip_noDraft')}</div>`;
+    return;
+  }
+
+  const allSortedDrafts = allDrafts.sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, prefs?.draftNbDisplayed || 5);
+  for (const draft of allSortedDrafts) {
+    const ctrl = controllers.find((c) => (c.draftMessages ?? []).some((d) => d.id === draft.id));
+    const div = document.createElement('div');
+    div.className = 'message-item draft-item';
+    div.title = `${escHtml(draft.subject + formatAccountName(ctrl, controllers.length))}`;
+    div.innerHTML = `
+      <div class="msg-from">${escHtml(draft.to ? i18n('tooltip_draft_to').replace('%TO%', draft.to) : i18n('tooltip_draft_no_recipient'))}</div>
+      <div class="msg-subject">${escHtml(draft.subject || i18n('tooltip_no_subject'))}</div>
+      <div class="msg-date">${formatRelativeDateTime(draft.date)}</div>
+      <div class="msg-abstract">${escHtml(draft.abstract.substring(0, prefs?.messageNbCharsDisplayed || 200))}</div>
     `;
     container.appendChild(div);
   }

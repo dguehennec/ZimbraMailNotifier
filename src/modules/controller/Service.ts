@@ -4,7 +4,7 @@
 
 import {
   ServiceState, ServiceEventType,
-  CalendarEvent, MailMessage, Task, MailboxInfo,
+  CalendarEvent, MailMessage, DraftMessage, Task, MailboxInfo,
   RequestStatus, SessionInfo,
   ZimbraError, AuthError, NetworkError, ErrorEntry
 } from '../../types';
@@ -37,6 +37,7 @@ export class Service {
   private unreadMessages: MailMessage[] = [];
   private calendarEvents: CalendarEvent[] = [];
   private tasks: Task[] = [];
+  private draftMessages: DraftMessage[] = [];
   private mailboxInfo: MailboxInfo | null = null;
   private eventNotifiers: EventNotifier[] = [];
 
@@ -68,6 +69,7 @@ export class Service {
   getUnreadMessages(): MailMessage[] { return this.unreadMessages; }
   getCalendarEvents(): CalendarEvent[] { return this.calendarEvents; }
   getTasks(): Task[] { return this.tasks; }
+  getDraftMessages(): DraftMessage[] { return this.draftMessages; }
   getMailboxInfo(): MailboxInfo | null { return this.mailboxInfo; }
   getLastErrorMessage(): ErrorEntry | null { return this.errors.getLastMessage(); }
 
@@ -112,6 +114,7 @@ export class Service {
     this.unreadMessages = [];
     this.calendarEvents = [];
     this.tasks = [];
+    this.draftMessages = [];
     this.mailboxInfo = null;
     this.errors.clearAll();
     this.connectRetryDelay = 0;
@@ -318,6 +321,13 @@ export class Service {
         const tasks = await this.webservice!.getTasks();
         this.tasks = tasks;
         this.delegate.onEvent(ServiceEventType.TASK_UPDATED);
+      }
+      // get draft messages
+      if (prefs.draftEnabled) {
+        this.delegate.onEvent(ServiceEventType.CHECKING_DRAFT);
+        const drafts = await this.webservice!.getDraftMessages();
+        this.draftMessages = drafts;
+        this.delegate.onEvent(ServiceEventType.DRAFT_UPDATED);
       }
       this.errors.clearAll();
       log.info('Refresh complete for account ' + this.delegate.accountId);

@@ -65,6 +65,8 @@ export const Constants = {
     TASK_ENABLED: true,
     TASK_NB_DISPLAYED: 5,
     TASK_PRIORITIES: [TaskPriority.HIGH, TaskPriority.NORMAL, TaskPriority.LOW],
+    DRAFT_ENABLED: false,
+    DRAFT_NB_DISPLAYED: 5,
     REQUEST_QUERY_TIMEOUT: 30_000,
     REQUEST_WAIT_TIMEOUT: 310_000,
     QUERY_LOOP_ENABLED: true,

@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "Выбрать файл…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "Черновики"
+  },
+  "option_draft_activate": {
+    "message": "Включить отображение черновиков"
+  },
+  "option_draft_view_caption": {
+    "message": "Отображение"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "Максимальное количество отображаемых черновиков"
+  },
+  "tooltip_draft_caption": {
+    "message": "Черновики"
+  },
+  "tooltip_noDraft": {
+    "message": "Нет черновиков"
+  },
+  "tooltip_draft_to": {
+    "message": "Кому: %TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(нет получателя)"
+  },
+  "tooltip_no_subject": {
+    "message": "(без темы)"
+  },
+  "tooltip_message_from": {
+    "message": "От: %FROM%",
+    "description": ""
   }
 }

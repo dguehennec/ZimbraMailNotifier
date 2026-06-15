@@ -267,6 +267,10 @@ function populateForm(p: AppPrefs): void {
   (el<HTMLInputElement>('opt-task-prio-high'))!.checked   = prios.includes(TaskPriority.HIGH);
   (el<HTMLInputElement>('opt-task-prio-normal'))!.checked = prios.includes(TaskPriority.NORMAL);
   (el<HTMLInputElement>('opt-task-prio-low'))!.checked    = prios.includes(TaskPriority.LOW);
+
+  // Drafts
+  setCheck('opt-draft-enabled', p.draftEnabled);
+  setNum('opt-draft-nb', p.draftNbDisplayed);
 }
 
 function setCheck(id: string, v: boolean)  { const e = el<HTMLInputElement>(id); if (e) e.checked = !!v; }
@@ -334,6 +338,10 @@ function bindControls(): void {
   ['opt-task-prio-high', 'opt-task-prio-normal', 'opt-task-prio-low'].forEach((id) => {
     el<HTMLInputElement>(id)?.addEventListener('change', savePriorities);
   });
+
+  // Drafts
+  onCheck('opt-draft-enabled', 'draftEnabled');
+  onNumber('opt-draft-nb', 'draftNbDisplayed');
 
   // Test sound buttons — play directly in the options page
   document.querySelectorAll<HTMLElement>('.btn-test-sound').forEach((btn) => {

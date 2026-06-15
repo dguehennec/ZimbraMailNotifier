@@ -1,7 +1,7 @@
 {
   "name": "zimbra-mail-notifier",
-  "version": "4.0.0",
-  "description": "Zimbra Mail Notifier – Chrome / Firefox / Opera extension (TypeScript rewrite)",
+  "version": "4.1.0",
+  "description": "Zimbra Mail Notifier – Chrome / Firefox / Opera extension",
   "scripts": {
     "build": "webpack --config webpack.config.js --mode production",
     "build:dev": "webpack --config webpack.config.js --mode development",
@@ -28,7 +28,8 @@
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.2",
     "webpack": "^5.90.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "zip-webpack-plugin": "^4.0.3"
   },
   "jest": {
     "preset": "ts-jest",

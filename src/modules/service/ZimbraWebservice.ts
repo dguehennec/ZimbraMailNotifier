@@ -5,7 +5,7 @@
 
 import {
   RequestStatus,
-  CalendarEvent, MailMessage, Task, MailboxInfo,
+  CalendarEvent, MailMessage, DraftMessage, Task, MailboxInfo,
   SessionInfo, WaitSetInfo, DeviceTrustedInfos,
   ZimbraError, NetworkError, AuthError,
 } from '../../types';
@@ -386,6 +386,26 @@ export class ZimbraWebservice {
     return (body.SearchResponse?.task ?? []).map((t) => parseTask(t));
   }
 
+  /** Fetch draft messages. */
+  async getDraftMessages(): Promise<DraftMessage[]> {
+    log.info('getDraftMessages');
+    const soapUrl = this.getZimbraSoapUrl(this.session.urlWebService);
+
+    type SearchResp = { SearchResponse?: { m?: Array<Record<string, unknown>> } };
+    const body = await callSoap<SearchResp>(soapUrl, {
+      SearchRequest: {
+        _jsns: 'urn:zimbraMail',
+        types: 'message',
+        query: 'in:drafts',
+        fetch: 'all',
+        limit: 200,
+        sortBy: 'dateDesc',
+      },
+    }, { token: this.session.authToken, timeout: this.queryTimeout });
+
+    return (body.SearchResponse?.m ?? []).map((m) => parseDraftMessage(m));
+  }
+
   /** Create a WaitSet. */
   async createWaitSet(): Promise<void> {
     log.info('createWaitSet');
@@ -479,5 +499,17 @@ function parseTask(t: Record<string, unknown>): Task {
     name: String(t['name'] ?? ''),
     priority: String(t['priority'] ?? '5') as import('../../types').TaskPriority,
     percentComplete: Number(t['percentComplete'] ?? 0),
+  };
+}
+
+function parseDraftMessage(m: Record<string, unknown>): DraftMessage {
+  const e = Array.isArray(m['e']) ? m['e'] as Array<Record<string, string>> : [];
+  const to = e.filter((x) => x['t'] === 't').map((x) => x['p'] || x['a'] || '').join(', ');
+  return {
+    id: String(m['id'] ?? ''),
+    subject: String(m['su'] ?? ''),
+    to,
+    date: new Date(Number(m['d'] ?? 0)),
+    abstract: String(m['fr'] ?? ''),
   };
 }

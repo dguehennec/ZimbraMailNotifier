@@ -47,6 +47,8 @@ const DEFAULT_PREFS: AppPrefs = {
   taskEnabled: Constants.DEFAULT_PREFS.TASK_ENABLED,
   taskNbDisplayed: Constants.DEFAULT_PREFS.TASK_NB_DISPLAYED,
   taskPriorities: [...Constants.DEFAULT_PREFS.TASK_PRIORITIES],
+  draftEnabled: Constants.DEFAULT_PREFS.DRAFT_ENABLED,
+  draftNbDisplayed: Constants.DEFAULT_PREFS.DRAFT_NB_DISPLAYED,
   accounts: [],
   requestQueryTimeout: Constants.DEFAULT_PREFS.REQUEST_QUERY_TIMEOUT,
   requestWaitTimeout: Constants.DEFAULT_PREFS.REQUEST_WAIT_TIMEOUT,

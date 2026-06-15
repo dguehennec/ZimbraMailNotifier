@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
+const packageJson = require('./package.json');
+const webpack = require("webpack");
 const CopyPlugin = require('copy-webpack-plugin');
+const ZipPlugin = require('zip-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
@@ -36,7 +39,13 @@ module.exports = (env, argv) => {
     plugins: [
       new CopyPlugin({
         patterns: [
-          { from: 'src/manifest.json', to: 'manifest.json' },
+          {
+            from: 'src/manifest.json', to: 'manifest.json', transform(content) {
+              const manifest = JSON.parse(content.toString());
+              manifest.version = packageJson.version;
+              return JSON.stringify(manifest, null, 2);
+            }
+          },
           { from: 'src/_locales', to: '_locales' },
           { from: 'src/skin', to: 'skin' },
           { from: 'src/ui/popup.html', to: 'popup.html' },
@@ -45,6 +54,14 @@ module.exports = (env, argv) => {
           { from: 'src/license.txt', to: 'license.txt' },
         ],
       }),
+      ... isDev ? [] : [new ZipPlugin({
+        filename: `ZimbraMailNotifier-v${packageJson.version}.zip`,
+        path: '../release',
+        exclude: [
+          /\.DS_Store$/,
+          /__MACOSX/,
+        ]
+      })]
     ],
     devtool: isDev ? 'cheap-source-map' : false,
     optimization: {

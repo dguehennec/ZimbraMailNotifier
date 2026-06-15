@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "Elegir archivo…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "Borradores"
+  },
+  "option_draft_activate": {
+    "message": "Activar la visualización de borradores"
+  },
+  "option_draft_view_caption": {
+    "message": "Visualización"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "Número máximo de borradores mostrados"
+  },
+  "tooltip_draft_caption": {
+    "message": "Borradores"
+  },
+  "tooltip_noDraft": {
+    "message": "No hay borradores"
+  },
+  "tooltip_draft_to": {
+    "message": "Para: %TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(sin destinatario)"
+  },
+  "tooltip_no_subject": {
+    "message": "(sin asunto)"
+  },
+  "tooltip_message_from": {
+    "message": "De: %FROM%",
+    "description": ""
   }
 }

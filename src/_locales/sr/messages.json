@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "Изабери датотеку…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "Нацрти"
+  },
+  "option_draft_activate": {
+    "message": "Омогући приказ нацрта порука"
+  },
+  "option_draft_view_caption": {
+    "message": "Приказ"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "Максималан број приказаних нацрта"
+  },
+  "tooltip_draft_caption": {
+    "message": "Нацрти"
+  },
+  "tooltip_noDraft": {
+    "message": "Нема нацрта порука"
+  },
+  "tooltip_draft_to": {
+    "message": "За: %TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(нема примаоца)"
+  },
+  "tooltip_no_subject": {
+    "message": "(без предмета)"
+  },
+  "tooltip_message_from": {
+    "message": "Од: %FROM%",
+    "description": ""
   }
 }

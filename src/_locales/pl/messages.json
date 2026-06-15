@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "Wybierz plik…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "Wersje robocze"
+  },
+  "option_draft_activate": {
+    "message": "Włącz wyświetlanie wersji roboczych"
+  },
+  "option_draft_view_caption": {
+    "message": "Wyświetlanie"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "Maksymalna liczba wyświetlanych wersji roboczych"
+  },
+  "tooltip_draft_caption": {
+    "message": "Wersje robocze"
+  },
+  "tooltip_noDraft": {
+    "message": "Brak wersji roboczych"
+  },
+  "tooltip_draft_to": {
+    "message": "Do: %TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(brak odbiorcy)"
+  },
+  "tooltip_no_subject": {
+    "message": "(brak tematu)"
+  },
+  "tooltip_message_from": {
+    "message": "Od: %FROM%",
+    "description": ""
   }
 }

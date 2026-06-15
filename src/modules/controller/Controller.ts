@@ -4,7 +4,7 @@
 
 import {
   ServiceEventType, ControllerInfo,
-  CalendarEvent, MailMessage, Task, MailboxInfo,
+  CalendarEvent, MailMessage, DraftMessage, Task, MailboxInfo,
   SessionInfo, ErrorEntry, AccountConfig,
 } from '../../types';
 import { Logger } from '../service/Logger';
@@ -54,6 +54,7 @@ export class Controller implements ServiceDelegate {
   getUnreadMessages(): MailMessage[] { return this.service.getUnreadMessages(); }
   getCalendarEvents(): CalendarEvent[] { return this.service.getCalendarEvents(); }
   getTasks(): Task[] { return this.service.getTasks(); }
+  getDraftMessages(): DraftMessage[] { return this.service.getDraftMessages(); }
   getMailboxInfo(): MailboxInfo | null { return this.service.getMailboxInfo(); }
   getLastErrorMessage(): ErrorEntry | null { return this.service.getLastErrorMessage(); }
   getAccountId(): string { return this.accountId; }
@@ -104,6 +105,7 @@ export class Controller implements ServiceDelegate {
       unreadMessages: this.getUnreadMessages(),
       calendarEvents: this.getCalendarEvents(),
       tasks: this.getTasks(),
+      draftMessages: this.getDraftMessages(),
       lastErrorMessage: this.getLastErrorMessage(),
       mailBoxInfo: this.getMailboxInfo(),
     };

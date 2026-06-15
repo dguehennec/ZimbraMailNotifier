@@ -558,5 +558,35 @@
   "uploadFile": {
     "message": "Choisir un fichier…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "Brouillons"
+  },
+  "option_draft_activate": {
+    "message": "Activer l'affichage des messages brouillons"
+  },
+  "option_draft_view_caption": {
+    "message": "Affichage"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "Nombre maximum de brouillons affichés"
+  },
+  "tooltip_draft_caption": {
+    "message": "Brouillons"
+  },
+  "tooltip_noDraft": {
+    "message": "Aucun message brouillon"
+  },
+  "tooltip_draft_to": {
+    "message": "À : %TO%"
+  },
+  "tooltip_message_from": {
+    "message": "De : %FROM%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(aucun destinataire)"
+  },
+  "tooltip_no_subject": {
+    "message": "(sans objet)"
   }
 }

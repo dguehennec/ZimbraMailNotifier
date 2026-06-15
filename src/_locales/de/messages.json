@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "Datei wählen…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "Entwürfe"
+  },
+  "option_draft_activate": {
+    "message": "Anzeige von E-Mail-Entwürfen aktivieren"
+  },
+  "option_draft_view_caption": {
+    "message": "Anzeige"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "Maximale Anzahl angezeigter Entwürfe"
+  },
+  "tooltip_draft_caption": {
+    "message": "Entwürfe"
+  },
+  "tooltip_noDraft": {
+    "message": "Keine Entwurfsnachrichten"
+  },
+  "tooltip_draft_to": {
+    "message": "An: %TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(kein Empfänger)"
+  },
+  "tooltip_no_subject": {
+    "message": "(kein Betreff)"
+  },
+  "tooltip_message_from": {
+    "message": "Von: %FROM%",
+    "description": ""
   }
 }

@@ -8,3 +8,4 @@ target/*
 /coverage
 /dist
 /node_modules
+/release

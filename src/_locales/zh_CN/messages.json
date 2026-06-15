@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "选择文件…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "草稿"
+  },
+  "option_draft_activate": {
+    "message": "启用草稿邮件显示"
+  },
+  "option_draft_view_caption": {
+    "message": "显示"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "最多显示草稿数量"
+  },
+  "tooltip_draft_caption": {
+    "message": "草稿"
+  },
+  "tooltip_noDraft": {
+    "message": "没有草稿邮件"
+  },
+  "tooltip_draft_to": {
+    "message": "收件人：%TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "（无收件人）"
+  },
+  "tooltip_no_subject": {
+    "message": "（无主题）"
+  },
+  "tooltip_message_from": {
+    "message": "发件人：%FROM%",
+    "description": ""
   }
 }

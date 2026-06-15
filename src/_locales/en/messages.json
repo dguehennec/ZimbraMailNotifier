@@ -558,5 +558,35 @@
   "uploadFile": {
     "message": "Choose file…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "Drafts"
+  },
+  "option_draft_activate": {
+    "message": "Enable draft messages display"
+  },
+  "option_draft_view_caption": {
+    "message": "Displaying"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "Maximum number of drafts displayed"
+  },
+  "tooltip_draft_caption": {
+    "message": "Drafts"
+  },
+  "tooltip_noDraft": {
+    "message": "No draft messages"
+  },
+  "tooltip_draft_to": {
+    "message": "To: %TO%"
+  },
+  "tooltip_message_from": {
+    "message": "From: %FROM%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(no recipient)"
+  },
+  "tooltip_no_subject": {
+    "message": "(no subject)"
   }
 }

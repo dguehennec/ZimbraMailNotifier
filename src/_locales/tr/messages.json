@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "Dosya seç…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "Taslaklar"
+  },
+  "option_draft_activate": {
+    "message": "Taslak mesajları görüntülemeyi etkinleştir"
+  },
+  "option_draft_view_caption": {
+    "message": "Görüntüleme"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "Gösterilecek maksimum taslak sayısı"
+  },
+  "tooltip_draft_caption": {
+    "message": "Taslaklar"
+  },
+  "tooltip_noDraft": {
+    "message": "Taslak mesaj yok"
+  },
+  "tooltip_draft_to": {
+    "message": "Alıcı: %TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(alıcı yok)"
+  },
+  "tooltip_no_subject": {
+    "message": "(konu yok)"
+  },
+  "tooltip_message_from": {
+    "message": "Kimden: %FROM%",
+    "description": ""
   }
 }

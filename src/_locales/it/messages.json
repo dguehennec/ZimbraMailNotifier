@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "Scegli file…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "Bozze"
+  },
+  "option_draft_activate": {
+    "message": "Attiva la visualizzazione delle bozze"
+  },
+  "option_draft_view_caption": {
+    "message": "Visualizzazione"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "Numero massimo di bozze visualizzate"
+  },
+  "tooltip_draft_caption": {
+    "message": "Bozze"
+  },
+  "tooltip_noDraft": {
+    "message": "Nessuna bozza"
+  },
+  "tooltip_draft_to": {
+    "message": "A: %TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(nessun destinatario)"
+  },
+  "tooltip_no_subject": {
+    "message": "(nessun oggetto)"
+  },
+  "tooltip_message_from": {
+    "message": "Da: %FROM%",
+    "description": ""
   }
 }

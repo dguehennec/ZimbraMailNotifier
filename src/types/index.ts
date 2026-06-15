@@ -41,6 +41,8 @@ export enum ServiceEventType {
   CALENDAR_UPDATED = 'CALENDAR_UPDATED',
   CHECKING_TASK = 'CHECKING_TASK',
   TASK_UPDATED = 'TASK_UPDATED',
+  CHECKING_DRAFT = 'CHECKING_DRAFT',
+  DRAFT_UPDATED = 'DRAFT_UPDATED',
   CHECKING_MAILBOX_INFO = 'CHECKING_MAILBOX_INFO',
   MAILBOX_INFO_UPDATED = 'MAILBOX_INFO_UPDATED',
   REQUEST_FAILED = 'REQUEST_FAILED',
@@ -97,6 +99,15 @@ export interface MailMessage {
   abstract: string;
   folderId: string;
   conversationId: string;
+}
+
+
+export interface DraftMessage {
+  id: string;
+  subject: string;
+  to: string;
+  date: Date;
+  abstract: string;
 }
 
 export interface Task {
@@ -190,6 +201,9 @@ export interface AppPrefs {
   taskEnabled: boolean;
   taskNbDisplayed: number;
   taskPriorities: TaskPriority[];
+  // Drafts
+  draftEnabled: boolean;
+  draftNbDisplayed: number;
   // Accounts list
   accounts: AccountConfig[];
   // Per account (keyed by accountId)
@@ -241,6 +255,7 @@ export interface ControllerInfo {
   unreadMessages: MailMessage[];
   calendarEvents: CalendarEvent[];
   tasks: Task[];
+  draftMessages: DraftMessage[];
   lastErrorMessage: ErrorEntry | null;
   mailBoxInfo: MailboxInfo | null;
 }

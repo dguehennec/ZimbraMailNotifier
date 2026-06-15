@@ -34,6 +34,10 @@
           <svg class="icon"><use href="skin/icons.svg#icon-task"/></svg>
           <span msg="option_task_label">Tasks</span>
         </button>
+        <button class="nav-item" data-tab-target="drafts">
+          <svg class="icon"><use href="skin/icons.svg#icon-draft"/></svg>
+          <span msg="option_draft_label">Drafts</span>
+        </button>
         <button class="nav-item" data-tab-target="accounts">
           <svg class="icon"><use href="skin/icons.svg#icon-user"/></svg>
           <span msg="option_identifiant_label">Accounts</span>
@@ -434,6 +438,31 @@
               </label>
             </div>
           </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════════════
+           Drafts
+           ═══════════════════════════════════════════════════ -->
+      <section data-tab-panel="drafts" class="tab-panel hidden">
+        <h2 msg="option_draft_label">Drafts</h2>
+
+        <!-- Activation -->
+        <div class="pref-group">
+          <label class="pref-row pref-row--activate">
+            <span msg="option_draft_activate">Enable draft messages display</span>
+            <input type="checkbox" id="opt-draft-enabled" />
+          </label>
+        </div>
+
+        <!-- Display -->
+        <div class="pref-group" id="group-draft-display">
+          <h3 msg="option_draft_view_caption">Displaying</h3>
+          <label class="pref-row">
+            <span msg="option_draft_view_nbDrafts">Maximum number of drafts displayed</span>
+            <input type="number" id="opt-draft-nb" min="1" max="50" class="input-sm" />
+          </label>
         </div>
       </section>
 

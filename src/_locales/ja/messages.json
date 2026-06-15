@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "ファイルを選択…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "下書き"
+  },
+  "option_draft_activate": {
+    "message": "下書きメッセージの表示を有効にする"
+  },
+  "option_draft_view_caption": {
+    "message": "表示"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "表示する下書きの最大数"
+  },
+  "tooltip_draft_caption": {
+    "message": "下書き"
+  },
+  "tooltip_noDraft": {
+    "message": "下書きメッセージはありません"
+  },
+  "tooltip_draft_to": {
+    "message": "宛先: %TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(宛先なし)"
+  },
+  "tooltip_no_subject": {
+    "message": "(件名なし)"
+  },
+  "tooltip_message_from": {
+    "message": "送信者: %FROM%",
+    "description": ""
   }
 }

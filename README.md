@@ -2,8 +2,6 @@
 
 Extension navigateur (Chrome MV3) écrite en **TypeScript** pour surveiller un compte Zimbra : messages non lus, calendrier, tâches, notifications bureau et sons.
 
-**Version actuelle :** 4.0.0
-
 ## Captures d’écran
 
 | Popup | Options — Général |
@@ -46,7 +44,7 @@ Extension navigateur (Chrome MV3) écrite en **TypeScript** pour surveiller un c
 ```bash
 npm install
 
-# Build production → dist/
+# Build production → dist/, release/
 npm run build
 
 # Build développement avec rechargement automatique
@@ -64,7 +62,7 @@ npm run watch
 
 | Commande | Description |
 | -------- | ----------- |
-| `npm run build` | Build production (Webpack) |
+| `npm run build` | Build production (Webpack) avec fichier zip prêt à être envoyé sur le store dans le repertoire release |
 | `npm run build:dev` | Build développement |
 | `npm run watch` | Build dev avec `--watch` |
 | `npm test` | Tests unitaires (Jest) |
@@ -90,6 +88,7 @@ src/
 tests/                         # Tests Jest (+ mocks Chrome dans setup.ts)
 mock-server/                   # Serveur SOAP Zimbra de test (Node.js natif)
 dist/                          # Sortie Webpack (à charger dans Chrome)
+release/                       # Fichier zip versionné prêt à être envoyé sur le store
 ```
 
 ## Tests

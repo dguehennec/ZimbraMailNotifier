@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "파일 선택…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "임시보관함"
+  },
+  "option_draft_activate": {
+    "message": "임시 저장 메시지 표시 활성화"
+  },
+  "option_draft_view_caption": {
+    "message": "표시"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "표시할 임시 저장 메시지 최대 수"
+  },
+  "tooltip_draft_caption": {
+    "message": "임시보관함"
+  },
+  "tooltip_noDraft": {
+    "message": "임시 저장 메시지 없음"
+  },
+  "tooltip_draft_to": {
+    "message": "받는 사람: %TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(수신자 없음)"
+  },
+  "tooltip_no_subject": {
+    "message": "(제목 없음)"
+  },
+  "tooltip_message_from": {
+    "message": "보낸 사람: %FROM%",
+    "description": ""
   }
 }

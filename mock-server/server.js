@@ -41,7 +41,7 @@ const USERS = {
     'admin@test.local': {
         password: 'admin123',
         displayName: 'Bob Martin',
-        quotaUsed: 120 * 1024 * 1024,
+        quotaUsed: 1200 * 1024 * 1024,
         quotaLimit: 2 * 1024 * 1024 * 1024,
     },
     'twofa@test.local': {
@@ -83,7 +83,7 @@ const testData = {
         {
             id: 'msg-003',
             su: '[URGENT] Mise à jour requise',
-            e: [{t: 'f', a: 'it@company.com', p: 'IT Support'}],
+            e: [],
             d: Date.now() - 2 * 3600_000,
             fr: 'Veuillez mettre à jour votre mot de passe avant vendredi.',
             l: '2',
@@ -141,6 +141,38 @@ const testData = {
             name: 'Mettre à jour la documentation',
             priority: '9',
             percentComplete: 0,
+        },
+    ],
+    drafts: [
+        {
+            id: 'draft-001',
+            su: 'Proposition de partenariat',
+            e: [{t: 't', a: 'partner@company.com', p: 'Sophie Partenaire'}],
+            d: Date.now() - 10 * 60_000,
+            fr: "Bonjour, suite à notre échange de la semaine dernière, je souhaitais vous proposer...",
+            l: '6', // folder 6 = Drafts
+            cid: 'conv-draft-001',
+        },
+        {
+            id: 'draft-002',
+            su: 'Compte-rendu réunion du 12/06',
+            e: [
+                {t: 't', a: 'alice@company.com', p: 'Alice Martin'},
+                {t: 't', a: 'bob@company.com', p: 'Bob Dupont'},
+            ],
+            d: Date.now() - 3 * 3600_000,
+            fr: "Voici le compte-rendu de notre réunion de mardi dernier...",
+            l: '6',
+            cid: 'conv-draft-002',
+        },
+        {
+            id: 'draft-003',
+            su: '',
+            e: [],
+            d: Date.now() - 24 * 3600_000,
+            fr: "Idée pour le prochain sprint : améliorer la gestion des erreurs réseau...",
+            l: '6',
+            cid: 'conv-draft-003',
         },
     ],
 };
@@ -308,6 +340,19 @@ function handleSearch(authToken, req) {
     log.info(`Search for ${sess.email} — types="${types}" sortBy="${sortBy}" limit=${limit}`);
 
     if (types === 'message') {
+        const query = (req.query ?? '').trim().toLowerCase();
+        if (query.includes('in:drafts')) {
+            log.info(`  → returning drafts`);
+            return [
+                200,
+                soapOk('SearchResponse', {
+                    _jsns: 'urn:zimbraMail',
+                    m: testData.drafts.slice(0, limit),
+                }),
+            ];
+        }
+        // default: unread messages (in:inbox is:unread)
+        log.info(`  → returning unread messages`);
         return [
             200,
             soapOk('SearchResponse', {
@@ -661,6 +706,42 @@ async function handleAdminApi(req, res, pathname) {
         return;
     }
 
+    // POST /api/drafts — add an draft message
+    if (req.method === 'POST' && pathname === '/api/drafts') {
+        const body = await readBody(req);
+        try {
+            const msg = JSON.parse(body);
+            const newDraftMsg = {
+                id: `draft-${Date.now()}`,
+                su: msg.subject ?? '',
+                e: [{ t: 't', a: msg.to ?? '', p: msg.toName ?? '' }],
+                d: Date.now(),
+                fr: msg.abstract ?? '',
+                l: '6',
+                cid: `conv-${Date.now()}`,
+            };
+            testData.drafts.unshift(newDraftMsg);
+            // Notify active WaitSets
+            for (const ws of waitSets.values()) ws.pendingEvents.push({ type: 'drafts' });
+            log.ok(`Added draft: "${newDraftMsg.su}"`);
+            res.writeHead(201);
+            res.end(JSON.stringify({ success: true, id: newDraftMsg.id }));
+        } catch (e) {
+            res.writeHead(400);
+            res.end(JSON.stringify({ error: String(e) }));
+        }
+        return;
+    }
+
+    // DELETE /api/drafts — clear messages
+    if (req.method === 'DELETE' && pathname === '/api/drafts') {
+        testData.drafts = [];
+        log.ok('Drafts cleared');
+        res.writeHead(200);
+        res.end(JSON.stringify({ success: true }));
+        return;
+    }
+
     // POST /api/reset — reset data to defaults
     if (req.method === 'POST' && pathname === '/api/reset') {
         resetData();
@@ -685,27 +766,10 @@ function readBody(req) {
 
 // ─── Data reset ────────────────────────────────────────
 function resetData() {
-    testData.messages = [
-        {
-            id: 'msg-001',
-            su: 'Bienvenue sur le serveur de test',
-            e: [{t: 'f', a: 'sender@example.com', p: 'Jean Sender'}],
-            d: Date.now() - 5 * 60_000,
-            fr: 'Ceci est un message de test pour le plugin ZimbraMailNotifier.',
-            l: '2',
-            cid: 'conv-001',
-        },
-    ];
-    testData.appointments = [
-        {
-            id: 'appt-001',
-            name: 'Réunion de projet',
-            dur: 3600_000,
-            loc: 'Salle A',
-            inst: [{s: Date.now() + 60 * 60_000}],
-        },
-    ];
-    testData.tasks = [{id: 'task-001', name: 'Tâche de test', priority: '5', percentComplete: 0}];
+    testData.messages = [];
+    testData.appointments = [];
+    testData.tasks = [];
+    testData.drafts = [];
     sessions.clear();
     waitSets.clear();
     log.ok('Data reset');
@@ -797,6 +861,7 @@ function dashboardHtml() {
     <div class="stat"><div class="stat-val" id="stat-messages">-</div><div class="stat-lbl">Messages</div></div>
     <div class="stat"><div class="stat-val" id="stat-appts">-</div><div class="stat-lbl">Rendez-vous</div></div>
     <div class="stat"><div class="stat-val" id="stat-tasks">-</div><div class="stat-lbl">Tâches</div></div>
+    <div class="stat"><div class="stat-val" id="stat-drafts">-</div><div class="stat-lbl">Brouillons</div></div>
     <div class="stat"><div class="stat-val" id="stat-waitsets">-</div><div class="stat-lbl">WaitSets</div></div>
   </div>
 
@@ -895,6 +960,23 @@ function dashboardHtml() {
       </div>
     </div>
 
+    <!-- Add a draft -->
+     <div class="card">
+      <h2>Ajouter un brouillon</h2>
+      <label>Sujet</label>
+      <input type="text" id="draft-subject" value="Nouveau message de test" />
+      <label>Destinataire (email)</label>
+      <input type="text" id="draft-to" value="test@example.com" />
+      <label>Nom destinataire</label>
+      <input type="text" id="draft-name" value="Test Receiver" />
+      <label>Extrait</label>
+      <input type="text" id="draft-abstract" value="Contenu du message de test." />
+      <div class="actions">
+        <button class="btn btn-green" onclick="addDraft()">+ Ajouter</button>
+        <button class="btn btn-red" onclick="clearDrafts()">🗑 Vider</button>
+      </div>
+    </div>
+
     <!-- Global actions -->
     <div class="card">
       <h2>Actions globales</h2>
@@ -986,6 +1068,23 @@ function dashboardHtml() {
   async function clearTasks() {
     await api('DELETE', '/api/tasks');
     logLine('Tâches vidés', 'warn');
+    refreshStatus();
+  }
+
+    async function addDraft() {
+    const r = await api('POST', '/api/drafts', {
+      subject:  document.getElementById('draft-subject').value,
+      to:     document.getElementById('draft-to').value,
+      toName: document.getElementById('draft-name').value,
+      abstract: document.getElementById('draft-abstract').value,
+    });
+    logLine(r.success ? 'Brouillon ajouté: ' + document.getElementById('draft-subject').value : 'Erreur', r.success ? 'ok' : 'error');
+    refreshStatus();
+  }
+
+  async function clearDrafts() {
+    await api('DELETE', '/api/drafts');
+    logLine('Brouillons vidés', 'warn');
     refreshStatus();
   }
 

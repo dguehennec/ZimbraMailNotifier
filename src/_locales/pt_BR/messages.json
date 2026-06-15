@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "Escolher arquivo…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "Rascunhos"
+  },
+  "option_draft_activate": {
+    "message": "Ativar exibição de rascunhos"
+  },
+  "option_draft_view_caption": {
+    "message": "Exibição"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "Número máximo de rascunhos exibidos"
+  },
+  "tooltip_draft_caption": {
+    "message": "Rascunhos"
+  },
+  "tooltip_noDraft": {
+    "message": "Sem rascunhos"
+  },
+  "tooltip_draft_to": {
+    "message": "Para: %TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(sem destinatário)"
+  },
+  "tooltip_no_subject": {
+    "message": "(sem assunto)"
+  },
+  "tooltip_message_from": {
+    "message": "De: %FROM%",
+    "description": ""
   }
 }

@@ -558,5 +558,36 @@
   "uploadFile": {
     "message": "Bestand kiezen…",
     "description": ""
+  },
+  "option_draft_label": {
+    "message": "Concepten"
+  },
+  "option_draft_activate": {
+    "message": "Weergave van conceptberichten inschakelen"
+  },
+  "option_draft_view_caption": {
+    "message": "Weergave"
+  },
+  "option_draft_view_nbDrafts": {
+    "message": "Maximaal aantal weer te geven concepten"
+  },
+  "tooltip_draft_caption": {
+    "message": "Concepten"
+  },
+  "tooltip_noDraft": {
+    "message": "Geen conceptberichten"
+  },
+  "tooltip_draft_to": {
+    "message": "Aan: %TO%"
+  },
+  "tooltip_draft_no_recipient": {
+    "message": "(geen ontvanger)"
+  },
+  "tooltip_no_subject": {
+    "message": "(geen onderwerp)"
+  },
+  "tooltip_message_from": {
+    "message": "Van: %FROM%",
+    "description": ""
   }
 }
