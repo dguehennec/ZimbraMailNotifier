@@ -244,11 +244,16 @@ body.options-body {
   gap: 12px;
   padding: 6px 0;
   cursor: pointer;
-  border-radius: var(--radius-sm);
   transition: background var(--transition);
+  min-height: 44px;
 }
-.pref-row:hover { background: var(--color-surface-2); }
-.pref-row + .pref-row { border-top: 1px solid var(--color-border); }
+.pref-row:hover {
+  background: var(--color-surface-2);
+}
+
+.pref-row + .pref-row {
+  border-top: 1px solid var(--color-border);
+}
 
 .pref-row span {
   font-size: 13.5px;
@@ -762,9 +767,13 @@ input[type="checkbox"] {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+
+}
+
+.group-header:has(+ .group-body:not(.group-body--disabled)) {
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 12px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--color-border);
 }
 
 .group-header h3 {
@@ -832,7 +841,6 @@ input[type="checkbox"] {
 /* ─── Group body hidden when toggle off ────────────────────── */
 .group-body {
   overflow: hidden;
-  transition: opacity .2s ease, max-height .25s ease;
   max-height: 800px;
   opacity: 1;
 }

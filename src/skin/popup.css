@@ -35,19 +35,26 @@ body.popup-body {
   background: var(--popup-bg, var(--color-bg));
   width: 320px;
   min-width: 280px;
-  max-width: 420px;
+  max-width: 800px;
   user-select: none;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /* ─── Header ───────────────────────────────────────────────── */
 .popup-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 10px 12px 9px;
   background: var(--color-primary);
   color: #fff;
+  height: 44px;
 }
 
 .popup-logo {
@@ -82,6 +89,12 @@ body.popup-body {
 .popup-header-actions {
   display: flex;
   gap: 4px;
+  padding-right: 8px;
+}
+
+#accounts-section {
+  padding-top: 44px;
+  /* header height */
 }
 
 /* ─── SVG sprite icon classes ────────────────────────────── */
@@ -133,7 +146,7 @@ body.popup-body {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 12px 6px;
+  padding: 6px 20px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: .06em;
@@ -146,7 +159,7 @@ body.popup-body {
 
 /* ─── Account rows ─────────────────────────────────────────── */
 .account-row {
-  padding: 5px 12px;
+  padding: 6px 20px;
   transition: background var(--transition);
 }
 .account-row:hover { background: var(--color-surface); }
@@ -254,7 +267,7 @@ body.popup-body {
 
 /* ─── Messages ─────────────────────────────────────────────── */
 .message-item {
-  padding: 7px 12px;
+  padding: 6px 20px;
   border-bottom: 1px solid var(--color-border);
   cursor: default;
   transition: background var(--transition);
@@ -317,7 +330,7 @@ body.popup-body {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 6px 12px;
+  padding: 6px 20px 6px 12px;
 }
 .event-item:hover {
   background: var(--color-surface);
@@ -344,7 +357,7 @@ body.popup-body {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 6px 12px;
+  padding: 6px 20px;
   border-bottom: 1px solid var(--color-border);
 }
 .task-item:last-child { border-bottom: none; }

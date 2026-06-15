@@ -32,6 +32,7 @@ export class Service {
   private webservice: ZimbraWebservice | null = null;
   private stateTimer: ReturnType<typeof setTimeout> | null = null;
   private running = false;
+  private waitStatePromise: Promise<boolean> | null = null;
 
   // ─── Data ────────────────────────────────────────────────
   private unreadMessages: MailMessage[] = [];
@@ -357,13 +358,19 @@ export class Service {
       this.planState(ServiceState.REFRESH_START, prefs.queryLoopPeriod);
       return;
     }
-
+    log.info('Starting WaitSetLoop for account ' + this.delegate.accountId);
     try {
       if (!this.webservice!.waitSetInfo) {
         await this.webservice!.createWaitSet();
       }
 
-      const hasEvents = await this.webservice!.waitForEvents(true);
+      if (this.waitStatePromise) {
+        log.info('WaitSetLoop already in progress for account ' + this.delegate.accountId);
+        return
+      }
+      this.waitStatePromise = this.webservice!.waitForEvents(true);
+      const hasEvents = await this.waitStatePromise;
+      this.waitStatePromise = null
       if (hasEvents) {
         log.info('WaitSet: new events, refreshing for account ' + this.delegate.accountId);
         this.planState(ServiceState.REFRESH_START, 0);
@@ -372,6 +379,7 @@ export class Service {
         this.planState(ServiceState.WAITSET_LOOP_START, 0);
       }
     } catch (e) {
+      this.waitStatePromise = null
       log.warn('WaitSet error, falling back to polling for account ' + this.delegate.accountId, e);
       if (e instanceof ZimbraError && e.code === RequestStatus.WAITSET_INVALID) {
         // Recreate WaitSet on next loop

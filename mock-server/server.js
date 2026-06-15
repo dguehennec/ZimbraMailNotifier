@@ -441,7 +441,7 @@ function handleWaitSet(authToken, req) {
     }
 
     // Block mode: simulate a 5s wait then return a random event
-    log.info(`WaitSet ${wsId} — blocking (will resolve in 60s)`);
+    log.info(`WaitSet ${wsId} — blocking (will resolve in 20s)`);
     return new Promise((resolve) => {
         setTimeout(() => {
             const hasEvent = Math.random() > 0.4; // 60% chance of an event
@@ -468,7 +468,7 @@ function handleWaitSet(authToken, req) {
                     }),
                 ]);
             }
-        }, 60000);
+        }, 20000);
     });
 }
 

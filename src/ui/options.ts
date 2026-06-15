@@ -2,7 +2,7 @@
 // ui/options.ts — Full settings page
 // ============================================================
 
-import { i18n, sendToBackground, formatLastErrorMessage } from './uiutil';
+import { i18n, escHtml, sendToBackground, formatLastErrorMessage } from './uiutil';
 import { AppPrefs, SoundType, SoundPath, TaskPriority, ServiceEventType, RequestStatus } from '../types';
 
 // ─── Custom sound dataUrl storage (email / cal) ───────────
@@ -70,7 +70,7 @@ function setCardError(accountId: string, errorKey: string): void {
   errDiv.className = 'error-msg error-msg--connect';
   errDiv.dataset['errorFor'] = accountId;
   const msg = i18n(errorKey);
-  errDiv.innerHTML = `<svg class="icon icon--sm"><use href="skin/icons.svg#icon-info"/></svg> ${msg}`;
+  errDiv.innerHTML = `<svg class="icon icon--sm"><use href="skin/icons.svg#icon-info"/></svg> ${escHtml(msg)}`;
   card.querySelector('.account-actions-row')?.insertAdjacentElement('afterend', errDiv);
 }
 
@@ -508,7 +508,7 @@ function renderAccounts(accounts: import('../types').AccountConfig[], controller
 
     card.innerHTML = `
       <div class="account-card-header">
-        <span class="account-badge">${(account.alias || account.login || account.id).substring(0, 30)}</span>
+        <span class="account-badge">${escHtml((account.alias || account.login || account.id).substring(0, 30))}</span>
         <span class="account-status ${statusClass}">${statusLabel}</span>
         <button class="btn-remove" data-action="remove-account" data-id="${account.id}" title="${i18n('option_identifiant_remove_button')}">✕</button>
       </div>
@@ -516,13 +516,13 @@ function renderAccounts(accounts: import('../types').AccountConfig[], controller
 
         <label class="field-label">${i18n('option_identifiant_alias_label') || 'Alias'}
           <input type="text" class="account-input" data-field="alias" data-account-id="${account.id}"
-                 value="${escAttr(account.alias ?? '')}" placeholder="Mon compte Zimbra" />
+                 value="${escHtml(account.alias ?? '')}" placeholder="Mon compte Zimbra" />
         </label>
 
         <div class="field-group-row">
           <label class="field-label">${i18n('option_identifiant_login_label') || 'Login'}
             <input type="text" class="account-input" data-field="login" data-account-id="${account.id}"
-                   value="${escAttr(account.login ?? '')}" placeholder="user@domain.com" autocomplete="username" />
+                   value="${escHtml(account.login ?? '')}" placeholder="user@domain.com" autocomplete="username" />
           </label>
           <label class="field-label">${i18n('option_identifiant_password_label') || 'Password'}
             <input type="password" class="account-input" data-field="password" data-account-id="${account.id}"
@@ -537,12 +537,12 @@ function renderAccounts(accounts: import('../types').AccountConfig[], controller
 
         <label class="field-label">${i18n('option_identifiant_urlwebservice_label') || 'Web service URL'}
           <input type="url" class="account-input" data-field="urlWebService" data-account-id="${account.id}"
-                 value="${escAttr(account.urlWebService ?? '')}" placeholder="https://zimbra.example.com" pattern="^(http|https)://.*" />
+                 value="${escHtml(account.urlWebService ?? '')}" placeholder="https://zimbra.example.com" pattern="^(http|https)://.*" />
         </label>
 
         <label class="field-label">${i18n('option_identifiant_urlwebinterface_label') || 'Web interface URL'}
           <input type="url" class="account-input" data-field="urlWebInterface" data-account-id="${account.id}"
-                 value="${escAttr(account.urlWebInterface ?? '')}" placeholder="https://zimbra.example.com" pattern="^(http|https)://.*" />
+                 value="${escHtml(account.urlWebInterface ?? '')}" placeholder="https://zimbra.example.com" pattern="^(http|https)://.*" />
         </label>
 
 
@@ -576,10 +576,6 @@ function renderAccounts(accounts: import('../types').AccountConfig[], controller
     const event = input.type === 'checkbox' ? 'change' : 'change';
     input.addEventListener(event, () => saveAccountField(input));
   });
-}
-
-function escAttr(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 }
 
 async function saveAccountField(input: HTMLInputElement): Promise<void> {

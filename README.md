@@ -53,7 +53,7 @@ npm run watch
 
 ### Charger l’extension dans Chrome
 
-1. Exécuter `npm run build` (ou `npm run watch` en dev).
+1. Exécuter `npm run build` (ou `npm run watch:chrome` en dev).
 2. Ouvrir `chrome://extensions`.
 3. Activer le **mode développeur**.
 4. Cliquer sur **Charger l’extension non empaquetée** et sélectionner le dossier `dist/`.
@@ -62,9 +62,13 @@ npm run watch
 
 | Commande | Description |
 | -------- | ----------- |
-| `npm run build` | Build production (Webpack) avec fichier zip prêt à être envoyé sur le store dans le repertoire release |
-| `npm run build:dev` | Build développement |
-| `npm run watch` | Build dev avec `--watch` |
+| `npm run build` | Build production (Webpack) avec fichier zip prêt à être envoyé sur les stores dans le repertoire release |
+| `npm run build:chrome` | Build production (Webpack) avec fichier zip prêt à être envoyé sur le store chrome dans le repertoire release |
+| `npm run build:chrome:dev` | Build de la version développement pour chrome  |
+| `npm run chrome:watch` | Build de la version développement pour chrome avec `--watch` |
+| `npm run build:firefox` | Build production (Webpack) avec fichier zip prêt à être envoyé sur le store firefox dans le repertoire release |
+| `npm run build:firefox:dev` | Build de la version développement pour firefox  |
+| `npm run firefox:watch` | Build de la version développement pour firefox avec `--watch` |
 | `npm test` | Tests unitaires (Jest) |
 | `npm run test:coverage` | Tests avec rapport de couverture |
 | `npm run lint` | ESLint sur `src/` et `tests/` |
@@ -84,7 +88,8 @@ src/
 ├── ui/                        # popup, options, offscreen (audio)
 ├── skin/                      # CSS, icônes PNG, sons OGG
 ├── _locales/                  # Fichiers i18n
-└── manifest.json
+└── manifest.chrome.json       # manifest pour chrome
+└── manifest.firefox.json      # manifest pour firefox
 tests/                         # Tests Jest (+ mocks Chrome dans setup.ts)
 mock-server/                   # Serveur SOAP Zimbra de test (Node.js natif)
 dist/                          # Sortie Webpack (à charger dans Chrome)
