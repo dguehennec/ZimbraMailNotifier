@@ -195,6 +195,10 @@
     "message": "E-posta özetinde görüntülenecek azami karakter sayısı",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "Yalnızca gelen kutusundaki okunmamış e-postaları göster",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "E-posta filtresi (düzenli ifade)",
     "description": "Seçeneklerdeki isteğe bağlı okunmamış e-posta regex filtresi etiketi."

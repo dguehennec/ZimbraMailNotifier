@@ -195,6 +195,10 @@
     "message": "Numero massimo di caratteri visualizzati nel riepilogo dell'e-mail",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "Mostrare solo le e-mail non lette nella posta in arrivo",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "Filtro e-mail (espressione regolare)",
     "description": "Etichetta del filtro regex opzionale per le e-mail non lette nelle opzioni."

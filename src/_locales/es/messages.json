@@ -195,6 +195,10 @@
     "message": "Número máximo de caracteres mostrados en el resumen del mensaje",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "Mostrar solo los correos no leídos de la bandeja de entrada",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "Filtro de correos (expresión regular)",
     "description": "Etiqueta del filtro regex opcional de correos no leídos en las opciones."

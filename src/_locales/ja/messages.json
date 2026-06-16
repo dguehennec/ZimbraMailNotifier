@@ -195,6 +195,10 @@
     "message": "メール概要に表示する最大文字数",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "受信トレイの未読メールのみ表示する",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "メールフィルター（正規表現）",
     "description": "オプションの未読メール regex フィルターのラベル。"

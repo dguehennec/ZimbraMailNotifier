@@ -210,6 +210,7 @@ function populateForm(p: AppPrefs): void {
 
   // Messages — display
   setCheck('opt-msg-enabled', p.messageEnabled);
+  setCheck('opt-msg-only-inbox', p.unrealMessageOnlyInbox);
   setNum('opt-msg-nb', p.messageNbDisplayed);
   setNum('opt-msg-chars', p.messageNbCharsDisplayed);
   setVal('opt-msg-filter', p.messageFilterRegex ?? '');
@@ -297,6 +298,7 @@ function bindControls(): void {
 
   // Messages — display
   onCheck('opt-msg-enabled', 'messageEnabled');
+  onCheck('opt-msg-only-inbox', 'unrealMessageOnlyInbox');
   onNumber('opt-msg-nb', 'messageNbDisplayed');
   onNumber('opt-msg-chars', 'messageNbCharsDisplayed');
   onText('opt-msg-filter', 'messageFilterRegex');

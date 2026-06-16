@@ -325,7 +325,7 @@ export class ZimbraWebservice {
   }
 
   /** Fetch unread messages. */
-  async getUnreadMessages(): Promise<MailMessage[]> {
+  async getUnreadMessages(onlyInbox: boolean = false): Promise<MailMessage[]> {
     log.info('getUnreadMessages');
     const soapUrl = this.getZimbraSoapUrl(this.session.urlWebService);
 
@@ -334,7 +334,7 @@ export class ZimbraWebservice {
       SearchRequest: {
         _jsns: 'urn:zimbraMail',
         types: 'message',
-        query: 'in:inbox is:unread',
+        query: onlyInbox ? 'in:inbox is:unread' : 'is:unread',
         fetch: 'all',
         limit: 200,
         sortBy: 'dateDesc',

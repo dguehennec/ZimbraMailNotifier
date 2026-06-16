@@ -195,6 +195,10 @@
     "message": "Nombre de caractères maximum affichés pour le résumé d'un mail",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "Afficher uniquement les e-mails non lus de la boîte de réception",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "Filtre des e-mails (expression régulière)",
     "description": "Libellé du filtre regex optionnel des e-mails non lus dans les options."

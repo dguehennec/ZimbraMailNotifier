@@ -195,6 +195,10 @@
     "message": "邮件摘要显示的最大字符数",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "仅显示收件箱中的未读邮件",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "邮件过滤器（正则表达式）",
     "description": "选项中可选未读邮件正则过滤器标签。"

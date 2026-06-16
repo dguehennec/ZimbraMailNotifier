@@ -183,6 +183,7 @@ export interface AppPrefs {
   popupWidth: number;
   // Messages
   messageEnabled: boolean;
+  unrealMessageOnlyInbox: boolean;
   messageNbDisplayed: number;
   messageNbCharsDisplayed: number;
   messageFilterRegex: string;

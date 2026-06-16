@@ -195,6 +195,10 @@
     "message": "Maximum aantal tekens in e-mailsamenvatting",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "Alleen ongelezen e-mails in de inbox tonen",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "E-mailfilter (reguliere expressie)",
     "description": "Label voor optionele regex-filter voor ongelezen e-mail in opties."

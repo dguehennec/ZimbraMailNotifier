@@ -31,6 +31,7 @@ const DEFAULT_PREFS: AppPrefs = {
   popupColor: Constants.DEFAULT_PREFS.POPUP_COLOR,
   popupWidth: Constants.DEFAULT_PREFS.POPUP_WIDTH,
   messageEnabled: Constants.DEFAULT_PREFS.MESSAGE_ENABLED,
+  unrealMessageOnlyInbox: Constants.DEFAULT_PREFS.UNREAL_MESSAGE_ONLY_INBOX,
   messageNbDisplayed: Constants.DEFAULT_PREFS.MESSAGE_NB_DISPLAYED,
   messageNbCharsDisplayed: Constants.DEFAULT_PREFS.MESSAGE_NB_CHARS_DISPLAYED,
   messageFilterRegex: Constants.DEFAULT_PREFS.MESSAGE_FILTER_REGEX,

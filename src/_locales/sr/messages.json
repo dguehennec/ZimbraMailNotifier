@@ -195,6 +195,10 @@
     "message": "Највећи број знакова приказаних у сажетку поруке",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "Прикажи само непрочитане поруке у пријемном сандучету",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "Филтер e-поште (регуларни израз)",
     "description": "Ознака опционог regex филтера непрочитаних порука у подешавањима."

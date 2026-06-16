@@ -293,7 +293,7 @@ export class Service {
       // get Unread messages
       if (prefs.messageEnabled) {
         this.delegate.onEvent(ServiceEventType.CHECKING_UNREAD_MSG);
-        const msgs = await this.webservice!.getUnreadMessages();
+        const msgs = await this.webservice!.getUnreadMessages(prefs.unrealMessageOnlyInbox);
         const newMsgs = filterMessagesByRegex(
           this.collectNewMessages(msgs),
           prefs.messageFilterRegex ?? '',

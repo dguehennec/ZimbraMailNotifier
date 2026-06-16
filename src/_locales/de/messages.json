@@ -195,6 +195,10 @@
     "message": "Maximale Anzahl Zeichen in der E-Mail-Vorschau",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "Nur ungelesene E-Mails im Posteingang anzeigen",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "E-Mail-Filter (regulärer Ausdruck)",
     "description": "Beschriftung für den optionalen Regex-Filter ungelesener E-Mails in den Optionen."

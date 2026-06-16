@@ -195,6 +195,10 @@
     "message": "메일 요약에 표시할 최대 문자 수",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "받은편지함의 읽지 않은 메일만 표시",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "이메일 필터(정규식)",
     "description": "옵션의 선택적 읽지 않은 메일 정규식 필터 레이블."

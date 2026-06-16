@@ -50,6 +50,7 @@ export const Constants = {
     POPUP_COLOR: '#ffffff',
     POPUP_WIDTH: 380,
     MESSAGE_ENABLED: true,
+    UNREAL_MESSAGE_ONLY_INBOX: false,
     MESSAGE_NB_DISPLAYED: 5,
     MESSAGE_NB_CHARS_DISPLAYED: 50,
     MESSAGE_FILTER_REGEX: '',

@@ -195,6 +195,10 @@
     "message": "Maksymalna liczba znaków w skrócie e-maila",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "Wyświetlaj tylko nieprzeczytane e-maile ze skrzynki odbiorczej",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "Filtr e-maili (wyrażenie regularne)",
     "description": "Etykieta opcjonalnego filtra regex nieprzeczytanych e-maili w ustawieniach."

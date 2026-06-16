@@ -195,6 +195,10 @@
     "message": "Maximum number of characters displayed in Email abstract",
     "description": ""
   },
+  "option_message_only_inbox": {
+    "message": "Only show unread emails in inbox",
+    "description": ""
+  },
   "option_message_view_filter_label": {
     "message": "Email filter (regular expression)",
     "description": "Label for the optional unread email regex filter in options."
