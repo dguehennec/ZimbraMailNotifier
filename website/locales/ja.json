@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "title": "Zimbra Mail Notifier — Chrome & Firefox 拡張機能",
+    "description": "Zimbra Mail Notifier — Zimbra メールボックスを監視する Chrome/Firefox 拡張機能：未読メッセージ、カレンダー、タスク、通知。"
+  },
+  "nav": {
+    "main": "メインナビゲーション",
+    "home": "ホーム",
+    "features": "機能",
+    "install": "インストール",
+    "manual": "ユーザーマニュアル",
+    "history": "バージョン履歴",
+    "compatibility": "互換性",
+    "help": "ヘルプとお問い合わせ",
+    "privacy": "プライバシー",
+    "about": "について",
+    "menu": "メニュー",
+    "backToTop": "トップへ",
+    "language": "言語"
+  },
+  "donate": {
+    "btn": "☕ 寄付",
+    "msg": "Zimbra メールボックスに新着メッセージが届いたときに通知します。"
+  },
+  "hero": {
+    "title": "Zimbra Mail Notifier",
+    "subtitle": "Zimbra アカウントを監視し、未読メッセージを通知。予定の確認やタスクの追跡がブラウザのツールバーからできます。",
+    "badgeVersion": "Version 4.1.0",
+    "badgeBrowsers": "Chrome · Firefox",
+    "badgeLangs": "15言語",
+    "badgeOpenSource": "オープンソース"
+  },
+  "features": {
+    "title": "機能",
+    "intro": "TypeScript で書かれたブラウザ拡張機能。1つ以上の Zimbra アカウントをリアルタイムで監視します。",
+    "unreadTitle": "メール",
+    "unreadDesc": "ツールバーアイコンのバッジ、正規表現フィルターと「受信トレイのみ」オプション付きメール一覧。",
+    "calendarTitle": "カレンダー",
+    "calendarDesc": "設定可能なリマインダーとデスクトップ通知付きの今後の予定。",
+    "tasksTitle": "タスク",
+    "tasksDesc": "優先度（高・通常・低）でソートされた進行中タスクの追跡。",
+    "draftsTitle": "下書き",
+    "draftsDesc": "ポップアップで未送信の下書きを表示。",
+    "notifTitle": "Notifications",
+    "notifDesc": "デスクトップアラートとカスタマイズ可能な通知音（音量調整付き）。",
+    "accountsTitle": "マルチアカウントとセキュリティ",
+    "accountsDesc": "複数アカウント、2FA、信頼済みデバイス、AES 暗号化パスワード、Cookie 同期。",
+    "screenshotsTitle": "インターフェースプレビュー",
+    "shotPopup": "Popup",
+    "shotGeneral": "オプション — 一般",
+    "shotMail": "オプション — メール",
+    "shotCalendar": "オプション — カレンダー",
+    "shotTasks": "オプション — タスク",
+    "shotAccounts": "オプション — アカウント"
+  },
+  "install": {
+    "title": "インストール",
+    "intro": "Zimbra Mail Notifier は <strong>Chrome</strong> と <strong>Firefox</strong> 用の拡張機能です。",
+    "addChrome": "Chrome に追加",
+    "addFirefox": "Firefox に追加",
+    "sourceCode": "ソースコード (GitHub)",
+    "storeTitle": "ストアからインストール",
+    "step1": "上記のブラウザボタンをクリック。",
+    "step2": "ストアページで <strong>Chrome に追加</strong> または <strong>Firefox に追加</strong> をクリック。",
+    "step3": "インストールを確認。",
+    "step4": "ツールバーにアイコンが表示されます。クリックして最初のアカウントを設定。",
+    "devTitle": "開発者向けインストール",
+    "devCallout": "<strong>開発者向け：</strong> GitHub リポジトリをクローンし <code>npm install &amp;&amp; npm run build</code> を実行、<code>dist/</code> を開発者モードで読み込み。",
+    "uninstallTitle": "アンインストール",
+    "uninstallDesc": "拡張機能マネージャーで「Zimbra Mail Notifier」を見つけ <strong>アンインストール</strong> をクリック。"
+  },
+  "manual": {
+    "title": "ユーザーマニュアル",
+    "accountTitle": "アカウント設定",
+    "step1": "拡張機能アイコンをクリックし、<strong>歯車</strong>（設定）をクリック。",
+    "step2": "<strong>アカウント</strong> タブで <strong>アカウントを追加</strong> をクリック。",
+    "step3": "<strong>Zimbra サーバー URL</strong> と <strong>Web インターフェース URL</strong> を入力。",
+    "step4": "ユーザー名とパスワードを入力。<strong>パスワードを保存</strong> をチェック。",
+    "step5": "<strong>接続</strong> をクリックしてテスト。",
+    "optionsTitle": "主要オプション",
+    "optGeneralTitle": "一般",
+    "optGeneralDesc": "起動時の自動接続、Cookie 同期、ポップアップの色と幅。",
+    "optMailTitle": "メール",
+    "optMailDesc": "未読管理、最大表示数、正規表現フィルター、受信トレイのみ、通知とサウンド。",
+    "optCalendarTitle": "カレンダー",
+    "optCalendarDesc": "表示期間（週）、予定数、リマインダー、サウンド通知。",
+    "optTasksTitle": "タスク & 下書き",
+    "optTasksDesc": "優先度フィルター、最大タスク数と下書き数。",
+    "tipCallout": "<strong>ヒント：</strong> ポップアップの <strong>更新</strong> (↻) ボタンで即座に確認。"
+  },
+  "versions": {
+    "title": "バージョン履歴",
+    "intro": "プロジェクトの Git 履歴から生成されたリリース年表。",
+    "items": [
+      {
+        "tag": "v4.1.0",
+        "date": "2026-06-16",
+        "desc": "メインフォルダ（受信トレイ）のみからメールを読むオプション。"
+      },
+      {
+        "tag": "v4.0.0",
+        "date": "2026-05-01",
+        "major": true,
+        "desc": "新デザイン、TypeScript 移行、Webpack ビルド。Firefox ネイティブサポート。下書き表示。"
+      },
+      {
+        "tag": "v3.0.2",
+        "date": "2025-02-23",
+        "desc": "Service Worker キープアライブ (Manifest V3)。"
+      },
+      {
+        "tag": "v3.0.1",
+        "date": "2025-01-27",
+        "desc": "Web インターフェース URL フィールドの修正。"
+      },
+      {
+        "tag": "v3.0.0",
+        "date": "2025-01-05",
+        "major": true,
+        "desc": "Manifest V3 への移行 (Chrome)。"
+      },
+      {
+        "tag": "v2.7.5",
+        "date": "2021-03-28",
+        "desc": "Free アカウント認証の修正。"
+      },
+      {
+        "tag": "v2.7.4",
+        "date": "2019-03-05",
+        "desc": "Chrome 72 互換性。"
+      },
+      {
+        "tag": "v2.7.3",
+        "date": "2018-09-07",
+        "desc": "Zimbra 8.8.9 未読メッセージの修正。"
+      },
+      {
+        "tag": "v2.7.2",
+        "date": "2018-01-13",
+        "desc": "jQuery v3.2.1 更新。"
+      },
+      {
+        "tag": "v2.7.1",
+        "date": "2017-11-27",
+        "desc": "ポップアップの色と幅のカスタマイズ。"
+      },
+      {
+        "tag": "v2.6.2",
+        "date": "2017-11-22",
+        "desc": "Firefox Free アカウント修正。"
+      },
+      {
+        "tag": "v2.6.0",
+        "date": "2016-06-26",
+        "major": true,
+        "desc": "Safari サポート。"
+      },
+      {
+        "tag": "v2.5.1",
+        "date": "2016-04-04",
+        "desc": "セルビア語ロケール追加。"
+      },
+      {
+        "tag": "v2.0.0",
+        "date": "2016-02-01",
+        "major": true,
+        "desc": "タスク優先度ソート、マルチアカウント。"
+      },
+      {
+        "tag": "v1.1.1",
+        "date": "2015-08-18",
+        "desc": "Free/Alice ADSL アカウント。"
+      },
+      {
+        "tag": "v1.0.0",
+        "date": "2013-12-12",
+        "major": true,
+        "desc": "初の公開リリース。"
+      }
+    ]
+  },
+  "compat": {
+    "title": "互換性",
+    "browsersTitle": "ブラウザ",
+    "chromeTitle": "Chrome / Chromium",
+    "chromeDesc": "Manifest V3 — available on the <a href=\"https://chromewebstore.google.com/detail/zimbra-mail-notifier/kglapfficgodpkmenjfpfcignofghanc\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>.",
+    "firefoxTitle": "Firefox",
+    "firefoxDesc": "Native support since v4.0 — available on <a href=\"https://addons.mozilla.org/firefox/addon/zimbra-mail-notifier/\" target=\"_blank\" rel=\"noopener\">Firefox Add-ons</a>.",
+    "serversTitle": "Zimbra サーバー",
+    "supportedTitle": "✓ サポート対象",
+    "supported1": "標準 Zimbra ログインインターフェースを使用するすべてのサイト",
+    "supported2": "<a href=\"http://zimbra.free.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.free.fr</a>（特定サポート）",
+    "supported3": "<a href=\"http://zimbra.aliceadsl.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.aliceadsl.fr</a>（特定サポート）",
+    "supported4": "Zimbra 8.x 以降",
+    "supported5": "2FA 認証と信頼済みデバイス",
+    "unsupportedTitle": "⚠ 非サポート",
+    "unsupported1": "事前認証ポータル（Free と Alice ADSL を除く）",
+    "unsupported2": "Safari と Opera（v4 では非メンテナンス）",
+    "langsTitle": "言語",
+    "langsDesc": "15言語で利用可能。"
+  },
+  "help": {
+    "title": "ヘルプとお問い合わせ",
+    "intro": "ご質問、提案、バグ報告：",
+    "emailLabel": "メール：",
+    "githubLabel": "GitHub issues：",
+    "faqTitle": "よくある問題",
+    "connFailTitle": "接続失敗",
+    "connFailDesc": "サーバー URL、認証情報、Zimbra の到達性を確認。",
+    "noNotifTitle": "通知なし",
+    "noNotifDesc": "拡張機能とブラウザ/システムで通知が有効か確認。",
+    "wrongCountTitle": "カウンター不正確",
+    "wrongCountDesc": "「受信トレイのみ」を有効にしてサブフォルダを除外。"
+  },
+  "privacy": {
+    "title": "プライバシーポリシー",
+    "intro": "Zimbra Mail Notifier が収集する情報と使用方法。",
+    "collectedTitle": "収集情報",
+    "collected1": "<strong>ログイン情報</strong> — 設定ページのユーザー名とパスワード。",
+    "collected2": "データはブラウザに<strong>ローカル保存</strong>（AES 暗号化）。",
+    "usageTitle": "情報の使用",
+    "usage1": "認証情報は自動ログイン時のみ Zimbra サーバーに送信。",
+    "usage2": "第三者サーバーにデータは送信されません。",
+    "usage3": "使用統計は収集されません。",
+    "permissionsCallout": "<strong>必要な権限：</strong> 通知、Cookie、ローカルストレージ、ネットワークアクセス。"
+  },
+  "about": {
+    "title": "について",
+    "name": "Zimbra Mail Notifier",
+    "desc": "Zimbra メールボックスに新着メッセージが届いたときに通知します。",
+    "github": "GitHub",
+    "chromeStore": "Chrome Web Store",
+    "firefoxStore": "Firefox Add-ons",
+    "donate": "☕ 寄付",
+    "authors": "David GUEHENNEC",
+    "license": "ライセンス MPL 1.1 / GPL 2.0 / LGPL 2.1",
+    "legal": "この拡張機能は VMware とは提携・公認関係にありません。"
+  },
+  "footer": {
+    "copyright": "© 2026 Zimbra Mail Notifier — David GUEHENNEC"
+  }
+}

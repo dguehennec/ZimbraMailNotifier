@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Zimbra Mail Notifier — Chrome and Firefox extension" />
+  <meta name="author" content="David GUEHENNEC" />
+  <title>Zimbra Mail Notifier</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/zimbra_mail_notifier_32.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <button class="menu-toggle" id="menu-toggle" data-i18n-attr="aria-label:nav.menu">
+    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <div class="site-layout">
+
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <img src="assets/images/zimbra_mail_notifier_48.png" alt="Zimbra Mail Notifier" />
+        <div class="sidebar-brand-text">
+          <strong data-i18n="hero.title">Zimbra Mail Notifier</strong>
+          <span>v4.1.0</span>
+        </div>
+      </div>
+
+      <div class="lang-switcher">
+        <label for="lang-select" class="lang-label" data-i18n="nav.language">Language</label>
+        <select id="lang-select" class="lang-select" aria-label="Language"></select>
+      </div>
+
+      <nav class="sidebar-nav" data-i18n-attr="aria-label:nav.main">
+        <a class="nav-item active" href="#home">
+          <svg class="icon"><use href="assets/icons.svg#icon-settings"/></svg>
+          <span data-i18n="nav.home">Home</span>
+        </a>
+        <a class="nav-item" href="#features">
+          <svg class="icon"><use href="assets/icons.svg#icon-mail"/></svg>
+          <span data-i18n="nav.features">Features</span>
+        </a>
+        <a class="nav-item" href="#install">
+          <svg class="icon"><use href="assets/icons.svg#icon-connect"/></svg>
+          <span data-i18n="nav.install">Installation</span>
+        </a>
+        <a class="nav-item" href="#manual">
+          <svg class="icon"><use href="assets/icons.svg#icon-user"/></svg>
+          <span data-i18n="nav.manual">User manual</span>
+        </a>
+        <a class="nav-item" href="#versions">
+          <svg class="icon"><use href="assets/icons.svg#icon-refresh"/></svg>
+          <span data-i18n="nav.history">Version history</span>
+        </a>
+        <a class="nav-item" href="#compatibility">
+          <svg class="icon"><use href="assets/icons.svg#icon-external-link"/></svg>
+          <span data-i18n="nav.compatibility">Compatibility</span>
+        </a>
+        <a class="nav-item" href="#help">
+          <svg class="icon"><use href="assets/icons.svg#icon-info"/></svg>
+          <span data-i18n="nav.help">Help &amp; contact</span>
+        </a>
+        <a class="nav-item" href="#privacy">
+          <svg class="icon"><use href="assets/icons.svg#icon-task"/></svg>
+          <span data-i18n="nav.privacy">Privacy</span>
+        </a>
+        <a class="nav-item" href="#about">
+          <svg class="icon"><use href="assets/icons.svg#icon-info"/></svg>
+          <span data-i18n="nav.about">About</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-donate">
+        <a href="https://www.paypal.me/DavidGUEHENNEC/5" target="_blank" rel="noopener" class="btn-donate" data-i18n="donate.btn">☕ Donation</a>
+        <p class="donate-msg" data-i18n="donate.msg"></p>
+      </div>
+    </aside>
+
+    <div class="site-main">
+
+      <header class="hero" id="home">
+        <div class="hero-inner">
+          <img src="assets/images/zimbra_mail_notifier_128.png" alt="" class="hero-logo" />
+          <div class="hero-content">
+            <h1 data-i18n="hero.title">Zimbra Mail Notifier</h1>
+            <p data-i18n="hero.subtitle"></p>
+            <div class="hero-badges">
+              <span class="badge badge--version" data-i18n="hero.badgeVersion">Version 4.1.0</span>
+              <span class="badge" data-i18n="hero.badgeBrowsers">Chrome · Firefox</span>
+              <span class="badge" data-i18n="hero.badgeLangs">15 languages</span>
+              <span class="badge" data-i18n="hero.badgeOpenSource">Open Source</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+
+        <section class="section" id="features">
+          <h2 data-i18n="features.title">Features</h2>
+          <p data-i18n="features.intro"></p>
+
+          <ul class="feature-list">
+            <li>
+              <span class="feature-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-mail"/></svg></span>
+              <div>
+                <strong data-i18n="features.unreadTitle">Unread messages</strong>
+                <span data-i18n="features.unreadDesc"></span>
+              </div>
+            </li>
+            <li>
+              <span class="feature-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-calendar"/></svg></span>
+              <div>
+                <strong data-i18n="features.calendarTitle">Calendar</strong>
+                <span data-i18n="features.calendarDesc"></span>
+              </div>
+            </li>
+            <li>
+              <span class="feature-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-task"/></svg></span>
+              <div>
+                <strong data-i18n="features.tasksTitle">Tasks</strong>
+                <span data-i18n="features.tasksDesc"></span>
+              </div>
+            </li>
+            <li>
+              <span class="feature-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-draft"/></svg></span>
+              <div>
+                <strong data-i18n="features.draftsTitle">Drafts</strong>
+                <span data-i18n="features.draftsDesc"></span>
+              </div>
+            </li>
+            <li>
+              <span class="feature-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-sound-bell"/></svg></span>
+              <div>
+                <strong data-i18n="features.notifTitle">Notifications</strong>
+                <span data-i18n="features.notifDesc"></span>
+              </div>
+            </li>
+            <li>
+              <span class="feature-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-user"/></svg></span>
+              <div>
+                <strong data-i18n="features.accountsTitle">Multi-account &amp; security</strong>
+                <span data-i18n="features.accountsDesc"></span>
+              </div>
+            </li>
+          </ul>
+
+          <h3 data-i18n="features.screenshotsTitle">Interface preview</h3>
+          <div class="screenshot-grid">
+            <figure class="screenshot-item">
+              <img src="assets/images/popup.png" alt="" loading="lazy" data-i18n-attr="alt:features.shotPopup" />
+              <figcaption data-i18n="features.shotPopup">Popup</figcaption>
+            </figure>
+            <figure class="screenshot-item">
+              <img src="assets/images/option_general.png" alt="" loading="lazy" data-i18n-attr="alt:features.shotGeneral" />
+              <figcaption data-i18n="features.shotGeneral">Options — General</figcaption>
+            </figure>
+            <figure class="screenshot-item">
+              <img src="assets/images/option_mail.png" alt="" loading="lazy" data-i18n-attr="alt:features.shotMail" />
+              <figcaption data-i18n="features.shotMail">Options — Email</figcaption>
+            </figure>
+            <figure class="screenshot-item">
+              <img src="assets/images/option_calendar.png" alt="" loading="lazy" data-i18n-attr="alt:features.shotCalendar" />
+              <figcaption data-i18n="features.shotCalendar">Options — Calendar</figcaption>
+            </figure>
+            <figure class="screenshot-item">
+              <img src="assets/images/option_task.png" alt="" loading="lazy" data-i18n-attr="alt:features.shotTasks" />
+              <figcaption data-i18n="features.shotTasks">Options — Tasks</figcaption>
+            </figure>
+            <figure class="screenshot-item">
+              <img src="assets/images/option_accounts.png" alt="" loading="lazy" data-i18n-attr="alt:features.shotAccounts" />
+              <figcaption data-i18n="features.shotAccounts">Options — Accounts</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section class="section" id="install">
+          <h2 data-i18n="install.title">Installation</h2>
+          <p data-i18n-html="install.intro"></p>
+
+          <div class="store-buttons">
+            <a href="https://chromewebstore.google.com/detail/zimbra-mail-notifier/kglapfficgodpkmenjfpfcignofghanc" target="_blank" rel="noopener" class="btn-store btn-store--chrome">
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4"/></svg>
+              <span data-i18n="install.addChrome">Add to Chrome</span>
+            </a>
+            <a href="https://addons.mozilla.org/firefox/addon/zimbra-mail-notifier/" target="_blank" rel="noopener" class="btn-store btn-store--firefox">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              <span data-i18n="install.addFirefox">Add to Firefox</span>
+            </a>
+            <a href="https://github.com/dguehennec/ZimbraMailNotifier" target="_blank" rel="noopener" class="btn-store btn-store--github">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.742 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+              <span data-i18n="install.sourceCode">Source code (GitHub)</span>
+            </a>
+          </div>
+
+          <h3 data-i18n="install.storeTitle">Install from stores</h3>
+          <ol class="steps">
+            <li data-i18n-html="install.step1"></li>
+            <li data-i18n-html="install.step2"></li>
+            <li data-i18n="install.step3"></li>
+            <li data-i18n="install.step4"></li>
+          </ol>
+
+          <h3 data-i18n="install.devTitle">Developer installation</h3>
+          <div class="callout" data-i18n-html="install.devCallout"></div>
+
+          <h3 data-i18n="install.uninstallTitle">Uninstall</h3>
+          <p data-i18n-html="install.uninstallDesc"></p>
+        </section>
+
+        <section class="section" id="manual">
+          <h2 data-i18n="manual.title">User manual</h2>
+
+          <h3 data-i18n="manual.accountTitle">Account configuration</h3>
+          <ol class="steps">
+            <li data-i18n-html="manual.step1"></li>
+            <li data-i18n-html="manual.step2"></li>
+            <li data-i18n-html="manual.step3"></li>
+            <li data-i18n-html="manual.step4"></li>
+            <li data-i18n-html="manual.step5"></li>
+          </ol>
+
+          <h3 data-i18n="manual.optionsTitle">Main options</h3>
+          <div class="card-grid">
+            <article class="card">
+              <div class="card-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-settings"/></svg></div>
+              <h3 data-i18n="manual.optGeneralTitle">General</h3>
+              <p data-i18n="manual.optGeneralDesc"></p>
+            </article>
+            <article class="card">
+              <div class="card-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-mail"/></svg></div>
+              <h3 data-i18n="manual.optMailTitle">Email</h3>
+              <p data-i18n="manual.optMailDesc"></p>
+            </article>
+            <article class="card">
+              <div class="card-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-calendar"/></svg></div>
+              <h3 data-i18n="manual.optCalendarTitle">Calendar</h3>
+              <p data-i18n="manual.optCalendarDesc"></p>
+            </article>
+            <article class="card">
+              <div class="card-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-task"/></svg></div>
+              <h3 data-i18n="manual.optTasksTitle">Tasks &amp; Drafts</h3>
+              <p data-i18n="manual.optTasksDesc"></p>
+            </article>
+          </div>
+
+          <div class="callout" data-i18n-html="manual.tipCallout"></div>
+        </section>
+
+        <section class="section" id="versions">
+          <h2 data-i18n="versions.title">Version history</h2>
+          <p data-i18n="versions.intro"></p>
+          <ul class="version-list" id="version-list"></ul>
+        </section>
+
+        <section class="section" id="compatibility">
+          <h2 data-i18n="compat.title">Compatibility</h2>
+
+          <h3 data-i18n="compat.browsersTitle">Browsers</h3>
+          <div class="card-grid">
+            <article class="card">
+              <div class="card-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-connect"/></svg></div>
+              <h3 data-i18n="compat.chromeTitle">Chrome / Chromium</h3>
+              <p data-i18n-html="compat.chromeDesc"></p>
+            </article>
+            <article class="card">
+              <div class="card-icon"><svg class="icon icon--md"><use href="assets/icons.svg#icon-connect"/></svg></div>
+              <h3 data-i18n="compat.firefoxTitle">Firefox</h3>
+              <p data-i18n-html="compat.firefoxDesc"></p>
+            </article>
+          </div>
+
+          <h3 data-i18n="compat.serversTitle">Zimbra servers</h3>
+          <div class="compat-grid">
+            <div class="compat-box compat-box--ok">
+              <h3 data-i18n="compat.supportedTitle">✓ Supported</h3>
+              <ul>
+                <li data-i18n="compat.supported1"></li>
+                <li data-i18n-html="compat.supported2"></li>
+                <li data-i18n-html="compat.supported3"></li>
+                <li data-i18n="compat.supported4"></li>
+                <li data-i18n="compat.supported5"></li>
+              </ul>
+            </div>
+            <div class="compat-box compat-box--warn">
+              <h3 data-i18n="compat.unsupportedTitle">⚠ Not supported</h3>
+              <ul>
+                <li data-i18n="compat.unsupported1"></li>
+                <li data-i18n="compat.unsupported2"></li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 data-i18n="compat.langsTitle">Languages</h3>
+          <p data-i18n="compat.langsDesc"></p>
+        </section>
+
+        <section class="section" id="help">
+          <h2 data-i18n="help.title">Help &amp; contact</h2>
+          <p data-i18n="help.intro"></p>
+          <ul>
+            <li><span data-i18n="help.emailLabel">Email:</span> <a href="mailto:zimbramailnotifier@gmail.com">zimbramailnotifier@gmail.com</a></li>
+            <li><span data-i18n="help.githubLabel">GitHub issues:</span> <a href="https://github.com/dguehennec/ZimbraMailNotifier/issues" target="_blank" rel="noopener">github.com/dguehennec/ZimbraMailNotifier/issues</a></li>
+          </ul>
+
+          <h3 data-i18n="help.faqTitle">Common issues</h3>
+          <div class="card-grid">
+            <article class="card">
+              <h3 data-i18n="help.connFailTitle">Connection failed</h3>
+              <p data-i18n-html="help.connFailDesc"></p>
+            </article>
+            <article class="card">
+              <h3 data-i18n="help.noNotifTitle">No notification</h3>
+              <p data-i18n="help.noNotifDesc"></p>
+            </article>
+            <article class="card">
+              <h3 data-i18n="help.wrongCountTitle">Incorrect counter</h3>
+              <p data-i18n="help.wrongCountDesc"></p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="privacy">
+          <h2 data-i18n="privacy.title">Privacy policy</h2>
+          <p data-i18n="privacy.intro"></p>
+
+          <h3 data-i18n="privacy.collectedTitle">Collected information</h3>
+          <ul>
+            <li data-i18n-html="privacy.collected1"></li>
+            <li data-i18n-html="privacy.collected2"></li>
+          </ul>
+
+          <h3 data-i18n="privacy.usageTitle">How information is used</h3>
+          <ul>
+            <li data-i18n="privacy.usage1"></li>
+            <li data-i18n="privacy.usage2"></li>
+            <li data-i18n="privacy.usage3"></li>
+          </ul>
+
+          <div class="callout" data-i18n-html="privacy.permissionsCallout"></div>
+        </section>
+
+        <section class="section" id="about">
+          <h2 data-i18n="about.title">About</h2>
+          <div class="about-card">
+            <img src="assets/images/zimbra_mail_notifier_128.png" alt="Zimbra Mail Notifier" class="about-logo" />
+            <h3 data-i18n="about.name">Zimbra Mail Notifier</h3>
+            <p data-i18n="about.desc"></p>
+            <div class="about-links">
+              <a href="https://github.com/dguehennec/ZimbraMailNotifier" target="_blank" rel="noopener" data-i18n="about.github">GitHub</a>
+              <a href="https://chromewebstore.google.com/detail/zimbra-mail-notifier/kglapfficgodpkmenjfpfcignofghanc" target="_blank" rel="noopener" data-i18n="about.chromeStore">Chrome Web Store</a>
+              <a href="https://addons.mozilla.org/firefox/addon/zimbra-mail-notifier/" target="_blank" rel="noopener" data-i18n="about.firefoxStore">Firefox Add-ons</a>
+              <a href="https://www.paypal.me/DavidGUEHENNEC/5" target="_blank" rel="noopener" data-i18n="about.donate">☕ Donate</a>
+            </div>
+            <p class="about-meta" data-i18n="about.authors">By David GUEHENNEC</p>
+            <p class="about-meta" data-i18n="about.license">License MPL 1.1 / GPL 2.0 / LGPL 2.1</p>
+            <p class="about-meta" data-i18n="about.legal"></p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <span data-i18n="footer.copyright">© 2026 Zimbra Mail Notifier</span>
+    <span><a href="mailto:zimbramailnotifier@gmail.com">zimbramailnotifier@gmail.com</a></span>
+  </footer>
+
+  <button class="back-to-top" id="back-to-top" data-i18n-attr="aria-label:nav.backToTop">
+    <svg class="icon icon--md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

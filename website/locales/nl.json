@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "title": "Zimbra Mail Notifier — Chrome & Firefox extensie",
+    "description": "Zimbra Mail Notifier — Chrome- en Firefox-extensie om uw Zimbra-postvak te volgen: ongelezen berichten, agenda, taken en meldingen."
+  },
+  "nav": {
+    "main": "Hoofdnavigatie",
+    "home": "Home",
+    "features": "Functies",
+    "install": "Installatie",
+    "manual": "Handleiding",
+    "history": "Versiegeschiedenis",
+    "compatibility": "Compatibiliteit",
+    "help": "Hulp & contact",
+    "privacy": "Privacy",
+    "about": "Over",
+    "menu": "Menu",
+    "backToTop": "Terug naar boven",
+    "language": "Taal"
+  },
+  "donate": {
+    "btn": "☕ Donatie",
+    "msg": "Deze extensie waarschuwt u wanneer er nieuwe berichten in uw Zimbra-postvak aankomen."
+  },
+  "hero": {
+    "title": "Zimbra Mail Notifier",
+    "subtitle": "Houd uw Zimbra-account in de gaten en ontvang meldingen over ongelezen berichten. Bekijk afspraken en volg lopende taken — vanuit de browserwerkbalk.",
+    "badgeVersion": "Version 4.1.0",
+    "badgeBrowsers": "Chrome · Firefox",
+    "badgeLangs": "15 talen",
+    "badgeOpenSource": "Open Source"
+  },
+  "features": {
+    "title": "Functies",
+    "intro": "Browserextensie in TypeScript voor real-time monitoring van een of meer Zimbra-accounts.",
+    "unreadTitle": "E-mail",
+    "unreadDesc": "Teller op de werkbalkpictogram, lijst recente e-mails met regex-filter en optie «alleen inbox».",
+    "calendarTitle": "Agenda",
+    "calendarDesc": "Komende afspraken met configureerbare herinneringen en bureaubladmeldingen.",
+    "tasksTitle": "Taken",
+    "tasksDesc": "Volg lopende taken gesorteerd op prioriteit (hoog, normaal, laag).",
+    "draftsTitle": "Concepten",
+    "draftsDesc": "Toon niet-verzonden concepten direct in de popup.",
+    "notifTitle": "Notifications",
+    "notifDesc": "Bureaubladwaarschuwingen en aanpasbare geluiden met volumeregeling.",
+    "accountsTitle": "Multi-account & beveiliging",
+    "accountsDesc": "Meerdere accounts, 2FA, vertrouwd apparaat, AES-versleutelde wachtwoorden en optionele cookie-sync.",
+    "screenshotsTitle": "Interfacevoorbeeld",
+    "shotPopup": "Popup",
+    "shotGeneral": "Opties — Algemeen",
+    "shotMail": "Opties — E-mail",
+    "shotCalendar": "Opties — Agenda",
+    "shotTasks": "Opties — Taken",
+    "shotAccounts": "Opties — Accounts"
+  },
+  "install": {
+    "title": "Installatie",
+    "intro": "Zimbra Mail Notifier is een extensie voor <strong>Chrome</strong> en <strong>Firefox</strong>.",
+    "addChrome": "Toevoegen aan Chrome",
+    "addFirefox": "Toevoegen aan Firefox",
+    "sourceCode": "Broncode (GitHub)",
+    "storeTitle": "Installeren via stores",
+    "step1": "Klik op de knop voor uw browser hierboven.",
+    "step2": "Klik op de storepagina op <strong>Toevoegen aan Chrome</strong> of <strong>Toevoegen aan Firefox</strong>.",
+    "step3": "Bevestig de installatie wanneer gevraagd.",
+    "step4": "Het pictogram verschijnt in de werkbalk. Klik om uw eerste account te configureren.",
+    "devTitle": "Ontwikkelaarsinstallatie",
+    "devCallout": "<strong>Voor ontwikkelaars:</strong> clone de GitHub-repo, voer <code>npm install &amp;&amp; npm run build</code> uit en laad <code>dist/</code> in ontwikkelaarsmodus.",
+    "uninstallTitle": "Deïnstallatie",
+    "uninstallDesc": "Open de extensiebeheerder, zoek «Zimbra Mail Notifier» en klik op <strong>Verwijderen</strong>."
+  },
+  "manual": {
+    "title": "Handleiding",
+    "accountTitle": "Accountconfiguratie",
+    "step1": "Klik op het extensiepictogram, dan op het <strong>tandwiel</strong> (Voorkeuren).",
+    "step2": "Klik op het tabblad <strong>Accounts</strong> op <strong>Account toevoegen</strong>.",
+    "step3": "Voer de <strong>Zimbra-server-URL</strong> en eventueel de <strong>webinterface-URL</strong> in.",
+    "step4": "Voer gebruikersnaam en wachtwoord in. Vink <strong>Wachtwoord opslaan</strong> aan.",
+    "step5": "Klik op <strong>Verbinden</strong> om te testen. Bij 2FA volg de instructies.",
+    "optionsTitle": "Hoofdopties",
+    "optGeneralTitle": "Algemeen",
+    "optGeneralDesc": "Automatisch verbinden, cookie-sync, popup-kleur en -breedte.",
+    "optMailTitle": "E-mail",
+    "optMailDesc": "Ongelezen beheer, maximum, regex-filter, alleen inbox, meldingen en geluiden.",
+    "optCalendarTitle": "Agenda",
+    "optCalendarDesc": "Weergaveperiode (weken), afspraken, herinneringen, geluidsmeldingen.",
+    "optTasksTitle": "Taken & Concepten",
+    "optTasksDesc": "Prioriteitsfilter, max taken en concepten in popup.",
+    "tipCallout": "<strong>Tip:</strong> gebruik de knop <strong>Vernieuwen</strong> (↻) in de popup."
+  },
+  "versions": {
+    "title": "Versiegeschiedenis",
+    "intro": "Release-tijdlijn uit de Git-geschiedenis.",
+    "items": [
+      {
+        "tag": "v4.1.0",
+        "date": "2026-06-16",
+        "desc": "Optie om e-mails alleen uit de hoofdmap (inbox) te lezen."
+      },
+      {
+        "tag": "v4.0.0",
+        "date": "2026-05-01",
+        "major": true,
+        "desc": "Nieuw design, TypeScript-migratie, Webpack-build. Native Firefox-ondersteuning. Concepten."
+      },
+      {
+        "tag": "v3.0.2",
+        "date": "2025-02-23",
+        "desc": "Service worker keep-alive (Manifest V3)."
+      },
+      {
+        "tag": "v3.0.1",
+        "date": "2025-01-27",
+        "desc": "Fix webinterface-URL-veld status."
+      },
+      {
+        "tag": "v3.0.0",
+        "date": "2025-01-05",
+        "major": true,
+        "desc": "Migratie naar Manifest V3 (Chrome)."
+      },
+      {
+        "tag": "v2.7.5",
+        "date": "2021-03-28",
+        "desc": "Authenticatiefix Free-accounts."
+      },
+      {
+        "tag": "v2.7.4",
+        "date": "2019-03-05",
+        "desc": "Chrome 72-compatibiliteit."
+      },
+      {
+        "tag": "v2.7.3",
+        "date": "2018-09-07",
+        "desc": "Fix ongelezen berichten Zimbra 8.8.9."
+      },
+      {
+        "tag": "v2.7.2",
+        "date": "2018-01-13",
+        "desc": "jQuery v3.2.1 update."
+      },
+      {
+        "tag": "v2.7.1",
+        "date": "2017-11-27",
+        "desc": "Aanpasbare popup-kleur en -breedte."
+      },
+      {
+        "tag": "v2.6.2",
+        "date": "2017-11-22",
+        "desc": "Firefox-fix Free-accounts."
+      },
+      {
+        "tag": "v2.6.0",
+        "date": "2016-06-26",
+        "major": true,
+        "desc": "Safari-ondersteuning."
+      },
+      {
+        "tag": "v2.5.1",
+        "date": "2016-04-04",
+        "desc": "Servische locale toegevoegd."
+      },
+      {
+        "tag": "v2.0.0",
+        "date": "2016-02-01",
+        "major": true,
+        "desc": "Taaksortering, multi-account."
+      },
+      {
+        "tag": "v1.1.1",
+        "date": "2015-08-18",
+        "desc": "Free/Alice ADSL-accounts."
+      },
+      {
+        "tag": "v1.0.0",
+        "date": "2013-12-12",
+        "major": true,
+        "desc": "Eerste publieke release."
+      }
+    ]
+  },
+  "compat": {
+    "title": "Compatibiliteit",
+    "browsersTitle": "Browsers",
+    "chromeTitle": "Chrome / Chromium",
+    "chromeDesc": "Manifest V3 — available on the <a href=\"https://chromewebstore.google.com/detail/zimbra-mail-notifier/kglapfficgodpkmenjfpfcignofghanc\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>.",
+    "firefoxTitle": "Firefox",
+    "firefoxDesc": "Native support since v4.0 — available on <a href=\"https://addons.mozilla.org/firefox/addon/zimbra-mail-notifier/\" target=\"_blank\" rel=\"noopener\">Firefox Add-ons</a>.",
+    "serversTitle": "Zimbra-servers",
+    "supportedTitle": "✓ Ondersteund",
+    "supported1": "Alle sites met standaard Zimbra-logininterface",
+    "supported2": "<a href=\"http://zimbra.free.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.free.fr</a> (specifieke ondersteuning)",
+    "supported3": "<a href=\"http://zimbra.aliceadsl.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.aliceadsl.fr</a> (specifieke ondersteuning)",
+    "supported4": "Zimbra 8.x en later",
+    "supported5": "2FA en vertrouwd apparaat",
+    "unsupportedTitle": "⚠ Niet ondersteund",
+    "unsupported1": "Pre-authenticatieportalen (behalve Free en Alice ADSL)",
+    "unsupported2": "Safari en Opera (historisch, niet onderhouden in v4)",
+    "langsTitle": "Talen",
+    "langsDesc": "Interface beschikbaar in 15 talen."
+  },
+  "help": {
+    "title": "Hulp & contact",
+    "intro": "Voor vragen, suggesties of bugrapporten:",
+    "emailLabel": "E-mail:",
+    "githubLabel": "GitHub issues:",
+    "faqTitle": "Veelvoorkomende problemen",
+    "connFailTitle": "Verbinding mislukt",
+    "connFailDesc": "Controleer server-URL, inloggegevens en bereikbaarheid.",
+    "noNotifTitle": "Geen melding",
+    "noNotifDesc": "Zorg dat meldingen zijn ingeschakeld in opties en browser/systeem.",
+    "wrongCountTitle": "Onjuiste teller",
+    "wrongCountDesc": "Schakel «alleen inbox» in om submappen uit te sluiten."
+  },
+  "privacy": {
+    "title": "Privacybeleid",
+    "intro": "Dit document legt uit welke informatie Zimbra Mail Notifier verzamelt.",
+    "collectedTitle": "Verzamelde informatie",
+    "collected1": "<strong>Inloggegevens</strong> — gebruikersnaam en wachtwoord in instellingen.",
+    "collected2": "Gegevens <strong>lokaal</strong> opgeslagen (AES-versleuteling).",
+    "usageTitle": "Gebruik",
+    "usage1": "Gegevens alleen naar Zimbra-server bij automatisch inloggen.",
+    "usage2": "Geen gegevens naar derden.",
+    "usage3": "Geen gebruiksstatistieken.",
+    "permissionsCallout": "<strong>Machtigingen:</strong> meldingen, cookies, lokale opslag, netwerktoegang."
+  },
+  "about": {
+    "title": "Over",
+    "name": "Zimbra Mail Notifier",
+    "desc": "Deze extensie waarschuwt u wanneer er nieuwe berichten in uw Zimbra-postvak aankomen.",
+    "github": "GitHub",
+    "chromeStore": "Chrome Web Store",
+    "firefoxStore": "Firefox Add-ons",
+    "donate": "☕ Doneren",
+    "authors": "Door David GUEHENNEC",
+    "license": "Licentie MPL 1.1 / GPL 2.0 / LGPL 2.1",
+    "legal": "Deze extensie is niet gelieerd aan of goedgekeurd door VMware."
+  },
+  "footer": {
+    "copyright": "© 2026 Zimbra Mail Notifier — David GUEHENNEC"
+  }
+}

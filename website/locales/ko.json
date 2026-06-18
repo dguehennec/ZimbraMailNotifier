@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "title": "Zimbra Mail Notifier — Chrome & Firefox 확장",
+    "description": "Zimbra Mail Notifier — Zimbra 사서함 모니터링 Chrome/Firefox 확장: 읽지 않은 메시지, 일정, 작업 및 알림."
+  },
+  "nav": {
+    "main": "주 탐색",
+    "home": "홈",
+    "features": "기능",
+    "install": "설치",
+    "manual": "사용 설명서",
+    "history": "버전 기록",
+    "compatibility": "호환성",
+    "help": "도움말 및 문의",
+    "privacy": "개인정보",
+    "about": "정보",
+    "menu": "메뉴",
+    "backToTop": "맨 위로",
+    "language": "언어"
+  },
+  "donate": {
+    "btn": "☕ 기부",
+    "msg": "Zimbra 사서함에 새 메시지가 도착하면 알려줍니다."
+  },
+  "hero": {
+    "title": "Zimbra Mail Notifier",
+    "subtitle": "Zimbra 계정을 모니터링하고 읽지 않은 메시지 알림을 받으세요. 다가오는 일정과 진행 중인 작업을 브라우저 도구 모음에서 확인하세요.",
+    "badgeVersion": "Version 4.1.0",
+    "badgeBrowsers": "Chrome · Firefox",
+    "badgeLangs": "15개 언어",
+    "badgeOpenSource": "오픈 소스"
+  },
+  "features": {
+    "title": "기능",
+    "intro": "TypeScript로 작성된 브라우저 확장으로 하나 이상의 Zimbra 계정을 실시간 모니터링합니다.",
+    "unreadTitle": "이메일",
+    "unreadDesc": "도구 모음 아이콘 배지, 정규식 필터 및 «받은편지함만» 옵션이 있는 최근 이메일 목록.",
+    "calendarTitle": "캘린더",
+    "calendarDesc": "구성 가능한 알림 및 데스크톱 알림이 있는 다가오는 일정.",
+    "tasksTitle": "작업",
+    "tasksDesc": "우선순위(높음, 보통, 낮음)별 진행 중 작업 추적.",
+    "draftsTitle": "임시보관함",
+    "draftsDesc": "팝업에서 보내지 않은 임시 보관 메시지 표시.",
+    "notifTitle": "Notifications",
+    "notifDesc": "데스크톱 알림 및 사용자 지정 소리(볼륨 조절).",
+    "accountsTitle": "다중 계정 및 보안",
+    "accountsDesc": "여러 계정, 2FA, 신뢰할 수 있는 기기, AES 암호화 비밀번호, 쿠키 동기화.",
+    "screenshotsTitle": "인터페이스 미리보기",
+    "shotPopup": "Popup",
+    "shotGeneral": "옵션 — 일반",
+    "shotMail": "옵션 — 이메일",
+    "shotCalendar": "옵션 — 캘린더",
+    "shotTasks": "옵션 — 작업",
+    "shotAccounts": "옵션 — 계정"
+  },
+  "install": {
+    "title": "설치",
+    "intro": "Zimbra Mail Notifier는 <strong>Chrome</strong> 및 <strong>Firefox</strong>용 확장입니다.",
+    "addChrome": "Chrome에 추가",
+    "addFirefox": "Firefox에 추가",
+    "sourceCode": "소스 코드 (GitHub)",
+    "storeTitle": "스토어에서 설치",
+    "step1": "위의 브라우저 버튼을 클릭하세요.",
+    "step2": "스토어 페이지에서 <strong>Chrome에 추가</strong> 또는 <strong>Firefox에 추가</strong>를 클릭.",
+    "step3": "설치를 확인하세요.",
+    "step4": "도구 모음에 아이콘이 나타납니다. 클릭하여 첫 계정을 구성하세요.",
+    "devTitle": "개발자 설치",
+    "devCallout": "<strong>개발자:</strong> GitHub 저장소 클론, <code>npm install &amp;&amp; npm run build</code> 실행, <code>dist/</code> 로드.",
+    "uninstallTitle": "제거",
+    "uninstallDesc": "확장 관리자에서 «Zimbra Mail Notifier»를 찾아 <strong>제거</strong>를 클릭."
+  },
+  "manual": {
+    "title": "사용 설명서",
+    "accountTitle": "계정 구성",
+    "step1": "확장 아이콘을 클릭한 다음 <strong>톱니바퀴</strong>(설정)를 클릭.",
+    "step2": "<strong>계정</strong> 탭에서 <strong>계정 추가</strong>를 클릭.",
+    "step3": "<strong>Zimbra 서버 URL</strong> 및 <strong>웹 인터페이스 URL</strong>을 입력.",
+    "step4": "사용자 이름과 비밀번호 입력. <strong>비밀번호 저장</strong> 체크.",
+    "step5": "<strong>연결</strong>을 클릭하여 테스트.",
+    "optionsTitle": "주요 옵션",
+    "optGeneralTitle": "일반",
+    "optGeneralDesc": "시작 시 자동 연결, 쿠키 동기화, 팝업 색상 및 너비.",
+    "optMailTitle": "이메일",
+    "optMailDesc": "읽지 않은 관리, 최대 표시, 정규식 필터, 받은편지함만, 알림 및 소리.",
+    "optCalendarTitle": "캘린더",
+    "optCalendarDesc": "표시 기간(주), 일정, 알림, 소리 알림.",
+    "optTasksTitle": "작업 & 임시보관함",
+    "optTasksDesc": "우선순위 필터, 최대 작업 및 임시 보관 수.",
+    "tipCallout": "<strong>팁:</strong> 팝업의 <strong>새로고침</strong> (↻) 버튼 사용."
+  },
+  "versions": {
+    "title": "버전 기록",
+    "intro": "프로젝트 Git 기록에서 생성된 릴리스 타임라인.",
+    "items": [
+      {
+        "tag": "v4.1.0",
+        "date": "2026-06-16",
+        "desc": "기본 폴더(받은편지함)에서만 이메일 읽기 옵션."
+      },
+      {
+        "tag": "v4.0.0",
+        "date": "2026-05-01",
+        "major": true,
+        "desc": "새 디자인, TypeScript 마이그레이션, Webpack 빌드. Firefox 네이티브 지원. 임시 보관 표시."
+      },
+      {
+        "tag": "v3.0.2",
+        "date": "2025-02-23",
+        "desc": "Service Worker 유지 (Manifest V3)."
+      },
+      {
+        "tag": "v3.0.1",
+        "date": "2025-01-27",
+        "desc": "웹 인터페이스 URL 필드 수정."
+      },
+      {
+        "tag": "v3.0.0",
+        "date": "2025-01-05",
+        "major": true,
+        "desc": "Manifest V3 마이그레이션 (Chrome)."
+      },
+      {
+        "tag": "v2.7.5",
+        "date": "2021-03-28",
+        "desc": "Free 계정 인증 수정."
+      },
+      {
+        "tag": "v2.7.4",
+        "date": "2019-03-05",
+        "desc": "Chrome 72 호환성."
+      },
+      {
+        "tag": "v2.7.3",
+        "date": "2018-09-07",
+        "desc": "Zimbra 8.8.9 읽지 않은 메시지 수정."
+      },
+      {
+        "tag": "v2.7.2",
+        "date": "2018-01-13",
+        "desc": "jQuery v3.2.1 업데이트."
+      },
+      {
+        "tag": "v2.7.1",
+        "date": "2017-11-27",
+        "desc": "팝업 색상 및 너비 사용자 지정."
+      },
+      {
+        "tag": "v2.6.2",
+        "date": "2017-11-22",
+        "desc": "Firefox Free 계정 수정."
+      },
+      {
+        "tag": "v2.6.0",
+        "date": "2016-06-26",
+        "major": true,
+        "desc": "Safari 지원."
+      },
+      {
+        "tag": "v2.5.1",
+        "date": "2016-04-04",
+        "desc": "세르비아어 로케일 추가."
+      },
+      {
+        "tag": "v2.0.0",
+        "date": "2016-02-01",
+        "major": true,
+        "desc": "작업 우선순위 정렬, 다중 계정."
+      },
+      {
+        "tag": "v1.1.1",
+        "date": "2015-08-18",
+        "desc": "Free/Alice ADSL 계정."
+      },
+      {
+        "tag": "v1.0.0",
+        "date": "2013-12-12",
+        "major": true,
+        "desc": "첫 공개 릴리스."
+      }
+    ]
+  },
+  "compat": {
+    "title": "호환성",
+    "browsersTitle": "브라우저",
+    "chromeTitle": "Chrome / Chromium",
+    "chromeDesc": "Manifest V3 — available on the <a href=\"https://chromewebstore.google.com/detail/zimbra-mail-notifier/kglapfficgodpkmenjfpfcignofghanc\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>.",
+    "firefoxTitle": "Firefox",
+    "firefoxDesc": "Native support since v4.0 — available on <a href=\"https://addons.mozilla.org/firefox/addon/zimbra-mail-notifier/\" target=\"_blank\" rel=\"noopener\">Firefox Add-ons</a>.",
+    "serversTitle": "Zimbra 서버",
+    "supportedTitle": "✓ 지원",
+    "supported1": "표준 Zimbra 로그인 인터페이스를 사용하는 모든 사이트",
+    "supported2": "<a href=\"http://zimbra.free.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.free.fr</a> (특별 지원)",
+    "supported3": "<a href=\"http://zimbra.aliceadsl.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.aliceadsl.fr</a> (특별 지원)",
+    "supported4": "Zimbra 8.x 이상",
+    "supported5": "2FA 및 신뢰할 수 있는 기기",
+    "unsupportedTitle": "⚠ 미지원",
+    "unsupported1": "사전 인증 포털 (Free 및 Alice ADSL 제외)",
+    "unsupported2": "Safari 및 Opera (v4에서 미유지보수)",
+    "langsTitle": "언어",
+    "langsDesc": "15개 언어로 이용 가능."
+  },
+  "help": {
+    "title": "도움말 및 문의",
+    "intro": "질문, 제안 또는 버그 보고:",
+    "emailLabel": "이메일:",
+    "githubLabel": "GitHub issues:",
+    "faqTitle": "일반적인 문제",
+    "connFailTitle": "연결 실패",
+    "connFailDesc": "서버 URL, 자격 증명 및 Zimbra 접근성 확인.",
+    "noNotifTitle": "알림 없음",
+    "noNotifDesc": "확장 옵션 및 브라우저/시스템에서 알림이 활성화되어 있는지 확인.",
+    "wrongCountTitle": "잘못된 카운터",
+    "wrongCountDesc": "«받은편지함만» 옵션을 활성화하여 하위 폴더 제외."
+  },
+  "privacy": {
+    "title": "개인정보 처리방침",
+    "intro": "Zimbra Mail Notifier가 수집하는 정보와 사용 방법.",
+    "collectedTitle": "수집 정보",
+    "collected1": "<strong>로그인 정보</strong> — 설정의 사용자 이름 및 비밀번호.",
+    "collected2": "데이터는 브라우저에 <strong>로컬 저장</strong> (AES 암호화).",
+    "usageTitle": "정보 사용",
+    "usage1": "자격 증명은 자동 로그인 시에만 Zimbra 서버로 전송.",
+    "usage2": "제3자 서버로 데이터 전송 없음.",
+    "usage3": "사용 통계 수집 없음.",
+    "permissionsCallout": "<strong>필요 권한:</strong> 알림, 쿠키, 로컬 저장소, 네트워크 액세스."
+  },
+  "about": {
+    "title": "정보",
+    "name": "Zimbra Mail Notifier",
+    "desc": "Zimbra 사서함에 새 메시지가 도착하면 알려줍니다.",
+    "github": "GitHub",
+    "chromeStore": "Chrome Web Store",
+    "firefoxStore": "Firefox Add-ons",
+    "donate": "☕ 기부",
+    "authors": "David GUEHENNEC",
+    "license": "라이선스 MPL 1.1 / GPL 2.0 / LGPL 2.1",
+    "legal": "이 확장 프로그램은 VMware와 제휴하거나 VMware의 승인을 받지 않았습니다."
+  },
+  "footer": {
+    "copyright": "© 2026 Zimbra Mail Notifier — David GUEHENNEC"
+  }
+}

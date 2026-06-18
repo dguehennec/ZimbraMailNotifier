@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "title": "Zimbra Mail Notifier — Chrome ve Firefox Eklentisi",
+    "description": "Zimbra Mail Notifier — Zimbra posta kutunuzu izlemek için Chrome ve Firefox eklentisi: okunmamış mesajlar, takvim, görevler ve bildirimler."
+  },
+  "nav": {
+    "main": "Ana navigasyon",
+    "home": "Ana sayfa",
+    "features": "Özellikler",
+    "install": "Kurulum",
+    "manual": "Kullanım kılavuzu",
+    "history": "Sürüm geçmişi",
+    "compatibility": "Uyumluluk",
+    "help": "Yardım ve iletişim",
+    "privacy": "Gizlilik",
+    "about": "Hakkında",
+    "menu": "Menü",
+    "backToTop": "Yukarı",
+    "language": "Dil"
+  },
+  "donate": {
+    "btn": "☕ Bağış yap",
+    "msg": "Bu eklenti, Zimbra posta kutunuza yeni ileti geldiğinde sizi bilgilendirir."
+  },
+  "hero": {
+    "title": "Zimbra Mail Notifier",
+    "subtitle": "Zimbra hesabınızı izleyin ve okunmamış mesaj bildirimleri alın. Yaklaşan randevuları görün ve devam eden görevleri takip edin — tarayıcı araç çubuğundan.",
+    "badgeVersion": "Version 4.1.0",
+    "badgeBrowsers": "Chrome · Firefox",
+    "badgeLangs": "15 dil",
+    "badgeOpenSource": "Açık Kaynak"
+  },
+  "features": {
+    "title": "Özellikler",
+    "intro": "Bir veya daha fazla Zimbra hesabını gerçek zamanlı izlemek için TypeScript ile yazılmış tarayıcı eklentisi.",
+    "unreadTitle": "E-posta",
+    "unreadDesc": "Araç çubuğu simgesinde sayaç, regex filtresi ve «yalnızca gelen kutusu» seçeneği ile son e-postalar.",
+    "calendarTitle": "Takvim",
+    "calendarDesc": "Yapılandırılabilir hatırlatıcılar ve masaüstü bildirimleri ile yaklaşan randevular.",
+    "tasksTitle": "Görevler",
+    "tasksDesc": "Önceliğe göre sıralanmış devam eden görevler (yüksek, normal, düşük).",
+    "draftsTitle": "Taslaklar",
+    "draftsDesc": "Gönderilmemiş taslakları popup'ta görüntüleme.",
+    "notifTitle": "Notifications",
+    "notifDesc": "Masaüstü uyarıları ve özelleştirilebilir sesler (ses seviyesi kontrolü).",
+    "accountsTitle": "Çoklu hesap ve güvenlik",
+    "accountsDesc": "Birden fazla hesap, 2FA, güvenilir cihaz, AES şifreli parolalar ve isteğe bağlı çerez senkronizasyonu.",
+    "screenshotsTitle": "Arayüz önizlemesi",
+    "shotPopup": "Popup",
+    "shotGeneral": "Options — Genel",
+    "shotMail": "Options — E-posta",
+    "shotCalendar": "Options — Takvim",
+    "shotTasks": "Options — Görevler",
+    "shotAccounts": "Options — Hesapları"
+  },
+  "install": {
+    "title": "Kurulum",
+    "intro": "Zimbra Mail Notifier <strong>Chrome</strong> ve <strong>Firefox</strong> için bir eklentidir.",
+    "addChrome": "Chrome'a ekle",
+    "addFirefox": "Firefox'a ekle",
+    "sourceCode": "Kaynak kodu (GitHub)",
+    "storeTitle": "Mağazalardan kurulum",
+    "step1": "Yukarıdaki tarayıcı düğmesine tıklayın.",
+    "step2": "Mağaza sayfasında <strong>Chrome'a ekle</strong> veya <strong>Firefox'a ekle</strong> tıklayın.",
+    "step3": "Kurulumu onaylayın.",
+    "step4": "Simge araç çubuğunda görünür. İlk hesabınızı yapılandırmak için tıklayın.",
+    "devTitle": "Geliştirici kurulumu",
+    "devCallout": "<strong>Geliştiriciler için:</strong> GitHub deposunu klonlayın, <code>npm install &amp;&amp; npm run build</code> çalıştırın, <code>dist/</code> yükleyin.",
+    "uninstallTitle": "Kaldırma",
+    "uninstallDesc": "Eklenti yöneticisini açın, «Zimbra Mail Notifier» bulun ve <strong>Kaldır</strong> tıklayın."
+  },
+  "manual": {
+    "title": "Kullanım kılavuzu",
+    "accountTitle": "Hesap yapılandırması",
+    "step1": "Eklenti simgesine, ardından <strong>dişli</strong> (Tercihler) simgesine tıklayın.",
+    "step2": "<strong>Hesaplar</strong> sekmesinde <strong>Hesap ekle</strong> tıklayın.",
+    "step3": "<strong>Zimbra sunucu URL</strong> ve <strong>web arayüzü URL</strong> girin.",
+    "step4": "Kullanıcı adı ve parola girin. <strong>Parolayı kaydet</strong> işaretleyin.",
+    "step5": "Yapılandırmayı test etmek için <strong>Bağlan</strong> tıklayın.",
+    "optionsTitle": "Ana seçenekler",
+    "optGeneralTitle": "Genel",
+    "optGeneralDesc": "Başlangıçta otomatik bağlantı, çerez senkronizasyonu, popup rengi ve genişliği.",
+    "optMailTitle": "E-posta",
+    "optMailDesc": "Okunmamış yönetimi, maksimum, regex filtresi, yalnızca gelen kutusu, bildirimler ve sesler.",
+    "optCalendarTitle": "Takvim",
+    "optCalendarDesc": "Gösterim dönemi (hafta), randevular, hatırlatıcılar, ses bildirimleri.",
+    "optTasksTitle": "Görevler & Taslaklar",
+    "optTasksDesc": "Öncelik filtresi, maksimum görev ve taslak sayısı.",
+    "tipCallout": "<strong>İpucu:</strong> popup'taki <strong>Yenile</strong> (↻) düğmesini kullanın."
+  },
+  "versions": {
+    "title": "Sürüm geçmişi",
+    "intro": "Projenin Git geçmişinden oluşturulan sürüm zaman çizelgesi.",
+    "items": [
+      {
+        "tag": "v4.1.0",
+        "date": "2026-06-16",
+        "desc": "E-postaları yalnızca ana klasörden (gelen kutusu) okuma seçeneği."
+      },
+      {
+        "tag": "v4.0.0",
+        "date": "2026-05-01",
+        "major": true,
+        "desc": "Yeni tasarım, TypeScript geçişi, Webpack derlemesi. Firefox desteği. Taslak görüntüleme."
+      },
+      {
+        "tag": "v3.0.2",
+        "date": "2025-02-23",
+        "desc": "Service worker canlı tutma (Manifest V3)."
+      },
+      {
+        "tag": "v3.0.1",
+        "date": "2025-01-27",
+        "desc": "Web arayüzü URL alanı düzeltmesi."
+      },
+      {
+        "tag": "v3.0.0",
+        "date": "2025-01-05",
+        "major": true,
+        "desc": "Manifest V3 geçişi (Chrome)."
+      },
+      {
+        "tag": "v2.7.5",
+        "date": "2021-03-28",
+        "desc": "Free hesap kimlik doğrulama düzeltmesi."
+      },
+      {
+        "tag": "v2.7.4",
+        "date": "2019-03-05",
+        "desc": "Chrome 72 uyumluluğu."
+      },
+      {
+        "tag": "v2.7.3",
+        "date": "2018-09-07",
+        "desc": "Zimbra 8.8.9 okunmamış mesaj düzeltmesi."
+      },
+      {
+        "tag": "v2.7.2",
+        "date": "2018-01-13",
+        "desc": "jQuery v3.2.1 güncellemesi."
+      },
+      {
+        "tag": "v2.7.1",
+        "date": "2017-11-27",
+        "desc": "Özelleştirilebilir popup rengi ve genişliği."
+      },
+      {
+        "tag": "v2.6.2",
+        "date": "2017-11-22",
+        "desc": "Firefox Free hesap düzeltmesi."
+      },
+      {
+        "tag": "v2.6.0",
+        "date": "2016-06-26",
+        "major": true,
+        "desc": "Safari desteği."
+      },
+      {
+        "tag": "v2.5.1",
+        "date": "2016-04-04",
+        "desc": "Sırpça locale eklendi."
+      },
+      {
+        "tag": "v2.0.0",
+        "date": "2016-02-01",
+        "major": true,
+        "desc": "Görev öncelik sıralaması, çoklu hesap."
+      },
+      {
+        "tag": "v1.1.1",
+        "date": "2015-08-18",
+        "desc": "Free/Alice ADSL hesapları."
+      },
+      {
+        "tag": "v1.0.0",
+        "date": "2013-12-12",
+        "major": true,
+        "desc": "İlk halka açık sürüm."
+      }
+    ]
+  },
+  "compat": {
+    "title": "Uyumluluk",
+    "browsersTitle": "Tarayıcılar",
+    "chromeTitle": "Chrome / Chromium",
+    "chromeDesc": "Manifest V3 — available on the <a href=\"https://chromewebstore.google.com/detail/zimbra-mail-notifier/kglapfficgodpkmenjfpfcignofghanc\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>.",
+    "firefoxTitle": "Firefox",
+    "firefoxDesc": "Native support since v4.0 — available on <a href=\"https://addons.mozilla.org/firefox/addon/zimbra-mail-notifier/\" target=\"_blank\" rel=\"noopener\">Firefox Add-ons</a>.",
+    "serversTitle": "Zimbra sunucuları",
+    "supportedTitle": "✓ Desteklenen",
+    "supported1": "Standart Zimbra giriş arayüzü kullanan tüm siteler",
+    "supported2": "<a href=\"http://zimbra.free.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.free.fr</a> (özel destek)",
+    "supported3": "<a href=\"http://zimbra.aliceadsl.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.aliceadsl.fr</a> (özel destek)",
+    "supported4": "Zimbra 8.x ve sonrası",
+    "supported5": "2FA ve güvenilir cihaz",
+    "unsupportedTitle": "⚠ Desteklenmeyen",
+    "unsupported1": "Ön kimlik doğrulama portalları (Free ve Alice ADSL hariç)",
+    "unsupported2": "Safari ve Opera (v4'te bakım yok)",
+    "langsTitle": "Diller",
+    "langsDesc": "Arayüz 15 dilde mevcut."
+  },
+  "help": {
+    "title": "Yardım ve iletişim",
+    "intro": "Sorular, öneriler veya hata bildirimleri için:",
+    "emailLabel": "E-posta:",
+    "githubLabel": "GitHub issues:",
+    "faqTitle": "Sık karşılaşılan sorunlar",
+    "connFailTitle": "Bağlantı başarısız",
+    "connFailDesc": "Sunucu URL, kimlik bilgileri ve Zimbra erişilebilirliğini kontrol edin.",
+    "noNotifTitle": "Bildirim yok",
+    "noNotifDesc": "Eklenti seçeneklerinde ve tarayıcı/sistemde bildirimlerin etkin olduğundan emin olun.",
+    "wrongCountTitle": "Yanlış sayaç",
+    "wrongCountDesc": "Alt klasörleri hariç tutmak için «yalnızca gelen kutusu» seçeneğini etkinleştirin."
+  },
+  "privacy": {
+    "title": "Gizlilik politikası",
+    "intro": "Bu belge Zimbra Mail Notifier'ın topladığı bilgileri açıklar.",
+    "collectedTitle": "Toplanan bilgiler",
+    "collected1": "<strong>Giriş bilgileri</strong> — ayarlarda girilen kullanıcı adı ve parola.",
+    "collected2": "Veriler tarayıcıda <strong>yerel olarak</strong> saklanır (AES şifreleme).",
+    "usageTitle": "Bilgi kullanımı",
+    "usage1": "Kimlik bilgileri yalnızca otomatik girişte Zimbra sunucusuna gönderilir.",
+    "usage2": "Üçüncü taraf sunuculara veri gönderilmez.",
+    "usage3": "Kullanım istatistiği toplanmaz.",
+    "permissionsCallout": "<strong>Gerekli izinler:</strong> bildirimler, çerezler, yerel depolama, ağ erişimi."
+  },
+  "about": {
+    "title": "Hakkında",
+    "name": "Zimbra Mail Notifier",
+    "desc": "Bu eklenti, Zimbra posta kutunuza yeni ileti geldiğinde sizi bilgilendirir.",
+    "github": "GitHub",
+    "chromeStore": "Chrome Web Store",
+    "firefoxStore": "Firefox Add-ons",
+    "donate": "☕ Bağış",
+    "authors": "David GUEHENNEC",
+    "license": "Lisans MPL 1.1 / GPL 2.0 / LGPL 2.1",
+    "legal": "Bu eklenti VMware ile bağlantılı değildir ve VMware tarafından onaylanmamıştır."
+  },
+  "footer": {
+    "copyright": "© 2026 Zimbra Mail Notifier — David GUEHENNEC"
+  }
+}

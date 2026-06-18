@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "title": "Zimbra Mail Notifier — Chrome и Firefox додатак",
+    "description": "Zimbra Mail Notifier — Chrome и Firefox додатак за надзор Zimbra поште: непрочитане поруке, календар, задаци и обавештења."
+  },
+  "nav": {
+    "main": "Главна навигација",
+    "home": "Почетна",
+    "features": "Функције",
+    "install": "Инсталација",
+    "manual": "Упутство",
+    "history": "Историја верзија",
+    "compatibility": "Комpatibilност",
+    "help": "Помоћ и контакт",
+    "privacy": "Приватност",
+    "about": "О програму",
+    "menu": "Мени",
+    "backToTop": "Назад на врх",
+    "language": "Језик"
+  },
+  "donate": {
+    "btn": "☕ Донирај",
+    "msg": "Ово проширење вас обавештава када пристигну нове поруке у вашем zimbra поштанском сандучету."
+  },
+  "hero": {
+    "title": "Zimbra Mail Notifier",
+    "subtitle": "Надгледајте Zimbra налог и добијајте обавештења о непрочитаним порукама. Погледајте заказане састанке и пратиte задатке — све са траке алатки.",
+    "badgeVersion": "Version 4.1.0",
+    "badgeBrowsers": "Chrome · Firefox",
+    "badgeLangs": "15 јezika",
+    "badgeOpenSource": "Open Source"
+  },
+  "features": {
+    "title": "Функције",
+    "intro": "Додатак за прегледач написан у TypeScript-у за надзор јednog или више Zimbra налога у реалном vremenu.",
+    "unreadTitle": "Е-пошта",
+    "unreadDesc": "Броjaч на икони траке, листа недавних имејлова са regex филтером и опцијом «сamo inbox».",
+    "calendarTitle": "Календар",
+    "calendarDesc": "Предстojeћи састanci са подесивim подsetnicima и desktop обавешtenjima.",
+    "tasksTitle": "Задаци",
+    "tasksDesc": "Praćenje zadataka po prioritetu (visok, normalan, nizak).",
+    "draftsTitle": "Нацрти",
+    "draftsDesc": "Prikaz nесlanih nacrta u popup-u.",
+    "notifTitle": "Notifications",
+    "notifDesc": "Desktop upozorenja i prilagodljivi zvukovi sa kontrolom jačine.",
+    "accountsTitle": "Više naloga i bezbednost",
+    "accountsDesc": "Više naloga, 2FA, pouzdani uređaj, AES lozinke i sync kolačića.",
+    "screenshotsTitle": "Pregled interfejsa",
+    "shotPopup": "Popup",
+    "shotGeneral": "Options — Опште",
+    "shotMail": "Options — Е-пошта",
+    "shotCalendar": "Options — Календар",
+    "shotTasks": "Options — Задаци",
+    "shotAccounts": "Options — Налози"
+  },
+  "install": {
+    "title": "Instalacija",
+    "intro": "Zimbra Mail Notifier je dodatak za <strong>Chrome</strong> i <strong>Firefox</strong>.",
+    "addChrome": "Dodaj u Chrome",
+    "addFirefox": "Dodaj u Firefox",
+    "sourceCode": "Izvorni kod (GitHub)",
+    "storeTitle": "Instalacija iz prodavnica",
+    "step1": "Kliknite dugme vašeg pregledača iznad.",
+    "step2": "Na stranici prodavnice kliknite <strong>Dodaj u Chrome</strong> ili <strong>Dodaj u Firefox</strong>.",
+    "step3": "Potvrdite instalaciju.",
+    "step4": "Ikona se pojavljuje na traci. Kliknite za podešavanje prvog naloga.",
+    "devTitle": "Instalacija za programere",
+    "devCallout": "<strong>Za programere:</strong> klonirajte repozitorijum, pokrenite <code>npm install &amp;&amp; npm run build</code>, učitajte <code>dist/</code>.",
+    "uninstallTitle": "Deinstalacija",
+    "uninstallDesc": "Otvorite menadžer dodataka, pronađite «Zimbra Mail Notifier» i kliknite <strong>Deinstaliraj</strong>."
+  },
+  "manual": {
+    "title": "Uputstvo",
+    "accountTitle": "Podešavanje naloga",
+    "step1": "Kliknite ikonu dodatka, zatim <strong>zupčanik</strong> (Podešavanja).",
+    "step2": "Na kartici <strong>Nalozi</strong> kliknite <strong>Dodaj nalog</strong>.",
+    "step3": "Unesite <strong>URL Zimbra servera</strong> i <strong>URL web interfejsa</strong>.",
+    "step4": "Unesite korisničko ime i lozinku. Označite <strong>Sačuvaj lozinku</strong>.",
+    "step5": "Kliknite <strong>Poveži</strong> za test.",
+    "optionsTitle": "Glavne opcije",
+    "optGeneralTitle": "Опште",
+    "optGeneralDesc": "Automatsko povezivanje, sync kolačića, boja i širina popup-a.",
+    "optMailTitle": "Е-пошта",
+    "optMailDesc": "Upravljanje nepročitanim, max, regex filter, samo inbox.",
+    "optCalendarTitle": "Календар",
+    "optCalendarDesc": "Period (nedelje), sastanci, podsetnici, zvučna obaveštenja.",
+    "optTasksTitle": "Задаци & Нацрти",
+    "optTasksDesc": "Filter prioriteta, max zadataka i nacrta.",
+    "tipCallout": "<strong>Savet:</strong> koristite dugme <strong>Osveži</strong> (↻) u popup-u."
+  },
+  "versions": {
+    "title": "Istorija verzija",
+    "intro": "Vremenska linija iz Git istorije projekta.",
+    "items": [
+      {
+        "tag": "v4.1.0",
+        "date": "2026-06-16",
+        "desc": "Opcija čitanja imejlova samo iz glavnog foldera (inbox)."
+      },
+      {
+        "tag": "v4.0.0",
+        "date": "2026-05-01",
+        "major": true,
+        "desc": "Novi dizajn, TypeScript migracija, Webpack build. Firefox podrška. Nacrti."
+      },
+      {
+        "tag": "v3.0.2",
+        "date": "2025-02-23",
+        "desc": "Service worker keep-alive (Manifest V3)."
+      },
+      {
+        "tag": "v3.0.1",
+        "date": "2025-01-27",
+        "desc": "Ispravka polja URL web interfejsa."
+      },
+      {
+        "tag": "v3.0.0",
+        "date": "2025-01-05",
+        "major": true,
+        "desc": "Migracija na Manifest V3 (Chrome)."
+      },
+      {
+        "tag": "v2.7.5",
+        "date": "2021-03-28",
+        "desc": "Ispravka autentifikacije Free naloga."
+      },
+      {
+        "tag": "v2.7.4",
+        "date": "2019-03-05",
+        "desc": "Chrome 72 kompatibilnost."
+      },
+      {
+        "tag": "v2.7.3",
+        "date": "2018-09-07",
+        "desc": "Ispravka nepročitanih Zimbra 8.8.9."
+      },
+      {
+        "tag": "v2.7.2",
+        "date": "2018-01-13",
+        "desc": "jQuery v3.2.1 ažuriranje."
+      },
+      {
+        "tag": "v2.7.1",
+        "date": "2017-11-27",
+        "desc": "Prilagodljiva boja i širina popup-a."
+      },
+      {
+        "tag": "v2.6.2",
+        "date": "2017-11-22",
+        "desc": "Firefox ispravka Free naloga."
+      },
+      {
+        "tag": "v2.6.0",
+        "date": "2016-06-26",
+        "major": true,
+        "desc": "Safari podrška."
+      },
+      {
+        "tag": "v2.5.1",
+        "date": "2016-04-04",
+        "desc": "Dodata srpska locale."
+      },
+      {
+        "tag": "v2.0.0",
+        "date": "2016-02-01",
+        "major": true,
+        "desc": "Sortiranje zadataka, više naloga."
+      },
+      {
+        "tag": "v1.1.1",
+        "date": "2015-08-18",
+        "desc": "Free/Alice ADSL nalozi."
+      },
+      {
+        "tag": "v1.0.0",
+        "date": "2013-12-12",
+        "major": true,
+        "desc": "Prvo javno izdanje."
+      }
+    ]
+  },
+  "compat": {
+    "title": "Kompatibilnost",
+    "browsersTitle": "Pregledači",
+    "chromeTitle": "Chrome / Chromium",
+    "chromeDesc": "Manifest V3 — available on the <a href=\"https://chromewebstore.google.com/detail/zimbra-mail-notifier/kglapfficgodpkmenjfpfcignofghanc\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>.",
+    "firefoxTitle": "Firefox",
+    "firefoxDesc": "Native support since v4.0 — available on <a href=\"https://addons.mozilla.org/firefox/addon/zimbra-mail-notifier/\" target=\"_blank\" rel=\"noopener\">Firefox Add-ons</a>.",
+    "serversTitle": "Zimbra serveri",
+    "supportedTitle": "✓ Podržano",
+    "supported1": "Sve stranice sa standardnim Zimbra login interfejsom",
+    "supported2": "<a href=\"http://zimbra.free.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.free.fr</a> (specifična podrška)",
+    "supported3": "<a href=\"http://zimbra.aliceadsl.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.aliceadsl.fr</a> (specifična podrška)",
+    "supported4": "Zimbra 8.x i novije",
+    "supported5": "2FA i pouzdani uređaj",
+    "unsupportedTitle": "⚠ Nije podržano",
+    "unsupported1": "Portali sa pre-autentifikacijom (osim Free i Alice ADSL)",
+    "unsupported2": "Safari i Opera (istorijska podrška, nije održavano u v4)",
+    "langsTitle": "Jezici",
+    "langsDesc": "Interfejs dostupan na 15 jezika."
+  },
+  "help": {
+    "title": "Pomoć i kontakt",
+    "intro": "Za pitanja, predloge ili prijave grešaka:",
+    "emailLabel": "E-mail:",
+    "githubLabel": "GitHub issues:",
+    "faqTitle": "Uobičajeni problemi",
+    "connFailTitle": "Veza neuspešna",
+    "connFailDesc": "Proverite URL servera, akreditive i dostupnost Zimbra.",
+    "noNotifTitle": "Nema obaveštenja",
+    "noNotifDesc": "Uverite se da su obaveštenja uključena u opcijama i sistemu.",
+    "wrongCountTitle": "Pogrešan brojač",
+    "wrongCountDesc": "Uključite «samo inbox» da isključite podfoldere."
+  },
+  "privacy": {
+    "title": "Politika privatnosti",
+    "intro": "Ovaj dokument objašnjava koje informacije Zimbra Mail Notifier prikuplja.",
+    "collectedTitle": "Prikupljene informacije",
+    "collected1": "<strong>Akreditivi</strong> — korisničko ime i lozinka u podešavanjima.",
+    "collected2": "Podaci se čuvaju <strong>lokalno</strong> (AES enkripcija).",
+    "usageTitle": "Korišćenje",
+    "usage1": "Akreditivi se šalju Zimbra serveru samo pri automatskoj prijavi.",
+    "usage2": "Nema slanja podataka trećim stranama.",
+    "usage3": "Nema statistike korišćenja.",
+    "permissionsCallout": "<strong>Dozvole:</strong> obaveštenja, kolačići, lokalno skladište, mrežni pristup."
+  },
+  "about": {
+    "title": "O programu",
+    "name": "Zimbra Mail Notifier",
+    "desc": "Ово проширење вас обавештава када пристигну нове поруке у вашем zimbra поштанском сандучету.",
+    "github": "GitHub",
+    "chromeStore": "Chrome Web Store",
+    "firefoxStore": "Firefox Add-ons",
+    "donate": "☕ Donacija",
+    "authors": "David GUEHENNEC",
+    "license": "Licenca MPL 1.1 / GPL 2.0 / LGPL 2.1",
+    "legal": "Ово проширење није повезано са VMware или одобрено од стране VMware."
+  },
+  "footer": {
+    "copyright": "© 2026 Zimbra Mail Notifier — David GUEHENNEC"
+  }
+}

@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "title": "Zimbra Mail Notifier — Chrome & Firefox Extension",
+    "description": "Zimbra Mail Notifier — Chrome and Firefox extension to monitor your Zimbra mailbox: unread messages, calendar, tasks and notifications."
+  },
+  "nav": {
+    "main": "Main navigation",
+    "home": "Home",
+    "features": "Features",
+    "install": "Installation",
+    "manual": "User manual",
+    "history": "Version history",
+    "compatibility": "Compatibility",
+    "help": "Help & contact",
+    "privacy": "Privacy",
+    "about": "About",
+    "menu": "Menu",
+    "backToTop": "Back to top",
+    "language": "Language"
+  },
+  "donate": {
+    "btn": "☕ Donation",
+    "msg": "This extension notifies you when new messages arrive in your Zimbra mailbox."
+  },
+  "hero": {
+    "title": "Zimbra Mail Notifier",
+    "subtitle": "Monitor your Zimbra account and get notified of unread messages. View upcoming appointments and track ongoing tasks — all from your browser toolbar.",
+    "badgeVersion": "Version 4.1.0",
+    "badgeBrowsers": "Chrome · Firefox",
+    "badgeLangs": "15 languages",
+    "badgeOpenSource": "Open Source"
+  },
+  "features": {
+    "title": "Features",
+    "intro": "Browser extension written in TypeScript to monitor one or more Zimbra accounts in real time.",
+    "unreadTitle": "Unread messages",
+    "unreadDesc": "Badge counter on the toolbar icon, list of recent emails with regex filter and \"inbox only\" option.",
+    "calendarTitle": "Calendar",
+    "calendarDesc": "Upcoming appointments with configurable reminders (delay, repeats) and desktop notifications.",
+    "tasksTitle": "Tasks",
+    "tasksDesc": "Track ongoing tasks sorted by priority (high, normal, low).",
+    "draftsTitle": "Drafts",
+    "draftsDesc": "Display unsent draft messages directly in the popup.",
+    "notifTitle": "Notifications",
+    "notifDesc": "Desktop alerts and customizable sounds (ding, drain, ping, heal or custom audio file) with volume control.",
+    "accountsTitle": "Multi-account & security",
+    "accountsDesc": "Multiple accounts, 2FA authentication, trusted device, AES-encrypted passwords and optional auth cookie sync.",
+    "screenshotsTitle": "Interface preview",
+    "shotPopup": "Popup",
+    "shotGeneral": "Options — General",
+    "shotMail": "Options — Email",
+    "shotCalendar": "Options — Calendar",
+    "shotTasks": "Options — Tasks",
+    "shotAccounts": "Options — Accounts"
+  },
+  "install": {
+    "title": "Installation",
+    "intro": "Zimbra Mail Notifier is an extension for <strong>Chrome</strong> and <strong>Firefox</strong> browsers.",
+    "addChrome": "Add to Chrome",
+    "addFirefox": "Add to Firefox",
+    "sourceCode": "Source code (GitHub)",
+    "storeTitle": "Install from stores",
+    "step1": "Click the button for your browser above.",
+    "step2": "On the store page, click <strong>Add to Chrome</strong> or <strong>Add to Firefox</strong>.",
+    "step3": "Confirm the installation when your browser asks.",
+    "step4": "The Zimbra Mail Notifier icon appears in the toolbar. Click it to configure your first account.",
+    "devTitle": "Developer installation",
+    "devCallout": "<strong>For developers:</strong> clone the GitHub repository, run <code>npm install &amp;&amp; npm run build</code>, then load the <code>dist/</code> folder via your browser's developer mode (<code>chrome://extensions</code> or <code>about:debugging</code>).",
+    "uninstallTitle": "Uninstall",
+    "uninstallDesc": "To remove the extension, open your browser's extension manager, find \"Zimbra Mail Notifier\" and click <strong>Uninstall</strong>."
+  },
+  "manual": {
+    "title": "User manual",
+    "accountTitle": "Account configuration",
+    "step1": "Click the extension icon in the toolbar, then the <strong>gear</strong> icon (Preferences).",
+    "step2": "In the <strong>Accounts</strong> tab, click <strong>Add new account</strong>.",
+    "step3": "Enter the <strong>Zimbra server URL</strong> (e.g. <code>https://mail.example.com</code>) and the <strong>web interface URL</strong> if different.",
+    "step4": "Enter your username and password. Check <strong>Save password</strong> for automatic login.",
+    "step5": "Click <strong>Connect</strong> to test the configuration. For 2FA, follow the on-screen instructions.",
+    "optionsTitle": "Main options",
+    "optGeneralTitle": "General",
+    "optGeneralDesc": "Auto-connect on startup, cookie sync to open the web interface already authenticated, popup color and width.",
+    "optMailTitle": "Email",
+    "optMailDesc": "Enable unread management, max displayed count, regex filter, inbox only, notifications and sounds.",
+    "optCalendarTitle": "Calendar",
+    "optCalendarDesc": "Display period (weeks), appointment count, reminders with delay and repeats, sound notifications.",
+    "optTasksTitle": "Tasks & Drafts",
+    "optTasksDesc": "Priority filtering, max tasks and drafts displayed in the popup.",
+    "tipCallout": "<strong>Tip:</strong> use the <strong>Refresh</strong> (↻) button in the popup to force an immediate check of your accounts."
+  },
+  "versions": {
+    "title": "Version history",
+    "intro": "Release timeline generated from the project's Git history.",
+    "items": [
+      {
+        "tag": "v4.1.0",
+        "date": "2026-06-16",
+        "desc": "Option to read emails only from the main folder (inbox)."
+      },
+      {
+        "tag": "v4.0.0",
+        "date": "2026-05-01",
+        "major": true,
+        "desc": "New design, TypeScript migration, Webpack build (replaces Maven). Native Firefox support. Draft display."
+      },
+      {
+        "tag": "v3.0.2",
+        "date": "2025-02-23",
+        "desc": "Service worker keep-alive (Manifest V3)."
+      },
+      {
+        "tag": "v3.0.1",
+        "date": "2025-01-27",
+        "desc": "Fix web interface URL field enable/disable state."
+      },
+      {
+        "tag": "v3.0.0",
+        "date": "2025-01-05",
+        "major": true,
+        "desc": "Migration to Manifest V3 (Chrome)."
+      },
+      {
+        "tag": "v2.7.5",
+        "date": "2021-03-28",
+        "desc": "Fix authentication for Free accounts."
+      },
+      {
+        "tag": "v2.7.4",
+        "date": "2019-03-05",
+        "desc": "Chrome 72 compatibility (extraHeaders in webRequest)."
+      },
+      {
+        "tag": "v2.7.3",
+        "date": "2018-09-07",
+        "desc": "Fix unread messages on Zimbra 8.8.9 without sortBy."
+      },
+      {
+        "tag": "v2.7.2",
+        "date": "2018-01-13",
+        "desc": "jQuery v3.2.1 update, cleanup of unnecessary files."
+      },
+      {
+        "tag": "v2.7.1",
+        "date": "2017-11-27",
+        "desc": "Customizable popup color and width, notification sound selection."
+      },
+      {
+        "tag": "v2.6.2",
+        "date": "2017-11-22",
+        "desc": "Firefox fix for Free accounts."
+      },
+      {
+        "tag": "v2.6.0",
+        "date": "2016-06-26",
+        "major": true,
+        "desc": "Safari support, dedicated Chrome notifications."
+      },
+      {
+        "tag": "v2.5.1",
+        "date": "2016-04-04",
+        "desc": "Serbian locale added."
+      },
+      {
+        "tag": "v2.0.0",
+        "date": "2016-02-01",
+        "major": true,
+        "desc": "Task sorting by priority, multi-account management."
+      },
+      {
+        "tag": "v1.1.1",
+        "date": "2015-08-18",
+        "desc": "Free/Alice ADSL account support, HTTPS fix."
+      },
+      {
+        "tag": "v1.0.0",
+        "date": "2013-12-12",
+        "major": true,
+        "desc": "First public release. Notifications, calendar, tasks, AES password encryption, DE/ES/IT/PT/TR locales."
+      }
+    ]
+  },
+  "compat": {
+    "title": "Compatibility",
+    "browsersTitle": "Browsers",
+    "chromeTitle": "Chrome / Chromium",
+    "chromeDesc": "Manifest V3 — available on the <a href=\"https://chromewebstore.google.com/detail/zimbra-mail-notifier/kglapfficgodpkmenjfpfcignofghanc\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>.",
+    "firefoxTitle": "Firefox",
+    "firefoxDesc": "Native support since v4.0 — available on <a href=\"https://addons.mozilla.org/firefox/addon/zimbra-mail-notifier/\" target=\"_blank\" rel=\"noopener\">Firefox Add-ons</a>.",
+    "serversTitle": "Zimbra servers",
+    "supportedTitle": "✓ Supported",
+    "supported1": "All sites using the standard Zimbra login interface",
+    "supported2": "<a href=\"http://zimbra.free.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.free.fr</a> (specific support)",
+    "supported3": "<a href=\"http://zimbra.aliceadsl.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.aliceadsl.fr</a> (specific support)",
+    "supported4": "Zimbra 8.x and later versions",
+    "supported5": "2FA authentication and trusted device",
+    "unsupportedTitle": "⚠ Not supported",
+    "unsupported1": "Pre-authentication portals (except Free and Alice ADSL)",
+    "unsupported2": "Safari and Opera (historical support, not maintained in v4)",
+    "langsTitle": "Languages",
+    "langsDesc": "The interface is available in 15 languages: English, French, German, Spanish, Italian, Portuguese, Brazilian Portuguese, Dutch, Polish, Russian, Japanese, Korean, Simplified Chinese, Serbian and Turkish."
+  },
+  "help": {
+    "title": "Help & contact",
+    "intro": "For any question, suggestion or bug report:",
+    "emailLabel": "Email:",
+    "githubLabel": "GitHub issues:",
+    "faqTitle": "Common issues",
+    "connFailTitle": "Connection failed",
+    "connFailDesc": "Check the server URL (with <code>https://</code>), your credentials and that your Zimbra server is reachable from your network.",
+    "noNotifTitle": "No notification",
+    "noNotifDesc": "Make sure notifications are enabled in the extension options and allowed in your browser / system settings.",
+    "wrongCountTitle": "Incorrect counter",
+    "wrongCountDesc": "Enable the \"inbox only\" option if you want to exclude subfolders from the count."
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "intro": "This document explains what information Zimbra Mail Notifier collects and how it is used.",
+    "collectedTitle": "Collected information",
+    "collected1": "<strong>Login credentials</strong> — username and password entered in the extension settings page.",
+    "collected2": "This data is <strong>stored locally</strong> in your browser storage (AES encryption for passwords).",
+    "usageTitle": "How information is used",
+    "usage1": "Credentials are sent to the Zimbra server only during automatic login.",
+    "usage2": "No data is sent to third-party servers.",
+    "usage3": "No usage statistics are collected (Google Analytics removed since v1.0.0).",
+    "permissionsCallout": "<strong>Required permissions:</strong> notifications, cookies, local storage, network access to your configured Zimbra server URLs."
+  },
+  "about": {
+    "title": "About",
+    "name": "Zimbra Mail Notifier",
+    "desc": "This extension notifies you when new messages arrive in your Zimbra mailbox.",
+    "github": "GitHub",
+    "chromeStore": "Chrome Web Store",
+    "firefoxStore": "Firefox Add-ons",
+    "donate": "☕ Donate",
+    "authors": "By David GUEHENNEC",
+    "license": "License MPL 1.1 / GPL 2.0 / LGPL 2.1",
+    "legal": "This extension is not affiliated or endorsed by VMware."
+  },
+  "footer": {
+    "copyright": "© 2026 Zimbra Mail Notifier — David GUEHENNEC"
+  }
+}

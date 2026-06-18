@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "title": "Zimbra Mail Notifier — Chrome 和 Firefox 扩展",
+    "description": "Zimbra Mail Notifier — 监控 Zimbra 邮箱的 Chrome/Firefox 扩展：未读消息、日历、任务和通知。"
+  },
+  "nav": {
+    "main": "主导航",
+    "home": "首页",
+    "features": "功能",
+    "install": "安装",
+    "manual": "用户手册",
+    "history": "版本历史",
+    "compatibility": "兼容性",
+    "help": "帮助与联系",
+    "privacy": "隐私",
+    "about": "关于",
+    "menu": "菜单",
+    "backToTop": "返回顶部",
+    "language": "语言"
+  },
+  "donate": {
+    "btn": "☕ 捐赠",
+    "msg": "当您的 Zimbra 邮箱收到新邮件时，此扩展会通知您。"
+  },
+  "hero": {
+    "title": "Zimbra Mail Notifier",
+    "subtitle": "监控您的 Zimbra 账户并获取未读消息通知。查看即将到来的约会并跟踪进行中的任务 — 全部来自浏览器工具栏。",
+    "badgeVersion": "Version 4.1.0",
+    "badgeBrowsers": "Chrome · Firefox",
+    "badgeLangs": "15 种语言",
+    "badgeOpenSource": "开源"
+  },
+  "features": {
+    "title": "功能",
+    "intro": "用 TypeScript 编写的浏览器扩展，实时监控一个或多个 Zimbra 账户。",
+    "unreadTitle": "邮件",
+    "unreadDesc": "工具栏图标徽章、带正则表达式过滤器和\"仅收件箱\"选项的最近邮件列表。",
+    "calendarTitle": "日历",
+    "calendarDesc": "可配置提醒和桌面通知的即将到来的约会。",
+    "tasksTitle": "任务",
+    "tasksDesc": "按优先级（高、正常、低）排序的进行中任务跟踪。",
+    "draftsTitle": "草稿",
+    "draftsDesc": "在弹出窗口中显示未发送的草稿。",
+    "notifTitle": "Notifications",
+    "notifDesc": "桌面提醒和可自定义声音（带音量控制）。",
+    "accountsTitle": "多账户与安全",
+    "accountsDesc": "多账户、2FA、受信任设备、AES 加密密码和可选 Cookie 同步。",
+    "screenshotsTitle": "界面预览",
+    "shotPopup": "Popup",
+    "shotGeneral": "选项 — 常规",
+    "shotMail": "选项 — 邮件",
+    "shotCalendar": "选项 — 日历",
+    "shotTasks": "选项 — 任务",
+    "shotAccounts": "选项 — 账户"
+  },
+  "install": {
+    "title": "安装",
+    "intro": "Zimbra Mail Notifier 是 <strong>Chrome</strong> 和 <strong>Firefox</strong> 扩展。",
+    "addChrome": "添加到 Chrome",
+    "addFirefox": "添加到 Firefox",
+    "sourceCode": "源代码 (GitHub)",
+    "storeTitle": "从商店安装",
+    "step1": "点击上方对应浏览器的按钮。",
+    "step2": "在商店页面点击 <strong>添加到 Chrome</strong> 或 <strong>添加到 Firefox</strong>。",
+    "step3": "确认安装。",
+    "step4": "图标出现在工具栏。点击配置第一个账户。",
+    "devTitle": "开发者安装",
+    "devCallout": "<strong>开发者：</strong> 克隆 GitHub 仓库，运行 <code>npm install &amp;&amp; npm run build</code>，加载 <code>dist/</code>。",
+    "uninstallTitle": "卸载",
+    "uninstallDesc": "打开扩展管理器，找到「Zimbra Mail Notifier」并点击 <strong>卸载</strong>。"
+  },
+  "manual": {
+    "title": "用户手册",
+    "accountTitle": "账户配置",
+    "step1": "点击扩展图标，然后点击 <strong>齿轮</strong>（首选项）。",
+    "step2": "在 <strong>账户</strong> 标签页点击 <strong>添加账户</strong>。",
+    "step3": "输入 <strong>Zimbra 服务器 URL</strong> 和 <strong>Web 界面 URL</strong>。",
+    "step4": "输入用户名和密码。勾选 <strong>保存密码</strong>。",
+    "step5": "点击 <strong>连接</strong> 测试配置。",
+    "optionsTitle": "主要选项",
+    "optGeneralTitle": "常规",
+    "optGeneralDesc": "启动时自动连接、Cookie 同步、弹出窗口颜色和宽度。",
+    "optMailTitle": "邮件",
+    "optMailDesc": "未读管理、最大显示数、正则过滤器、仅收件箱、通知和声音。",
+    "optCalendarTitle": "日历",
+    "optCalendarDesc": "显示周期（周）、约会数、提醒、声音通知。",
+    "optTasksTitle": "任务 & 草稿",
+    "optTasksDesc": "优先级过滤、最大任务和草稿数。",
+    "tipCallout": "<strong>提示：</strong> 使用弹出窗口中的 <strong>刷新</strong> (↻) 按钮。"
+  },
+  "versions": {
+    "title": "版本历史",
+    "intro": "从项目 Git 历史生成的发布时间表。",
+    "items": [
+      {
+        "tag": "v4.1.0",
+        "date": "2026-06-16",
+        "desc": "仅从主文件夹（收件箱）读取邮件的选项。"
+      },
+      {
+        "tag": "v4.0.0",
+        "date": "2026-05-01",
+        "major": true,
+        "desc": "新设计、TypeScript 迁移、Webpack 构建。原生 Firefox 支持。草稿显示。"
+      },
+      {
+        "tag": "v3.0.2",
+        "date": "2025-02-23",
+        "desc": "Service Worker 保活 (Manifest V3)。"
+      },
+      {
+        "tag": "v3.0.1",
+        "date": "2025-01-27",
+        "desc": "Web 界面 URL 字段修复。"
+      },
+      {
+        "tag": "v3.0.0",
+        "date": "2025-01-05",
+        "major": true,
+        "desc": "迁移到 Manifest V3 (Chrome)。"
+      },
+      {
+        "tag": "v2.7.5",
+        "date": "2021-03-28",
+        "desc": "Free 账户认证修复。"
+      },
+      {
+        "tag": "v2.7.4",
+        "date": "2019-03-05",
+        "desc": "Chrome 72 兼容性。"
+      },
+      {
+        "tag": "v2.7.3",
+        "date": "2018-09-07",
+        "desc": "Zimbra 8.8.9 未读消息修复。"
+      },
+      {
+        "tag": "v2.7.2",
+        "date": "2018-01-13",
+        "desc": "jQuery v3.2.1 更新。"
+      },
+      {
+        "tag": "v2.7.1",
+        "date": "2017-11-27",
+        "desc": "可自定义弹出窗口颜色和宽度。"
+      },
+      {
+        "tag": "v2.6.2",
+        "date": "2017-11-22",
+        "desc": "Firefox Free 账户修复。"
+      },
+      {
+        "tag": "v2.6.0",
+        "date": "2016-06-26",
+        "major": true,
+        "desc": "Safari 支持。"
+      },
+      {
+        "tag": "v2.5.1",
+        "date": "2016-04-04",
+        "desc": "添加塞尔维亚语区域设置。"
+      },
+      {
+        "tag": "v2.0.0",
+        "date": "2016-02-01",
+        "major": true,
+        "desc": "任务优先级排序、多账户。"
+      },
+      {
+        "tag": "v1.1.1",
+        "date": "2015-08-18",
+        "desc": "Free/Alice ADSL 账户。"
+      },
+      {
+        "tag": "v1.0.0",
+        "date": "2013-12-12",
+        "major": true,
+        "desc": "首个公开发布。"
+      }
+    ]
+  },
+  "compat": {
+    "title": "兼容性",
+    "browsersTitle": "浏览器",
+    "chromeTitle": "Chrome / Chromium",
+    "chromeDesc": "Manifest V3 — available on the <a href=\"https://chromewebstore.google.com/detail/zimbra-mail-notifier/kglapfficgodpkmenjfpfcignofghanc\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>.",
+    "firefoxTitle": "Firefox",
+    "firefoxDesc": "Native support since v4.0 — available on <a href=\"https://addons.mozilla.org/firefox/addon/zimbra-mail-notifier/\" target=\"_blank\" rel=\"noopener\">Firefox Add-ons</a>.",
+    "serversTitle": "Zimbra 服务器",
+    "supportedTitle": "✓ 支持",
+    "supported1": "所有使用标准 Zimbra 登录界面的网站",
+    "supported2": "<a href=\"http://zimbra.free.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.free.fr</a>（特定支持）",
+    "supported3": "<a href=\"http://zimbra.aliceadsl.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.aliceadsl.fr</a>（特定支持）",
+    "supported4": "Zimbra 8.x 及更高版本",
+    "supported5": "2FA 和受信任设备",
+    "unsupportedTitle": "⚠ 不支持",
+    "unsupported1": "预认证门户（Free 和 Alice ADSL 除外）",
+    "unsupported2": "Safari 和 Opera（v4 不再维护）",
+    "langsTitle": "语言",
+    "langsDesc": "界面提供 15 种语言。"
+  },
+  "help": {
+    "title": "帮助与联系",
+    "intro": "如有问题、建议或错误报告：",
+    "emailLabel": "电子邮件：",
+    "githubLabel": "GitHub issues：",
+    "faqTitle": "常见问题",
+    "connFailTitle": "连接失败",
+    "connFailDesc": "检查服务器 URL、凭据和 Zimbra 可达性。",
+    "noNotifTitle": "无通知",
+    "noNotifDesc": "确保扩展选项和浏览器/系统中启用了通知。",
+    "wrongCountTitle": "计数不正确",
+    "wrongCountDesc": "启用\"仅收件箱\"以排除子文件夹。"
+  },
+  "privacy": {
+    "title": "隐私政策",
+    "intro": "本文档说明 Zimbra Mail Notifier 收集的信息及使用方式。",
+    "collectedTitle": "收集的信息",
+    "collected1": "<strong>登录凭据</strong> — 设置中的用户名和密码。",
+    "collected2": "数据<strong>本地存储</strong>在浏览器中（AES 加密）。",
+    "usageTitle": "信息使用",
+    "usage1": "凭据仅在自动登录时发送到 Zimbra 服务器。",
+    "usage2": "不向第三方服务器发送数据。",
+    "usage3": "不收集使用统计。",
+    "permissionsCallout": "<strong>所需权限：</strong> 通知、Cookie、本地存储、网络访问。"
+  },
+  "about": {
+    "title": "关于",
+    "name": "Zimbra Mail Notifier",
+    "desc": "当您的 Zimbra 邮箱收到新邮件时，此扩展会通知您。",
+    "github": "GitHub",
+    "chromeStore": "Chrome Web Store",
+    "firefoxStore": "Firefox Add-ons",
+    "donate": "☕ 捐赠",
+    "authors": "David GUEHENNEC",
+    "license": "许可证 MPL 1.1 / GPL 2.0 / LGPL 2.1",
+    "legal": "此扩展与 VMware 无关联，也未获 VMware 认可。"
+  },
+  "footer": {
+    "copyright": "© 2026 Zimbra Mail Notifier — David GUEHENNEC"
+  }
+}

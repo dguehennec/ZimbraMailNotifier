@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "title": "Zimbra Mail Notifier — Расширение Chrome и Firefox",
+    "description": "Zimbra Mail Notifier — расширение для Chrome и Firefox для мониторинга почты Zimbra: непрочитанные сообщения, календарь, задачи и уведомления."
+  },
+  "nav": {
+    "main": "Основная навигация",
+    "home": "Главная",
+    "features": "Функции",
+    "install": "Установка",
+    "manual": "Руководство",
+    "history": "История версий",
+    "compatibility": "Совместимость",
+    "help": "Помощь и контакты",
+    "privacy": "Конфиденциальность",
+    "about": "О программе",
+    "menu": "Меню",
+    "backToTop": "Наверх",
+    "language": "Язык"
+  },
+  "donate": {
+    "btn": "☕ Пожертвование",
+    "msg": "Это расширение уведомляет вас о новых сообщениях в вашем почтовом ящике Zimbra."
+  },
+  "hero": {
+    "title": "Zimbra Mail Notifier",
+    "subtitle": "Отслеживайте учётную запись Zimbra и получайте уведомления о непрочитанных сообщениях. Просматривайте встречи и задачи — прямо с панели браузера.",
+    "badgeVersion": "Version 4.1.0",
+    "badgeBrowsers": "Chrome · Firefox",
+    "badgeLangs": "15 языков",
+    "badgeOpenSource": "Open Source"
+  },
+  "features": {
+    "title": "Функции",
+    "intro": "Расширение браузера на TypeScript для мониторинга одной или нескольких учётных записей Zimbra в реальном времени.",
+    "unreadTitle": "Почта",
+    "unreadDesc": "Счётчик на значке панели, список писем с regex-фильтром и опцией «только входящие».",
+    "calendarTitle": "Календарь",
+    "calendarDesc": "Предстоящие встречи с настраиваемыми напоминаниями и уведомлениями.",
+    "tasksTitle": "Задачи",
+    "tasksDesc": "Отслеживание задач по приоритету (высокий, обычный, низкий).",
+    "draftsTitle": "Черновики",
+    "draftsDesc": "Отображение неотправленных черновиков в popup.",
+    "notifTitle": "Notifications",
+    "notifDesc": "Уведомления рабочего стола и настраиваемые звуки с регулировкой громкости.",
+    "accountsTitle": "Несколько аккаунтов и безопасность",
+    "accountsDesc": "Несколько аккаунтов, 2FA, доверенное устройство, AES-шифрование паролей и синхронизация cookie.",
+    "screenshotsTitle": "Предпросмотр интерфейса",
+    "shotPopup": "Popup",
+    "shotGeneral": "Параметры — Общие",
+    "shotMail": "Параметры — Почта",
+    "shotCalendar": "Параметры — Календарь",
+    "shotTasks": "Параметры — Задачи",
+    "shotAccounts": "Параметры — Учётные записи"
+  },
+  "install": {
+    "title": "Установка",
+    "intro": "Zimbra Mail Notifier — расширение для <strong>Chrome</strong> и <strong>Firefox</strong>.",
+    "addChrome": "Добавить в Chrome",
+    "addFirefox": "Добавить в Firefox",
+    "sourceCode": "Исходный код (GitHub)",
+    "storeTitle": "Установка из магазинов",
+    "step1": "Нажмите кнопку вашего браузера выше.",
+    "step2": "На странице магазина нажмите <strong>Добавить в Chrome</strong> или <strong>Добавить в Firefox</strong>.",
+    "step3": "Подтвердите установку.",
+    "step4": "Значок появится на панели. Нажмите для настройки первого аккаунта.",
+    "devTitle": "Установка для разработчиков",
+    "devCallout": "<strong>Для разработчиков:</strong> клонируйте репозиторий, выполните <code>npm install &amp;&amp; npm run build</code> и загрузите <code>dist/</code>.",
+    "uninstallTitle": "Удаление",
+    "uninstallDesc": "Откройте менеджер расширений, найдите «Zimbra Mail Notifier» и нажмите <strong>Удалить</strong>."
+  },
+  "manual": {
+    "title": "Руководство пользователя",
+    "accountTitle": "Настройка аккаунта",
+    "step1": "Нажмите значок расширения, затем <strong>шестерёнку</strong> (Настройки).",
+    "step2": "На вкладке <strong>Аккаунты</strong> нажмите <strong>Добавить аккаунт</strong>.",
+    "step3": "Введите <strong>URL сервера Zimbra</strong> и <strong>URL веб-интерфейса</strong>.",
+    "step4": "Введите логин и пароль. Отметьте <strong>Сохранить пароль</strong>.",
+    "step5": "Нажмите <strong>Подключить</strong> для проверки.",
+    "optionsTitle": "Основные параметры",
+    "optGeneralTitle": "Общие",
+    "optGeneralDesc": "Автоподключение, синхронизация cookie, цвет и ширина popup.",
+    "optMailTitle": "Почта",
+    "optMailDesc": "Управление непрочитанными, максимум, regex-фильтр, только входящие.",
+    "optCalendarTitle": "Календарь",
+    "optCalendarDesc": "Период (недели), встречи, напоминания, звуковые уведомления.",
+    "optTasksTitle": "Задачи & Черновики",
+    "optTasksDesc": "Фильтр приоритета, максимум задач и черновиков.",
+    "tipCallout": "<strong>Совет:</strong> используйте кнопку <strong>Обновить</strong> (↻) в popup."
+  },
+  "versions": {
+    "title": "История версий",
+    "intro": "Хронология релизов из истории Git проекта.",
+    "items": [
+      {
+        "tag": "v4.1.0",
+        "date": "2026-06-16",
+        "desc": "Опция чтения писем только из основной папки (входящие)."
+      },
+      {
+        "tag": "v4.0.0",
+        "date": "2026-05-01",
+        "major": true,
+        "desc": "Новый дизайн, миграция TypeScript, сборка Webpack. Поддержка Firefox. Черновики."
+      },
+      {
+        "tag": "v3.0.2",
+        "date": "2025-02-23",
+        "desc": "Поддержание service worker (Manifest V3)."
+      },
+      {
+        "tag": "v3.0.1",
+        "date": "2025-01-27",
+        "desc": "Исправление поля URL веб-интерфейса."
+      },
+      {
+        "tag": "v3.0.0",
+        "date": "2025-01-05",
+        "major": true,
+        "desc": "Миграция на Manifest V3 (Chrome)."
+      },
+      {
+        "tag": "v2.7.5",
+        "date": "2021-03-28",
+        "desc": "Исправление аутентификации Free."
+      },
+      {
+        "tag": "v2.7.4",
+        "date": "2019-03-05",
+        "desc": "Совместимость Chrome 72."
+      },
+      {
+        "tag": "v2.7.3",
+        "date": "2018-09-07",
+        "desc": "Исправление непрочитанных Zimbra 8.8.9."
+      },
+      {
+        "tag": "v2.7.2",
+        "date": "2018-01-13",
+        "desc": "Обновление jQuery v3.2.1."
+      },
+      {
+        "tag": "v2.7.1",
+        "date": "2017-11-27",
+        "desc": "Настраиваемый цвет и ширина popup."
+      },
+      {
+        "tag": "v2.6.2",
+        "date": "2017-11-22",
+        "desc": "Исправление Firefox для Free."
+      },
+      {
+        "tag": "v2.6.0",
+        "date": "2016-06-26",
+        "major": true,
+        "desc": "Поддержка Safari."
+      },
+      {
+        "tag": "v2.5.1",
+        "date": "2016-04-04",
+        "desc": "Добавлена сербская локаль."
+      },
+      {
+        "tag": "v2.0.0",
+        "date": "2016-02-01",
+        "major": true,
+        "desc": "Сортировка задач, несколько аккаунтов."
+      },
+      {
+        "tag": "v1.1.1",
+        "date": "2015-08-18",
+        "desc": "Аккаунты Free/Alice ADSL."
+      },
+      {
+        "tag": "v1.0.0",
+        "date": "2013-12-12",
+        "major": true,
+        "desc": "Первый публичный релиз."
+      }
+    ]
+  },
+  "compat": {
+    "title": "Совместимость",
+    "browsersTitle": "Браузеры",
+    "chromeTitle": "Chrome / Chromium",
+    "chromeDesc": "Manifest V3 — available on the <a href=\"https://chromewebstore.google.com/detail/zimbra-mail-notifier/kglapfficgodpkmenjfpfcignofghanc\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>.",
+    "firefoxTitle": "Firefox",
+    "firefoxDesc": "Native support since v4.0 — available on <a href=\"https://addons.mozilla.org/firefox/addon/zimbra-mail-notifier/\" target=\"_blank\" rel=\"noopener\">Firefox Add-ons</a>.",
+    "serversTitle": "Серверы Zimbra",
+    "supportedTitle": "✓ Поддерживается",
+    "supported1": "Все сайты со стандартным интерфейсом входа Zimbra",
+    "supported2": "<a href=\"http://zimbra.free.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.free.fr</a> (специальная поддержка)",
+    "supported3": "<a href=\"http://zimbra.aliceadsl.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.aliceadsl.fr</a> (специальная поддержка)",
+    "supported4": "Zimbra 8.x и новее",
+    "supported5": "2FA и доверенное устройство",
+    "unsupportedTitle": "⚠ Не поддерживается",
+    "unsupported1": "Порталы с предварительной аутентификацией (кроме Free и Alice ADSL)",
+    "unsupported2": "Safari и Opera (историческая поддержка, не поддерживается в v4)",
+    "langsTitle": "Языки",
+    "langsDesc": "Интерфейс доступен на 15 языках."
+  },
+  "help": {
+    "title": "Помощь и контакты",
+    "intro": "По вопросам, предложениям и ошибкам:",
+    "emailLabel": "E-mail:",
+    "githubLabel": "GitHub issues:",
+    "faqTitle": "Частые проблемы",
+    "connFailTitle": "Ошибка подключения",
+    "connFailDesc": "Проверьте URL сервера, учётные данные и доступность Zimbra.",
+    "noNotifTitle": "Нет уведомлений",
+    "noNotifDesc": "Убедитесь, что уведомления включены в настройках расширения и системы.",
+    "wrongCountTitle": "Неверный счётчик",
+    "wrongCountDesc": "Включите «только входящие» для исключения подпапок."
+  },
+  "privacy": {
+    "title": "Политика конфиденциальности",
+    "intro": "Этот документ объясняет, какую информацию собирает Zimbra Mail Notifier.",
+    "collectedTitle": "Собираемая информация",
+    "collected1": "<strong>Учётные данные</strong> — логин и пароль в настройках.",
+    "collected2": "Данные хранятся <strong>локально</strong> (AES-шифрование).",
+    "usageTitle": "Использование",
+    "usage1": "Данные отправляются на сервер Zimbra только при автовходе.",
+    "usage2": "Данные не передаются третьим лицам.",
+    "usage3": "Статистика использования не собирается.",
+    "permissionsCallout": "<strong>Разрешения:</strong> уведомления, cookie, локальное хранилище, сетевой доступ."
+  },
+  "about": {
+    "title": "О программе",
+    "name": "Zimbra Mail Notifier",
+    "desc": "Это расширение уведомляет вас о новых сообщениях в вашем почтовом ящике Zimbra.",
+    "github": "GitHub",
+    "chromeStore": "Chrome Web Store",
+    "firefoxStore": "Firefox Add-ons",
+    "donate": "☕ Пожертвование",
+    "authors": "David GUEHENNEC",
+    "license": "Лицензия MPL 1.1 / GPL 2.0 / LGPL 2.1",
+    "legal": "Это расширение не связано с VMware и не одобрено VMware."
+  },
+  "footer": {
+    "copyright": "© 2026 Zimbra Mail Notifier — David GUEHENNEC"
+  }
+}

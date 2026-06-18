@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "title": "Zimbra Mail Notifier — Rozszerzenie Chrome i Firefox",
+    "description": "Zimbra Mail Notifier — rozszerzenie Chrome i Firefox do monitorowania skrzynki Zimbra: nieprzeczytane wiadomości, kalendarz, zadania i powiadomienia."
+  },
+  "nav": {
+    "main": "Nawigacja główna",
+    "home": "Strona główna",
+    "features": "Funkcje",
+    "install": "Instalacja",
+    "manual": "Instrukcja",
+    "history": "Historia wersji",
+    "compatibility": "Kompatybilność",
+    "help": "Pomoc i kontakt",
+    "privacy": "Prywatność",
+    "about": "O programie",
+    "menu": "Menu",
+    "backToTop": "Do góry",
+    "language": "Język"
+  },
+  "donate": {
+    "btn": "☕ Darowizna",
+    "msg": "To rozszerzenie powiadamia o nowych wiadomościach w skrzynce Zimbra."
+  },
+  "hero": {
+    "title": "Zimbra Mail Notifier",
+    "subtitle": "Monitoruj konto Zimbra i otrzymuj powiadomienia o nieprzeczytanych wiadomościach. Przeglądaj spotkania i śledź zadania — z paska narzędzi przeglądarki.",
+    "badgeVersion": "Version 4.1.0",
+    "badgeBrowsers": "Chrome · Firefox",
+    "badgeLangs": "15 języków",
+    "badgeOpenSource": "Open Source"
+  },
+  "features": {
+    "title": "Funkcje",
+    "intro": "Rozszerzenie przeglądarki w TypeScript do monitorowania kont Zimbra w czasie rzeczywistym.",
+    "unreadTitle": "E-mail",
+    "unreadDesc": "Licznik na ikonie paska, lista ostatnich e-maili z filtrem regex i opcją «tylko skrzynka odbiorcza».",
+    "calendarTitle": "Kalendarz",
+    "calendarDesc": "Nadchodzące spotkania z konfigurowalnymi przypomnieniami i powiadomieniami pulpitowymi.",
+    "tasksTitle": "Zadania",
+    "tasksDesc": "Śledzenie bieżących zadań według priorytetu (wysoki, normalny, niski).",
+    "draftsTitle": "Wersje robocze",
+    "draftsDesc": "Wyświetlanie niewysłanych wersji roboczych w popupie.",
+    "notifTitle": "Notifications",
+    "notifDesc": "Alerty pulpitowe i konfigurowalne dźwięki z regulacją głośności.",
+    "accountsTitle": "Wiele kont i bezpieczeństwo",
+    "accountsDesc": "Wiele kont, 2FA, zaufane urządzenie, hasła AES i opcjonalna synchronizacja ciasteczek.",
+    "screenshotsTitle": "Podgląd interfejsu",
+    "shotPopup": "Popup",
+    "shotGeneral": "Opcje — Ogólne",
+    "shotMail": "Opcje — E-mail",
+    "shotCalendar": "Opcje — Kalendarz",
+    "shotTasks": "Opcje — Zadania",
+    "shotAccounts": "Opcje — Konta"
+  },
+  "install": {
+    "title": "Instalacja",
+    "intro": "Zimbra Mail Notifier to rozszerzenie dla <strong>Chrome</strong> i <strong>Firefox</strong>.",
+    "addChrome": "Dodaj do Chrome",
+    "addFirefox": "Dodaj do Firefox",
+    "sourceCode": "Kod źródłowy (GitHub)",
+    "storeTitle": "Instalacja ze sklepów",
+    "step1": "Kliknij przycisk swojej przeglądarki powyżej.",
+    "step2": "Na stronie sklepu kliknij <strong>Dodaj do Chrome</strong> lub <strong>Dodaj do Firefox</strong>.",
+    "step3": "Potwierdź instalację.",
+    "step4": "Ikona pojawi się na pasku. Kliknij, aby skonfigurować pierwsze konto.",
+    "devTitle": "Instalacja deweloperska",
+    "devCallout": "<strong>Dla deweloperów:</strong> sklonuj repozytorium, uruchom <code>npm install &amp;&amp; npm run build</code> i załaduj <code>dist/</code>.",
+    "uninstallTitle": "Odinstalowanie",
+    "uninstallDesc": "Otwórz menedżer rozszerzeń, znajdź «Zimbra Mail Notifier» i kliknij <strong>Odinstaluj</strong>."
+  },
+  "manual": {
+    "title": "Instrukcja",
+    "accountTitle": "Konfiguracja konta",
+    "step1": "Kliknij ikonę rozszerzenia, potem <strong>koło zębate</strong> (Preferencje).",
+    "step2": "W zakładce <strong>Konta</strong> kliknij <strong>Dodaj konto</strong>.",
+    "step3": "Wprowadź <strong>URL serwera Zimbra</strong> i <strong>URL interfejsu web</strong>.",
+    "step4": "Wprowadź login i hasło. Zaznacz <strong>Zapisz hasło</strong>.",
+    "step5": "Kliknij <strong>Połącz</strong> aby przetestować.",
+    "optionsTitle": "Główne opcje",
+    "optGeneralTitle": "Ogólne",
+    "optGeneralDesc": "Auto-połączenie, sync ciasteczek, kolor i szerokość popupu.",
+    "optMailTitle": "E-mail",
+    "optMailDesc": "Zarządzanie nieprzeczytanymi, max, filtr regex, tylko skrzynka odbiorcza.",
+    "optCalendarTitle": "Kalendarz",
+    "optCalendarDesc": "Okres (tygodnie), spotkania, przypomnienia, powiadomienia dźwiękowe.",
+    "optTasksTitle": "Zadania & Wersje robocze",
+    "optTasksDesc": "Filtr priorytetu, max zadań i wersji roboczych.",
+    "tipCallout": "<strong>Wskazówka:</strong> użyj przycisku <strong>Odśwież</strong> (↻) w popupie."
+  },
+  "versions": {
+    "title": "Historia wersji",
+    "intro": "Oś czasu wydań z historii Git projektu.",
+    "items": [
+      {
+        "tag": "v4.1.0",
+        "date": "2026-06-16",
+        "desc": "Opcja czytania e-maili tylko z folderu głównego (skrzynka odbiorcza)."
+      },
+      {
+        "tag": "v4.0.0",
+        "date": "2026-05-01",
+        "major": true,
+        "desc": "Nowy design, migracja TypeScript, build Webpack. Wsparcie Firefox. Wersje robocze."
+      },
+      {
+        "tag": "v3.0.2",
+        "date": "2025-02-23",
+        "desc": "Utrzymanie service workera (Manifest V3)."
+      },
+      {
+        "tag": "v3.0.1",
+        "date": "2025-01-27",
+        "desc": "Poprawka pola URL interfejsu web."
+      },
+      {
+        "tag": "v3.0.0",
+        "date": "2025-01-05",
+        "major": true,
+        "desc": "Migracja do Manifest V3 (Chrome)."
+      },
+      {
+        "tag": "v2.7.5",
+        "date": "2021-03-28",
+        "desc": "Poprawka autentykacji kont Free."
+      },
+      {
+        "tag": "v2.7.4",
+        "date": "2019-03-05",
+        "desc": "Kompatybilność Chrome 72."
+      },
+      {
+        "tag": "v2.7.3",
+        "date": "2018-09-07",
+        "desc": "Poprawka nieprzeczytanych Zimbra 8.8.9."
+      },
+      {
+        "tag": "v2.7.2",
+        "date": "2018-01-13",
+        "desc": "Aktualizacja jQuery v3.2.1."
+      },
+      {
+        "tag": "v2.7.1",
+        "date": "2017-11-27",
+        "desc": "Konfigurowalny kolor i szerokość popupu."
+      },
+      {
+        "tag": "v2.6.2",
+        "date": "2017-11-22",
+        "desc": "Poprawka Firefox kont Free."
+      },
+      {
+        "tag": "v2.6.0",
+        "date": "2016-06-26",
+        "major": true,
+        "desc": "Wsparcie Safari."
+      },
+      {
+        "tag": "v2.5.1",
+        "date": "2016-04-04",
+        "desc": "Dodano locale serbski."
+      },
+      {
+        "tag": "v2.0.0",
+        "date": "2016-02-01",
+        "major": true,
+        "desc": "Sortowanie zadań, wiele kont."
+      },
+      {
+        "tag": "v1.1.1",
+        "date": "2015-08-18",
+        "desc": "Konta Free/Alice ADSL."
+      },
+      {
+        "tag": "v1.0.0",
+        "date": "2013-12-12",
+        "major": true,
+        "desc": "Pierwsze publiczne wydanie."
+      }
+    ]
+  },
+  "compat": {
+    "title": "Kompatybilność",
+    "browsersTitle": "Przeglądarki",
+    "chromeTitle": "Chrome / Chromium",
+    "chromeDesc": "Manifest V3 — available on the <a href=\"https://chromewebstore.google.com/detail/zimbra-mail-notifier/kglapfficgodpkmenjfpfcignofghanc\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>.",
+    "firefoxTitle": "Firefox",
+    "firefoxDesc": "Native support since v4.0 — available on <a href=\"https://addons.mozilla.org/firefox/addon/zimbra-mail-notifier/\" target=\"_blank\" rel=\"noopener\">Firefox Add-ons</a>.",
+    "serversTitle": "Serwery Zimbra",
+    "supportedTitle": "✓ Obsługiwane",
+    "supported1": "Wszystkie strony ze standardowym interfejsem logowania Zimbra",
+    "supported2": "<a href=\"http://zimbra.free.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.free.fr</a> (specjalne wsparcie)",
+    "supported3": "<a href=\"http://zimbra.aliceadsl.fr/\" target=\"_blank\" rel=\"noopener\">zimbra.aliceadsl.fr</a> (specjalne wsparcie)",
+    "supported4": "Zimbra 8.x i nowsze",
+    "supported5": "2FA i zaufane urządzenie",
+    "unsupportedTitle": "⚠ Nieobsługiwane",
+    "unsupported1": "Portale z pre-autentykacją (oprócz Free i Alice ADSL)",
+    "unsupported2": "Safari i Opera (historyczne, nieutrzymywane w v4)",
+    "langsTitle": "Języki",
+    "langsDesc": "Interfejs dostępny w 15 językach."
+  },
+  "help": {
+    "title": "Pomoc i kontakt",
+    "intro": "W razie pytań, sugestii lub zgłoszeń błędów:",
+    "emailLabel": "E-mail:",
+    "githubLabel": "Zgłoszenia GitHub:",
+    "faqTitle": "Typowe problemy",
+    "connFailTitle": "Połączenie nieudane",
+    "connFailDesc": "Sprawdź URL serwera, dane logowania i dostępność Zimbra.",
+    "noNotifTitle": "Brak powiadomienia",
+    "noNotifDesc": "Upewnij się, że powiadomienia są włączone w opcjach i systemie.",
+    "wrongCountTitle": "Nieprawidłowy licznik",
+    "wrongCountDesc": "Włącz «tylko skrzynka odbiorcza» aby wykluczyć podfoldery."
+  },
+  "privacy": {
+    "title": "Polityka prywatności",
+    "intro": "Ten dokument wyjaśnia, jakie informacje zbiera Zimbra Mail Notifier.",
+    "collectedTitle": "Zbierane informacje",
+    "collected1": "<strong>Dane logowania</strong> — użytkownik i hasło w ustawieniach.",
+    "collected2": "Dane przechowywane <strong>lokalnie</strong> (szyfrowanie AES).",
+    "usageTitle": "Wykorzystanie",
+    "usage1": "Dane wysyłane do serwera Zimbra tylko przy auto-logowaniu.",
+    "usage2": "Brak danych do serwerów trzecich.",
+    "usage3": "Brak statystyk użycia.",
+    "permissionsCallout": "<strong>Uprawnienia:</strong> powiadomienia, ciasteczka, pamięć lokalna, dostęp sieciowy."
+  },
+  "about": {
+    "title": "O programie",
+    "name": "Zimbra Mail Notifier",
+    "desc": "To rozszerzenie powiadamia o nowych wiadomościach w skrzynce Zimbra.",
+    "github": "GitHub",
+    "chromeStore": "Chrome Web Store",
+    "firefoxStore": "Firefox Add-ons",
+    "donate": "☕ Darowizna",
+    "authors": "Autor: David GUEHENNEC",
+    "license": "Licencja MPL 1.1 / GPL 2.0 / LGPL 2.1",
+    "legal": "To rozszerzenie nie jest powiązane z VMware ani zatwierdzone przez VMware."
+  },
+  "footer": {
+    "copyright": "© 2026 Zimbra Mail Notifier — David GUEHENNEC"
+  }
+}
