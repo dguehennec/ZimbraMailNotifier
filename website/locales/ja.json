@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Zimbra アカウントを監視し、未読メッセージを通知。予定の確認やタスクの追跡がブラウザのツールバーからできます。",
-    "badgeVersion": "Version 4.1.0",
+    "badgeVersion": "Version 4.2.0",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15言語",
     "badgeOpenSource": "オープンソース"
@@ -92,6 +92,11 @@
     "title": "バージョン履歴",
     "intro": "プロジェクトの Git 履歴から生成されたリリース年表。",
     "items": [
+      {
+        "tag": "v4.2.0",
+        "date": "2026-06-25",
+        "desc": "Free サポートを追加。"
+      },
       {
         "tag": "v4.1.0",
         "date": "2026-06-16",

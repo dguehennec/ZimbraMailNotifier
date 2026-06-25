@@ -1,4 +1,4 @@
-import { resetChromeMocks, mockCookiesSet } from './setup';
+import { resetChromeMocks, mockCookiesSet, mockTabsQuery } from './setup';
 
 describe('BrowserService', () => {
   beforeEach(async () => {
@@ -80,18 +80,48 @@ describe('BrowserService', () => {
     expect(mockCookiesSet).not.toHaveBeenCalled();
   });
 
-  it('removes ZM_AUTH_TOKEN cookie', async () => {
+  it('removes ZM_AUTH_TOKEN and SID cookies', async () => {
     const BrowserService = await loadBrowserService();
     await BrowserService.clearCookies('https://zimbra.example.com');
     expect(chrome.cookies.remove).toHaveBeenCalledWith({
       url: 'https://zimbra.example.com',
       name: 'ZM_AUTH_TOKEN',
     });
+    expect(chrome.cookies.remove).toHaveBeenCalledWith({
+      url: 'https://zimbra.example.com',
+      name: 'SID',
+    });
   });
 
-  it('opens web interface in a new tab', async () => {
+  it('sets SID cookie when provided', async () => {
     const BrowserService = await loadBrowserService();
-    BrowserService.openWebInterface('https://zimbra.example.com/');
+    await BrowserService.updateCookies('http://zimbra.free.fr', 'token-123', 'sid-456');
+    expect(chrome.cookies.set).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: 'http://zimbra.free.fr',
+        name: 'SID',
+        value: 'sid-456',
+        httpOnly: false,
+        secure: false,
+      })
+    );
+  });
+
+  it('opens web interface in a new tab when none exists', async () => {
+    const BrowserService = await loadBrowserService();
+    await BrowserService.openWebInterface('https://zimbra.example.com/');
+    expect(chrome.tabs.query).toHaveBeenCalledWith({});
     expect(chrome.tabs.create).toHaveBeenCalledWith({ url: 'https://zimbra.example.com/' });
+    expect(chrome.tabs.update).not.toHaveBeenCalled();
+  });
+
+  it('focuses existing tab for the same web interface origin', async () => {
+    mockTabsQuery.mockResolvedValueOnce([
+      { id: 42, url: 'https://zimbra.example.com/zimbra/mail?action=1#test', windowId: 1 },
+    ]);
+    const BrowserService = await loadBrowserService();
+    await BrowserService.openWebInterface('https://zimbra.example.com/zimbra/mail');
+    expect(chrome.tabs.query).toHaveBeenCalledWith({});
+    expect(chrome.tabs.update).toHaveBeenCalledWith(42, { active: true });
   });
 });

@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Monitorize a sua conta Zimbra e seja notificado sobre mensagens não lidas. Veja compromissos e acompanhe tarefas — tudo a partir da barra do navegador.",
-    "badgeVersion": "Version 4.1.0",
+    "badgeVersion": "Version 4.2.0",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 idiomas",
     "badgeOpenSource": "Código aberto"
@@ -92,6 +92,11 @@
     "title": "Histórico de versões",
     "intro": "Cronologia de releases do histórico Git do projeto.",
     "items": [
+      {
+        "tag": "v4.2.0",
+        "date": "2026-06-25",
+        "desc": "Adicionado suporte Free."
+      },
       {
         "tag": "v4.1.0",
         "date": "2026-06-16",

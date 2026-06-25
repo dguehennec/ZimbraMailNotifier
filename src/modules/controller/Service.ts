@@ -246,8 +246,8 @@ export class Service {
 
       // Set cookie
       if (prefs.browserSetCookies) {
-        const token = this.webservice.sessionInfo.authToken;
-        if (token) await BrowserService.updateCookies(account.urlWebService, token);
+        const { authToken, sid } = this.webservice.sessionInfo;
+        if (authToken) await BrowserService.updateCookies(account.urlWebService, authToken, sid);
       }
 
       if (this.webservice.sessionInfo.twoFactorAuthRequired) {
@@ -333,7 +333,7 @@ export class Service {
       this.errors.clearAll();
       log.info('Refresh complete for account ' + this.delegate.accountId);
     } catch (e) {
-      log.error('Refresh failedfor account ' + this.delegate.accountId, e);
+      log.error('Refresh failed for account ' + this.delegate.accountId, e);
       if (e instanceof ZimbraError && e.code === RequestStatus.AUTH_REQUIRED) {
         // retry to connect with password
         const password = await Prefs.loadPassword(this.delegate.accountId) ?? '';

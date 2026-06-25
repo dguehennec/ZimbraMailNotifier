@@ -15,6 +15,33 @@ import { Constants } from '../constant/constants';
 
 const log = new Logger('Webservice');
 
+// ─── functions helpers ─────────────────────────────────────────────
+
+function isFreeZimbraHost(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    return Constants.ZIMBRA.FREE_HOSTS.some((h) => host === h || host.endsWith('.' + h));
+  } catch {
+    return false;
+  }
+}
+
+async function readBrowserCookie(url: string, name: string): Promise<string | null> {
+  const cookie = await chrome.cookies.get({ url, name });
+  return cookie?.value ?? null;
+}
+
+
+function parseFreeLoginError(html: string, status: number): ZimbraError | AuthError | null {
+  if (html.includes('mot de passe incorrect') || html.includes('CONNEXION AU WEBMAIL ZIMBRA')) {
+    return new ZimbraError(RequestStatus.LOGIN_INVALID, 'Invalid credentials');
+  }
+  if (status === 404 || html.includes("S'identifier")) {
+    return new AuthError('Auth required: status 404 or login page');
+  }
+  return null;
+}
+
 // ─── SOAP helpers ─────────────────────────────────────────────
 
 function soapEnvelope(body: object, token?: string | null): string {
@@ -55,6 +82,7 @@ function applyTrustedDevice(session: ZimbraSession, ar: AuthResponseBody): void 
 
 export class ZimbraSession {
   authToken: string | null = null;
+  sid: string | null = null;
   tokenExpiry: number = 0;
   urlWebService = '';
   urlWebInterface = '';
@@ -73,6 +101,7 @@ export class ZimbraSession {
 
   isAuthenticated(): boolean {
     if (!this.authToken || this.twoFactorAuthRequired) return false;
+    if (isFreeZimbraHost(this.urlWebService) && !this.sid) return false;
     return Date.now() < this.tokenExpiry - Constants.ZIMBRA.TOKEN_LIFETIME_SAFETY_MARGIN_MS;
   }
 
@@ -88,6 +117,7 @@ export class ZimbraSession {
   toSessionInfo(): SessionInfo {
     return {
       authToken: this.authToken,
+      sid: this.sid,
       lifetime: this.tokenExpiry,
       urlWebService: this.urlWebService,
       urlWebInterface: this.urlWebInterface,
@@ -106,6 +136,8 @@ export class ZimbraSession {
 
 interface FetchOptions {
   token?: string | null;
+  sid?: string | null;
+  freeMode?: boolean;
   timeout?: number;
 }
 
@@ -114,17 +146,25 @@ async function callSoap<T = unknown>(
   bodyObj: object,
   opts: FetchOptions = {}
 ): Promise<T> {
-  const { token, timeout = Constants.SERVICE.DEFAULT_QUERY_TIMEOUT } = opts;
+  const { token, sid, freeMode = false, timeout = Constants.SERVICE.DEFAULT_QUERY_TIMEOUT } = opts;
   const ac = new AbortController();
   const timer = setTimeout(() => ac.abort(), timeout);
   const payload = soapEnvelope(bodyObj, token);
 
   log.traceRequest(`SOAP → ${url}`, payload);
 
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/soap+xml; charset=utf-8',
+  };
+  /* need for free mode authentication */
+  if (freeMode && token && sid) {
+    headers['Cookie'] = `ZM_AUTH_TOKEN=${encodeURIComponent(token)}; SID=${encodeURIComponent(sid)}`;
+  }
+
   try {
     const resp = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/soap+xml; charset=utf-8' },
+      headers,
       credentials: 'include',
       redirect: 'follow',
       referrerPolicy: 'no-referrer',
@@ -224,6 +264,16 @@ export class ZimbraWebservice {
     return url.replace(/\/$/, '') + Constants.ZIMBRA.SOAP_URL_SUFFIX;
   }
 
+  private soapOpts(): FetchOptions {
+    const freeMode = isFreeZimbraHost(this.session.urlWebService);
+    return {
+      token: this.session.authToken,
+      sid: this.session.sid,
+      freeMode,
+      timeout: this.queryTimeout,
+    };
+  }
+
   /** Authenticate (username + password). Returns true on success. */
   async authenticate(
     urlWebService: string,
@@ -232,44 +282,124 @@ export class ZimbraWebservice {
     password: string
   ): Promise<void> {
     log.info('authenticate', { urlWebService, urlWebInterface, user });
-        await withRetry(async () => {
-      log.info('withRetry');
-      const soapUrl = this.getZimbraSoapUrl(urlWebService);
-      const trusted = this.session.deviceTrustedInfos;
+    let authenticateFct: (urlWebService: string, urlWebInterface: string, user: string, password: string) => Promise<void>;
+    if (isFreeZimbraHost(urlWebService)) {
+      authenticateFct = this.authenticateFree.bind(this);
+    } else {
+      authenticateFct = this.authenticateDefault.bind(this);
+    }
+    await withRetry(
+      () => authenticateFct(urlWebService, urlWebInterface, user, password),
+      { shouldRetry: (e) => e instanceof NetworkError && e.retriable }
+    );
+  }
 
-      type AuthResp = { AuthResponse?: AuthResponseBody };
-      const body = await callSoap<AuthResp>(soapUrl, {
-        AuthRequest: {
-          _jsns: 'urn:zimbraAccount',
-          account: { by: 'name', _content: user },
-          password: { _content: password },
-          ...(trusted.id && trusted.deviceId
-            ? {
-                trustedToken: { _content: trusted.id },
-                deviceId: { _content: trusted.deviceId },
-              }
-            : {
-                generateDeviceId: '1',
-              }),
-        },
-      }, { timeout: this.queryTimeout });
+  private async authenticateDefault(urlWebService: string,
+    urlWebInterface: string,
+    user: string,
+    password: string
+  ): Promise<void> {
+    const soapUrl = this.getZimbraSoapUrl(urlWebService);
+    const trusted = this.session.deviceTrustedInfos;
 
-      const ar = body.AuthResponse;
-      if (!ar?.authToken?.[0]?._content) {
-        throw new ZimbraError(RequestStatus.INTERNAL_ERROR, 'No auth token in response');
+    type AuthResp = { AuthResponse?: AuthResponseBody };
+    const body = await callSoap<AuthResp>(soapUrl, {
+      AuthRequest: {
+        _jsns: 'urn:zimbraAccount',
+        account: { by: 'name', _content: user },
+        password: { _content: password },
+        ...(trusted.id && trusted.deviceId
+          ? {
+              trustedToken: { _content: trusted.id },
+              deviceId: { _content: trusted.deviceId },
+            }
+          : {
+              generateDeviceId: '1',
+            }),
+      },
+    }, { timeout: this.queryTimeout });
+
+    const ar = body.AuthResponse;
+    if (!ar?.authToken?.[0]?._content) {
+      throw new ZimbraError(RequestStatus.INTERNAL_ERROR, 'No auth token in response');
+    }
+    this.session.authToken = soapContent(ar.authToken[0]);
+    this.session.sid = null;
+    this.session.tokenExpiry = Date.now() + (ar.lifetime ?? 3_600_000);
+    this.session.urlWebService = urlWebService;
+    this.session.urlWebInterface = urlWebInterface;
+    this.session.twoFactorAuthRequired = soapContent(ar.twoFactorAuthRequired) === "true";
+    this.session.user = user;
+    this.session.connectionDate = new Date();
+    applyTrustedDevice(this.session, ar);
+
+    this.onSessionChanged(this.session.toSessionInfo());
+    log.info('Authenticated', { user });
+  }
+
+  private async authenticateFree(
+    urlWebService: string,
+    urlWebInterface: string,
+    user: string,
+    password: string,
+  ): Promise<void> {
+    /* forcedly clear cookies */
+    await chrome.cookies.remove({ url: urlWebService, name: 'ZM_AUTH_TOKEN' });
+    await chrome.cookies.remove({ url: urlWebService, name: 'SID' });
+
+    const loginUrl = urlWebService.replace(/\/$/, '') + '/index.pl';
+    const body = new URLSearchParams({
+      actionID: '105',
+      url: '',
+      mailbox: 'INBOX',
+      login: user,
+      password,
+      Envoyer: 'Connexion',
+    });
+
+    const ac = new AbortController();
+    const timer = setTimeout(() => ac.abort(), this.queryTimeout);
+    try {
+      const resp = await fetch(loginUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+        credentials: 'include',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        signal: ac.signal,
+      });
+
+      const html = await resp.text();
+      const authToken = await readBrowserCookie(urlWebService, 'ZM_AUTH_TOKEN');
+      const sid = await readBrowserCookie(urlWebService, 'SID');
+
+      if (authToken && sid) {
+        this.session.authToken = authToken;
+        this.session.sid = sid;
+        this.session.tokenExpiry = Date.now() + Constants.ZIMBRA.FREE_TOKEN_LIFETIME_MS;
+        this.session.urlWebService = urlWebService;
+        this.session.urlWebInterface = urlWebInterface;
+        this.session.user = user;
+        this.session.twoFactorAuthRequired = false;
+        this.session.connectionDate = new Date();
+        this.onSessionChanged(this.session.toSessionInfo());
+        log.info('Authenticated', { user });
+        return;
       }
-      this.session.authToken = soapContent(ar.authToken[0]);
-      this.session.tokenExpiry = Date.now() + (ar.lifetime ?? 3_600_000);
-      this.session.urlWebService = urlWebService;
-      this.session.urlWebInterface = urlWebInterface;
-      this.session.twoFactorAuthRequired = soapContent(ar.twoFactorAuthRequired) === "true";
-      this.session.user = user;
-      this.session.connectionDate = new Date();
-      applyTrustedDevice(this.session, ar);
 
-      this.onSessionChanged(this.session.toSessionInfo());
-      log.info('Authenticated', { user });
-    }, { shouldRetry: (e) => e instanceof NetworkError && e.retriable });
+      const err = parseFreeLoginError(html, resp.status);
+      if (err) throw err;
+      throw new ZimbraError(RequestStatus.LOGIN_INVALID, 'Authentication failed');
+    } catch (e) {
+      if ((e as Error).name === 'AbortError') {
+        throw new ZimbraError(RequestStatus.TIMEOUT, 'Authentication request timed out');
+      }
+      if (e instanceof ZimbraError) throw e;
+      throw new NetworkError((e as Error).message);
+    } finally {
+      clearTimeout(timer);
+    }
   }
 
   /** Authenticate with 2FA token. */
@@ -290,7 +420,7 @@ export class ZimbraWebservice {
         authToken: { _content: this.session.authToken },
         twoFactorCode: { _content: token },
       },
-    }, { token: this.session.authToken, timeout: this.queryTimeout });
+    }, this.soapOpts());
 
     const ar = body.AuthResponse;
     if (!ar?.authToken?.[0]?._content) {
@@ -313,7 +443,7 @@ export class ZimbraWebservice {
     const body = await callSoap<InfoResp>(soapUrl, {
       GetInfoResponse: undefined,
       GetInfoRequest: { _jsns: 'urn:zimbraAccount', sections: 'mbox' },
-    }, { token: this.session.authToken, timeout: this.queryTimeout });
+    }, this.soapOpts());
 
     const r = body.GetInfoResponse ?? {};
     return {
@@ -339,7 +469,7 @@ export class ZimbraWebservice {
         limit: 200,
         sortBy: 'dateDesc',
       },
-    }, { token: this.session.authToken, timeout: this.queryTimeout });
+    }, this.soapOpts());
 
     return (body.SearchResponse?.m ?? []).map((m) => parseMessage(m));
   }
@@ -362,7 +492,7 @@ export class ZimbraWebservice {
         sortBy: 'dateAsc',
         query: 'in:calendar',
       },
-    }, { token: this.session.authToken, timeout: this.queryTimeout });
+    }, this.soapOpts());
 
     return (body.SearchResponse?.appt ?? []).flatMap((a) => parseAppointment(a));
   }
@@ -381,7 +511,7 @@ export class ZimbraWebservice {
         limit: 200,
         sortBy: 'taskDueAsc',
       },
-    }, { token: this.session.authToken, timeout: this.queryTimeout });
+    }, this.soapOpts());
 
     return (body.SearchResponse?.task ?? []).map((t) => parseTask(t));
   }
@@ -401,7 +531,7 @@ export class ZimbraWebservice {
         limit: 200,
         sortBy: 'dateDesc',
       },
-    }, { token: this.session.authToken, timeout: this.queryTimeout });
+    }, this.soapOpts());
 
     return (body.SearchResponse?.m ?? []).map((m) => parseDraftMessage(m));
   }
@@ -418,7 +548,7 @@ export class ZimbraWebservice {
         defTypes: 'f',
         add: { a: [{ name: this.session.user, t: 'all' }] },
       },
-    }, { token: this.session.authToken, timeout: this.queryTimeout });
+    }, this.soapOpts());
 
     const r = body.CreateWaitSetResponse;
     if (!r?.waitSet) throw new ZimbraError(RequestStatus.INTERNAL_ERROR, 'No WaitSet id in response');
@@ -445,7 +575,7 @@ export class ZimbraWebservice {
         seq: this.session.waitSetSeq,
         block: block ? '1' : '0',
       },
-    }, { token: this.session.authToken, timeout });
+    }, { ...this.soapOpts(), timeout });
 
     const r = body.WaitSetResponse;
     if (r?.seq !== undefined) {

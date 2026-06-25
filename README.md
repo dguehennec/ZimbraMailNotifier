@@ -22,6 +22,7 @@ Extension navigateur (Chrome MV3) écrite en **TypeScript** pour surveiller un c
 - Notifications bureau à l’arrivée de nouveaux messages
 - Affichage des prochains rendez-vous et rappels calendrier configurables
 - Suivi des tâches en cours (filtre par priorité)
+- Affichage des brouillons en attentes d'envoi
 - Support multi-comptes
 - Authentification 2FA et appareil de confiance (trusted device)
 - WaitSet (long-poll Zimbra) avec repli sur polling périodique
@@ -32,7 +33,7 @@ Extension navigateur (Chrome MV3) écrite en **TypeScript** pour surveiller un c
 
 | Supporté | Non supporté (pour l’instant) |
 | -------- | ----------------------------- |
-| Serveurs Zimbra avec l’interface de connexion standard | Portails avec pré-authentification (ex. `http://zimbra.free.fr`) |
+| Serveurs Zimbra avec l’interface de connexion standard | Portails avec pré-authentification (autre que `http://zimbra.free.fr` ou `http://zimbra.aliceadsl.fr`) |
 
 ## Prérequis
 

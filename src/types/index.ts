@@ -127,6 +127,7 @@ export interface MailboxInfo {
 
 export interface SessionInfo {
   authToken: string | null;
+  sid: string | null;
   lifetime: number;
   urlWebService: string;
   urlWebInterface: string;

@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Отслеживайте учётную запись Zimbra и получайте уведомления о непрочитанных сообщениях. Просматривайте встречи и задачи — прямо с панели браузера.",
-    "badgeVersion": "Version 4.1.0",
+    "badgeVersion": "Version 4.2.0",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 языков",
     "badgeOpenSource": "Open Source"
@@ -92,6 +92,11 @@
     "title": "История версий",
     "intro": "Хронология релизов из истории Git проекта.",
     "items": [
+      {
+        "tag": "v4.2.0",
+        "date": "2026-06-25",
+        "desc": "Добавлена поддержка Free."
+      },
       {
         "tag": "v4.1.0",
         "date": "2026-06-16",

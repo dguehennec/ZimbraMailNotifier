@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Surveillez votre compte Zimbra et soyez notifié du nombre de messages non lus. Consultez vos prochains rendez-vous et suivez vos tâches en cours — le tout depuis la barre d'outils de votre navigateur.",
-    "badgeVersion": "Version 4.1.0",
+    "badgeVersion": "Version 4.2.0",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 langues",
     "badgeOpenSource": "Open Source"
@@ -92,6 +92,11 @@
     "title": "Historique des versions",
     "intro": "Chronologie des releases, générée à partir de l'historique Git du projet.",
     "items": [
+      {
+        "tag": "v4.2.0",
+        "date": "2026-06-25",
+        "desc": "Ajout du support free."
+      },
       {
         "tag": "v4.1.0",
         "date": "2026-06-16",

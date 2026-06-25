@@ -78,5 +78,9 @@ export const Constants = {
     SOAP_URL_SUFFIX: '/service/soap/',
     /** Extra ms safety margin on token expiry */
     TOKEN_LIFETIME_SAFETY_MARGIN_MS: 60000,
+    /** Free/Alice mail servers hosts */
+    FREE_HOSTS: ['zimbra.free.fr', 'zimbra.aliceadsl.fr'],
+    /** Free/Alice token lifetime (12 h) */
+    FREE_TOKEN_LIFETIME_MS: 43_200_000,
   },
 } as const;

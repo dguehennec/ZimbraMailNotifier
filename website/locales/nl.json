@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Houd uw Zimbra-account in de gaten en ontvang meldingen over ongelezen berichten. Bekijk afspraken en volg lopende taken — vanuit de browserwerkbalk.",
-    "badgeVersion": "Version 4.1.0",
+    "badgeVersion": "Version 4.2.0",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 talen",
     "badgeOpenSource": "Open Source"
@@ -92,6 +92,11 @@
     "title": "Versiegeschiedenis",
     "intro": "Release-tijdlijn uit de Git-geschiedenis.",
     "items": [
+      {
+        "tag": "v4.2.0",
+        "date": "2026-06-25",
+        "desc": "Free-ondersteuning toegevoegd."
+      },
       {
         "tag": "v4.1.0",
         "date": "2026-06-16",

@@ -1,9 +1,11 @@
-import { webcrypto } from 'crypto';
+import { webcrypto } from 'node:crypto';
 import { TextEncoder, TextDecoder } from 'util';
 
-if (!globalThis.crypto?.getRandomValues) {
-  Object.defineProperty(globalThis, 'crypto', { value: webcrypto, configurable: true });
-}
+Object.defineProperty(globalThis, 'crypto', {
+  value: webcrypto,
+  configurable: true,
+  writable: true,
+});
 
 if (!globalThis.TextEncoder) {
   Object.defineProperty(globalThis, 'TextEncoder', { value: TextEncoder, configurable: true });
@@ -66,8 +68,11 @@ const mockGetMessage = jest.fn((key: string) => key);
 const mockNotificationsCreate = jest.fn().mockResolvedValue(undefined);
 const mockNotificationsClear = jest.fn().mockResolvedValue(undefined);
 export const mockCookiesSet = jest.fn().mockResolvedValue(undefined);
+export const mockCookiesGet = jest.fn().mockResolvedValue(undefined);
 const mockCookiesRemove = jest.fn().mockResolvedValue(undefined);
 const mockTabsCreate = jest.fn().mockResolvedValue(undefined);
+export const mockTabsQuery = jest.fn().mockResolvedValue([]);
+export const mockTabsUpdate = jest.fn().mockResolvedValue(undefined);
 const mockSendMessage = jest.fn((_msg: unknown, cb?: (response: unknown) => void) => {
   cb?.(null);
 });
@@ -105,8 +110,11 @@ export function resetChromeMocks(): void {
   mockNotificationsCreate.mockResolvedValue(undefined);
   mockNotificationsClear.mockResolvedValue(undefined);
   mockCookiesSet.mockResolvedValue(undefined);
+  mockCookiesGet.mockResolvedValue(undefined);
   mockCookiesRemove.mockResolvedValue(undefined);
   mockTabsCreate.mockResolvedValue(undefined);
+  mockTabsQuery.mockResolvedValue([]);
+  mockTabsUpdate.mockResolvedValue(undefined);
   mockSendMessage.mockImplementation((_msg: unknown, cb?: (response: unknown) => void) => {
     cb?.(null);
   });
@@ -137,10 +145,13 @@ Object.defineProperty(globalThis, 'chrome', {
     },
     cookies: {
       set: mockCookiesSet,
+      get: mockCookiesGet,
       remove: mockCookiesRemove,
     },
     tabs: {
       create: mockTabsCreate,
+      query: mockTabsQuery,
+      update: mockTabsUpdate,
     },
   },
 });

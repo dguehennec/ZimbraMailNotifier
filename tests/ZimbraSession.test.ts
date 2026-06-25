@@ -52,6 +52,29 @@ describe('ZimbraSession', () => {
     expect(info.twoFactorAuthRequired).toBe(true);
   });
 
+  it('is not authenticated on Free host without sid', () => {
+    const s = makeSession();
+    s.authToken = 'abc123';
+    s.tokenExpiry = Date.now() + 3_600_000;
+    s.urlWebService = 'http://zimbra.free.fr';
+    expect(s.isAuthenticated()).toBe(false);
+  });
+
+  it('is authenticated on Free host with sid', () => {
+    const s = makeSession();
+    s.authToken = 'abc123';
+    s.sid = 'sid-1';
+    s.tokenExpiry = Date.now() + 3_600_000;
+    s.urlWebService = 'http://zimbra.free.fr';
+    expect(s.isAuthenticated()).toBe(true);
+  });
+
+  it('toSessionInfo includes sid', () => {
+    const s = makeSession();
+    s.sid = 'sid-1';
+    expect(s.toSessionInfo().sid).toBe('sid-1');
+  });
+
   it('toSessionInfo has null authToken initially', () => {
     const info = makeSession().toSessionInfo();
     expect(info.authToken).toBeNull();

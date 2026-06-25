@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Zimbra 계정을 모니터링하고 읽지 않은 메시지 알림을 받으세요. 다가오는 일정과 진행 중인 작업을 브라우저 도구 모음에서 확인하세요.",
-    "badgeVersion": "Version 4.1.0",
+    "badgeVersion": "Version 4.2.0",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15개 언어",
     "badgeOpenSource": "오픈 소스"
@@ -92,6 +92,11 @@
     "title": "버전 기록",
     "intro": "프로젝트 Git 기록에서 생성된 릴리스 타임라인.",
     "items": [
+      {
+        "tag": "v4.2.0",
+        "date": "2026-06-25",
+        "desc": "Free 지원 추가."
+      },
       {
         "tag": "v4.1.0",
         "date": "2026-06-16",

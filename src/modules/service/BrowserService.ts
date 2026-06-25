@@ -22,6 +22,11 @@ function serializeError(e: unknown): string {
   return String(e);
 }
 
+function tabMatchesWebInterface(tabUrl: string | undefined, targetUrl: string): boolean {
+  if (!tabUrl) return false;
+  return tabUrl.toLowerCase().startsWith(targetUrl.toLowerCase());
+}
+
 export const BrowserService = {
   /** Send a desktop notification. */
   async notify(title: string, body: string, duration?: number, iconUrl?: string): Promise<void> {
@@ -50,7 +55,7 @@ export const BrowserService = {
   },
 
   /** Update cookies from Zimbra auth. */
-  async updateCookies(url: string, authToken: string): Promise<void> {
+  async updateCookies(url: string, authToken: string, sid?: string | null): Promise<void> {
     const prefs = Prefs.get();
     if (!prefs.browserSetCookies || !url || !authToken) return;
     try {
@@ -61,6 +66,15 @@ export const BrowserService = {
         httpOnly: prefs.browserCookieHttpOnly,
         secure: url.startsWith('https'),
       });
+      if (sid) {
+        await chrome.cookies.set({
+          url,
+          name: 'SID',
+          value: sid,
+          httpOnly: false,
+          secure: url.startsWith('https'),
+        });
+      }
     } catch (e) {
       log.warn('Failed to set cookie', e);
     }
@@ -71,13 +85,27 @@ export const BrowserService = {
     if (!url) return;
     try {
       await chrome.cookies.remove({ url, name: 'ZM_AUTH_TOKEN' });
+      await chrome.cookies.remove({ url, name: 'SID' });
     } catch (e) {
       log.warn('Failed to clear cookie', e);
     }
   },
 
-  /** Open Zimbra web interface in a new tab. */
-  openWebInterface(url: string): void {
-    chrome.tabs.create({ url }).catch((e) => log.error('Failed to open tab', e));
+  /** Open or focus the Zimbra web interface tab (one tab per site origin). */
+  async openWebInterface(url: string): Promise<void> {
+    if (!url) return;
+    try {
+      const tabs = await chrome.tabs.query({});
+      const existing = tabs.find((tab) => tabMatchesWebInterface(tab.url, url));
+
+      if (existing?.id !== undefined) {
+        await chrome.tabs.update(existing.id, { active: true });
+        return;
+      }
+
+      await chrome.tabs.create({ url });
+    } catch (e) {
+      log.error('Failed to open tab', e);
+    }
   },
 };

@@ -26,6 +26,7 @@ const mockWs = {
   isAuthenticated: true,
   sessionInfo: {
     authToken: 'auth-token',
+    sid: null,
     lifetime: Date.now() + 3_600_000,
     urlWebService: 'https://zimbra.example.com',
     urlWebInterface: 'https://zimbra.example.com/',
@@ -181,7 +182,8 @@ describe('Service', () => {
     expect(service.getUnreadMessages()).toHaveLength(1);
     expect(BrowserService.updateCookies).toHaveBeenCalledWith(
       testAccount.urlWebService,
-      'auth-token'
+      'auth-token',
+      null
     );
   });
 
