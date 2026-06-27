@@ -355,6 +355,10 @@
     "message": "URL почтового сервиса, обычно совпадает с URL веб-интерфейса",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "Требуется авторизация для подключения к сайту: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "URL веб-интерфейса",
     "description": ""

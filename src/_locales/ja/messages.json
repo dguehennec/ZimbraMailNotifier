@@ -355,6 +355,10 @@
     "message": "メールサービスの URL。多くの場合 Web インターフェース URL と同じです",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "ウェブサイトへの接続には認証が必要です: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "Web インターフェース URL",
     "description": ""

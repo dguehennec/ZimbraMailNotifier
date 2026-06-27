@@ -355,6 +355,10 @@
     "message": "Mail hizmeti URL'si, çoğu zaman web arayüzü URL'si ile aynı",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "Web sitesine bağlanmak için yetkilendirme gerekiyor: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "Web arayüzü URL",
     "description": ""

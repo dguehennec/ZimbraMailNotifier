@@ -355,6 +355,10 @@
     "message": "Адреса сервиса е-поште, најчешће иста као адреса веб окружења",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "Потребна је дозвола за повезивање са веб сајтом: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "Адреса веб окружења",
     "description": ""

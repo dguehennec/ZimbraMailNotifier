@@ -355,6 +355,10 @@
     "message": "邮件服务的 URL，通常与 Web 界面 URL 相同",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "需要授权才能连接到网站：%WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "Web 界面 URL",
     "description": ""

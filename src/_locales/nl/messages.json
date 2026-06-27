@@ -355,6 +355,10 @@
     "message": "De URL van de mailservice, meestal hetzelfde als de webinterface-URL",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "Autorisatie vereist om verbinding te maken met de website: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "URL webinterface",
     "description": ""

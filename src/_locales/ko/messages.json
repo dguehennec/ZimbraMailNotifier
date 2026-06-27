@@ -355,6 +355,10 @@
     "message": "메일 서비스 URL, 대부분 웹 인터페이스 URL과 동일합니다",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "웹사이트에 연결하려면 권한이 필요합니다: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "웹 인터페이스 URL",
     "description": ""

@@ -2,7 +2,7 @@
 // ui/offscreen.ts — Audio playback in offscreen document (MV3)
 // ============================================================
 
-import { SoundType, SoundPath } from '../types';
+import { SoundType, SoundPath, BackgroundMessage } from '../types';
 import { Logger } from '../modules/service/Logger';
 
 const log = new Logger('Offscreen');
@@ -37,8 +37,14 @@ setInterval(() => {
 }, 20000);
 
 // Listen for play requests from service worker
-chrome.runtime.onMessage.addListener(({ func, args }: { func: string; args: unknown[] }) => {
-  if (func === 'playSound') {
-    playSound(args[0] as SoundType, args[1] as string, args[2] as number);
+chrome.runtime.onMessage.addListener((msg: BackgroundMessage, _sender: any, sendResponse: any) => {
+  if (_sender?.id !== chrome.runtime.id) {
+    log.error('Sender not authorized to send the message')
+    return;
   }
+
+  if (msg?.func !== 'playSound') {
+    return;
+  }
+  playSound(msg.args?.[0] as SoundType, msg.args?.[1] as string, msg.args?.[2] as number);
 });

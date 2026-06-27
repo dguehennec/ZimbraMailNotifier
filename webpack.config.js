@@ -79,7 +79,7 @@ module.exports = (env = {}, argv) => {
             new ZipPlugin({
               filename: zipFilename,
               path: '../release',
-              exclude: [/\.DS_Store$/, /__MACOSX/],
+              exclude: [/\.DS_Store$/, /__MACOSX/, /\.map$/],
             }),
           ]
         : []),

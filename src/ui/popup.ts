@@ -2,9 +2,12 @@
 // ui/popup.ts
 // ============================================================
 
-import { ControllerInfo, AppPrefs, RequestStatus } from '../types';
+import { ControllerInfo, AppPrefs, RequestStatus, BackgroundMessage } from '../types';
 import { filterMessagesByRegex } from '../modules/service/Util';
 import { getContrastColor, i18n, sendToBackground, formatAccountName, formatLastErrorMessage, formatRelativeDate, formatRelativeTime, formatRelativeDateTime, formatPercentageQuotaUsed, formatBytes, escHtml, maxStringLength} from './uiutil';
+import { Logger } from '../modules/service/Logger';
+
+const log = new Logger('Popup');
 
 let controllers: ControllerInfo[] = [];
 let refreshTimer: ReturnType<typeof setTimeout> | undefined;
@@ -314,11 +317,17 @@ document.addEventListener('click', async (e) => {
 
 // ─── Message listener (push refresh from worker) ─────────────
 
-chrome.runtime.onMessage.addListener(({ func }: { func: string }) => {
-  if (func === 'needRefresh') {
-    clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(refresh, 100);
+chrome.runtime.onMessage.addListener((msg: BackgroundMessage, _sender: any, sendResponse: any) => {
+ if (_sender?.id !== chrome.runtime.id) {
+    log.error('Sender not authorized to send the message')
+    return;
   }
+
+  if (msg?.func !== 'needRefresh') {
+    return;
+  }
+  clearTimeout(refreshTimer);
+  refreshTimer = setTimeout(refresh, 100);
 });
 
 // ─── Init ─────────────────────────────────────────────────────

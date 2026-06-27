@@ -355,6 +355,10 @@
     "message": "L'Url du service de messagerie, la plupart du temps identique à celle de l'interface web",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "Autorisation requise pour se connecter au site : %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "Url de l'interface Web",
     "description": ""

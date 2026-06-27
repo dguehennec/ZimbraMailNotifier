@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Monitora il tuo account Zimbra e ricevi notifiche sui messaggi non letti. Visualizza appuntamenti e attività in corso — tutto dalla barra degli strumenti del browser.",
-    "badgeVersion": "Version 4.2.0",
+    "badgeVersion": "Version 4.2.1",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 lingue",
     "badgeOpenSource": "Open Source"

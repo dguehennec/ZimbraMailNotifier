@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Monitoruj konto Zimbra i otrzymuj powiadomienia o nieprzeczytanych wiadomościach. Przeglądaj spotkania i śledź zadania — z paska narzędzi przeglądarki.",
-    "badgeVersion": "Version 4.2.0",
+    "badgeVersion": "Version 4.2.1",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 języków",
     "badgeOpenSource": "Open Source"

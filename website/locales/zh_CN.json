@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "监控您的 Zimbra 账户并获取未读消息通知。查看即将到来的约会并跟踪进行中的任务 — 全部来自浏览器工具栏。",
-    "badgeVersion": "Version 4.2.0",
+    "badgeVersion": "Version 4.2.1",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 种语言",
     "badgeOpenSource": "开源"

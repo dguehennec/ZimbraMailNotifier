@@ -355,6 +355,10 @@
     "message": "Adres URL usługi pocztowej, zwykle taki sam jak URL interfejsu web",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "Wymagana autoryzacja w celu połączenia ze stroną: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "URL interfejsu web",
     "description": ""

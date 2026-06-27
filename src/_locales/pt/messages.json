@@ -355,6 +355,10 @@
     "message": "O URL do serviço de mail, tem na maioria das vezes, o mesmo URL do interface web",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "Autorização necessária para ligar ao site: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "URL interface web",
     "description": ""

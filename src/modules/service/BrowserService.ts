@@ -24,7 +24,7 @@ function serializeError(e: unknown): string {
 
 function tabMatchesWebInterface(tabUrl: string | undefined, targetUrl: string): boolean {
   if (!tabUrl) return false;
-  return tabUrl.toLowerCase().startsWith(targetUrl.toLowerCase());
+  return new URL(tabUrl).origin === new URL(targetUrl).origin && tabUrl.toLowerCase().startsWith(targetUrl.toLowerCase());
 }
 
 export const BrowserService = {
@@ -71,7 +71,7 @@ export const BrowserService = {
           url,
           name: 'SID',
           value: sid,
-          httpOnly: false,
+          httpOnly: prefs.browserCookieHttpOnly,
           secure: url.startsWith('https'),
         });
       }

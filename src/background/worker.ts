@@ -164,15 +164,20 @@ const handlers: Record<string, (...args: unknown[]) => unknown> = {
 };
 
 chrome.runtime.onMessage.addListener((msg: BackgroundMessage, _sender: any, sendResponse: any) => {
-  if (!msg?.func) return false;
+  if (_sender?.id !== chrome.runtime.id) {
+    log.error('Sender not authorized to send the message')
+    return false;
+  }
 
+  if (!msg?.func) {
+    return false;
+  }
   // Chrome keep-alive heartbeat from offscreen document
   if (msg.func === 'needKeepAlive') {
     clearTimeout(keepAliveTimer);
     keepAliveTimer = setTimeout(keepAlive, 5000);
     return false;
   }
-
   const fn = handlers[msg.func];
   if (!fn) {
     log.warn(`Unknown message function: ${msg.func}`);

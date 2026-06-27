@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Надгледајте Zimbra налог и добијајте обавештења о непрочитаним порукама. Погледајте заказане састанке и пратиte задатке — све са траке алатки.",
-    "badgeVersion": "Version 4.2.0",
+    "badgeVersion": "Version 4.2.1",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 јezika",
     "badgeOpenSource": "Open Source"

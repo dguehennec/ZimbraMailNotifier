@@ -355,6 +355,10 @@
     "message": "La URL del servicio de correo, la mayoría de las veces el mismo que el URL de la interfaz web",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "Se requiere autorización para conectarse al sitio web: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "URL interfaz Web",
     "description": ""

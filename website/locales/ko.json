@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Zimbra 계정을 모니터링하고 읽지 않은 메시지 알림을 받으세요. 다가오는 일정과 진행 중인 작업을 브라우저 도구 모음에서 확인하세요.",
-    "badgeVersion": "Version 4.2.0",
+    "badgeVersion": "Version 4.2.1",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15개 언어",
     "badgeOpenSource": "오픈 소스"

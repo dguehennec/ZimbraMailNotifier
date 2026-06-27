@@ -33,6 +33,37 @@ export const i18n = Object.assign(
   }
 );
 
+export function getOriginUrl(serverUrl: string): string {
+   try {
+    const url = new URL(serverUrl);
+    if (url.protocol !== "https:" && url.protocol !== "http:") {
+      return '';
+    }
+    if (!url.origin || url.origin === 'null') {
+      return '';
+    }
+    return url.origin;
+  } catch (error) {
+    return '';
+  }
+}
+
+export async function ensureOriginPermission(serverUrl: string): Promise<boolean> {
+  const origin = getOriginUrl(serverUrl);
+  if (!origin) {
+    return false;
+  }
+  try {
+    const origins = [`${origin}/*`];
+    if (await chrome.permissions.contains({ origins })) {
+      return true;
+    }
+    return await chrome.permissions.request({ origins });
+  } catch (error) {
+    return false;
+  }
+}
+
 export function formatLastErrorMessage(lastErr: ErrorEntry): string {
   let message = "";
   if (lastErr !== null) {
@@ -104,7 +135,7 @@ export function formatRelativeTime(date: Date): string {
 
 export function formatAccountName(account: ControllerInfo | undefined, nbAccount: number): string {
   if (account && nbAccount > 1) {
-    return ' (${account.accountAlias || account.accountLogin || account.id})';
+    return ` (${account.accountAlias || account.accountLogin || account.id})`;
   }
   return '';
 }

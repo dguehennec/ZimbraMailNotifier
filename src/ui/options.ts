@@ -2,8 +2,11 @@
 // ui/options.ts — Full settings page
 // ============================================================
 
-import { i18n, escHtml, sendToBackground, formatLastErrorMessage } from './uiutil';
-import { AppPrefs, SoundType, SoundPath, TaskPriority, ServiceEventType, RequestStatus } from '../types';
+import { i18n, escHtml, sendToBackground, formatLastErrorMessage, getOriginUrl, ensureOriginPermission } from './uiutil';
+import { AppPrefs, SoundType, SoundPath, TaskPriority, ServiceEventType, RequestStatus, BackgroundMessage } from '../types';
+import { Logger } from '../modules/service/Logger';
+
+const log = new Logger('Options');
 
 // ─── Custom sound dataUrl storage (email / cal) ───────────
 const customSoundData: Record<string, { dataUrl: string; name: string }> = { email: { dataUrl: '', name: '' }, cal: { dataUrl: '', name: '' } };
@@ -629,9 +632,21 @@ document.addEventListener('click', async (e) => {
       break;
     case 'connect-account': {
       const card = document.querySelector(`.account-card[data-id="${id}"]`);
+      const login   = (card?.querySelector('[data-field="login"]') as HTMLInputElement)?.value ?? '';
       const pw   = (card?.querySelector('[data-field="password"]') as HTMLInputElement)?.value ?? '';
+      const urlWebService   = (card?.querySelector('[data-field="urlWebService"]') as HTMLInputElement)?.value ?? '';
+      const originUrlWebService = getOriginUrl(urlWebService)
+      if (!login || !originUrlWebService) {
+        break;
+      }
+      const permissionDone = await ensureOriginPermission(urlWebService)
+      if(!permissionDone) {
+        setCardError(id, i18n('option_identifiant_urlwebservice_persmission_error').replace('%WEBSITE%', originUrlWebService));
+        break;
+      }
       setCardLoading(id, true);
       clearCardError(id);
+
       await sendToBackground('initializeConnection', id, pw);
       // Result arrives via needRefresh — release loader after 30s max
       setTimeout(() => {
@@ -652,16 +667,21 @@ document.addEventListener('click', async (e) => {
 
 // ─── Push from service worker ───────────────────────────
 
-chrome.runtime.onMessage.addListener(({ func, args }: { func: string; args: unknown[] }) => {
-  if (func !== 'needRefresh') return;
+chrome.runtime.onMessage.addListener((msg: BackgroundMessage, _sender: any, sendResponse: any) => {
+ if (_sender?.id !== chrome.runtime.id) {
+    log.error('Sender not authorized to send the message')
+    return;
+  }
 
-  const event = args?.[0] as ServiceEventType | undefined;
+  if (msg?.func !== 'needRefresh') {
+    return;
+  }
 
+  const event = msg.args?.[0] as ServiceEventType | undefined;
   // Find the account currently connecting (first entry in the Map)
   const firstEntry    = connectingAccounts.entries().next().value;
   const controllerId  = firstEntry?.[0];
   const accountId     = firstEntry?.[1];
-
   if (event && controllerId && accountId) {
     const errKey = eventToErrorKey(event);
 
@@ -684,7 +704,6 @@ chrome.runtime.onMessage.addListener(({ func, args }: { func: string; args: unkn
 
       case ServiceEventType.TWOFA_AUTHENTICATION_REQUIRED:
         setCardLoading(controllerId, false);
-        if (errKey) setCardError(accountId, errKey);
         showTwoFaPrompt(accountId);
         connectingAccounts.delete(controllerId);
         break;
@@ -694,7 +713,6 @@ chrome.runtime.onMessage.addListener(({ func, args }: { func: string; args: unkn
         break;
     }
   }
-
   // Light refresh without full card re-render (keeps focus/loader state)
   if (event === ServiceEventType.CONNECTED || event === ServiceEventType.STOPPED || event === ServiceEventType.DISCONNECTED) {
     loadPrefs();

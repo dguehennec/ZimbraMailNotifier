@@ -355,6 +355,10 @@
     "message": "L'URL del servizio di posta elettronica, la maggior parte delle volte lo stesso del servizio web",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "Autorizzazione richiesta per connettersi al sito web: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "URL interfaccia web",
     "description": ""

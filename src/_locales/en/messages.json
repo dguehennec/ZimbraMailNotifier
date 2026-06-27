@@ -355,6 +355,10 @@
     "message": "The URL of the mail service, most of the time the same as the web interface URL",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "Authorization required to connect to the website: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "Web interface URL",
     "description": ""

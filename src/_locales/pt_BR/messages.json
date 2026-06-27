@@ -355,6 +355,10 @@
     "message": "URL do serviço de e-mail, geralmente a mesma da interface web",
     "description": ""
   },
+  "option_identifiant_urlwebservice_persmission_error": {
+    "message": "Autorização necessária para conectar ao site: %WEBSITE%",
+    "description": ""
+  },
   "option_identifiant_urlwebinterface_label": {
     "message": "URL da interface web",
     "description": ""
