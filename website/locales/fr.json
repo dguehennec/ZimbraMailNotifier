@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Surveillez votre compte Zimbra et soyez notifié du nombre de messages non lus. Consultez vos prochains rendez-vous et suivez vos tâches en cours — le tout depuis la barre d'outils de votre navigateur.",
-    "badgeVersion": "Version 4.2.1",
+    "badgeVersion": "Version 4.2.2",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 langues",
     "badgeOpenSource": "Open Source"

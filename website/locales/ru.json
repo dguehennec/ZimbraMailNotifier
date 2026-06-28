@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Отслеживайте учётную запись Zimbra и получайте уведомления о непрочитанных сообщениях. Просматривайте встречи и задачи — прямо с панели браузера.",
-    "badgeVersion": "Version 4.2.1",
+    "badgeVersion": "Version 4.2.2",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 языков",
     "badgeOpenSource": "Open Source"

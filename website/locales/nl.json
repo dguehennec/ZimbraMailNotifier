@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Houd uw Zimbra-account in de gaten en ontvang meldingen over ongelezen berichten. Bekijk afspraken en volg lopende taken — vanuit de browserwerkbalk.",
-    "badgeVersion": "Version 4.2.1",
+    "badgeVersion": "Version 4.2.2",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 talen",
     "badgeOpenSource": "Open Source"

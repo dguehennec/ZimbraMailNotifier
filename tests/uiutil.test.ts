@@ -33,7 +33,7 @@ describe('uiutil', () => {
         status: RequestStatus.NETWORK_ERROR,
         message: 'fail',
         ts: Date.now(),
-      })).toBe('connector_error_req_network');
+      }, '')).toBe('connector_error_req_network');
     });
 
     it('maps login invalid errors', () => {
@@ -41,7 +41,7 @@ describe('uiutil', () => {
         status: RequestStatus.LOGIN_INVALID,
         message: 'bad login',
         ts: Date.now(),
-      })).toBe('connector_error_req_logininvalid');
+      }, '')).toBe('connector_error_req_logininvalid');
     });
   });
 

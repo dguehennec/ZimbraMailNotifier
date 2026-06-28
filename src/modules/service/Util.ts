@@ -29,6 +29,47 @@ export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+export function getOriginUrl(serverUrl: string): string {
+   try {
+    const url = new URL(serverUrl);
+    if (url.protocol !== "https:" && url.protocol !== "http:") {
+      return '';
+    }
+    if (!url.origin || url.origin === 'null') {
+      return '';
+    }
+    return url.origin;
+  } catch (error) {
+    return '';
+  }
+}
+
+export async function requestOriginPermission(serverUrl: string): Promise<boolean> {
+  const origin = getOriginUrl(serverUrl);
+  if (!origin) {
+    return false;
+  }
+  try {
+    const origins = [`${origin}/*`];
+    return await chrome.permissions.request({ origins });
+  } catch (error) {
+    return false;
+  }
+}
+
+export async function checkOriginPermission(serverUrl: string): Promise<boolean> {
+  const origin = getOriginUrl(serverUrl);
+  if (!origin) {
+    return false;
+  }
+  try {
+    const origins = [`${origin}/*`];
+    return await chrome.permissions.contains({ origins });
+  } catch (error) {
+    return false;
+  }
+}
+
 /**
  * Retry an async operation with exponential back-off + jitter.
  * Only retries on NetworkError (retriable = true).

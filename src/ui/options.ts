@@ -2,8 +2,9 @@
 // ui/options.ts — Full settings page
 // ============================================================
 
-import { i18n, escHtml, sendToBackground, formatLastErrorMessage, getOriginUrl, ensureOriginPermission } from './uiutil';
+import { i18n, escHtml, sendToBackground, formatLastErrorMessage } from './uiutil';
 import { AppPrefs, SoundType, SoundPath, TaskPriority, ServiceEventType, RequestStatus, BackgroundMessage } from '../types';
+import { getOriginUrl, requestOriginPermission} from '../modules/service/Util';
 import { Logger } from '../modules/service/Logger';
 
 const log = new Logger('Options');
@@ -106,6 +107,8 @@ function eventToErrorKey(event: ServiceEventType): string | null {
       return 'connector_error_req_server';
     case ServiceEventType.TWOFA_AUTHENTICATION_REQUIRED:
       return 'option_identifiant_2fatoken_label';
+    case ServiceEventType.ORIGIN_PERMISSION_ERROR:
+      return 'option_identifiant_urlwebservice_persmission_error';
     default:
       return null;
   }
@@ -563,8 +566,7 @@ function renderAccounts(accounts: import('../types').AccountConfig[], controller
               <span class="btn-spinner"></span>${i18n('tooltip_connecting_descriptionStatus') || 'Connecting…'}</span>
             </button>` : ''}
         </div>
-
-        ${errorMsg && errorMsg.status !== RequestStatus.TWOFA_AUTHENTICATION_REQUIRED ? `<div class="error-msg">${formatLastErrorMessage(errorMsg)}</div>` : ''}
+        ${errorMsg && errorMsg.status !== RequestStatus.TWOFA_AUTHENTICATION_REQUIRED ? `<div class="error-msg">${formatLastErrorMessage(errorMsg, account.urlWebService)}</div>` : ''}
         </div>
     `;
     container.appendChild(card);
@@ -639,11 +641,7 @@ document.addEventListener('click', async (e) => {
       if (!login || !originUrlWebService) {
         break;
       }
-      const permissionDone = await ensureOriginPermission(urlWebService)
-      if(!permissionDone) {
-        setCardError(id, i18n('option_identifiant_urlwebservice_persmission_error').replace('%WEBSITE%', originUrlWebService));
-        break;
-      }
+      await requestOriginPermission(urlWebService)
       setCardLoading(id, true);
       clearCardError(id);
 

@@ -15,7 +15,7 @@ import { BrowserService } from '../service/BrowserService';
 import { EventNotifier } from '../service/Notifier';
 import { ErrorInfo } from '../service/ErrorInfo';
 import { Constants } from '../constant/constants';
-import { i18n, filterNewItemsById, filterMessagesByRegex } from '../service/Util';
+import { i18n, filterNewItemsById, filterMessagesByRegex, checkOriginPermission } from '../service/Util';
 import type { AppPrefs, AccountConfig } from '../../types';
 
 const log = new Logger('Service');
@@ -197,9 +197,15 @@ export class Service {
     if (!account) {
       this.delegate.onEvent(ServiceEventType.INVALID_LOGIN);
       this.errors.add(RequestStatus.LOGIN_INVALID, `Account ${this.delegate.accountId} not found`);
+      this.planState(ServiceState.NOTHING_TO_DO, 0);
       return;
     }
-
+    if(!(await checkOriginPermission(account.urlWebService))) {
+      this.delegate.onEvent(ServiceEventType.ORIGIN_PERMISSION_ERROR);
+      this.errors.add(RequestStatus.ORIGIN_PERMISSION_ERROR, `Permission denied to ${account.urlWebService} for account ${this.delegate.accountId}`);
+      this.planState(ServiceState.NOTHING_TO_DO, 0);
+      return;
+    }
     try {
       if (!this.webservice) {
         const device = await Prefs.loadDeviceTrusted(this.delegate.accountId);

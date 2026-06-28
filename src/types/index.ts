@@ -18,6 +18,7 @@ export enum RequestStatus {
   WAITSET_INVALID = 8,
   REQUEST_INVALID = 9,
   TWOFA_AUTHENTICATION_REQUIRED = 10,
+  ORIGIN_PERMISSION_ERROR = 11,
 }
 
 export enum ServiceState {
@@ -32,6 +33,7 @@ export enum ServiceEventType {
   STOPPED = 'STOPPED',
   CONNECTING = 'CONNECTING',
   INVALID_LOGIN = 'INVALID_LOGIN',
+  ORIGIN_PERMISSION_ERROR = 'ORIGIN_PERMISSION_ERROR',
   CONNECT_ERR = 'CONNECT_ERR',
   CONNECTED = 'CONNECTED',
   DISCONNECTED = 'DISCONNECTED',
@@ -251,6 +253,7 @@ export interface ControllerInfo {
   accountId: string;
   accountAlias: string;
   accountLogin: string;
+  accountServiceUrl: string;
   isConnected: boolean;
   isConnecting: boolean;
   needTwoFactorAuth: boolean;

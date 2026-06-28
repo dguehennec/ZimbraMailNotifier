@@ -3,7 +3,7 @@
 // ============================================================
 
 import { ControllerInfo, AppPrefs, RequestStatus, BackgroundMessage } from '../types';
-import { filterMessagesByRegex } from '../modules/service/Util';
+import { filterMessagesByRegex, requestOriginPermission } from '../modules/service/Util';
 import { getContrastColor, i18n, sendToBackground, formatAccountName, formatLastErrorMessage, formatRelativeDate, formatRelativeTime, formatRelativeDateTime, formatPercentageQuotaUsed, formatBytes, escHtml, maxStringLength} from './uiutil';
 import { Logger } from '../modules/service/Logger';
 
@@ -82,7 +82,7 @@ function renderAccounts(prefs: AppPrefs | null): void {
 
     const lastErrorMessage = ctrl.lastErrorMessage;
     const errorMsg = lastErrorMessage && lastErrorMessage.status !== RequestStatus.TWOFA_AUTHENTICATION_REQUIRED
-      ? `<div class="account-error">${formatLastErrorMessage(lastErrorMessage)}</div>` : '';
+      ? `<div class="account-error">${formatLastErrorMessage(lastErrorMessage, ctrl.accountServiceUrl)}</div>` : '';
 
     const actions = ctrl.isConnected
       ? `<button class="btn-icon" data-action="disconnect" data-id="${ctrl.id}" title="${i18n('main_disconnect')}">
@@ -291,6 +291,8 @@ document.addEventListener('click', async (e) => {
 
   switch (action) {
     case 'connect':
+      const urlWebService = controllers.find((ctrl) => ctrl.id === id)?.accountServiceUrl || '';
+      await requestOriginPermission(urlWebService)
       await sendToBackground('initializeConnection', id);
       break;
     case 'disconnect':

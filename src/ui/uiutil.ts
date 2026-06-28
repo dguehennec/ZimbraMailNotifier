@@ -33,38 +33,7 @@ export const i18n = Object.assign(
   }
 );
 
-export function getOriginUrl(serverUrl: string): string {
-   try {
-    const url = new URL(serverUrl);
-    if (url.protocol !== "https:" && url.protocol !== "http:") {
-      return '';
-    }
-    if (!url.origin || url.origin === 'null') {
-      return '';
-    }
-    return url.origin;
-  } catch (error) {
-    return '';
-  }
-}
-
-export async function ensureOriginPermission(serverUrl: string): Promise<boolean> {
-  const origin = getOriginUrl(serverUrl);
-  if (!origin) {
-    return false;
-  }
-  try {
-    const origins = [`${origin}/*`];
-    if (await chrome.permissions.contains({ origins })) {
-      return true;
-    }
-    return await chrome.permissions.request({ origins });
-  } catch (error) {
-    return false;
-  }
-}
-
-export function formatLastErrorMessage(lastErr: ErrorEntry): string {
+export function formatLastErrorMessage(lastErr: ErrorEntry, urlWebService: string): string {
   let message = "";
   if (lastErr !== null) {
     switch (lastErr.status) {
@@ -91,6 +60,9 @@ export function formatLastErrorMessage(lastErr: ErrorEntry): string {
         break;
       case RequestStatus.LOGIN_INVALID:
         message = i18n('connector_error_req_logininvalid');
+        break;
+      case RequestStatus.ORIGIN_PERMISSION_ERROR:
+        message = i18n('option_identifiant_urlwebservice_persmission_error').replace('%WEBSITE%', urlWebService);
         break;
       case RequestStatus.INTERNAL_ERROR:
       default:

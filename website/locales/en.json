@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Monitor your Zimbra account and get notified of unread messages. View upcoming appointments and track ongoing tasks — all from your browser toolbar.",
-    "badgeVersion": "Version 4.2.1",
+    "badgeVersion": "Version 4.2.2",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 languages",
     "badgeOpenSource": "Open Source"

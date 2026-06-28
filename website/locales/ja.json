@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Zimbra アカウントを監視し、未読メッセージを通知。予定の確認やタスクの追跡がブラウザのツールバーからできます。",
-    "badgeVersion": "Version 4.2.1",
+    "badgeVersion": "Version 4.2.2",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15言語",
     "badgeOpenSource": "オープンソース"

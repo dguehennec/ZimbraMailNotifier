@@ -99,6 +99,7 @@ export class Controller implements ServiceDelegate {
       accountId: this.accountId,
       accountAlias: account?.alias ?? '',
       accountLogin: account?.login ?? '',
+      accountServiceUrl: account?.urlWebService ?? '',
       isConnected: this.isConnected(),
       isConnecting: this.isConnecting(),
       needTwoFactorAuth: this._needTwoFactorAuth,

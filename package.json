@@ -1,6 +1,6 @@
 {
   "name": "zimbra-mail-notifier",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "description": "Zimbra Mail Notifier – Chrome / Firefox / Opera extension",
   "scripts": {
     "build": "npm run build:chrome && npm run build:firefox",

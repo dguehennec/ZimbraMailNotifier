@@ -73,6 +73,8 @@ const mockCookiesRemove = jest.fn().mockResolvedValue(undefined);
 const mockTabsCreate = jest.fn().mockResolvedValue(undefined);
 export const mockTabsQuery = jest.fn().mockResolvedValue([]);
 export const mockTabsUpdate = jest.fn().mockResolvedValue(undefined);
+export const mockRequestPermission = jest.fn().mockResolvedValue(true);
+export const mockContainsPermission = jest.fn().mockResolvedValue(true);
 const mockSendMessage = jest.fn((_msg: unknown, cb?: (response: unknown) => void) => {
   cb?.(null);
 });
@@ -115,6 +117,8 @@ export function resetChromeMocks(): void {
   mockTabsCreate.mockResolvedValue(undefined);
   mockTabsQuery.mockResolvedValue([]);
   mockTabsUpdate.mockResolvedValue(undefined);
+  mockRequestPermission.mockResolvedValue(true);
+  mockContainsPermission.mockResolvedValue(true);
   mockSendMessage.mockImplementation((_msg: unknown, cb?: (response: unknown) => void) => {
     cb?.(null);
   });
@@ -153,6 +157,10 @@ Object.defineProperty(globalThis, 'chrome', {
       query: mockTabsQuery,
       update: mockTabsUpdate,
     },
+    permissions: {
+      request: mockRequestPermission,
+      contains: mockContainsPermission,
+    }
   },
 });
 

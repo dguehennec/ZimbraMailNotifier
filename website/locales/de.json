@@ -25,7 +25,7 @@
   "hero": {
     "title": "Zimbra Mail Notifier",
     "subtitle": "Überwachen Sie Ihr Zimbra-Konto und werden Sie über ungelesene Nachrichten informiert. Sehen Sie anstehende Termine und verfolgen Sie laufende Aufgaben — direkt in der Browser-Symbolleiste.",
-    "badgeVersion": "Version 4.2.1",
+    "badgeVersion": "Version 4.2.2",
     "badgeBrowsers": "Chrome · Firefox",
     "badgeLangs": "15 Sprachen",
     "badgeOpenSource": "Open Source"
