@@ -109,9 +109,9 @@ describe('BrowserService', () => {
 
   it('opens web interface in a new tab when none exists', async () => {
     const BrowserService = await loadBrowserService();
-    await BrowserService.openWebInterface('https://zimbra.example.com/');
+    await BrowserService.openWebInterface('https://zimbra.example.com/', 'test');
     expect(chrome.tabs.query).toHaveBeenCalledWith({});
-    expect(chrome.tabs.create).toHaveBeenCalledWith({ url: 'https://zimbra.example.com/' });
+    expect(chrome.tabs.create).toHaveBeenCalledWith({ url: 'https://zimbra.example.com/#test' });
     expect(chrome.tabs.update).not.toHaveBeenCalled();
   });
 
@@ -120,7 +120,7 @@ describe('BrowserService', () => {
       { id: 42, url: 'https://zimbra.example.com/zimbra/mail?action=1#test', windowId: 1 },
     ]);
     const BrowserService = await loadBrowserService();
-    await BrowserService.openWebInterface('https://zimbra.example.com/zimbra/mail');
+    await BrowserService.openWebInterface('https://zimbra.example.com/zimbra/mail', 'test');
     expect(chrome.tabs.query).toHaveBeenCalledWith({});
     expect(chrome.tabs.update).toHaveBeenCalledWith(42, { active: true });
   });

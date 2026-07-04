@@ -79,7 +79,7 @@ export class Controller implements ServiceDelegate {
     const account = this.getAccount();
     const webUrl = account?.urlWebInterface || account?.urlWebService;
     if (webUrl) {
-      BrowserService.openWebInterface(webUrl);
+      BrowserService.openWebInterface(webUrl, account.alias || account.id);
     }
   }
 

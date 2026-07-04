@@ -22,9 +22,10 @@ function serializeError(e: unknown): string {
   return String(e);
 }
 
-function tabMatchesWebInterface(tabUrl: string | undefined, targetUrl: string): boolean {
+function tabMatchesWebInterface(tabUrl: string | undefined, targetUrl: string, alias: string): boolean {
   if (!tabUrl) return false;
-  return new URL(tabUrl).origin === new URL(targetUrl).origin && tabUrl.toLowerCase().startsWith(targetUrl.toLowerCase());
+  const originUrl = new URL(tabUrl)
+  return originUrl.origin === new URL(targetUrl).origin && tabUrl.toLowerCase().startsWith(targetUrl.toLowerCase()) && originUrl.hash.toLowerCase().includes(alias);
 }
 
 export const BrowserService = {
@@ -92,18 +93,19 @@ export const BrowserService = {
   },
 
   /** Open or focus the Zimbra web interface tab (one tab per site origin). */
-  async openWebInterface(url: string): Promise<void> {
+  async openWebInterface(url: string, alias: string): Promise<void> {
     if (!url) return;
     try {
+      const hash = `#${encodeURIComponent(alias.toLocaleLowerCase())}`
       const tabs = await chrome.tabs.query({});
-      const existing = tabs.find((tab) => tabMatchesWebInterface(tab.url, url));
+      const existing = tabs.find((tab) => tabMatchesWebInterface(tab.url, url, hash));
 
       if (existing?.id !== undefined) {
         await chrome.tabs.update(existing.id, { active: true });
         return;
       }
 
-      await chrome.tabs.create({ url });
+      await chrome.tabs.create({ url: `${url}${hash}` });
     } catch (e) {
       log.error('Failed to open tab', e);
     }
